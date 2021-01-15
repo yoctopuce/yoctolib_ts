@@ -1,0 +1,14 @@
+{
+  "name": "doc-savesettings",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-SaveSettings example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-ts": "file:..\\.."
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  }
+}

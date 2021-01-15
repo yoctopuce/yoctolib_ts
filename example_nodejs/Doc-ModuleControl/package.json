@@ -1,0 +1,11 @@
+{
+  "name": "doc-modulecontrol",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-ModuleControl example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-ts": "file:..\\.."
+  }
+}

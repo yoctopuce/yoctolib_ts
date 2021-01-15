@@ -1,0 +1,11 @@
+{
+  "name": "doc-inventory",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-Inventory example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-ts": "file:..\\.."
+  }
+}

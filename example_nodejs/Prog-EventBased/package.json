@@ -1,0 +1,11 @@
+{
+  "name": "prog-eventbased",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-EventBased example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-ts": "file:..\\.."
+  }
+}

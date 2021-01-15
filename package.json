@@ -1,0 +1,39 @@
+{
+	"name": "yoctolib-ts",
+	"author": "Yoctopuce",
+	"description": "Yoctopuce library for Node.js (fully asynchronous) as an ECMAScript module",
+	"version": "1.10.29282-dev.2",
+	"license": "SEE LICENSE IN LICENSE.txt",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yoctopuce/yoctolib_ts.git"
+	},
+	"bugs": {
+		"url": "https://github.com/yoctopuce/yoctolib_ts/issues"
+	},
+	"keywords": [
+		"Yoctopuce",
+		"yoctoapi",
+		"TypeScript"
+	],
+	"files": [
+		"dist"
+	],
+	"main": "dist/cjs/index.js",
+	"types": "dist/cjs/index.d.ts",
+	"scripts": {
+		"app-server": "node bin/app-server.js",
+		"build_mjs": "tsc --outDir dist/esm --module es2015",
+		"build_cjs": "tsc --outDir dist/cjs --module commonjs",
+		"build_tools": "cd bin && tsc",
+		"build": "npm run build_mjs && npm run build_cjs && npm run build_tools"
+	},
+	"bin" : { "tsc-browser" : "bin/app-server.js"},
+	"dependencies": {
+		"ws": "^7.3.1"
+	},
+	"devDependencies": {
+		"@types/ws": "^7.2.6",
+		"typescript": "^4.0.2"
+	}
+}

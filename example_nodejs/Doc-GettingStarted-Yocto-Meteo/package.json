@@ -1,0 +1,15 @@
+{
+  "name": "doc-gettingstarted-yocto-meteo",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-GettingStarted-Yocto-Meteo example",
+  "scripts": {
+    "build": "tsc",
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-ts": "file:..\\.."
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  }
+}
