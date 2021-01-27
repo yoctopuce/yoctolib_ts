@@ -71,10 +71,16 @@ function setVersion(str_newver: string)
     json.version = newver;
     fs.writeFileSync("package.json", JSON.stringify(json, null, 2), 'utf-8');
 
-    // Update ES module package.json as well
+    // Update ESM package.json as well
     let esmjson: { version: string } = JSON.parse(fs.readFileSync('dist/esm/package.json', 'utf8'));
     esmjson.version = newver;
     fs.writeFileSync('dist/esm/package.json', JSON.stringify(esmjson, null, 2), 'utf-8');
+
+    // Update CJS package.json as well
+    let cjsjson: { version: string } = JSON.parse(fs.readFileSync('dist/cjs/package.json', 'utf8'));
+    cjsjson.version = newver;
+    fs.writeFileSync('dist/cjs/package.json', JSON.stringify(cjsjson, null, 2), 'utf-8');
+
 
     // update version number in yocto_api.ts
     patchVersionInFile(newver, 'src/yocto_api.ts');
