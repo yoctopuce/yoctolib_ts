@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_colorledcluster.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_LedType {
+export declare const enum YColorLedCluster_LedType {
     RGB = 0,
     RGBW = 1,
     INVALID = -1
@@ -61,24 +61,24 @@ export interface YColorLedClusterValueCallback {
 export declare class YColorLedCluster extends YFunction {
     _className: string;
     _activeLedCount: number;
-    _ledType: Y_LedType;
+    _ledType: YColorLedCluster_LedType;
     _maxLedCount: number;
     _blinkSeqMaxCount: number;
     _blinkSeqMaxSize: number;
     _command: string;
     _valueCallbackColorLedCluster: YColorLedClusterValueCallback | null;
     readonly ACTIVELEDCOUNT_INVALID: number;
-    readonly LEDTYPE_RGB: Y_LedType;
-    readonly LEDTYPE_RGBW: Y_LedType;
-    readonly LEDTYPE_INVALID: Y_LedType;
+    readonly LEDTYPE_RGB: YColorLedCluster_LedType;
+    readonly LEDTYPE_RGBW: YColorLedCluster_LedType;
+    readonly LEDTYPE_INVALID: YColorLedCluster_LedType;
     readonly MAXLEDCOUNT_INVALID: number;
     readonly BLINKSEQMAXCOUNT_INVALID: number;
     readonly BLINKSEQMAXSIZE_INVALID: number;
     readonly COMMAND_INVALID: string;
     static readonly ACTIVELEDCOUNT_INVALID: number;
-    static readonly LEDTYPE_RGB: Y_LedType;
-    static readonly LEDTYPE_RGBW: Y_LedType;
-    static readonly LEDTYPE_INVALID: Y_LedType;
+    static readonly LEDTYPE_RGB: YColorLedCluster_LedType;
+    static readonly LEDTYPE_RGBW: YColorLedCluster_LedType;
+    static readonly LEDTYPE_INVALID: YColorLedCluster_LedType;
     static readonly MAXLEDCOUNT_INVALID: number;
     static readonly BLINKSEQMAXCOUNT_INVALID: number;
     static readonly BLINKSEQMAXSIZE_INVALID: number;
@@ -90,7 +90,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @return an integer corresponding to the number of LEDs currently handled by the device
      *
-     * On failure, throws an exception or returns Y_ACTIVELEDCOUNT_INVALID.
+     * On failure, throws an exception or returns YColorLedCluster.ACTIVELEDCOUNT_INVALID.
      */
     get_activeLedCount(): Promise<number>;
     /**
@@ -100,7 +100,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param newval : an integer corresponding to the number of LEDs currently handled by the device
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -108,30 +108,31 @@ export declare class YColorLedCluster extends YFunction {
     /**
      * Returns the RGB LED type currently handled by the device.
      *
-     * @return either Y_LEDTYPE_RGB or Y_LEDTYPE_RGBW, according to the RGB LED type currently handled by the device
+     * @return either YColorLedCluster.LEDTYPE_RGB or YColorLedCluster.LEDTYPE_RGBW, according to the RGB
+     * LED type currently handled by the device
      *
-     * On failure, throws an exception or returns Y_LEDTYPE_INVALID.
+     * On failure, throws an exception or returns YColorLedCluster.LEDTYPE_INVALID.
      */
-    get_ledType(): Promise<Y_LedType>;
+    get_ledType(): Promise<YColorLedCluster_LedType>;
     /**
      * Changes the RGB LED type currently handled by the device.
      * Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
      *
-     * @param newval : either Y_LEDTYPE_RGB or Y_LEDTYPE_RGBW, according to the RGB LED type currently
-     * handled by the device
+     * @param newval : either YColorLedCluster.LEDTYPE_RGB or YColorLedCluster.LEDTYPE_RGBW, according to
+     * the RGB LED type currently handled by the device
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_ledType(newval: Y_LedType): Promise<number>;
+    set_ledType(newval: YColorLedCluster_LedType): Promise<number>;
     /**
      * Returns the maximum number of LEDs that the device can handle.
      *
      * @return an integer corresponding to the maximum number of LEDs that the device can handle
      *
-     * On failure, throws an exception or returns Y_MAXLEDCOUNT_INVALID.
+     * On failure, throws an exception or returns YColorLedCluster.MAXLEDCOUNT_INVALID.
      */
     get_maxLedCount(): Promise<number>;
     /**
@@ -139,7 +140,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @return an integer corresponding to the maximum number of sequences that the device can handle
      *
-     * On failure, throws an exception or returns Y_BLINKSEQMAXCOUNT_INVALID.
+     * On failure, throws an exception or returns YColorLedCluster.BLINKSEQMAXCOUNT_INVALID.
      */
     get_blinkSeqMaxCount(): Promise<number>;
     /**
@@ -147,13 +148,13 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @return an integer corresponding to the maximum length of sequences
      *
-     * On failure, throws an exception or returns Y_BLINKSEQMAXSIZE_INVALID.
+     * On failure, throws an exception or returns YColorLedCluster.BLINKSEQMAXSIZE_INVALID.
      */
     get_blinkSeqMaxSize(): Promise<number>;
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a RGB LED cluster for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -163,11 +164,11 @@ export declare class YColorLedCluster extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RGB LED cluster is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YColorLedCluster.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YColorLedCluster.isOnline() to test if the RGB LED cluster is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a RGB LED cluster by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -175,14 +176,14 @@ export declare class YColorLedCluster extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RGB LED cluster, for instance
+     *         YRGBLED2.colorLedCluster.
      *
-     * @return a YColorLedCluster object allowing you to drive $THEFUNCTION$.
+     * @return a YColorLedCluster object allowing you to drive the RGB LED cluster.
      */
     static FindColorLedCluster(func: string): YColorLedCluster;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a RGB LED cluster for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -192,19 +193,19 @@ export declare class YColorLedCluster extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RGB LED cluster is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YColorLedCluster.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YColorLedCluster.isOnline() to test if the RGB LED cluster is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a RGB LED cluster by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RGB LED cluster, for instance
+     *         YRGBLED2.colorLedCluster.
      *
-     * @return a YColorLedCluster object allowing you to drive $THEFUNCTION$.
+     * @return a YColorLedCluster object allowing you to drive the RGB LED cluster.
      */
     static FindColorLedClusterInContext(yctx: YAPIContext, func: string): YColorLedCluster;
     /**
@@ -229,7 +230,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param count    :  affected LED count.
      * @param rgbValue :  new color.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -243,7 +244,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param count    :  affected LED count.
      * @param rgbValue :  new color.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -257,7 +258,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param count    :  affected LED count.
      * @param hslValue :  new color.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -270,7 +271,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param count    :  affected LED count.
      * @param hslValue :  new color.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -284,7 +285,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param rgbValue :  new color (0xRRGGBB).
      * @param delay    :  transition duration in ms
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -302,7 +303,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param hslValue :  new color (0xHHSSLL).
      * @param delay    :  transition duration in ms
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -316,7 +317,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param rgbValue :  target color (0xRRGGBB)
      * @param delay    :  transition duration in ms
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -330,7 +331,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param hslValue : target color (0xHHSSLL)
      * @param delay    : transition duration in ms
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -344,7 +345,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param seqIndex : sequence index.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -357,7 +358,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param seqIndex : sequence index.
      * @param linkSeqIndex : index of the sequence to chain.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -369,7 +370,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param seqIndex : sequence index.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -385,7 +386,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param seqIndex :  sequence index.
      * @param offset   :  execution offset in ms.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -401,7 +402,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param seqIndex :  sequence index.
      * @param offset   :  execution offset in ms.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -417,7 +418,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param seqIndex :  sequence index.
      * @param periods  :  number of periods to show on LEDs.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -428,7 +429,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param ledIndex  :  index of the first affected LED.
      * @param count     :  affected LED count.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -439,7 +440,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param seqIndex :  index of the sequence to start.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -450,7 +451,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param seqIndex :  index of the sequence to stop.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -461,7 +462,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param seqIndex :  index of the sequence to reset
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -475,7 +476,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param seqIndex :  index of the sequence to reset.
      * @param autostart : 0 to keep the sequence turned off and 1 to start it automatically.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -488,7 +489,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param seqIndex :  index of the sequence to start.
      * @param speed :     sequence running speed (-1000...1000).
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -498,7 +499,7 @@ export declare class YColorLedCluster extends YFunction {
      * sequence binding for all LEDs. Warning: if some LEDs are linked to a sequence, the
      * method saveBlinkSeq() must also be called to save the sequence definition.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -511,7 +512,7 @@ export declare class YColorLedCluster extends YFunction {
      *
      * @param seqIndex :  index of the sequence to start.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -524,7 +525,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param ledIndex : index of the first LED which should be updated
      * @param buff : the binary buffer to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -537,7 +538,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param ledIndex : index of the first LED which should be updated
      * @param rgbList : a list of 24bit RGB codes, in the form 0xRRGGBB
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -551,7 +552,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param rgbList : a list of target 24bit RGB codes, in the form 0xRRGGBB
      * @param delay   : transition duration in ms
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -564,7 +565,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param rgbList : a list of target 24bit RGB codes, in the form 0xRRGGBB
      * @param delay   : transition duration in ms
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -577,7 +578,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param ledIndex : index of the first LED which should be updated
      * @param buff : the binary buffer to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -590,7 +591,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param ledIndex : index of the first LED which should be updated
      * @param hslList : a list of 24bit HSL codes, in the form 0xHHSSLL
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -603,7 +604,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param hslList : a list of target 24bit HSL codes, in the form 0xHHSSLL
      * @param delay   : transition duration in ms
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -617,7 +618,7 @@ export declare class YColorLedCluster extends YFunction {
      * @param hslList : a list of target 24bit HSL codes, in the form 0xHHSSLL
      * @param delay   : transition duration in ms
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -640,10 +641,10 @@ export declare class YColorLedCluster extends YFunction {
      * the RGB LEDs. The first number represents the RGB value of the first LED,
      * the second number represents the RGB value of the second LED, etc.
      *
-     * @param ledIndex {number} : index of the first LED which should be returned
+     * @param ledIndex : index of the first LED which should be returned
      * @param count    : number of LEDs which should be returned
      *
-     * @return {Integer[]} a list of 24bit color codes with RGB components of selected LEDs, as 0xRRGGBB.
+     * @return a list of 24bit color codes with RGB components of selected LEDs, as 0xRRGGBB.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -653,10 +654,10 @@ export declare class YColorLedCluster extends YFunction {
      * The first number represents the startup RGB value of the first LED,
      * the second number represents the RGB value of the second LED, etc.
      *
-     * @param ledIndex {number} : index of the first LED  which should be returned
+     * @param ledIndex : index of the first LED  which should be returned
      * @param count    : number of LEDs which should be returned
      *
-     * @return {Integer[]} a list of 24bit color codes with RGB components of selected LEDs, as 0xRRGGBB.
+     * @return a list of 24bit color codes with RGB components of selected LEDs, as 0xRRGGBB.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -666,10 +667,10 @@ export declare class YColorLedCluster extends YFunction {
      * sequence index for the the first LED, the second number represents the sequence
      * index for the second LED, etc.
      *
-     * @param ledIndex {number} : index of the first LED which should be returned
+     * @param ledIndex : index of the first LED which should be returned
      * @param count    : number of LEDs which should be returned
      *
-     * @return {Integer[]} a list of integers with sequence index
+     * @return a list of integers with sequence index
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -679,10 +680,10 @@ export declare class YColorLedCluster extends YFunction {
      * Since blinking sequences cannot be read from the device, this can be used
      * to detect if a specific blinking sequence is already programmed.
      *
-     * @param seqIndex {number} : index of the first blinking sequence which should be returned
+     * @param seqIndex : index of the first blinking sequence which should be returned
      * @param count    : number of blinking sequences which should be returned
      *
-     * @return {Integer[]} a list of 32 bit integer signatures
+     * @return a list of 32 bit integer signatures
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -690,10 +691,10 @@ export declare class YColorLedCluster extends YFunction {
     /**
      * Returns a list of integers with the current speed for specified blinking sequences.
      *
-     * @param seqIndex {number} : index of the first sequence speed which should be returned
+     * @param seqIndex : index of the first sequence speed which should be returned
      * @param count    : number of sequence speeds which should be returned
      *
-     * @return {Integer[]} a list of integers, 0 for sequences turned off and 1 for sequences running
+     * @return a list of integers, 0 for sequences turned off and 1 for sequences running
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -701,10 +702,10 @@ export declare class YColorLedCluster extends YFunction {
     /**
      * Returns a list of integers with the "auto-start at power on" flag state for specified blinking sequences.
      *
-     * @param seqIndex {number} : index of the first blinking sequence which should be returned
+     * @param seqIndex : index of the first blinking sequence which should be returned
      * @param count    : number of blinking sequences which should be returned
      *
-     * @return {Integer[]} a list of integers, 0 for sequences turned off and 1 for sequences running
+     * @return a list of integers, 0 for sequences turned off and 1 for sequences running
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -712,10 +713,10 @@ export declare class YColorLedCluster extends YFunction {
     /**
      * Returns a list of integers with the started state for specified blinking sequences.
      *
-     * @param seqIndex {number} : index of the first blinking sequence which should be returned
+     * @param seqIndex : index of the first blinking sequence which should be returned
      * @param count    : number of blinking sequences which should be returned
      *
-     * @return {Integer[]} a list of integers, 0 for sequences turned off and 1 for sequences running
+     * @return a list of integers, 0 for sequences turned off and 1 for sequences running
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -723,23 +724,36 @@ export declare class YColorLedCluster extends YFunction {
     hsl2rgbInt(temp1: number, temp2: number, temp3: number): Promise<number>;
     hsl2rgb(hslValue: number): Promise<number>;
     /**
-     * Returns the next ColorLedCluster
+     * Continues the enumeration of RGB LED clusters started using yFirstColorLedCluster().
+     * Caution: You can't make any assumption about the returned RGB LED clusters order.
+     * If you want to find a specific a RGB LED cluster, use ColorLedCluster.findColorLedCluster()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YColorLedCluster}
+     * @return a pointer to a YColorLedCluster object, corresponding to
+     *         a RGB LED cluster currently online, or a null pointer
+     *         if there are no more RGB LED clusters to enumerate.
      */
     nextColorLedCluster(): YColorLedCluster | null;
     /**
-     * Retrieves the first ColorLedCluster in a YAPI context
+     * Starts the enumeration of RGB LED clusters currently accessible.
+     * Use the method YColorLedCluster.nextColorLedCluster() to iterate on
+     * next RGB LED clusters.
      *
-     * @returns {YColorLedCluster}
+     * @return a pointer to a YColorLedCluster object, corresponding to
+     *         the first RGB LED cluster currently online, or a null pointer
+     *         if there are none.
      */
     static FirstColorLedCluster(): YColorLedCluster | null;
     /**
-     * Retrieves the first ColorLedCluster in a given context
+     * Starts the enumeration of RGB LED clusters currently accessible.
+     * Use the method YColorLedCluster.nextColorLedCluster() to iterate on
+     * next RGB LED clusters.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YColorLedCluster}
+     * @return a pointer to a YColorLedCluster object, corresponding to
+     *         the first RGB LED cluster currently online, or a null pointer
+     *         if there are none.
      */
     static FirstColorLedClusterInContext(yctx: YAPIContext): YColorLedCluster | null;
 }

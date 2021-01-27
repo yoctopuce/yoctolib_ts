@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_steppermotor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -149,10 +149,11 @@ export class YStepperMotor extends YFunction {
     /**
      * Returns the motor working state.
      *
-     * @return a value among Y_MOTORSTATE_ABSENT, Y_MOTORSTATE_ALERT, Y_MOTORSTATE_HI_Z,
-     * Y_MOTORSTATE_STOP, Y_MOTORSTATE_RUN and Y_MOTORSTATE_BATCH corresponding to the motor working state
+     * @return a value among YStepperMotor.MOTORSTATE_ABSENT, YStepperMotor.MOTORSTATE_ALERT,
+     * YStepperMotor.MOTORSTATE_HI_Z, YStepperMotor.MOTORSTATE_STOP, YStepperMotor.MOTORSTATE_RUN and
+     * YStepperMotor.MOTORSTATE_BATCH corresponding to the motor working state
      *
-     * On failure, throws an exception or returns Y_MOTORSTATE_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.MOTORSTATE_INVALID.
      */
     async get_motorState() {
         let res;
@@ -169,7 +170,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return an integer corresponding to the stepper motor controller diagnostics, as a bitmap
      *
-     * On failure, throws an exception or returns Y_DIAGS_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.DIAGS_INVALID.
      */
     async get_diags() {
         let res;
@@ -191,7 +192,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the current logical motor position, measured in steps
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -206,7 +207,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return a floating point number corresponding to current motor speed, measured in steps per second
      *
-     * On failure, throws an exception or returns Y_SPEED_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.SPEED_INVALID.
      */
     async get_speed() {
         let res;
@@ -224,7 +225,7 @@ export class YStepperMotor extends YFunction {
      * @param newval : a floating point number corresponding to the motor speed immediately reachable from
      * stop state, measured in steps per second
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -239,7 +240,7 @@ export class YStepperMotor extends YFunction {
      * @return a floating point number corresponding to the motor speed immediately reachable from stop
      * state, measured in steps per second
      *
-     * On failure, throws an exception or returns Y_PULLINSPEED_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.PULLINSPEED_INVALID.
      */
     async get_pullinSpeed() {
         let res;
@@ -257,7 +258,7 @@ export class YStepperMotor extends YFunction {
      * @param newval : a floating point number corresponding to the maximal motor acceleration, measured
      * in steps per second^2
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -271,7 +272,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return a floating point number corresponding to the maximal motor acceleration, measured in steps per second^2
      *
-     * On failure, throws an exception or returns Y_MAXACCEL_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.MAXACCEL_INVALID.
      */
     async get_maxAccel() {
         let res;
@@ -288,7 +289,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the maximal motor speed, measured in steps per second
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -302,7 +303,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return a floating point number corresponding to the maximal motor speed, measured in steps per second
      *
-     * On failure, throws an exception or returns Y_MAXSPEED_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.MAXSPEED_INVALID.
      */
     async get_maxSpeed() {
         let res;
@@ -317,10 +318,11 @@ export class YStepperMotor extends YFunction {
     /**
      * Returns the stepping mode used to drive the motor.
      *
-     * @return a value among Y_STEPPING_MICROSTEP16, Y_STEPPING_MICROSTEP8, Y_STEPPING_MICROSTEP4,
-     * Y_STEPPING_HALFSTEP and Y_STEPPING_FULLSTEP corresponding to the stepping mode used to drive the motor
+     * @return a value among YStepperMotor.STEPPING_MICROSTEP16, YStepperMotor.STEPPING_MICROSTEP8,
+     * YStepperMotor.STEPPING_MICROSTEP4, YStepperMotor.STEPPING_HALFSTEP and
+     * YStepperMotor.STEPPING_FULLSTEP corresponding to the stepping mode used to drive the motor
      *
-     * On failure, throws an exception or returns Y_STEPPING_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.STEPPING_INVALID.
      */
     async get_stepping() {
         let res;
@@ -335,10 +337,12 @@ export class YStepperMotor extends YFunction {
     /**
      * Changes the stepping mode used to drive the motor.
      *
-     * @param newval : a value among Y_STEPPING_MICROSTEP16, Y_STEPPING_MICROSTEP8, Y_STEPPING_MICROSTEP4,
-     * Y_STEPPING_HALFSTEP and Y_STEPPING_FULLSTEP corresponding to the stepping mode used to drive the motor
+     * @param newval : a value among YStepperMotor.STEPPING_MICROSTEP16,
+     * YStepperMotor.STEPPING_MICROSTEP8, YStepperMotor.STEPPING_MICROSTEP4,
+     * YStepperMotor.STEPPING_HALFSTEP and YStepperMotor.STEPPING_FULLSTEP corresponding to the stepping
+     * mode used to drive the motor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -352,7 +356,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return an integer corresponding to the overcurrent alert and emergency stop threshold, measured in mA
      *
-     * On failure, throws an exception or returns Y_OVERCURRENT_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.OVERCURRENT_INVALID.
      */
     async get_overcurrent() {
         let res;
@@ -369,7 +373,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param newval : an integer corresponding to the overcurrent alert and emergency stop threshold, measured in mA
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -383,7 +387,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return an integer corresponding to the torque regulation current when the motor is stopped, measured in mA
      *
-     * On failure, throws an exception or returns Y_TCURRSTOP_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.TCURRSTOP_INVALID.
      */
     async get_tCurrStop() {
         let res;
@@ -401,7 +405,7 @@ export class YStepperMotor extends YFunction {
      * @param newval : an integer corresponding to the torque regulation current when the motor is
      * stopped, measured in mA
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -415,7 +419,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return an integer corresponding to the torque regulation current when the motor is running, measured in mA
      *
-     * On failure, throws an exception or returns Y_TCURRRUN_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.TCURRRUN_INVALID.
      */
     async get_tCurrRun() {
         let res;
@@ -433,7 +437,7 @@ export class YStepperMotor extends YFunction {
      * @param newval : an integer corresponding to the torque regulation current when the motor is
      * running, measured in mA
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -477,7 +481,7 @@ export class YStepperMotor extends YFunction {
      *
      * @return an integer corresponding to the current value of the signal generated on the auxiliary output
      *
-     * On failure, throws an exception or returns Y_AUXSIGNAL_INVALID.
+     * On failure, throws an exception or returns YStepperMotor.AUXSIGNAL_INVALID.
      */
     async get_auxSignal() {
         let res;
@@ -495,7 +499,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param newval : an integer corresponding to the value of the signal generated on the auxiliary output
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -520,7 +524,7 @@ export class YStepperMotor extends YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a stepper motor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -530,11 +534,11 @@ export class YStepperMotor extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the stepper motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YStepperMotor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YStepperMotor.isOnline() to test if the stepper motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a stepper motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -542,10 +546,10 @@ export class YStepperMotor extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the stepper motor, for instance
+     *         MyDevice.stepperMotor1.
      *
-     * @return a YStepperMotor object allowing you to drive $THEFUNCTION$.
+     * @return a YStepperMotor object allowing you to drive the stepper motor.
      */
     static FindStepperMotor(func) {
         let obj;
@@ -557,7 +561,7 @@ export class YStepperMotor extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a stepper motor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -567,19 +571,19 @@ export class YStepperMotor extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the stepper motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YStepperMotor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YStepperMotor.isOnline() to test if the stepper motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a stepper motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the stepper motor, for instance
+     *         MyDevice.stepperMotor1.
      *
-     * @return a YStepperMotor object allowing you to drive $THEFUNCTION$.
+     * @return a YStepperMotor object allowing you to drive the stepper motor.
      */
     static FindStepperMotorInContext(yctx, func) {
         let obj;
@@ -659,7 +663,7 @@ export class YStepperMotor extends YFunction {
     /**
      * Reinitialize the controller and clear all alert flags.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async reset() {
@@ -670,7 +674,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param speed : desired speed, in steps per second.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async findHomePosition(speed) {
@@ -683,7 +687,7 @@ export class YStepperMotor extends YFunction {
      * @param speed : desired speed, in steps per second. The minimal non-zero speed
      *         is 0.001 pulse per second.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async changeSpeed(speed) {
@@ -696,7 +700,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param absPos : absolute position, measured in steps from the origin.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async moveTo(absPos) {
@@ -709,7 +713,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param relPos : relative position, measured in steps from the current position.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async moveRel(relPos) {
@@ -723,7 +727,7 @@ export class YStepperMotor extends YFunction {
      * @param relPos : relative position, measured in steps from the current position.
      * @param maxSpeed : limit speed, in steps per second.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async moveRelSlow(relPos, maxSpeed) {
@@ -734,7 +738,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param waitMs : wait time, specified in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async pause(waitMs) {
@@ -743,7 +747,7 @@ export class YStepperMotor extends YFunction {
     /**
      * Stops the motor with an emergency alert, without taking any additional precaution.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async emergencyStop() {
@@ -754,7 +758,7 @@ export class YStepperMotor extends YFunction {
      * The move occurs even if the system is still in alert mode (end switch depressed). Caution.
      * use this function with great care as it may cause mechanical damages !
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async alertStepOut() {
@@ -767,7 +771,7 @@ export class YStepperMotor extends YFunction {
      *
      * @param dir : Value +1 or -1, according to the desired direction of the move
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async alertStepDir(dir) {
@@ -782,7 +786,7 @@ export class YStepperMotor extends YFunction {
     /**
      * Stops the motor smoothly as soon as possible, without waiting for ongoing move completion.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async abortAndBrake() {
@@ -791,16 +795,21 @@ export class YStepperMotor extends YFunction {
     /**
      * Turn the controller into Hi-Z mode immediately, without waiting for ongoing move completion.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async abortAndHiZ() {
         return await this.set_command('z');
     }
     /**
-     * Returns the next StepperMotor
+     * Continues the enumeration of stepper motors started using yFirstStepperMotor().
+     * Caution: You can't make any assumption about the returned stepper motors order.
+     * If you want to find a specific a stepper motor, use StepperMotor.findStepperMotor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YStepperMotor}
+     * @return a pointer to a YStepperMotor object, corresponding to
+     *         a stepper motor currently online, or a null pointer
+     *         if there are no more stepper motors to enumerate.
      */
     nextStepperMotor() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -812,9 +821,13 @@ export class YStepperMotor extends YFunction {
         return YStepperMotor.FindStepperMotorInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first StepperMotor in a YAPI context
+     * Starts the enumeration of stepper motors currently accessible.
+     * Use the method YStepperMotor.nextStepperMotor() to iterate on
+     * next stepper motors.
      *
-     * @returns {YStepperMotor}
+     * @return a pointer to a YStepperMotor object, corresponding to
+     *         the first stepper motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstStepperMotor() {
         let next_hwid = YAPI.imm_getFirstHardwareId('StepperMotor');
@@ -823,11 +836,15 @@ export class YStepperMotor extends YFunction {
         return YStepperMotor.FindStepperMotor(next_hwid);
     }
     /**
-     * Retrieves the first StepperMotor in a given context
+     * Starts the enumeration of stepper motors currently accessible.
+     * Use the method YStepperMotor.nextStepperMotor() to iterate on
+     * next stepper motors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YStepperMotor}
+     * @return a pointer to a YStepperMotor object, corresponding to
+     *         the first stepper motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstStepperMotorInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('StepperMotor');

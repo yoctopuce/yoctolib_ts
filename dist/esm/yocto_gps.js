@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_gps.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -163,10 +163,10 @@ export class YGps extends YFunction {
     /**
      * Returns TRUE if the receiver has found enough satellites to work.
      *
-     * @return either Y_ISFIXED_FALSE or Y_ISFIXED_TRUE, according to TRUE if the receiver has found
+     * @return either YGps.ISFIXED_FALSE or YGps.ISFIXED_TRUE, according to TRUE if the receiver has found
      * enough satellites to work
      *
-     * On failure, throws an exception or returns Y_ISFIXED_INVALID.
+     * On failure, throws an exception or returns YGps.ISFIXED_INVALID.
      */
     async get_isFixed() {
         let res;
@@ -183,7 +183,7 @@ export class YGps extends YFunction {
      *
      * @return an integer corresponding to the total count of satellites used to compute GPS position
      *
-     * On failure, throws an exception or returns Y_SATCOUNT_INVALID.
+     * On failure, throws an exception or returns YGps.SATCOUNT_INVALID.
      */
     async get_satCount() {
         let res;
@@ -203,7 +203,7 @@ export class YGps extends YFunction {
      * @return an integer corresponding to the count of visible satellites per constellation encoded
      *         on a 32 bit integer: bits 0.
      *
-     * On failure, throws an exception or returns Y_SATPERCONST_INVALID.
+     * On failure, throws an exception or returns YGps.SATPERCONST_INVALID.
      */
     async get_satPerConst() {
         let res;
@@ -221,7 +221,7 @@ export class YGps extends YFunction {
      *
      * @return a floating point number corresponding to effective GPS data refresh frequency
      *
-     * On failure, throws an exception or returns Y_GPSREFRESHRATE_INVALID.
+     * On failure, throws an exception or returns YGps.GPSREFRESHRATE_INVALID.
      */
     async get_gpsRefreshRate() {
         let res;
@@ -236,10 +236,10 @@ export class YGps extends YFunction {
     /**
      * Returns the representation system used for positioning data.
      *
-     * @return a value among Y_COORDSYSTEM_GPS_DMS, Y_COORDSYSTEM_GPS_DM and Y_COORDSYSTEM_GPS_D
+     * @return a value among YGps.COORDSYSTEM_GPS_DMS, YGps.COORDSYSTEM_GPS_DM and YGps.COORDSYSTEM_GPS_D
      * corresponding to the representation system used for positioning data
      *
-     * On failure, throws an exception or returns Y_COORDSYSTEM_INVALID.
+     * On failure, throws an exception or returns YGps.COORDSYSTEM_INVALID.
      */
     async get_coordSystem() {
         let res;
@@ -256,10 +256,10 @@ export class YGps extends YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_COORDSYSTEM_GPS_DMS, Y_COORDSYSTEM_GPS_DM and Y_COORDSYSTEM_GPS_D
-     * corresponding to the representation system used for positioning data
+     * @param newval : a value among YGps.COORDSYSTEM_GPS_DMS, YGps.COORDSYSTEM_GPS_DM and
+     * YGps.COORDSYSTEM_GPS_D corresponding to the representation system used for positioning data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -272,12 +272,12 @@ export class YGps extends YFunction {
      * Returns the the satellites constellation used to compute
      * positioning data.
      *
-     * @return a value among Y_CONSTELLATION_GNSS, Y_CONSTELLATION_GPS, Y_CONSTELLATION_GLONASS,
-     * Y_CONSTELLATION_GALILEO, Y_CONSTELLATION_GPS_GLONASS, Y_CONSTELLATION_GPS_GALILEO and
-     * Y_CONSTELLATION_GLONASS_GALILEO corresponding to the the satellites constellation used to compute
+     * @return a value among YGps.CONSTELLATION_GNSS, YGps.CONSTELLATION_GPS, YGps.CONSTELLATION_GLONASS,
+     * YGps.CONSTELLATION_GALILEO, YGps.CONSTELLATION_GPS_GLONASS, YGps.CONSTELLATION_GPS_GALILEO and
+     * YGps.CONSTELLATION_GLONASS_GALILEO corresponding to the the satellites constellation used to compute
      *         positioning data
      *
-     * On failure, throws an exception or returns Y_CONSTELLATION_INVALID.
+     * On failure, throws an exception or returns YGps.CONSTELLATION_INVALID.
      */
     async get_constellation() {
         let res;
@@ -294,12 +294,13 @@ export class YGps extends YFunction {
      * positioning data. Possible  constellations are GNSS ( = all supported constellations),
      * GPS, Glonass, Galileo , and the 3 possible pairs. This setting has  no effect on Yocto-GPS (V1).
      *
-     * @param newval : a value among Y_CONSTELLATION_GNSS, Y_CONSTELLATION_GPS, Y_CONSTELLATION_GLONASS,
-     * Y_CONSTELLATION_GALILEO, Y_CONSTELLATION_GPS_GLONASS, Y_CONSTELLATION_GPS_GALILEO and
-     * Y_CONSTELLATION_GLONASS_GALILEO corresponding to the satellites constellation used to compute
+     * @param newval : a value among YGps.CONSTELLATION_GNSS, YGps.CONSTELLATION_GPS,
+     * YGps.CONSTELLATION_GLONASS, YGps.CONSTELLATION_GALILEO, YGps.CONSTELLATION_GPS_GLONASS,
+     * YGps.CONSTELLATION_GPS_GALILEO and YGps.CONSTELLATION_GLONASS_GALILEO corresponding to the
+     * satellites constellation used to compute
      *         positioning data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -313,7 +314,7 @@ export class YGps extends YFunction {
      *
      * @return a string corresponding to the current latitude
      *
-     * On failure, throws an exception or returns Y_LATITUDE_INVALID.
+     * On failure, throws an exception or returns YGps.LATITUDE_INVALID.
      */
     async get_latitude() {
         let res;
@@ -330,7 +331,7 @@ export class YGps extends YFunction {
      *
      * @return a string corresponding to the current longitude
      *
-     * On failure, throws an exception or returns Y_LONGITUDE_INVALID.
+     * On failure, throws an exception or returns YGps.LONGITUDE_INVALID.
      */
     async get_longitude() {
         let res;
@@ -349,7 +350,7 @@ export class YGps extends YFunction {
      * @return a floating point number corresponding to the current horizontal dilution of precision,
      *         the smaller that number is, the better
      *
-     * On failure, throws an exception or returns Y_DILUTION_INVALID.
+     * On failure, throws an exception or returns YGps.DILUTION_INVALID.
      */
     async get_dilution() {
         let res;
@@ -367,7 +368,7 @@ export class YGps extends YFunction {
      *
      * @return a floating point number corresponding to the current altitude
      *
-     * On failure, throws an exception or returns Y_ALTITUDE_INVALID.
+     * On failure, throws an exception or returns YGps.ALTITUDE_INVALID.
      */
     async get_altitude() {
         let res;
@@ -384,7 +385,7 @@ export class YGps extends YFunction {
      *
      * @return a floating point number corresponding to the current ground speed in Km/h
      *
-     * On failure, throws an exception or returns Y_GROUNDSPEED_INVALID.
+     * On failure, throws an exception or returns YGps.GROUNDSPEED_INVALID.
      */
     async get_groundSpeed() {
         let res;
@@ -403,7 +404,7 @@ export class YGps extends YFunction {
      * @return a floating point number corresponding to the current move bearing in degrees, zero
      *         is the true (geographic) north
      *
-     * On failure, throws an exception or returns Y_DIRECTION_INVALID.
+     * On failure, throws an exception or returns YGps.DIRECTION_INVALID.
      */
     async get_direction() {
         let res;
@@ -422,7 +423,7 @@ export class YGps extends YFunction {
      * @return an integer corresponding to the current time in Unix format (number of
      *         seconds elapsed since Jan 1st, 1970)
      *
-     * On failure, throws an exception or returns Y_UNIXTIME_INVALID.
+     * On failure, throws an exception or returns YGps.UNIXTIME_INVALID.
      */
     async get_unixTime() {
         let res;
@@ -439,7 +440,7 @@ export class YGps extends YFunction {
      *
      * @return a string corresponding to the current time in the form "YYYY/MM/DD hh:mm:ss"
      *
-     * On failure, throws an exception or returns Y_DATETIME_INVALID.
+     * On failure, throws an exception or returns YGps.DATETIME_INVALID.
      */
     async get_dateTime() {
         let res;
@@ -456,7 +457,7 @@ export class YGps extends YFunction {
      *
      * @return an integer corresponding to the number of seconds between current time and UTC time (time zone)
      *
-     * On failure, throws an exception or returns Y_UTCOFFSET_INVALID.
+     * On failure, throws an exception or returns YGps.UTCOFFSET_INVALID.
      */
     async get_utcOffset() {
         let res;
@@ -477,7 +478,7 @@ export class YGps extends YFunction {
      *
      * @param newval : an integer corresponding to the number of seconds between current time and UTC time (time zone)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -502,7 +503,7 @@ export class YGps extends YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a geolocalization module for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -512,11 +513,11 @@ export class YGps extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the geolocalization module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGps.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGps.isOnline() to test if the geolocalization module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a geolocalization module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -524,10 +525,10 @@ export class YGps extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the geolocalization module, for instance
+     *         YGNSSMK2.gps.
      *
-     * @return a YGps object allowing you to drive $THEFUNCTION$.
+     * @return a YGps object allowing you to drive the geolocalization module.
      */
     static FindGps(func) {
         let obj;
@@ -539,7 +540,7 @@ export class YGps extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a geolocalization module for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -549,19 +550,19 @@ export class YGps extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the geolocalization module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGps.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGps.isOnline() to test if the geolocalization module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a geolocalization module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the geolocalization module, for instance
+     *         YGNSSMK2.gps.
      *
-     * @return a YGps object allowing you to drive $THEFUNCTION$.
+     * @return a YGps object allowing you to drive the geolocalization module.
      */
     static FindGpsInContext(yctx, func) {
         let obj;
@@ -616,9 +617,14 @@ export class YGps extends YFunction {
         return 0;
     }
     /**
-     * Returns the next Gps
+     * Continues the enumeration of geolocalization modules started using yFirstGps().
+     * Caution: You can't make any assumption about the returned geolocalization modules order.
+     * If you want to find a specific a geolocalization module, use Gps.findGps()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YGps}
+     * @return a pointer to a YGps object, corresponding to
+     *         a geolocalization module currently online, or a null pointer
+     *         if there are no more geolocalization modules to enumerate.
      */
     nextGps() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -630,9 +636,13 @@ export class YGps extends YFunction {
         return YGps.FindGpsInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Gps in a YAPI context
+     * Starts the enumeration of geolocalization modules currently accessible.
+     * Use the method YGps.nextGps() to iterate on
+     * next geolocalization modules.
      *
-     * @returns {YGps}
+     * @return a pointer to a YGps object, corresponding to
+     *         the first geolocalization module currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGps() {
         let next_hwid = YAPI.imm_getFirstHardwareId('Gps');
@@ -641,11 +651,15 @@ export class YGps extends YFunction {
         return YGps.FindGps(next_hwid);
     }
     /**
-     * Retrieves the first Gps in a given context
+     * Starts the enumeration of geolocalization modules currently accessible.
+     * Use the method YGps.nextGps() to iterate on
+     * next geolocalization modules.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YGps}
+     * @return a pointer to a YGps object, corresponding to
+     *         the first geolocalization module currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGpsInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Gps');

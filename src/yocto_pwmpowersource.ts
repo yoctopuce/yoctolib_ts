@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_pwmpowersource.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YPwmPowerSource definitions)
-export const enum Y_PowerMode {
+export const enum YPwmPowerSource_PowerMode {
     USB_5V = 0,
     USB_3V = 1,
     EXT_V = 2,
@@ -63,22 +63,22 @@ export class YPwmPowerSource extends YFunction
 {
     //--- (YPwmPowerSource attributes declaration)
     _className: string;
-    _powerMode: Y_PowerMode = YPwmPowerSource.POWERMODE_INVALID;
+    _powerMode: YPwmPowerSource_PowerMode = YPwmPowerSource.POWERMODE_INVALID;
     _valueCallbackPwmPowerSource: YPwmPowerSourceValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly POWERMODE_USB_5V: Y_PowerMode = Y_PowerMode.USB_5V;
-    public readonly POWERMODE_USB_3V: Y_PowerMode = Y_PowerMode.USB_3V;
-    public readonly POWERMODE_EXT_V: Y_PowerMode = Y_PowerMode.EXT_V;
-    public readonly POWERMODE_OPNDRN: Y_PowerMode = Y_PowerMode.OPNDRN;
-    public readonly POWERMODE_INVALID: Y_PowerMode = Y_PowerMode.INVALID;
+    public readonly POWERMODE_USB_5V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_5V;
+    public readonly POWERMODE_USB_3V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_3V;
+    public readonly POWERMODE_EXT_V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.EXT_V;
+    public readonly POWERMODE_OPNDRN: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.OPNDRN;
+    public readonly POWERMODE_INVALID: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.INVALID;
 
     // API symbols as static members
-    public static readonly POWERMODE_USB_5V: Y_PowerMode = Y_PowerMode.USB_5V;
-    public static readonly POWERMODE_USB_3V: Y_PowerMode = Y_PowerMode.USB_3V;
-    public static readonly POWERMODE_EXT_V: Y_PowerMode = Y_PowerMode.EXT_V;
-    public static readonly POWERMODE_OPNDRN: Y_PowerMode = Y_PowerMode.OPNDRN;
-    public static readonly POWERMODE_INVALID: Y_PowerMode = Y_PowerMode.INVALID;
+    public static readonly POWERMODE_USB_5V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_5V;
+    public static readonly POWERMODE_USB_3V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_3V;
+    public static readonly POWERMODE_EXT_V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.EXT_V;
+    public static readonly POWERMODE_OPNDRN: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.OPNDRN;
+    public static readonly POWERMODE_INVALID: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.INVALID;
     //--- (end of YPwmPowerSource attributes declaration)
 
 //--- (YPwmPowerSource return codes)
@@ -98,7 +98,7 @@ export class YPwmPowerSource extends YFunction
     {
         switch(name) {
         case 'powerMode':
-            this._powerMode = <Y_PowerMode> <number> val;
+            this._powerMode = <YPwmPowerSource_PowerMode> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -107,12 +107,13 @@ export class YPwmPowerSource extends YFunction
     /**
      * Returns the selected power source for the PWM on the same device.
      *
-     * @return a value among Y_POWERMODE_USB_5V, Y_POWERMODE_USB_3V, Y_POWERMODE_EXT_V and
-     * Y_POWERMODE_OPNDRN corresponding to the selected power source for the PWM on the same device
+     * @return a value among YPwmPowerSource.POWERMODE_USB_5V, YPwmPowerSource.POWERMODE_USB_3V,
+     * YPwmPowerSource.POWERMODE_EXT_V and YPwmPowerSource.POWERMODE_OPNDRN corresponding to the selected
+     * power source for the PWM on the same device
      *
-     * On failure, throws an exception or returns Y_POWERMODE_INVALID.
+     * On failure, throws an exception or returns YPwmPowerSource.POWERMODE_INVALID.
      */
-    async get_powerMode(): Promise<Y_PowerMode>
+    async get_powerMode(): Promise<YPwmPowerSource_PowerMode>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -133,14 +134,14 @@ export class YPwmPowerSource extends YFunction
      * If you want the change to be kept after a device reboot, make sure  to call the matching
      * module saveToFlash().
      *
-     * @param newval : a value among Y_POWERMODE_USB_5V, Y_POWERMODE_USB_3V, Y_POWERMODE_EXT_V and
-     * Y_POWERMODE_OPNDRN corresponding to  the PWM power source
+     * @param newval : a value among YPwmPowerSource.POWERMODE_USB_5V, YPwmPowerSource.POWERMODE_USB_3V,
+     * YPwmPowerSource.POWERMODE_EXT_V and YPwmPowerSource.POWERMODE_OPNDRN corresponding to  the PWM power source
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_powerMode(newval: Y_PowerMode): Promise<number>
+    async set_powerMode(newval: YPwmPowerSource_PowerMode): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -148,7 +149,7 @@ export class YPwmPowerSource extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a PWM generator power source for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -158,11 +159,11 @@ export class YPwmPowerSource extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM generator power source is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmPowerSource.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmPowerSource.isOnline() to test if the PWM generator power source is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM generator power source by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -170,10 +171,10 @@ export class YPwmPowerSource extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM generator power source, for instance
+     *         YPWMTX01.pwmPowerSource.
      *
-     * @return a YPwmPowerSource object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmPowerSource object allowing you to drive the PWM generator power source.
      */
     static FindPwmPowerSource(func: string): YPwmPowerSource
     {
@@ -187,7 +188,7 @@ export class YPwmPowerSource extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a PWM generator power source for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -197,19 +198,19 @@ export class YPwmPowerSource extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM generator power source is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmPowerSource.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmPowerSource.isOnline() to test if the PWM generator power source is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM generator power source by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM generator power source, for instance
+     *         YPWMTX01.pwmPowerSource.
      *
-     * @return a YPwmPowerSource object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmPowerSource object allowing you to drive the PWM generator power source.
      */
     static FindPwmPowerSourceInContext(yctx: YAPIContext, func: string): YPwmPowerSource
     {
@@ -267,9 +268,14 @@ export class YPwmPowerSource extends YFunction
     }
 
     /**
-     * Returns the next PwmPowerSource
+     * Continues the enumeration of PWM generator power sources started using yFirstPwmPowerSource().
+     * Caution: You can't make any assumption about the returned PWM generator power sources order.
+     * If you want to find a specific a PWM generator power source, use PwmPowerSource.findPwmPowerSource()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPwmPowerSource}
+     * @return a pointer to a YPwmPowerSource object, corresponding to
+     *         a PWM generator power source currently online, or a null pointer
+     *         if there are no more PWM generator power sources to enumerate.
      */
     nextPwmPowerSource(): YPwmPowerSource | null
     {
@@ -281,9 +287,13 @@ export class YPwmPowerSource extends YFunction
     }
 
     /**
-     * Retrieves the first PwmPowerSource in a YAPI context
+     * Starts the enumeration of PWM generator power sources currently accessible.
+     * Use the method YPwmPowerSource.nextPwmPowerSource() to iterate on
+     * next PWM generator power sources.
      *
-     * @returns {YPwmPowerSource}
+     * @return a pointer to a YPwmPowerSource object, corresponding to
+     *         the first PWM generator power source currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmPowerSource(): YPwmPowerSource | null
     {
@@ -293,11 +303,15 @@ export class YPwmPowerSource extends YFunction
     }
 
     /**
-     * Retrieves the first PwmPowerSource in a given context
+     * Starts the enumeration of PWM generator power sources currently accessible.
+     * Use the method YPwmPowerSource.nextPwmPowerSource() to iterate on
+     * next PWM generator power sources.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPwmPowerSource}
+     * @return a pointer to a YPwmPowerSource object, corresponding to
+     *         the first PWM generator power source currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmPowerSourceInContext(yctx: YAPIContext): YPwmPowerSource | null
     {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_groundspeed.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for GroundSpeed functions
  *
@@ -56,7 +56,7 @@ export declare class YGroundSpeed extends YSensor {
     _timedReportCallbackGroundSpeed: YGroundSpeedTimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a ground speed sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -66,11 +66,11 @@ export declare class YGroundSpeed extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the ground speed sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGroundSpeed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGroundSpeed.isOnline() to test if the ground speed sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a ground speed sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -78,14 +78,14 @@ export declare class YGroundSpeed extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the ground speed sensor, for instance
+     *         YGNSSMK2.groundSpeed.
      *
-     * @return a YGroundSpeed object allowing you to drive $THEFUNCTION$.
+     * @return a YGroundSpeed object allowing you to drive the ground speed sensor.
      */
     static FindGroundSpeed(func: string): YGroundSpeed;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a ground speed sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -95,19 +95,19 @@ export declare class YGroundSpeed extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the ground speed sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGroundSpeed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGroundSpeed.isOnline() to test if the ground speed sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a ground speed sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the ground speed sensor, for instance
+     *         YGNSSMK2.groundSpeed.
      *
-     * @return a YGroundSpeed object allowing you to drive $THEFUNCTION$.
+     * @return a YGroundSpeed object allowing you to drive the ground speed sensor.
      */
     static FindGroundSpeedInContext(yctx: YAPIContext, func: string): YGroundSpeed;
     /**
@@ -137,23 +137,36 @@ export declare class YGroundSpeed extends YSensor {
     registerTimedReportCallback(callback: YGroundSpeedTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next GroundSpeed
+     * Continues the enumeration of ground speed sensors started using yFirstGroundSpeed().
+     * Caution: You can't make any assumption about the returned ground speed sensors order.
+     * If you want to find a specific a ground speed sensor, use GroundSpeed.findGroundSpeed()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YGroundSpeed}
+     * @return a pointer to a YGroundSpeed object, corresponding to
+     *         a ground speed sensor currently online, or a null pointer
+     *         if there are no more ground speed sensors to enumerate.
      */
     nextGroundSpeed(): YGroundSpeed | null;
     /**
-     * Retrieves the first GroundSpeed in a YAPI context
+     * Starts the enumeration of ground speed sensors currently accessible.
+     * Use the method YGroundSpeed.nextGroundSpeed() to iterate on
+     * next ground speed sensors.
      *
-     * @returns {YGroundSpeed}
+     * @return a pointer to a YGroundSpeed object, corresponding to
+     *         the first ground speed sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGroundSpeed(): YGroundSpeed | null;
     /**
-     * Retrieves the first GroundSpeed in a given context
+     * Starts the enumeration of ground speed sensors currently accessible.
+     * Use the method YGroundSpeed.nextGroundSpeed() to iterate on
+     * next ground speed sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YGroundSpeed}
+     * @return a pointer to a YGroundSpeed object, corresponding to
+     *         the first ground speed sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGroundSpeedInContext(yctx: YAPIContext): YGroundSpeed | null;
 }

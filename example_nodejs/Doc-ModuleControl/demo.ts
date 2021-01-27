@@ -1,30 +1,30 @@
 /*********************************************************************
  *
- *  $Id: app.ts 32624 2018-10-10 13:23:29Z seb $
+ *  $Id: svn_id $
  *
- *  Yoctopuce TypeScript library example
+ *  Doc-ModuleControl example
  *
  *  You can find more information on our web site:
- *   EcmaScript API Reference:
- *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-ecmascript-EN.html
+ *   TypeScript API Reference:
+ *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-typescript-EN.html
  *
  *********************************************************************/
 
-import { YAPI, YErrorMsg, YModule } from 'yoctolib-ts/dist/cjs/yocto_api_nodejs.js';
+import { YAPI, YErrorMsg, YModule } from 'yoctolib-cjs/yocto_api_nodejs.js';
 
 async function startDemo(args: string[]): Promise<void>
 {
     await YAPI.LogUnhandledPromiseRejections();
 
     // Setup the API to use the VirtualHub on local machine
-    let errmsg = new YErrorMsg();
+    let errmsg: YErrorMsg = new YErrorMsg();
     if (await YAPI.RegisterHub('127.0.0.1', errmsg) != YAPI.SUCCESS) {
         console.log('Cannot contact VirtualHub on 127.0.0.1: '+errmsg.msg);
         return;
     }
 
-    // Select the relay to use
-    let module = YModule.FindModule(args[0]);
+    // Select the device to use
+    let module: YModule = YModule.FindModule(args[0]);
     if(await module.isOnline()) {
         if(args.length > 1) {
             if(args[1] == 'ON') {

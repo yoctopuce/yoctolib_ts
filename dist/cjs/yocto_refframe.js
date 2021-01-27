@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_refframe.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -43,7 +43,8 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YRefFrame definitions)
 //--- (YRefFrame class start)
 /**
- * YRefFrame Class: 3D reference frame configuration interface, available for instance in the Yocto-3D-V2
+ * YRefFrame Class: 3D reference frame configuration interface, available for instance in the
+ * Yocto-3D-V2 or the Yocto-Inclinometer
  *
  * The YRefFrame class is used to setup the base orientation of the Yoctopuce inertial
  * sensors. Thanks to this, orientation functions relative to the earth surface plane
@@ -152,7 +153,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the reference bearing used by the compass
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -168,7 +169,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the reference bearing used by the compass
      *
-     * On failure, throws an exception or returns Y_BEARING_INVALID.
+     * On failure, throws an exception or returns YRefFrame.BEARING_INVALID.
      */
     async get_bearing() {
         let res;
@@ -198,11 +199,12 @@ class YRefFrame extends yocto_api_js_1.YFunction {
     /**
      * Returns the sensor fusion mode. Note that available sensor fusion modes depend on the sensor type.
      *
-     * @return a value among Y_FUSIONMODE_NDOF, Y_FUSIONMODE_NDOF_FMC_OFF, Y_FUSIONMODE_M4G,
-     * Y_FUSIONMODE_COMPASS, Y_FUSIONMODE_IMU, Y_FUSIONMODE_INCLIN_90DEG_1G8,
-     * Y_FUSIONMODE_INCLIN_90DEG_3G6 and Y_FUSIONMODE_INCLIN_10DEG corresponding to the sensor fusion mode
+     * @return a value among YRefFrame.FUSIONMODE_NDOF, YRefFrame.FUSIONMODE_NDOF_FMC_OFF,
+     * YRefFrame.FUSIONMODE_M4G, YRefFrame.FUSIONMODE_COMPASS, YRefFrame.FUSIONMODE_IMU,
+     * YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8, YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6 and
+     * YRefFrame.FUSIONMODE_INCLIN_10DEG corresponding to the sensor fusion mode
      *
-     * On failure, throws an exception or returns Y_FUSIONMODE_INVALID.
+     * On failure, throws an exception or returns YRefFrame.FUSIONMODE_INVALID.
      */
     async get_fusionMode() {
         let res;
@@ -218,11 +220,12 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * Change the sensor fusion mode. Note that available sensor fusion modes depend on the sensor type.
      * Remember to call the matching module saveToFlash() method to save the setting permanently.
      *
-     * @param newval : a value among Y_FUSIONMODE_NDOF, Y_FUSIONMODE_NDOF_FMC_OFF, Y_FUSIONMODE_M4G,
-     * Y_FUSIONMODE_COMPASS, Y_FUSIONMODE_IMU, Y_FUSIONMODE_INCLIN_90DEG_1G8,
-     * Y_FUSIONMODE_INCLIN_90DEG_3G6 and Y_FUSIONMODE_INCLIN_10DEG
+     * @param newval : a value among YRefFrame.FUSIONMODE_NDOF, YRefFrame.FUSIONMODE_NDOF_FMC_OFF,
+     * YRefFrame.FUSIONMODE_M4G, YRefFrame.FUSIONMODE_COMPASS, YRefFrame.FUSIONMODE_IMU,
+     * YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8, YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6 and
+     * YRefFrame.FUSIONMODE_INCLIN_10DEG
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -232,7 +235,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         return await this._setAttr('fusionMode', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a reference frame for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -242,11 +245,11 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the reference frame is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRefFrame.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRefFrame.isOnline() to test if the reference frame is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a reference frame by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -254,10 +257,10 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the reference frame, for instance
+     *         Y3DMK002.refFrame.
      *
-     * @return a YRefFrame object allowing you to drive $THEFUNCTION$.
+     * @return a YRefFrame object allowing you to drive the reference frame.
      */
     static FindRefFrame(func) {
         let obj;
@@ -269,7 +272,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a reference frame for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -279,19 +282,19 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the reference frame is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRefFrame.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRefFrame.isOnline() to test if the reference frame is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a reference frame by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the reference frame, for instance
+     *         Y3DMK002.refFrame.
      *
-     * @return a YRefFrame object allowing you to drive $THEFUNCTION$.
+     * @return a YRefFrame object allowing you to drive the reference frame.
      */
     static FindRefFrameInContext(yctx, func) {
         let obj;
@@ -350,13 +353,13 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * in order to define the reference frame for the compass and the
      * pitch/roll tilt sensors.
      *
-     * @return a value among the Y_MOUNTPOSITION enumeration
-     *         (Y_MOUNTPOSITION_BOTTOM,   Y_MOUNTPOSITION_TOP,
-     *         Y_MOUNTPOSITION_FRONT,    Y_MOUNTPOSITION_RIGHT,
-     *         Y_MOUNTPOSITION_REAR,     Y_MOUNTPOSITION_LEFT),
+     * @return a value among the YRefFrame.MOUNTPOSITION enumeration
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
+     *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
      *
-     * On failure, throws an exception or returns Y_MOUNTPOSITION_INVALID.
+     * On failure, throws an exception or returns YRefFrame.MOUNTPOSITION_INVALID.
      */
     async get_mountPosition() {
         let position;
@@ -371,15 +374,15 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * in order to define the reference frame for the compass and the
      * pitch/roll tilt sensors.
      *
-     * @return a value among the enumeration Y_MOUNTORIENTATION
-     *         (Y_MOUNTORIENTATION_TWELVE, Y_MOUNTORIENTATION_THREE,
-     *         Y_MOUNTORIENTATION_SIX,     Y_MOUNTORIENTATION_NINE)
+     * @return a value among the enumeration YRefFrame.MOUNTORIENTATION
+     *         (YRefFrame.MOUNTORIENTATION_TWELVE, YRefFrame.MOUNTORIENTATION_THREE,
+     *         YRefFrame.MOUNTORIENTATION_SIX,     YRefFrame.MOUNTORIENTATION_NINE)
      *         corresponding to the orientation of the "X" arrow on the device,
      *         as on a clock dial seen from an observer in the center of the box.
      *         On the bottom face, the 12H orientation points to the front, while
      *         on the top face, the 12H orientation points to the rear.
      *
-     * On failure, throws an exception or returns Y_MOUNTORIENTATION_INVALID.
+     * On failure, throws an exception or returns YRefFrame.MOUNTORIENTATION_INVALID.
      */
     async get_mountOrientation() {
         let position;
@@ -396,14 +399,14 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * and horizontally, you must select its reference orientation (parallel to
      * the earth surface) so that the measures are made relative to this position.
      *
-     * @param position : a value among the Y_MOUNTPOSITION enumeration
-     *         (Y_MOUNTPOSITION_BOTTOM,   Y_MOUNTPOSITION_TOP,
-     *         Y_MOUNTPOSITION_FRONT,    Y_MOUNTPOSITION_RIGHT,
-     *         Y_MOUNTPOSITION_REAR,     Y_MOUNTPOSITION_LEFT),
+     * @param position : a value among the YRefFrame.MOUNTPOSITION enumeration
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
+     *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
-     * @param orientation : a value among the enumeration Y_MOUNTORIENTATION
-     *         (Y_MOUNTORIENTATION_TWELVE, Y_MOUNTORIENTATION_THREE,
-     *         Y_MOUNTORIENTATION_SIX,     Y_MOUNTORIENTATION_NINE)
+     * @param orientation : a value among the enumeration YRefFrame.MOUNTORIENTATION
+     *         (YRefFrame.MOUNTORIENTATION_TWELVE, YRefFrame.MOUNTORIENTATION_THREE,
+     *         YRefFrame.MOUNTORIENTATION_SIX,     YRefFrame.MOUNTORIENTATION_NINE)
      *         corresponding to the orientation of the "X" arrow on the device,
      *         as on a clock dial seen from an observer in the center of the box.
      *         On the bottom face, the 12H orientation points to the front, while
@@ -974,9 +977,14 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         return await this.set_calibrationParam(this._calibSavedParams);
     }
     /**
-     * Returns the next RefFrame
+     * Continues the enumeration of reference frames started using yFirstRefFrame().
+     * Caution: You can't make any assumption about the returned reference frames order.
+     * If you want to find a specific a reference frame, use RefFrame.findRefFrame()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YRefFrame}
+     * @return a pointer to a YRefFrame object, corresponding to
+     *         a reference frame currently online, or a null pointer
+     *         if there are no more reference frames to enumerate.
      */
     nextRefFrame() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -988,9 +996,13 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         return YRefFrame.FindRefFrameInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first RefFrame in a YAPI context
+     * Starts the enumeration of reference frames currently accessible.
+     * Use the method YRefFrame.nextRefFrame() to iterate on
+     * next reference frames.
      *
-     * @returns {YRefFrame}
+     * @return a pointer to a YRefFrame object, corresponding to
+     *         the first reference frame currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRefFrame() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('RefFrame');
@@ -999,11 +1011,15 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         return YRefFrame.FindRefFrame(next_hwid);
     }
     /**
-     * Retrieves the first RefFrame in a given context
+     * Starts the enumeration of reference frames currently accessible.
+     * Use the method YRefFrame.nextRefFrame() to iterate on
+     * next reference frames.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YRefFrame}
+     * @return a pointer to a YRefFrame object, corresponding to
+     *         the first reference frame currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRefFrameInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('RefFrame');

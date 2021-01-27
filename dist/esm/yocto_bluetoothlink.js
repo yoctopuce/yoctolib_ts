@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_bluetoothlink.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -128,7 +128,7 @@ export class YBluetoothLink extends YFunction {
      * @return a string corresponding to the MAC-48 address of the bluetooth interface, which is unique on
      * the bluetooth network
      *
-     * On failure, throws an exception or returns Y_OWNADDRESS_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.OWNADDRESS_INVALID.
      */
     async get_ownAddress() {
         let res;
@@ -149,7 +149,7 @@ export class YBluetoothLink extends YFunction {
      *         the SIM card, or an empty string if none has been configured or if the code provided
      *         was rejected by the SIM card
      *
-     * On failure, throws an exception or returns Y_PAIRINGPIN_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.PAIRINGPIN_INVALID.
      */
     async get_pairingPin() {
         let res;
@@ -168,7 +168,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @param newval : a string corresponding to the PIN code used by the module for bluetooth pairing
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -182,7 +182,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @return a string corresponding to the MAC-48 address of the remote device to connect to
      *
-     * On failure, throws an exception or returns Y_REMOTEADDRESS_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.REMOTEADDRESS_INVALID.
      */
     async get_remoteAddress() {
         let res;
@@ -201,7 +201,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @param newval : a string corresponding to the MAC-48 address defining which remote device to connect to
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -215,7 +215,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @return a string corresponding to the bluetooth name the remote device, if found on the bluetooth network
      *
-     * On failure, throws an exception or returns Y_REMOTENAME_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.REMOTENAME_INVALID.
      */
     async get_remoteName() {
         let res;
@@ -230,9 +230,10 @@ export class YBluetoothLink extends YFunction {
     /**
      * Returns the state of the mute function.
      *
-     * @return either Y_MUTE_FALSE or Y_MUTE_TRUE, according to the state of the mute function
+     * @return either YBluetoothLink.MUTE_FALSE or YBluetoothLink.MUTE_TRUE, according to the state of the
+     * mute function
      *
-     * On failure, throws an exception or returns Y_MUTE_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.MUTE_INVALID.
      */
     async get_mute() {
         let res;
@@ -248,9 +249,10 @@ export class YBluetoothLink extends YFunction {
      * Changes the state of the mute function. Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
      *
-     * @param newval : either Y_MUTE_FALSE or Y_MUTE_TRUE, according to the state of the mute function
+     * @param newval : either YBluetoothLink.MUTE_FALSE or YBluetoothLink.MUTE_TRUE, according to the
+     * state of the mute function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -264,7 +266,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @return an integer corresponding to the audio pre-amplifier volume, in per cents
      *
-     * On failure, throws an exception or returns Y_PREAMPLIFIER_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.PREAMPLIFIER_INVALID.
      */
     async get_preAmplifier() {
         let res;
@@ -283,7 +285,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @param newval : an integer corresponding to the audio pre-amplifier volume, in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -297,7 +299,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @return an integer corresponding to the connected headset volume, in per cents
      *
-     * On failure, throws an exception or returns Y_VOLUME_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.VOLUME_INVALID.
      */
     async get_volume() {
         let res;
@@ -314,7 +316,7 @@ export class YBluetoothLink extends YFunction {
      *
      * @param newval : an integer corresponding to the connected headset volume, in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -326,10 +328,11 @@ export class YBluetoothLink extends YFunction {
     /**
      * Returns the bluetooth link state.
      *
-     * @return a value among Y_LINKSTATE_DOWN, Y_LINKSTATE_FREE, Y_LINKSTATE_SEARCH, Y_LINKSTATE_EXISTS,
-     * Y_LINKSTATE_LINKED and Y_LINKSTATE_PLAY corresponding to the bluetooth link state
+     * @return a value among YBluetoothLink.LINKSTATE_DOWN, YBluetoothLink.LINKSTATE_FREE,
+     * YBluetoothLink.LINKSTATE_SEARCH, YBluetoothLink.LINKSTATE_EXISTS, YBluetoothLink.LINKSTATE_LINKED
+     * and YBluetoothLink.LINKSTATE_PLAY corresponding to the bluetooth link state
      *
-     * On failure, throws an exception or returns Y_LINKSTATE_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.LINKSTATE_INVALID.
      */
     async get_linkState() {
         let res;
@@ -347,7 +350,7 @@ export class YBluetoothLink extends YFunction {
      * @return an integer corresponding to the bluetooth receiver signal strength, in pourcents, or 0 if
      * no connection is established
      *
-     * On failure, throws an exception or returns Y_LINKQUALITY_INVALID.
+     * On failure, throws an exception or returns YBluetoothLink.LINKQUALITY_INVALID.
      */
     async get_linkQuality() {
         let res;
@@ -375,7 +378,7 @@ export class YBluetoothLink extends YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a Bluetooth sound controller for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -385,11 +388,11 @@ export class YBluetoothLink extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the Bluetooth sound controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YBluetoothLink.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YBluetoothLink.isOnline() to test if the Bluetooth sound controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a Bluetooth sound controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -397,10 +400,10 @@ export class YBluetoothLink extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the Bluetooth sound controller, for instance
+     *         MyDevice.bluetoothLink1.
      *
-     * @return a YBluetoothLink object allowing you to drive $THEFUNCTION$.
+     * @return a YBluetoothLink object allowing you to drive the Bluetooth sound controller.
      */
     static FindBluetoothLink(func) {
         let obj;
@@ -412,7 +415,7 @@ export class YBluetoothLink extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a Bluetooth sound controller for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -422,19 +425,19 @@ export class YBluetoothLink extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the Bluetooth sound controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YBluetoothLink.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YBluetoothLink.isOnline() to test if the Bluetooth sound controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a Bluetooth sound controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the Bluetooth sound controller, for instance
+     *         MyDevice.bluetoothLink1.
      *
-     * @return a YBluetoothLink object allowing you to drive $THEFUNCTION$.
+     * @return a YBluetoothLink object allowing you to drive the Bluetooth sound controller.
      */
     static FindBluetoothLinkInContext(yctx, func) {
         let obj;
@@ -491,7 +494,7 @@ export class YBluetoothLink extends YFunction {
     /**
      * Attempt to connect to the previously selected remote device.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -501,7 +504,7 @@ export class YBluetoothLink extends YFunction {
     /**
      * Disconnect from the previously selected remote device.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -509,9 +512,14 @@ export class YBluetoothLink extends YFunction {
         return await this.set_command('D');
     }
     /**
-     * Returns the next BluetoothLink
+     * Continues the enumeration of Bluetooth sound controllers started using yFirstBluetoothLink().
+     * Caution: You can't make any assumption about the returned Bluetooth sound controllers order.
+     * If you want to find a specific a Bluetooth sound controller, use BluetoothLink.findBluetoothLink()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YBluetoothLink}
+     * @return a pointer to a YBluetoothLink object, corresponding to
+     *         a Bluetooth sound controller currently online, or a null pointer
+     *         if there are no more Bluetooth sound controllers to enumerate.
      */
     nextBluetoothLink() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -523,9 +531,13 @@ export class YBluetoothLink extends YFunction {
         return YBluetoothLink.FindBluetoothLinkInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first BluetoothLink in a YAPI context
+     * Starts the enumeration of Bluetooth sound controllers currently accessible.
+     * Use the method YBluetoothLink.nextBluetoothLink() to iterate on
+     * next Bluetooth sound controllers.
      *
-     * @returns {YBluetoothLink}
+     * @return a pointer to a YBluetoothLink object, corresponding to
+     *         the first Bluetooth sound controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstBluetoothLink() {
         let next_hwid = YAPI.imm_getFirstHardwareId('BluetoothLink');
@@ -534,11 +546,15 @@ export class YBluetoothLink extends YFunction {
         return YBluetoothLink.FindBluetoothLink(next_hwid);
     }
     /**
-     * Retrieves the first BluetoothLink in a given context
+     * Starts the enumeration of Bluetooth sound controllers currently accessible.
+     * Use the method YBluetoothLink.nextBluetoothLink() to iterate on
+     * next Bluetooth sound controllers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YBluetoothLink}
+     * @return a pointer to a YBluetoothLink object, corresponding to
+     *         the first Bluetooth sound controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstBluetoothLinkInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('BluetoothLink');

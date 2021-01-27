@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_current.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Current functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum Y_Enabled {
+export declare const enum YCurrent_Enabled {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -58,25 +58,25 @@ export interface YCurrentTimedReportCallback {
  */
 export declare class YCurrent extends YSensor {
     _className: string;
-    _enabled: Y_Enabled;
+    _enabled: YCurrent_Enabled;
     _valueCallbackCurrent: YCurrentValueCallback | null;
     _timedReportCallbackCurrent: YCurrentTimedReportCallback | null;
-    readonly ENABLED_FALSE: Y_Enabled;
-    readonly ENABLED_TRUE: Y_Enabled;
-    readonly ENABLED_INVALID: Y_Enabled;
-    static readonly ENABLED_FALSE: Y_Enabled;
-    static readonly ENABLED_TRUE: Y_Enabled;
-    static readonly ENABLED_INVALID: Y_Enabled;
+    readonly ENABLED_FALSE: YCurrent_Enabled;
+    readonly ENABLED_TRUE: YCurrent_Enabled;
+    readonly ENABLED_INVALID: YCurrent_Enabled;
+    static readonly ENABLED_FALSE: YCurrent_Enabled;
+    static readonly ENABLED_TRUE: YCurrent_Enabled;
+    static readonly ENABLED_INVALID: YCurrent_Enabled;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
      * Returns the activation state of this input.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this input
+     * @return either YCurrent.ENABLED_FALSE or YCurrent.ENABLED_TRUE, according to the activation state of this input
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YCurrent.ENABLED_INVALID.
      */
-    get_enabled(): Promise<Y_Enabled>;
+    get_enabled(): Promise<YCurrent_Enabled>;
     /**
      * Changes the activation state of this voltage input. When AC measurements are disabled,
      * the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
@@ -85,16 +85,16 @@ export declare class YCurrent extends YSensor {
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this
-     * voltage input
+     * @param newval : either YCurrent.ENABLED_FALSE or YCurrent.ENABLED_TRUE, according to the activation
+     * state of this voltage input
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: Y_Enabled): Promise<number>;
+    set_enabled(newval: YCurrent_Enabled): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a current sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -104,11 +104,11 @@ export declare class YCurrent extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the current sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCurrent.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCurrent.isOnline() to test if the current sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a current sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -116,14 +116,14 @@ export declare class YCurrent extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the current sensor, for instance
+     *         YAMPMK01.current1.
      *
-     * @return a YCurrent object allowing you to drive $THEFUNCTION$.
+     * @return a YCurrent object allowing you to drive the current sensor.
      */
     static FindCurrent(func: string): YCurrent;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a current sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -133,19 +133,19 @@ export declare class YCurrent extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the current sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCurrent.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCurrent.isOnline() to test if the current sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a current sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the current sensor, for instance
+     *         YAMPMK01.current1.
      *
-     * @return a YCurrent object allowing you to drive $THEFUNCTION$.
+     * @return a YCurrent object allowing you to drive the current sensor.
      */
     static FindCurrentInContext(yctx: YAPIContext, func: string): YCurrent;
     /**
@@ -175,23 +175,36 @@ export declare class YCurrent extends YSensor {
     registerTimedReportCallback(callback: YCurrentTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next Current
+     * Continues the enumeration of current sensors started using yFirstCurrent().
+     * Caution: You can't make any assumption about the returned current sensors order.
+     * If you want to find a specific a current sensor, use Current.findCurrent()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YCurrent}
+     * @return a pointer to a YCurrent object, corresponding to
+     *         a current sensor currently online, or a null pointer
+     *         if there are no more current sensors to enumerate.
      */
     nextCurrent(): YCurrent | null;
     /**
-     * Retrieves the first Current in a YAPI context
+     * Starts the enumeration of current sensors currently accessible.
+     * Use the method YCurrent.nextCurrent() to iterate on
+     * next current sensors.
      *
-     * @returns {YCurrent}
+     * @return a pointer to a YCurrent object, corresponding to
+     *         the first current sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCurrent(): YCurrent | null;
     /**
-     * Retrieves the first Current in a given context
+     * Starts the enumeration of current sensors currently accessible.
+     * Use the method YCurrent.nextCurrent() to iterate on
+     * next current sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YCurrent}
+     * @return a pointer to a YCurrent object, corresponding to
+     *         the first current sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCurrentInContext(yctx: YAPIContext): YCurrent | null;
 }

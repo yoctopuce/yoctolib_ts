@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_proximity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -136,7 +136,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @return a floating point number corresponding to the current value of signal measured by the proximity sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALVALUE_INVALID.
+     * On failure, throws an exception or returns YProximity.SIGNALVALUE_INVALID.
      */
     async get_signalValue() {
         let res;
@@ -156,7 +156,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      * proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * On failure, throws an exception or returns Y_DETECTIONTHRESHOLD_INVALID.
+     * On failure, throws an exception or returns YProximity.DETECTIONTHRESHOLD_INVALID.
      */
     async get_detectionThreshold() {
         let res;
@@ -177,7 +177,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      * the proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -194,7 +194,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      * proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * On failure, throws an exception or returns Y_DETECTIONHYSTERESIS_INVALID.
+     * On failure, throws an exception or returns YProximity.DETECTIONHYSTERESIS_INVALID.
      */
     async get_detectionHysteresis() {
         let res;
@@ -215,7 +215,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      * the proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -230,7 +230,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the minimal detection duration before signalling a presence event
      *
-     * On failure, throws an exception or returns Y_PRESENCEMINTIME_INVALID.
+     * On failure, throws an exception or returns YProximity.PRESENCEMINTIME_INVALID.
      */
     async get_presenceMinTime() {
         let res;
@@ -249,7 +249,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @param newval : an integer corresponding to the minimal detection duration before signalling a presence event
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -264,7 +264,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the minimal detection duration before signalling a removal event
      *
-     * On failure, throws an exception or returns Y_REMOVALMINTIME_INVALID.
+     * On failure, throws an exception or returns YProximity.REMOVALMINTIME_INVALID.
      */
     async get_removalMinTime() {
         let res;
@@ -283,7 +283,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @param newval : an integer corresponding to the minimal detection duration before signalling a removal event
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -296,10 +296,11 @@ class YProximity extends yocto_api_js_1.YSensor {
      * Returns true if the input (considered as binary) is active (detection value is smaller than the
      * specified threshold), and false otherwise.
      *
-     * @return either Y_ISPRESENT_FALSE or Y_ISPRESENT_TRUE, according to true if the input (considered as
-     * binary) is active (detection value is smaller than the specified threshold), and false otherwise
+     * @return either YProximity.ISPRESENT_FALSE or YProximity.ISPRESENT_TRUE, according to true if the
+     * input (considered as binary) is active (detection value is smaller than the specified threshold),
+     * and false otherwise
      *
-     * On failure, throws an exception or returns Y_ISPRESENT_INVALID.
+     * On failure, throws an exception or returns YProximity.ISPRESENT_INVALID.
      */
     async get_isPresent() {
         let res;
@@ -319,7 +320,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      * and the last observed
      *         detection (the input contact transitioned from absent to present)
      *
-     * On failure, throws an exception or returns Y_LASTTIMEAPPROACHED_INVALID.
+     * On failure, throws an exception or returns YProximity.LASTTIMEAPPROACHED_INVALID.
      */
     async get_lastTimeApproached() {
         let res;
@@ -339,7 +340,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      * and the last observed
      *         detection (the input contact transitioned from present to absent)
      *
-     * On failure, throws an exception or returns Y_LASTTIMEREMOVED_INVALID.
+     * On failure, throws an exception or returns YProximity.LASTTIMEREMOVED_INVALID.
      */
     async get_lastTimeRemoved() {
         let res;
@@ -358,7 +359,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the pulse counter value
      *
-     * On failure, throws an exception or returns Y_PULSECOUNTER_INVALID.
+     * On failure, throws an exception or returns YProximity.PULSECOUNTER_INVALID.
      */
     async get_pulseCounter() {
         let res;
@@ -380,7 +381,7 @@ class YProximity extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the timer of the pulse counter (ms)
      *
-     * On failure, throws an exception or returns Y_PULSETIMER_INVALID.
+     * On failure, throws an exception or returns YProximity.PULSETIMER_INVALID.
      */
     async get_pulseTimer() {
         let res;
@@ -396,11 +397,11 @@ class YProximity extends yocto_api_js_1.YSensor {
      * Returns the parameter (sensor value, presence or pulse count) returned by the get_currentValue
      * function and callbacks.
      *
-     * @return a value among Y_PROXIMITYREPORTMODE_NUMERIC, Y_PROXIMITYREPORTMODE_PRESENCE and
-     * Y_PROXIMITYREPORTMODE_PULSECOUNT corresponding to the parameter (sensor value, presence or pulse
-     * count) returned by the get_currentValue function and callbacks
+     * @return a value among YProximity.PROXIMITYREPORTMODE_NUMERIC,
+     * YProximity.PROXIMITYREPORTMODE_PRESENCE and YProximity.PROXIMITYREPORTMODE_PULSECOUNT corresponding
+     * to the parameter (sensor value, presence or pulse count) returned by the get_currentValue function and callbacks
      *
-     * On failure, throws an exception or returns Y_PROXIMITYREPORTMODE_INVALID.
+     * On failure, throws an exception or returns YProximity.PROXIMITYREPORTMODE_INVALID.
      */
     async get_proximityReportMode() {
         let res;
@@ -419,11 +420,12 @@ class YProximity extends yocto_api_js_1.YSensor {
      * get_pulseCounter().
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_PROXIMITYREPORTMODE_NUMERIC, Y_PROXIMITYREPORTMODE_PRESENCE and
-     * Y_PROXIMITYREPORTMODE_PULSECOUNT corresponding to the  parameter  type (sensor value, presence or
-     * pulse count) returned by the get_currentValue function and callbacks
+     * @param newval : a value among YProximity.PROXIMITYREPORTMODE_NUMERIC,
+     * YProximity.PROXIMITYREPORTMODE_PRESENCE and YProximity.PROXIMITYREPORTMODE_PULSECOUNT corresponding
+     * to the  parameter  type (sensor value, presence or pulse count) returned by the get_currentValue
+     * function and callbacks
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -433,7 +435,7 @@ class YProximity extends yocto_api_js_1.YSensor {
         return await this._setAttr('proximityReportMode', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a proximity sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -443,11 +445,11 @@ class YProximity extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the proximity sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YProximity.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YProximity.isOnline() to test if the proximity sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a proximity sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -455,10 +457,10 @@ class YProximity extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the proximity sensor, for instance
+     *         YPROXIM1.proximity1.
      *
-     * @return a YProximity object allowing you to drive $THEFUNCTION$.
+     * @return a YProximity object allowing you to drive the proximity sensor.
      */
     static FindProximity(func) {
         let obj;
@@ -470,7 +472,7 @@ class YProximity extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a proximity sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -480,19 +482,19 @@ class YProximity extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the proximity sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YProximity.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YProximity.isOnline() to test if the proximity sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a proximity sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the proximity sensor, for instance
+     *         YPROXIM1.proximity1.
      *
-     * @return a YProximity object allowing you to drive $THEFUNCTION$.
+     * @return a YProximity object allowing you to drive the proximity sensor.
      */
     static FindProximityInContext(yctx, func) {
         let obj;
@@ -586,7 +588,7 @@ class YProximity extends yocto_api_js_1.YSensor {
     /**
      * Resets the pulse counter value as well as its timer.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -594,9 +596,14 @@ class YProximity extends yocto_api_js_1.YSensor {
         return await this.set_pulseCounter(0);
     }
     /**
-     * Returns the next Proximity
+     * Continues the enumeration of proximity sensors started using yFirstProximity().
+     * Caution: You can't make any assumption about the returned proximity sensors order.
+     * If you want to find a specific a proximity sensor, use Proximity.findProximity()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YProximity}
+     * @return a pointer to a YProximity object, corresponding to
+     *         a proximity sensor currently online, or a null pointer
+     *         if there are no more proximity sensors to enumerate.
      */
     nextProximity() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -608,9 +615,13 @@ class YProximity extends yocto_api_js_1.YSensor {
         return YProximity.FindProximityInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Proximity in a YAPI context
+     * Starts the enumeration of proximity sensors currently accessible.
+     * Use the method YProximity.nextProximity() to iterate on
+     * next proximity sensors.
      *
-     * @returns {YProximity}
+     * @return a pointer to a YProximity object, corresponding to
+     *         the first proximity sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstProximity() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Proximity');
@@ -619,11 +630,15 @@ class YProximity extends yocto_api_js_1.YSensor {
         return YProximity.FindProximity(next_hwid);
     }
     /**
-     * Retrieves the first Proximity in a given context
+     * Starts the enumeration of proximity sensors currently accessible.
+     * Use the method YProximity.nextProximity() to iterate on
+     * next proximity sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YProximity}
+     * @return a pointer to a YProximity object, corresponding to
+     *         the first proximity sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstProximityInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Proximity');

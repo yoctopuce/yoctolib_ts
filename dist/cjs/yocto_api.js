@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 41769 2020-09-03 17:34:23Z mvuilleu $
+ * $Id: yocto_api.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -127,12 +127,10 @@ class YoctoError extends Error {
         this.errorMsg = this.name;
         this.name = 'YoctoError';
         // Maintains proper stack trace for where our error was thrown (only available on V8)
-        if (Error.captureStackTrace) {
+        if ('captureStackTrace' in Error) {
+            // @ts-ignore
             Error.captureStackTrace(this, YoctoError);
         }
-        // 'Error' breaks prototype chain; restore it
-        //const actualProto = new.target.prototype;
-        //Object.setPrototypeOf(this, actualProto);
     }
 }
 exports.YoctoError = YoctoError;
@@ -1011,12 +1009,12 @@ class YDataStream {
     /**
      * Returns the smallest measure observed within this stream.
      * If the device uses a firmware older than version 13000,
-     * this method will always return Y_DATA_INVALID.
+     * this method will always return YDataStream.DATA_INVALID.
      *
      * @return a floating-point number corresponding to the smallest value,
-     *         or Y_DATA_INVALID if the stream is not yet complete (still recording).
+     *         or YDataStream.DATA_INVALID if the stream is not yet complete (still recording).
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     async get_minValue() {
         return this._minVal;
@@ -1024,12 +1022,12 @@ class YDataStream {
     /**
      * Returns the average of all measures observed within this stream.
      * If the device uses a firmware older than version 13000,
-     * this method will always return Y_DATA_INVALID.
+     * this method will always return YDataStream.DATA_INVALID.
      *
      * @return a floating-point number corresponding to the average value,
-     *         or Y_DATA_INVALID if the stream is not yet complete (still recording).
+     *         or YDataStream.DATA_INVALID if the stream is not yet complete (still recording).
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     async get_averageValue() {
         return this._avgVal;
@@ -1037,12 +1035,12 @@ class YDataStream {
     /**
      * Returns the largest measure observed within this stream.
      * If the device uses a firmware older than version 13000,
-     * this method will always return Y_DATA_INVALID.
+     * this method will always return YDataStream.DATA_INVALID.
      *
      * @return a floating-point number corresponding to the largest value,
-     *         or Y_DATA_INVALID if the stream is not yet complete (still recording).
+     *         or YDataStream.DATA_INVALID if the stream is not yet complete (still recording).
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     async get_maxValue() {
         return this._maxVal;
@@ -1088,7 +1086,7 @@ class YDataStream {
      *
      * @return a floating-point number
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     async get_data(row, col) {
         if ((this._values.length == 0) || !(this._isClosed)) {
@@ -1432,7 +1430,7 @@ class YDataSet {
      *
      * @return a string that uniquely identifies the function (ex: THRMCPL1-123456.temperature1)
      *
-     * On failure, throws an exception or returns  Y_HARDWAREID_INVALID.
+     * On failure, throws an exception or returns  YDataSet.HARDWAREID_INVALID.
      */
     async get_hardwareId() {
         let mo;
@@ -1457,7 +1455,7 @@ class YDataSet {
      *
      * @return a string that represents a physical unit.
      *
-     * On failure, throws an exception or returns  Y_UNIT_INVALID.
+     * On failure, throws an exception or returns  YDataSet.UNIT_INVALID.
      */
     async get_unit() {
         return this._unit;
@@ -3073,7 +3071,7 @@ class YFunction {
      *
      * @return a string corresponding to the logical name of the function
      *
-     * On failure, throws an exception or returns Y_LOGICALNAME_INVALID.
+     * On failure, throws an exception or returns YFunction.LOGICALNAME_INVALID.
      */
     async get_logicalName() {
         let res;
@@ -3093,7 +3091,7 @@ class YFunction {
      *
      * @param newval : a string corresponding to the logical name of the function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3110,7 +3108,7 @@ class YFunction {
      *
      * @return a string corresponding to a short string representing the current state of the function
      *
-     * On failure, throws an exception or returns Y_ADVERTISEDVALUE_INVALID.
+     * On failure, throws an exception or returns YFunction.ADVERTISEDVALUE_INVALID.
      */
     async get_advertisedValue() {
         let res;
@@ -3128,7 +3126,7 @@ class YFunction {
         return await this._setAttr('advertisedValue', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a function for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -3138,11 +3136,11 @@ class YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the function is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YFunction.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YFunction.isOnline() to test if the function is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a function by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -3150,10 +3148,10 @@ class YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the function, for instance
+     *         MyDevice..
      *
-     * @return a YFunction object allowing you to drive $THEFUNCTION$.
+     * @return a YFunction object allowing you to drive the function.
      */
     static FindFunction(func) {
         let obj;
@@ -3165,7 +3163,7 @@ class YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a function for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -3175,19 +3173,19 @@ class YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the function is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YFunction.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YFunction.isOnline() to test if the function is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a function by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the function, for instance
+     *         MyDevice..
      *
-     * @return a YFunction object allowing you to drive $THEFUNCTION$.
+     * @return a YFunction object allowing you to drive the function.
      */
     static FindFunctionInContext(yctx, func) {
         let obj;
@@ -3247,7 +3245,7 @@ class YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3260,7 +3258,7 @@ class YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3413,7 +3411,7 @@ class YFunction {
      * not yet been connected. This method does not trigger any USB or TCP transaction and can therefore be used in
      * a debugger.
      *
-     * @return {string} a string that describes the function
+     * @return a string that describes the function
      *         (ex: Relay(MyCustomName.relay1)=RELAYLO1-123456.relay1)
      */
     async describe() {
@@ -3431,7 +3429,7 @@ class YFunction {
      * The unique hardware identifier is composed of the device serial
      * number and of the hardware identifier of the function (for example RELAYLO1-123456.relay1).
      *
-     * @return {string} a string that uniquely identifies the function (ex: RELAYLO1-123456.relay1)
+     * @return a string that uniquely identifies the function (ex: RELAYLO1-123456.relay1)
      *
      * On failure, throws an exception or returns  YFunction.HARDWAREID_INVALID.
      */
@@ -3453,7 +3451,7 @@ class YFunction {
      * Returns the hardware identifier of the function, without reference to the module. For example
      * relay1
      *
-     * @return {string} a string that identifies the function (ex: relay1)
+     * @return a string that identifies the function (ex: relay1)
      *
      * On failure, throws an exception or returns  YFunction.FUNCTIONID_INVALID.
      */
@@ -3491,7 +3489,7 @@ class YFunction {
      * otherwise the serial number of the module and the hardware identifier of the function
      * (for example: MyCustomName.relay1)
      *
-     * @return {string} a string that uniquely identifies the function using logical names
+     * @return a string that uniquely identifies the function using logical names
      *         (ex: MyCustomName.relay1)
      *
      * On failure, throws an exception or returns  YFunction.FRIENDLYNAME_INVALID.
@@ -3916,7 +3914,7 @@ class YFunction {
      * No exception is raised if there is an error while trying to contact the
      * device hosting the function.
      *
-     * @return {boolean} true if the function can be reached, and false otherwise
+     * @return true if the function can be reached, and false otherwise
      */
     async isOnline() {
         // A valid value in cache means that the device is online
@@ -3937,7 +3935,7 @@ class YFunction {
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
-     * @return {number} a number corresponding to the code of the latest error that occurred while
+     * @return a number corresponding to the code of the latest error that occurred while
      *         using the function object
      */
     get_errorType() {
@@ -3948,7 +3946,7 @@ class YFunction {
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
-     * @return {string} a string corresponding to the latest error message that occured while
+     * @return a string corresponding to the latest error message that occured while
      *         using the function object
      */
     get_errorMessage() {
@@ -3961,10 +3959,10 @@ class YFunction {
      * used to temporarily mark the cache as valid for a longer period, in order
      * to reduce network traffic for instance.
      *
-     * @param msValidity {number} : an integer corresponding to the validity attributed to the
+     * @param msValidity : an integer corresponding to the validity attributed to the
      *         loaded function parameters, in milliseconds
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4036,7 +4034,7 @@ class YFunction {
      * If the function cannot be located on any module, the returned instance of
      * YModule is not shown as on-line.
      *
-     * @return {YModule} an instance of YModule
+     * @return an instance of YModule
      */
     async get_module() {
         return this.module();
@@ -4046,7 +4044,7 @@ class YFunction {
      * This identifier can be used to test if two instances of YFunction reference the same
      * physical function on the same physical device.
      *
-     * @return {string} an identifier of type YFUN_DESCR.
+     * @return an identifier of type YFUN_DESCR.
      *
      * If the function has never been contacted, the returned value is YFunction.FUNCTIONDESCRIPTOR_INVALID.
      */
@@ -4073,7 +4071,7 @@ class YFunction {
      * This attribute is never touched directly by the API, and is at disposal of the caller to
      * store a context.
      *
-     * @return {object} the object stored previously by the caller.
+     * @return the object stored previously by the caller.
      */
     async get_userData() {
         return this._userData;
@@ -4082,7 +4080,7 @@ class YFunction {
      * Stores a user context provided as argument in the userData attribute of the function.
      * This attribute is never touched by the API, and is at disposal of the caller to store a context.
      *
-     * @param data {object} : any kind of object to be stored
+     * @param data : any kind of object to be stored
      * @noreturn
      */
     async set_userData(data) {
@@ -4207,7 +4205,7 @@ class YModule extends YFunction {
     /**
      * Returns the number of functions (beside the "module" interface) available on the module.
      *
-     * @return {number} the number of functions on the module
+     * @return the number of functions on the module
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4221,10 +4219,10 @@ class YModule extends YFunction {
     /**
      * Retrieves the hardware identifier of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the unambiguous hardware identifier of the requested module function
+     * @return a string corresponding to the unambiguous hardware identifier of the requested module function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -4238,10 +4236,10 @@ class YModule extends YFunction {
     /**
      * Retrieves the type of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the type of the function
+     * @return a string corresponding to the type of the function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -4256,10 +4254,10 @@ class YModule extends YFunction {
      * Retrieves the base type of the <i>n</i>th function on the module.
      * For instance, the base type of all measuring functions is "Sensor".
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the base type of the function
+     * @return a string corresponding to the base type of the function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -4273,10 +4271,10 @@ class YModule extends YFunction {
     /**
      * Retrieves the logical name of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the logical name of the requested module function
+     * @return a string corresponding to the logical name of the requested module function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -4290,11 +4288,11 @@ class YModule extends YFunction {
     /**
      * Retrieves the advertised value of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a short string (up to 6 characters) corresponding to the advertised value of the
-     * requested module function
+     * @return a short string (up to 6 characters) corresponding to the advertised value of the requested
+     * module function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -4308,7 +4306,7 @@ class YModule extends YFunction {
     /**
      * Returns the logical name of the module.
      *
-     * @return {string} a string corresponding to the logical name of the module
+     * @return a string corresponding to the logical name of the module
      *
      * On failure, throws an exception or returns YModule.LOGICALNAME_INVALID.
      */
@@ -4424,7 +4422,7 @@ class YModule extends YFunction {
      *
      * @return a string corresponding to the commercial name of the module, as set by the factory
      *
-     * On failure, throws an exception or returns Y_PRODUCTNAME_INVALID.
+     * On failure, throws an exception or returns YModule.PRODUCTNAME_INVALID.
      */
     async get_productName() {
         let res;
@@ -4446,7 +4444,7 @@ class YModule extends YFunction {
      *
      * @return a string corresponding to the serial number of the module, as set by the factory
      *
-     * On failure, throws an exception or returns Y_SERIALNUMBER_INVALID.
+     * On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
      */
     async get_serialNumber() {
         let res;
@@ -4468,7 +4466,7 @@ class YModule extends YFunction {
      *
      * @return an integer corresponding to the USB device identifier of the module
      *
-     * On failure, throws an exception or returns Y_PRODUCTID_INVALID.
+     * On failure, throws an exception or returns YModule.PRODUCTID_INVALID.
      */
     async get_productId() {
         let res;
@@ -4491,7 +4489,7 @@ class YModule extends YFunction {
      *
      * @return an integer corresponding to the release number of the module hardware, preprogrammed at the factory
      *
-     * On failure, throws an exception or returns Y_PRODUCTRELEASE_INVALID.
+     * On failure, throws an exception or returns YModule.PRODUCTRELEASE_INVALID.
      */
     async get_productRelease() {
         let res;
@@ -4508,7 +4506,7 @@ class YModule extends YFunction {
      *
      * @return a string corresponding to the version of the firmware embedded in the module
      *
-     * On failure, throws an exception or returns Y_FIRMWARERELEASE_INVALID.
+     * On failure, throws an exception or returns YModule.FIRMWARERELEASE_INVALID.
      */
     async get_firmwareRelease() {
         let res;
@@ -4523,10 +4521,10 @@ class YModule extends YFunction {
     /**
      * Returns the current state of persistent module settings.
      *
-     * @return a value among Y_PERSISTENTSETTINGS_LOADED, Y_PERSISTENTSETTINGS_SAVED and
-     * Y_PERSISTENTSETTINGS_MODIFIED corresponding to the current state of persistent module settings
+     * @return a value among YModule.PERSISTENTSETTINGS_LOADED, YModule.PERSISTENTSETTINGS_SAVED and
+     * YModule.PERSISTENTSETTINGS_MODIFIED corresponding to the current state of persistent module settings
      *
-     * On failure, throws an exception or returns Y_PERSISTENTSETTINGS_INVALID.
+     * On failure, throws an exception or returns YModule.PERSISTENTSETTINGS_INVALID.
      */
     async get_persistentSettings() {
         let res;
@@ -4548,7 +4546,7 @@ class YModule extends YFunction {
      *
      * @return an integer corresponding to the luminosity of the  module informative LEDs (from 0 to 100)
      *
-     * On failure, throws an exception or returns Y_LUMINOSITY_INVALID.
+     * On failure, throws an exception or returns YModule.LUMINOSITY_INVALID.
      */
     async get_luminosity() {
         let res;
@@ -4568,7 +4566,7 @@ class YModule extends YFunction {
      *
      * @param newval : an integer corresponding to the luminosity of the module informative leds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4580,9 +4578,9 @@ class YModule extends YFunction {
     /**
      * Returns the state of the localization beacon.
      *
-     * @return either Y_BEACON_OFF or Y_BEACON_ON, according to the state of the localization beacon
+     * @return either YModule.BEACON_OFF or YModule.BEACON_ON, according to the state of the localization beacon
      *
-     * On failure, throws an exception or returns Y_BEACON_INVALID.
+     * On failure, throws an exception or returns YModule.BEACON_INVALID.
      */
     async get_beacon() {
         let res;
@@ -4602,9 +4600,9 @@ class YModule extends YFunction {
     /**
      * Turns on or off the module localization beacon.
      *
-     * @param newval : either Y_BEACON_OFF or Y_BEACON_ON
+     * @param newval : either YModule.BEACON_OFF or YModule.BEACON_ON
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4618,7 +4616,7 @@ class YModule extends YFunction {
      *
      * @return an integer corresponding to the number of milliseconds spent since the module was powered on
      *
-     * On failure, throws an exception or returns Y_UPTIME_INVALID.
+     * On failure, throws an exception or returns YModule.UPTIME_INVALID.
      */
     async get_upTime() {
         let res;
@@ -4635,7 +4633,7 @@ class YModule extends YFunction {
      *
      * @return an integer corresponding to the current consumed by the module on the USB bus, in milli-amps
      *
-     * On failure, throws an exception or returns Y_USBCURRENT_INVALID.
+     * On failure, throws an exception or returns YModule.USBCURRENT_INVALID.
      */
     async get_usbCurrent() {
         let res;
@@ -4654,7 +4652,7 @@ class YModule extends YFunction {
      * @return an integer corresponding to the remaining number of seconds before the module restarts, or zero when no
      *         reboot has been scheduled
      *
-     * On failure, throws an exception or returns Y_REBOOTCOUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YModule.REBOOTCOUNTDOWN_INVALID.
      */
     async get_rebootCountdown() {
         let res;
@@ -4677,7 +4675,7 @@ class YModule extends YFunction {
      *
      * @return an integer corresponding to the value previously stored in this attribute
      *
-     * On failure, throws an exception or returns Y_USERVAR_INVALID.
+     * On failure, throws an exception or returns YModule.USERVAR_INVALID.
      */
     async get_userVar() {
         let res;
@@ -4696,7 +4694,7 @@ class YModule extends YFunction {
      *
      * @param newval : an integer
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4706,32 +4704,26 @@ class YModule extends YFunction {
         return await this._setAttr('userVar', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
-     * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     * Allows you to find a module from its serial number or from its logical name.
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YModule.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YModule.isOnline() to test if the module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
+     *
      * If a call to this object's is_online() method returns FALSE although
-     * you are certain that the matching device is plugged, make sure that you did
+     * you are certain that the device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string containing either the serial number or
+     *         the logical name of the desired module
      *
-     * @return a YModule object allowing you to drive $THEFUNCTION$.
+     * @return a YModule object allowing you to drive the module
+     *         or get additional information on the module.
      */
     static FindModule(func) {
         let obj;
@@ -4750,7 +4742,7 @@ class YModule extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a module for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -4760,19 +4752,19 @@ class YModule extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YModule.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YModule.isOnline() to test if the module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the module, for instance
+     *         MyDevice.module.
      *
-     * @return a YModule object allowing you to drive $THEFUNCTION$.
+     * @return a YModule object allowing you to drive the module.
      */
     static FindModuleInContext(yctx, func) {
         let obj;
@@ -4852,7 +4844,7 @@ class YModule extends YFunction {
      * Warning: the number of allowed save operations during a module life is
      * limited (about 100000 cycles). Do not call this function within a loop.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4863,7 +4855,7 @@ class YModule extends YFunction {
      * Reloads the settings stored in the nonvolatile memory, as
      * when the module is powered on.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4875,7 +4867,7 @@ class YModule extends YFunction {
      *
      * @param secBeforeReboot : number of seconds before rebooting
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4887,7 +4879,7 @@ class YModule extends YFunction {
      *
      * @param secBeforeReboot : number of seconds before rebooting
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -5163,7 +5155,7 @@ class YModule extends YFunction {
      *
      * @param settings : a binary buffer with all the settings.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -5532,7 +5524,7 @@ class YModule extends YFunction {
      *
      * @param settings : a binary buffer with all the settings.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -5857,7 +5849,7 @@ class YModule extends YFunction {
      *
      * @return a binary buffer with the file content
      *
-     * On failure, throws an exception or returns  YAPI_INVALID_STRING.
+     * On failure, throws an exception or returns  YAPI.INVALID_STRING.
      */
     async download(pathname) {
         return await this._download(pathname);
@@ -5867,7 +5859,7 @@ class YModule extends YFunction {
      * exceeds 1536 bytes.
      *
      * @return a binary buffer with module icon, in png format.
-     *         On failure, throws an exception or returns  YAPI_INVALID_STRING.
+     *         On failure, throws an exception or returns  YAPI.INVALID_STRING.
      */
     async get_icon2d() {
         return await this._download('icon2d.png');
@@ -5877,7 +5869,7 @@ class YModule extends YFunction {
      * logs that are still in the module.
      *
      * @return a string with last logs of the module.
-     *         On failure, throws an exception or returns  YAPI_INVALID_STRING.
+     *         On failure, throws an exception or returns  YAPI.INVALID_STRING.
      */
     async get_lastLogs() {
         let content;
@@ -5891,7 +5883,7 @@ class YModule extends YFunction {
      *
      * @param text : the string to append to the logs.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -5928,9 +5920,14 @@ class YModule extends YFunction {
         return await this.get_url_internal();
     }
     /**
-     * Returns the next Module
+     * Continues the module enumeration started using yFirstModule().
+     * Caution: You can't make any assumption about the returned modules order.
+     * If you want to find a specific module, use Module.findModule()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YModule}
+     * @return a pointer to a YModule object, corresponding to
+     *         the next module found, or a null pointer
+     *         if there are no more modules to enumerate.
      */
     nextModule() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -5942,9 +5939,13 @@ class YModule extends YFunction {
         return YModule.FindModuleInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Module in a YAPI context
+     * Starts the enumeration of modules currently accessible.
+     * Use the method YModule.nextModule() to iterate on the
+     * next modules.
      *
-     * @returns {YModule}
+     * @return a pointer to a YModule object, corresponding to
+     *         the first module currently online, or a null pointer
+     *         if there are none.
      */
     static FirstModule() {
         let next_hwid = exports.YAPI.imm_getFirstHardwareId('Module');
@@ -6092,7 +6093,7 @@ class YSensor extends YFunction {
      *
      * @return a string corresponding to the measuring unit for the measure
      *
-     * On failure, throws an exception or returns Y_UNIT_INVALID.
+     * On failure, throws an exception or returns YSensor.UNIT_INVALID.
      */
     async get_unit() {
         let res;
@@ -6117,7 +6118,7 @@ class YSensor extends YFunction {
      * @return a floating point number corresponding to the current value of the measure, in the specified
      * unit, as a floating point number
      *
-     * On failure, throws an exception or returns Y_CURRENTVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.CURRENTVALUE_INVALID.
      */
     async get_currentValue() {
         let res;
@@ -6140,7 +6141,7 @@ class YSensor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the recorded minimal value observed
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6156,7 +6157,7 @@ class YSensor extends YFunction {
      * @return a floating point number corresponding to the minimal value observed for the measure since
      * the device was started
      *
-     * On failure, throws an exception or returns Y_LOWESTVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.LOWESTVALUE_INVALID.
      */
     async get_lowestValue() {
         let res;
@@ -6175,7 +6176,7 @@ class YSensor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the recorded maximal value observed
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6191,7 +6192,7 @@ class YSensor extends YFunction {
      * @return a floating point number corresponding to the maximal value observed for the measure since
      * the device was started
      *
-     * On failure, throws an exception or returns Y_HIGHESTVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.HIGHESTVALUE_INVALID.
      */
     async get_highestValue() {
         let res;
@@ -6211,7 +6212,7 @@ class YSensor extends YFunction {
      * @return a floating point number corresponding to the uncalibrated, unrounded raw value returned by the
      *         sensor, in the specified unit, as a floating point number
      *
-     * On failure, throws an exception or returns Y_CURRENTRAWVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.CURRENTRAWVALUE_INVALID.
      */
     async get_currentRawValue() {
         let res;
@@ -6230,7 +6231,7 @@ class YSensor extends YFunction {
      * @return a string corresponding to the datalogger recording frequency for this function, or "OFF"
      *         when measures are not stored in the data logger flash memory
      *
-     * On failure, throws an exception or returns Y_LOGFREQUENCY_INVALID.
+     * On failure, throws an exception or returns YSensor.LOGFREQUENCY_INVALID.
      */
     async get_logFrequency() {
         let res;
@@ -6254,7 +6255,7 @@ class YSensor extends YFunction {
      *
      * @param newval : a string corresponding to the datalogger recording frequency for this function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6270,7 +6271,7 @@ class YSensor extends YFunction {
      * @return a string corresponding to the timed value notification frequency, or "OFF" if timed
      *         value notifications are disabled for this function
      *
-     * On failure, throws an exception or returns Y_REPORTFREQUENCY_INVALID.
+     * On failure, throws an exception or returns YSensor.REPORTFREQUENCY_INVALID.
      */
     async get_reportFrequency() {
         let res;
@@ -6295,7 +6296,7 @@ class YSensor extends YFunction {
      *
      * @param newval : a string corresponding to the timed value notification frequency for this function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6307,10 +6308,11 @@ class YSensor extends YFunction {
     /**
      * Returns the measuring mode used for the advertised value pushed to the parent hub.
      *
-     * @return a value among Y_ADVMODE_IMMEDIATE, Y_ADVMODE_PERIOD_AVG, Y_ADVMODE_PERIOD_MIN and
-     * Y_ADVMODE_PERIOD_MAX corresponding to the measuring mode used for the advertised value pushed to the parent hub
+     * @return a value among YSensor.ADVMODE_IMMEDIATE, YSensor.ADVMODE_PERIOD_AVG,
+     * YSensor.ADVMODE_PERIOD_MIN and YSensor.ADVMODE_PERIOD_MAX corresponding to the measuring mode used
+     * for the advertised value pushed to the parent hub
      *
-     * On failure, throws an exception or returns Y_ADVMODE_INVALID.
+     * On failure, throws an exception or returns YSensor.ADVMODE_INVALID.
      */
     async get_advMode() {
         let res;
@@ -6326,10 +6328,11 @@ class YSensor extends YFunction {
      * Changes the measuring mode used for the advertised value pushed to the parent hub.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_ADVMODE_IMMEDIATE, Y_ADVMODE_PERIOD_AVG, Y_ADVMODE_PERIOD_MIN and
-     * Y_ADVMODE_PERIOD_MAX corresponding to the measuring mode used for the advertised value pushed to the parent hub
+     * @param newval : a value among YSensor.ADVMODE_IMMEDIATE, YSensor.ADVMODE_PERIOD_AVG,
+     * YSensor.ADVMODE_PERIOD_MIN and YSensor.ADVMODE_PERIOD_MAX corresponding to the measuring mode used
+     * for the advertised value pushed to the parent hub
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6360,7 +6363,7 @@ class YSensor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the resolution of the measured physical values
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6376,7 +6379,7 @@ class YSensor extends YFunction {
      *
      * @return a floating point number corresponding to the resolution of the measured values
      *
-     * On failure, throws an exception or returns Y_RESOLUTION_INVALID.
+     * On failure, throws an exception or returns YSensor.RESOLUTION_INVALID.
      */
     async get_resolution() {
         let res;
@@ -6396,7 +6399,7 @@ class YSensor extends YFunction {
      * up-to-date measure
      *         available or a positive code if the sensor is not able to provide a measure right now
      *
-     * On failure, throws an exception or returns Y_SENSORSTATE_INVALID.
+     * On failure, throws an exception or returns YSensor.SENSORSTATE_INVALID.
      */
     async get_sensorState() {
         let res;
@@ -6409,7 +6412,7 @@ class YSensor extends YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -6419,11 +6422,11 @@ class YSensor extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSensor.isOnline() to test if the sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -6431,10 +6434,10 @@ class YSensor extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the sensor, for instance
+     *         MyDevice..
      *
-     * @return a YSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YSensor object allowing you to drive the sensor.
      */
     static FindSensor(func) {
         let obj;
@@ -6446,7 +6449,7 @@ class YSensor extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -6456,19 +6459,19 @@ class YSensor extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSensor.isOnline() to test if the sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the sensor, for instance
+     *         MyDevice..
      *
-     * @return a YSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YSensor object allowing you to drive the sensor.
      */
     static FindSensorInContext(yctx, func) {
         let obj;
@@ -6687,7 +6690,7 @@ class YSensor extends YFunction {
      * will only save the measures on this sensor if the logFrequency
      * is not set to "OFF".
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      */
     async startDataLogger() {
         let res;
@@ -6700,7 +6703,7 @@ class YSensor extends YFunction {
     /**
      * Stops the datalogger on the device.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      */
     async stopDataLogger() {
         let res;
@@ -6796,7 +6799,7 @@ class YSensor extends YFunction {
      * @param refValues : array of floating point numbers, corresponding to the corrected
      *         values for the correction points.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -6816,7 +6819,7 @@ class YSensor extends YFunction {
      * @param refValues : array of floating point numbers, that will be filled by the
      *         function with the desired values for the correction points.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -7014,9 +7017,14 @@ class YSensor extends YFunction {
         return val;
     }
     /**
-     * Returns the next Sensor
+     * Continues the enumeration of sensors started using yFirstSensor().
+     * Caution: You can't make any assumption about the returned sensors order.
+     * If you want to find a specific a sensor, use Sensor.findSensor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YSensor}
+     * @return a pointer to a YSensor object, corresponding to
+     *         a sensor currently online, or a null pointer
+     *         if there are no more sensors to enumerate.
      */
     nextSensor() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -7028,9 +7036,13 @@ class YSensor extends YFunction {
         return YSensor.FindSensorInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Sensor in a YAPI context
+     * Starts the enumeration of sensors currently accessible.
+     * Use the method YSensor.nextSensor() to iterate on
+     * next sensors.
      *
-     * @returns {YSensor}
+     * @return a pointer to a YSensor object, corresponding to
+     *         the first sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSensor() {
         let next_hwid = exports.YAPI.imm_getFirstHardwareId('Sensor');
@@ -7039,11 +7051,15 @@ class YSensor extends YFunction {
         return YSensor.FindSensor(next_hwid);
     }
     /**
-     * Retrieves the first Sensor in a given context
+     * Starts the enumeration of sensors currently accessible.
+     * Use the method YSensor.nextSensor() to iterate on
+     * next sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YSensor}
+     * @return a pointer to a YSensor object, corresponding to
+     *         the first sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSensorInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Sensor');
@@ -7248,7 +7264,7 @@ class YDataLogger extends YFunction {
      * @return an integer corresponding to the current run number, corresponding to the number of times the module was
      *         powered on with the dataLogger enabled at some point
      *
-     * On failure, throws an exception or returns Y_CURRENTRUNINDEX_INVALID.
+     * On failure, throws an exception or returns YDataLogger.CURRENTRUNINDEX_INVALID.
      */
     async get_currentRunIndex() {
         let res;
@@ -7265,7 +7281,7 @@ class YDataLogger extends YFunction {
      *
      * @return an integer corresponding to the Unix timestamp for current UTC time, if known
      *
-     * On failure, throws an exception or returns Y_TIMEUTC_INVALID.
+     * On failure, throws an exception or returns YDataLogger.TIMEUTC_INVALID.
      */
     async get_timeUTC() {
         let res;
@@ -7282,7 +7298,7 @@ class YDataLogger extends YFunction {
      *
      * @param newval : an integer corresponding to the current UTC time reference used for recorded data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -7294,10 +7310,10 @@ class YDataLogger extends YFunction {
     /**
      * Returns the current activation state of the data logger.
      *
-     * @return a value among Y_RECORDING_OFF, Y_RECORDING_ON and Y_RECORDING_PENDING corresponding to the
-     * current activation state of the data logger
+     * @return a value among YDataLogger.RECORDING_OFF, YDataLogger.RECORDING_ON and
+     * YDataLogger.RECORDING_PENDING corresponding to the current activation state of the data logger
      *
-     * On failure, throws an exception or returns Y_RECORDING_INVALID.
+     * On failure, throws an exception or returns YDataLogger.RECORDING_INVALID.
      */
     async get_recording() {
         let res;
@@ -7312,10 +7328,11 @@ class YDataLogger extends YFunction {
     /**
      * Changes the activation state of the data logger to start/stop recording data.
      *
-     * @param newval : a value among Y_RECORDING_OFF, Y_RECORDING_ON and Y_RECORDING_PENDING corresponding
-     * to the activation state of the data logger to start/stop recording data
+     * @param newval : a value among YDataLogger.RECORDING_OFF, YDataLogger.RECORDING_ON and
+     * YDataLogger.RECORDING_PENDING corresponding to the activation state of the data logger to
+     * start/stop recording data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -7327,10 +7344,10 @@ class YDataLogger extends YFunction {
     /**
      * Returns the default activation state of the data logger on power up.
      *
-     * @return either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the default activation state of the
-     * data logger on power up
+     * @return either YDataLogger.AUTOSTART_OFF or YDataLogger.AUTOSTART_ON, according to the default
+     * activation state of the data logger on power up
      *
-     * On failure, throws an exception or returns Y_AUTOSTART_INVALID.
+     * On failure, throws an exception or returns YDataLogger.AUTOSTART_INVALID.
      */
     async get_autoStart() {
         let res;
@@ -7349,10 +7366,10 @@ class YDataLogger extends YFunction {
      * starting up, it will wait for ~8 seconds before automatically starting to record  with
      * an arbitrary timestamp
      *
-     * @param newval : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the default activation state
-     * of the data logger on power up
+     * @param newval : either YDataLogger.AUTOSTART_OFF or YDataLogger.AUTOSTART_ON, according to the
+     * default activation state of the data logger on power up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -7364,10 +7381,10 @@ class YDataLogger extends YFunction {
     /**
      * Returns true if the data logger is synchronised with the localization beacon.
      *
-     * @return either Y_BEACONDRIVEN_OFF or Y_BEACONDRIVEN_ON, according to true if the data logger is
-     * synchronised with the localization beacon
+     * @return either YDataLogger.BEACONDRIVEN_OFF or YDataLogger.BEACONDRIVEN_ON, according to true if
+     * the data logger is synchronised with the localization beacon
      *
-     * On failure, throws an exception or returns Y_BEACONDRIVEN_INVALID.
+     * On failure, throws an exception or returns YDataLogger.BEACONDRIVEN_INVALID.
      */
     async get_beaconDriven() {
         let res;
@@ -7384,10 +7401,10 @@ class YDataLogger extends YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : either Y_BEACONDRIVEN_OFF or Y_BEACONDRIVEN_ON, according to the type of
-     * synchronisation of the data logger
+     * @param newval : either YDataLogger.BEACONDRIVEN_OFF or YDataLogger.BEACONDRIVEN_ON, according to
+     * the type of synchronisation of the data logger
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -7401,7 +7418,7 @@ class YDataLogger extends YFunction {
      *
      * @return an integer corresponding to the percentage of datalogger memory in use
      *
-     * On failure, throws an exception or returns Y_USAGE_INVALID.
+     * On failure, throws an exception or returns YDataLogger.USAGE_INVALID.
      */
     async get_usage() {
         let res;
@@ -7429,7 +7446,7 @@ class YDataLogger extends YFunction {
         return await this._setAttr('clearHistory', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a data logger for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -7439,11 +7456,11 @@ class YDataLogger extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the data logger is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDataLogger.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDataLogger.isOnline() to test if the data logger is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a data logger by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -7451,10 +7468,10 @@ class YDataLogger extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the data logger, for instance
+     *         RX420MA1.dataLogger.
      *
-     * @return a YDataLogger object allowing you to drive $THEFUNCTION$.
+     * @return a YDataLogger object allowing you to drive the data logger.
      */
     static FindDataLogger(func) {
         let obj;
@@ -7466,7 +7483,7 @@ class YDataLogger extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a data logger for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -7476,19 +7493,19 @@ class YDataLogger extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the data logger is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDataLogger.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDataLogger.isOnline() to test if the data logger is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a data logger by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the data logger, for instance
+     *         RX420MA1.dataLogger.
      *
-     * @return a YDataLogger object allowing you to drive $THEFUNCTION$.
+     * @return a YDataLogger object allowing you to drive the data logger.
      */
     static FindDataLoggerInContext(yctx, func) {
         let obj;
@@ -7546,7 +7563,7 @@ class YDataLogger extends YFunction {
      * Clears the data logger memory and discards all recorded data streams.
      * This method also resets the current run index to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -7582,9 +7599,14 @@ class YDataLogger extends YFunction {
         return res;
     }
     /**
-     * Returns the next DataLogger
+     * Continues the enumeration of data loggers started using yFirstDataLogger().
+     * Caution: You can't make any assumption about the returned data loggers order.
+     * If you want to find a specific a data logger, use DataLogger.findDataLogger()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDataLogger}
+     * @return a pointer to a YDataLogger object, corresponding to
+     *         a data logger currently online, or a null pointer
+     *         if there are no more data loggers to enumerate.
      */
     nextDataLogger() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -7596,9 +7618,13 @@ class YDataLogger extends YFunction {
         return YDataLogger.FindDataLoggerInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first DataLogger in a YAPI context
+     * Starts the enumeration of data loggers currently accessible.
+     * Use the method YDataLogger.nextDataLogger() to iterate on
+     * next data loggers.
      *
-     * @returns {YDataLogger}
+     * @return a pointer to a YDataLogger object, corresponding to
+     *         the first data logger currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDataLogger() {
         let next_hwid = exports.YAPI.imm_getFirstHardwareId('DataLogger');
@@ -7607,11 +7633,15 @@ class YDataLogger extends YFunction {
         return YDataLogger.FindDataLogger(next_hwid);
     }
     /**
-     * Retrieves the first DataLogger in a given context
+     * Starts the enumeration of data loggers currently accessible.
+     * Use the method YDataLogger.nextDataLogger() to iterate on
+     * next data loggers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDataLogger}
+     * @return a pointer to a YDataLogger object, corresponding to
+     *         the first data logger currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDataLoggerInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('DataLogger');
@@ -7701,20 +7731,17 @@ class YGenericHub {
         this._firstArrivalCallback = true; // indicates that this is the first time we see this device
         this._missing = {}; // hash table by serial number, used during UpdateDeviceList
         this._hubAdded = false;
-        this._HUB_REGISTRED = 0;
-        this._HUB_PREREGISTRED = 1;
-        this._HUB_TESTONLY = 2;
         this._yapi = yapi;
         this.urlInfo = urlInfo;
-        this._connectionType = this._HUB_REGISTRED;
+        this._connectionType = 0 /* HUB_REGISTERED */;
     }
     _throw(int_errType, str_errMsg, obj_retVal) {
         this._lastErrorType = int_errType;
         this._lastErrorMsg = str_errMsg;
         return this._yapi._throw(int_errType, str_errMsg, obj_retVal);
     }
-    imm_setConnectionType(int_hubtype) {
-        this._connectionType = int_hubtype;
+    imm_setConnectionType(hubtype) {
+        this._connectionType = hubtype;
     }
     imm_forceUpdate() {
         this.devListExpires = this._yapi.GetTickCount();
@@ -7734,22 +7761,35 @@ class YGenericHub {
      */
     async testHub(mstimeout, errmsg) {
         // default test method is to issue a small request
-        this._hubAdded = false;
-        /** @type {YHTTPRequest} **/
         let yreq = await this.request('GET', '/api/module.json', null, 0);
         if (yreq.errorType != exports.YAPI_SUCCESS) {
             errmsg.msg = yreq.errorMsg;
             return yreq.errorType;
         }
-        if (!this._hubAdded && this._connectionType != this._HUB_TESTONLY) {
-            this._hubAdded = true;
-            await this._yapi._addHub(this);
+        if (!this._hubAdded) {
+            await this.signalHubConnected();
         }
         return exports.YAPI_SUCCESS;
+    }
+    /** Handle successful hub connection (including preregisterhub handling)
+     */
+    async signalHubConnected() {
+        if (this._connectionType != 2 /* HUB_TESTONLY */) {
+            await this._yapi._addHub(this);
+            this._hubAdded = true;
+            if (this._yapi._pendingHubs[this.urlInfo.url]) {
+                delete this._yapi._pendingHubs[this.urlInfo.url];
+            }
+        }
     }
     imm_testHubAgainLater() {
         this.isNotifWorking = false;
         this.devListExpires = 0;
+        if (this._connectionType == 1 /* HUB_PREREGISTERED */ && this._hubAdded) {
+            this._yapi._pendingHubs[this.urlInfo.url] = this;
+            this._yapi.imm_forgetHub(this);
+            this._hubAdded = false;
+        }
         if (this._reconnectionTimer) {
             // reconnection already scheduled
             return true;
@@ -7776,12 +7816,12 @@ class YGenericHub {
     }
     async hubUpdateDeviceList() {
         // load hub API, process white pages and yellow pages
+        let hubDev = this._yapi.imm_getDevice(this.urlInfo.url);
+        hubDev.imm_dropCache();
         try {
-            let hubDev = this._yapi.imm_getDevice(this.urlInfo.url);
-            hubDev.imm_dropCache();
             let retcode = await hubDev.refresh();
             if (retcode != exports.YAPI_SUCCESS) {
-                if (this._connectionType == this._HUB_PREREGISTRED) {
+                if (this._connectionType == 1 /* HUB_PREREGISTERED */) {
                     await this._yapi.updateDeviceList_process(this, hubDev, [], {});
                 }
                 return this._throw(retcode, hubDev._lastErrorMsg, retcode);
@@ -7789,7 +7829,7 @@ class YGenericHub {
             /** @type {YHTTPRequest} **/
             let yreq = await hubDev.requestAPI(this._yapi.defaultCacheValidity);
             if (yreq.errorType != exports.YAPI_SUCCESS) {
-                if (this._connectionType == this._HUB_PREREGISTRED) {
+                if (this._connectionType == 1 /* HUB_PREREGISTERED */) {
                     await this._yapi.updateDeviceList_process(this, hubDev, [], {});
                 }
                 return yreq.errorType;
@@ -7813,6 +7853,9 @@ class YGenericHub {
             return exports.YAPI_SUCCESS;
         }
         catch (e) {
+            if (this._connectionType == 1 /* HUB_PREREGISTERED */) {
+                await this._yapi.updateDeviceList_process(this, hubDev, [], {});
+            }
             return exports.YAPI_IO_ERROR;
         }
     }
@@ -8174,7 +8217,6 @@ class YWebSocketHub extends YGenericHub {
         }
         // Open WebSocket connection
         this._connectionState = this._WS_CONNECTING;
-        this._hubAdded = false;
         if (!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             if (mstimeout) {
@@ -8203,12 +8245,17 @@ class YWebSocketHub extends YGenericHub {
                             this.websocket.onmessage = ((evt) => {
                                 this._webSocketMsg(new Uint8Array(evt.data));
                                 if (this._connectionState == this._WS_CONNECTED) {
-                                    this.notbynOpenTimeout = null;
-                                    if (this.notbynOpenTimeoutObj) {
-                                        clearTimeout(this.notbynOpenTimeoutObj);
-                                        this.notbynOpenTimeoutObj = null;
+                                    if (!this._hubAdded) {
+                                        // registration is now complete
+                                        this.notbynOpenTimeout = null;
+                                        if (this.notbynOpenTimeoutObj) {
+                                            clearTimeout(this.notbynOpenTimeoutObj);
+                                            this.notbynOpenTimeoutObj = null;
+                                        }
+                                        this.signalHubConnected().then(() => {
+                                            resolve({ errorType: exports.YAPI_SUCCESS, errorMsg: "" });
+                                        });
                                     }
-                                    resolve({ errorType: exports.YAPI_SUCCESS, errorMsg: "" });
                                 }
                                 else if (this._connectionState == this._WS_DEAD) {
                                     if (errmsg) {
@@ -8271,10 +8318,6 @@ class YWebSocketHub extends YGenericHub {
         let res_struct = await this.notbynOpenPromise;
         if (errmsg) {
             errmsg.msg = res_struct.errorMsg;
-        }
-        if (res_struct.errorType == exports.YAPI.SUCCESS && !this._hubAdded && this._connectionType != this._HUB_TESTONLY) {
-            this._hubAdded = true;
-            await this._yapi._addHub(this);
         }
         this.notbynOpenPromise = null;
         return res_struct.errorType;
@@ -9493,7 +9536,7 @@ class YAPIContext {
      * Registers a log callback function. This callback will be called each time
      * the API have something to say. Quite useful to debug the API.
      *
-     * @param logfun {LogCallback | null} : a procedure taking a string parameter, or null
+     * @param logfun : a procedure taking a string parameter, or null
      *         to unregister a previously registered  callback.
      */
     async RegisterLogFunction(logfun) {
@@ -9522,7 +9565,7 @@ class YAPIContext {
     }
     // Search for an existing a hub object for a given URL
     imm_getHub(obj_urlInfo) {
-        let i, hubUrl;
+        let i;
         for (i = 0; i < this._hubs.length; i++) {
             let info = this._hubs[i].urlInfo;
             if (info.host == obj_urlInfo.host && info.port == obj_urlInfo.port && info.domain == obj_urlInfo.domain) {
@@ -9559,8 +9602,10 @@ class YAPIContext {
                 let hub = this._hubs[i];
                 let rootUrl = hub.urlInfo.url;
                 let hubDev = this.imm_getDevice(rootUrl);
-                if (!hubDev)
+                if (!hubDev) {
+                    console.log('getDevice failed for hub ' + hub.urlInfo.url);
                     continue;
+                }
                 if (hub.devListExpires <= this.GetTickCount()) {
                     hub._missing = {};
                     hubs.push(hub);
@@ -10905,13 +10950,13 @@ class YAPIContext {
      * number is greater or equal. The build number is not relevant
      * with respect to the library compatibility.
      *
-     * @return {string} a character string describing the library version.
+     * @return a character string describing the library version.
      */
     async GetAPIVersion() {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.29282-dev.2';
+        return /* version number patched automatically */ '1.10.43561';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -10923,13 +10968,13 @@ class YAPIContext {
      * you must explicitly use yRegisterHub() to point the API to the
      * VirtualHub on which your devices are connected before trying to access them.
      *
-     * @param mode {number} : an integer corresponding to the type of automatic
+     * @param mode : an integer corresponding to the type of automatic
      *         device detection to use. Possible values are
      *         YAPI.DETECT_NONE, YAPI.DETECT_USB, YAPI.DETECT_NET,
      *         and YAPI.DETECT_ALL.
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -11110,6 +11155,23 @@ class YAPIContext {
         }
         return newhub;
     }
+    imm_forgetHub(hub) {
+        for (let j = 0; j < hub.serialByYdx.length; j++) {
+            let serial = hub.serialByYdx[j];
+            if (serial) {
+                if (this._removalCallback) {
+                    this._pendingCallbacks.push('-' + serial);
+                }
+                else {
+                    this.imm_forgetDevice(this._devs[serial]);
+                }
+            }
+        }
+        let i = this._hubs.indexOf(hub);
+        if (i >= 0) {
+            this._hubs.splice(i, 1);
+        }
+    }
     /**
      * Setup the Yoctopuce library to use modules connected on a given machine. The
      * parameter will determine how the API will work. Use the following values:
@@ -11146,11 +11208,11 @@ class YAPIContext {
      *
      * You can call <i>RegisterHub</i> several times to connect to several machines.
      *
-     * @param url {string} : a string containing either "usb","callback" or the
+     * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -11201,11 +11263,11 @@ class YAPIContext {
      * This makes it possible to register a network hub independently of the current
      * connectivity, and to try to contact it only when a device is actively needed.
      *
-     * @param url {string} : a string containing either "usb","callback" or the
+     * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -11213,23 +11275,22 @@ class YAPIContext {
         let urlInfo = this.imm_parseRegisteredUrl(url);
         let newhub = this.imm_getHub(urlInfo);
         if (newhub) {
+            // hub already active
             return exports.YAPI_SUCCESS;
         }
-        if (this._pendingHubs[url]) {
-            // hub already pre-registered
+        if (this._pendingHubs[urlInfo.url]) {
+            // hub already pre-registered but not connected
             return exports.YAPI_SUCCESS;
         }
-        this._pendingHubs[url] = true;
         newhub = this.imm_registerHub_internal(urlInfo);
         if (!newhub) {
             return this._throw(exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
         }
-        newhub.imm_setConnectionType(newhub._HUB_PREREGISTRED);
+        newhub.imm_setConnectionType(1 /* HUB_PREREGISTERED */);
+        this._pendingHubs[urlInfo.url] = newhub;
         // trigger testHub, but don't wait for the result
-        newhub.testHub(0, errmsg).then(() => {
-            // registration is now complete
-            delete this._pendingHubs[url];
-        });
+        // the hub will be removed from _pendingHubs when connected
+        newhub.testHub(0, errmsg);
         return exports.YAPI_SUCCESS;
     }
     /**
@@ -11317,7 +11378,7 @@ class YAPIContext {
      * Setup the Yoctopuce library to no more use modules connected on a previously
      * registered machine with RegisterHub.
      *
-     * @param url {string} : a string containing either "usb" or the
+     * @param url : a string containing either "usb" or the
      *         root URL of the hub to monitor
      */
     async UnregisterHub(url) {
@@ -11325,23 +11386,11 @@ class YAPIContext {
         let hub = this.imm_getHub(urlInfo);
         if (hub) {
             await hub.disconnect();
-            for (let j = 0; j < hub.serialByYdx.length; j++) {
-                let serial = hub.serialByYdx[j];
-                if (serial) {
-                    this.imm_forgetDevice(this._devs[serial]);
-                }
-            }
-            for (let i = 0; i < this._hubs.length; i++) {
-                if (this._hubs[i] == hub) {
-                    let before = this._hubs.slice(0, i);
-                    if (i + 1 < this._hubs.length) {
-                        let after = this._hubs.slice(i + 1);
-                        this._hubs = before.concat(after);
-                    }
-                    this._hubs = before;
-                    return;
-                }
-            }
+            this.imm_forgetHub(hub);
+        }
+        else if (this._pendingHubs[urlInfo.url]) {
+            await this._pendingHubs[urlInfo.url].disconnect();
+            delete this._pendingHubs[urlInfo.url];
         }
     }
     /**
@@ -11350,12 +11399,12 @@ class YAPIContext {
      * method. This method is useful to verify the authentication parameters for a hub. It
      * is possible to force this method to return after mstimeout milliseconds.
      *
-     * @param url {string} : a string containing either "usb","callback" or the
+     * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor
-     * @param mstimeout {number} : the number of millisecond available to test the connection.
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param mstimeout : the number of millisecond available to test the connection.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure returns a negative error code.
      */
@@ -11369,7 +11418,7 @@ class YAPIContext {
         if (!newhub) {
             return exports.YAPI_NOT_SUPPORTED;
         }
-        newhub.imm_setConnectionType(newhub._HUB_TESTONLY);
+        newhub.imm_setConnectionType(2 /* HUB_TESTONLY */);
         if (!errmsg)
             errmsg = new YErrorMsg();
         let res = await newhub.testHub(mstimeout, errmsg);
@@ -11387,9 +11436,9 @@ class YAPIContext {
      * detection is quite a heavy process, UpdateDeviceList shouldn't be called more
      * than once every two seconds.
      *
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -11424,9 +11473,9 @@ class YAPIContext {
      * Force a hub discovery, if a callback as been registered with yRegisterHubDiscoveryCallback it
      * will be called for each net work hub that will respond to the discovery.
      *
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async TriggerHubDiscovery(errmsg = null) {
@@ -11454,9 +11503,9 @@ class YAPIContext {
      * This function may signal an error in case there is a communication problem
      * while contacting a module.
      *
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -11474,11 +11523,11 @@ class YAPIContext {
      * This function may signal an error in case there is a communication problem
      * while contacting a module.
      *
-     * @param ms_duration {number} : an integer corresponding to the duration of the pause,
+     * @param ms_duration : an integer corresponding to the duration of the pause,
      *         in milliseconds.
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -11545,7 +11594,7 @@ class YAPIContext {
      * This counter can be used to compute delays in relation with
      * Yoctopuce devices, which also uses the millisecond as timebase.
      *
-     * @return {number} a long integer corresponding to the millisecond counter.
+     * @return a long integer corresponding to the millisecond counter.
      */
     GetTickCount() {
         return Date.now();
@@ -11566,9 +11615,9 @@ class YAPIContext {
      * If you try to configure a logical name with an incorrect string,
      * the invalid characters are ignored.
      *
-     * @param name {string} : a string containing the name to check.
+     * @param name : a string containing the name to check.
      *
-     * @return {boolean} true if the name is valid, false otherwise.
+     * @return true if the name is valid, false otherwise.
      */
     async CheckLogicalName(name) {
         return this.imm_CheckLogicalName(name);
@@ -11578,7 +11627,7 @@ class YAPIContext {
      * a device is plugged. This callback will be invoked while yUpdateDeviceList
      * is running. You will have to call this function on a regular basis.
      *
-     * @param arrivalCallback {DeviceArrivalCallback | null} : a procedure taking a YModule parameter, or null
+     * @param arrivalCallback : a procedure taking a YModule parameter, or null
      *         to unregister a previously registered  callback.
      */
     async RegisterDeviceArrivalCallback(arrivalCallback) {
@@ -11592,7 +11641,7 @@ class YAPIContext {
      * a device is unplugged. This callback will be invoked while yUpdateDeviceList
      * is running. You will have to call this function on a regular basis.
      *
-     * @param removalCallback {DeviceRemovalCallback | null} : a procedure taking a YModule parameter, or null
+     * @param removalCallback : a procedure taking a YModule parameter, or null
      *         to unregister a previously registered  callback.
      */
     async RegisterDeviceRemovalCallback(removalCallback) {
@@ -11605,7 +11654,7 @@ class YAPIContext {
      * network hub (this URL can be passed to RegisterHub). This callback will be invoked
      * while yUpdateDeviceList is running. You will have to call this function on a regular basis.
      *
-     * @param hubDiscoveryCallback {HubDiscoveryCallback | null} : a procedure taking two string parameter, the serial
+     * @param hubDiscoveryCallback : a procedure taking two string parameter, the serial
      *         number and the hub URL. Use null to unregister a previously registered  callback.
      */
     async RegisterHubDiscoveryCallback(hubDiscoveryCallback) {

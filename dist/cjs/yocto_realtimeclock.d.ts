@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_realtimeclock.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_TimeSet {
+export declare const enum YRealTimeClock_TimeSet {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -47,7 +47,7 @@ export interface YRealTimeClockValueCallback {
 }
 /**
  * YRealTimeClock Class: real-time clock control interface, available for instance in the
- * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * The YRealTimeClock class provide access to the embedded real-time clock available on some Yoctopuce
  * devices. It can provide current date and time, even after a power outage
@@ -60,20 +60,20 @@ export declare class YRealTimeClock extends YFunction {
     _unixTime: number;
     _dateTime: string;
     _utcOffset: number;
-    _timeSet: Y_TimeSet;
+    _timeSet: YRealTimeClock_TimeSet;
     _valueCallbackRealTimeClock: YRealTimeClockValueCallback | null;
     readonly UNIXTIME_INVALID: number;
     readonly DATETIME_INVALID: string;
     readonly UTCOFFSET_INVALID: number;
-    readonly TIMESET_FALSE: Y_TimeSet;
-    readonly TIMESET_TRUE: Y_TimeSet;
-    readonly TIMESET_INVALID: Y_TimeSet;
+    readonly TIMESET_FALSE: YRealTimeClock_TimeSet;
+    readonly TIMESET_TRUE: YRealTimeClock_TimeSet;
+    readonly TIMESET_INVALID: YRealTimeClock_TimeSet;
     static readonly UNIXTIME_INVALID: number;
     static readonly DATETIME_INVALID: string;
     static readonly UTCOFFSET_INVALID: number;
-    static readonly TIMESET_FALSE: Y_TimeSet;
-    static readonly TIMESET_TRUE: Y_TimeSet;
-    static readonly TIMESET_INVALID: Y_TimeSet;
+    static readonly TIMESET_FALSE: YRealTimeClock_TimeSet;
+    static readonly TIMESET_TRUE: YRealTimeClock_TimeSet;
+    static readonly TIMESET_INVALID: YRealTimeClock_TimeSet;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -82,7 +82,7 @@ export declare class YRealTimeClock extends YFunction {
      * @return an integer corresponding to the current time in Unix format (number of elapsed seconds
      * since Jan 1st, 1970)
      *
-     * On failure, throws an exception or returns Y_UNIXTIME_INVALID.
+     * On failure, throws an exception or returns YRealTimeClock.UNIXTIME_INVALID.
      */
     get_unixTime(): Promise<number>;
     /**
@@ -90,7 +90,7 @@ export declare class YRealTimeClock extends YFunction {
      *
      * @param newval : an integer corresponding to the current time
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -100,7 +100,7 @@ export declare class YRealTimeClock extends YFunction {
      *
      * @return a string corresponding to the current time in the form "YYYY/MM/DD hh:mm:ss"
      *
-     * On failure, throws an exception or returns Y_DATETIME_INVALID.
+     * On failure, throws an exception or returns YRealTimeClock.DATETIME_INVALID.
      */
     get_dateTime(): Promise<string>;
     /**
@@ -108,7 +108,7 @@ export declare class YRealTimeClock extends YFunction {
      *
      * @return an integer corresponding to the number of seconds between current time and UTC time (time zone)
      *
-     * On failure, throws an exception or returns Y_UTCOFFSET_INVALID.
+     * On failure, throws an exception or returns YRealTimeClock.UTCOFFSET_INVALID.
      */
     get_utcOffset(): Promise<number>;
     /**
@@ -119,7 +119,7 @@ export declare class YRealTimeClock extends YFunction {
      *
      * @param newval : an integer corresponding to the number of seconds between current time and UTC time (time zone)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -127,14 +127,14 @@ export declare class YRealTimeClock extends YFunction {
     /**
      * Returns true if the clock has been set, and false otherwise.
      *
-     * @return either Y_TIMESET_FALSE or Y_TIMESET_TRUE, according to true if the clock has been set, and
-     * false otherwise
+     * @return either YRealTimeClock.TIMESET_FALSE or YRealTimeClock.TIMESET_TRUE, according to true if
+     * the clock has been set, and false otherwise
      *
-     * On failure, throws an exception or returns Y_TIMESET_INVALID.
+     * On failure, throws an exception or returns YRealTimeClock.TIMESET_INVALID.
      */
-    get_timeSet(): Promise<Y_TimeSet>;
+    get_timeSet(): Promise<YRealTimeClock_TimeSet>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a real-time clock for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -144,11 +144,11 @@ export declare class YRealTimeClock extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the real-time clock is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRealTimeClock.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRealTimeClock.isOnline() to test if the real-time clock is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a real-time clock by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -156,14 +156,14 @@ export declare class YRealTimeClock extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the real-time clock, for instance
+     *         YHUBGSM3.realTimeClock.
      *
-     * @return a YRealTimeClock object allowing you to drive $THEFUNCTION$.
+     * @return a YRealTimeClock object allowing you to drive the real-time clock.
      */
     static FindRealTimeClock(func: string): YRealTimeClock;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a real-time clock for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -173,19 +173,19 @@ export declare class YRealTimeClock extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the real-time clock is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRealTimeClock.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRealTimeClock.isOnline() to test if the real-time clock is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a real-time clock by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the real-time clock, for instance
+     *         YHUBGSM3.realTimeClock.
      *
-     * @return a YRealTimeClock object allowing you to drive $THEFUNCTION$.
+     * @return a YRealTimeClock object allowing you to drive the real-time clock.
      */
     static FindRealTimeClockInContext(yctx: YAPIContext, func: string): YRealTimeClock;
     /**
@@ -202,23 +202,36 @@ export declare class YRealTimeClock extends YFunction {
     registerValueCallback(callback: YRealTimeClockValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
-     * Returns the next RealTimeClock
+     * Continues the enumeration of real-time clocks started using yFirstRealTimeClock().
+     * Caution: You can't make any assumption about the returned real-time clocks order.
+     * If you want to find a specific a real-time clock, use RealTimeClock.findRealTimeClock()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YRealTimeClock}
+     * @return a pointer to a YRealTimeClock object, corresponding to
+     *         a real-time clock currently online, or a null pointer
+     *         if there are no more real-time clocks to enumerate.
      */
     nextRealTimeClock(): YRealTimeClock | null;
     /**
-     * Retrieves the first RealTimeClock in a YAPI context
+     * Starts the enumeration of real-time clocks currently accessible.
+     * Use the method YRealTimeClock.nextRealTimeClock() to iterate on
+     * next real-time clocks.
      *
-     * @returns {YRealTimeClock}
+     * @return a pointer to a YRealTimeClock object, corresponding to
+     *         the first real-time clock currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRealTimeClock(): YRealTimeClock | null;
     /**
-     * Retrieves the first RealTimeClock in a given context
+     * Starts the enumeration of real-time clocks currently accessible.
+     * Use the method YRealTimeClock.nextRealTimeClock() to iterate on
+     * next real-time clocks.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YRealTimeClock}
+     * @return a pointer to a YRealTimeClock object, corresponding to
+     *         the first real-time clock currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRealTimeClockInContext(yctx: YAPIContext): YRealTimeClock | null;
 }

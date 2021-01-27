@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_wakeupmonitor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -44,7 +44,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (YWakeUpMonitor class start)
 /**
  * YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
- * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * The YWakeUpMonitor class handles globally all wake-up sources, as well
  * as automated sleep mode.
@@ -112,7 +112,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the maximal wake up time (in seconds) before automatically going to sleep
      *
-     * On failure, throws an exception or returns Y_POWERDURATION_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.POWERDURATION_INVALID.
      */
     async get_powerDuration() {
         let res;
@@ -132,7 +132,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      * @param newval : an integer corresponding to the maximal wake up time (seconds) before automatically
      * going to sleep
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -146,7 +146,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the delay before the  next sleep period
      *
-     * On failure, throws an exception or returns Y_SLEEPCOUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.SLEEPCOUNTDOWN_INVALID.
      */
     async get_sleepCountdown() {
         let res;
@@ -163,7 +163,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the delay before the next sleep period
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -177,7 +177,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the next scheduled wake up date/time (UNIX format)
      *
-     * On failure, throws an exception or returns Y_NEXTWAKEUP_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.NEXTWAKEUP_INVALID.
      */
     async get_nextWakeUp() {
         let res;
@@ -194,7 +194,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the days of the week when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -206,11 +206,12 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
     /**
      * Returns the latest wake up reason.
      *
-     * @return a value among Y_WAKEUPREASON_USBPOWER, Y_WAKEUPREASON_EXTPOWER, Y_WAKEUPREASON_ENDOFSLEEP,
-     * Y_WAKEUPREASON_EXTSIG1, Y_WAKEUPREASON_SCHEDULE1 and Y_WAKEUPREASON_SCHEDULE2 corresponding to the
-     * latest wake up reason
+     * @return a value among YWakeUpMonitor.WAKEUPREASON_USBPOWER, YWakeUpMonitor.WAKEUPREASON_EXTPOWER,
+     * YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP, YWakeUpMonitor.WAKEUPREASON_EXTSIG1,
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 and YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 corresponding to
+     * the latest wake up reason
      *
-     * On failure, throws an exception or returns Y_WAKEUPREASON_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
     async get_wakeUpReason() {
         let res;
@@ -225,9 +226,10 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
     /**
      * Returns  the current state of the monitor.
      *
-     * @return either Y_WAKEUPSTATE_SLEEPING or Y_WAKEUPSTATE_AWAKE, according to  the current state of the monitor
+     * @return either YWakeUpMonitor.WAKEUPSTATE_SLEEPING or YWakeUpMonitor.WAKEUPSTATE_AWAKE, according
+     * to  the current state of the monitor
      *
-     * On failure, throws an exception or returns Y_WAKEUPSTATE_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPSTATE_INVALID.
      */
     async get_wakeUpState() {
         let res;
@@ -255,7 +257,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a wake-up monitor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -265,11 +267,11 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wake-up monitor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWakeUpMonitor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWakeUpMonitor.isOnline() to test if the wake-up monitor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wake-up monitor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -277,10 +279,10 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wake-up monitor, for instance
+     *         YHUBGSM3.wakeUpMonitor.
      *
-     * @return a YWakeUpMonitor object allowing you to drive $THEFUNCTION$.
+     * @return a YWakeUpMonitor object allowing you to drive the wake-up monitor.
      */
     static FindWakeUpMonitor(func) {
         let obj;
@@ -292,7 +294,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a wake-up monitor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -302,19 +304,19 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wake-up monitor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWakeUpMonitor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWakeUpMonitor.isOnline() to test if the wake-up monitor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wake-up monitor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wake-up monitor, for instance
+     *         YHUBGSM3.wakeUpMonitor.
      *
-     * @return a YWakeUpMonitor object allowing you to drive $THEFUNCTION$.
+     * @return a YWakeUpMonitor object allowing you to drive the wake-up monitor.
      */
     static FindWakeUpMonitorInContext(yctx, func) {
         let obj;
@@ -380,7 +382,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      *
      * @param secBeforeSleep : number of seconds before going into sleep mode,
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -402,7 +404,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      * @param secUntilWakeUp : number of seconds before next wake up
      * @param secBeforeSleep : number of seconds before going into sleep mode
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -424,7 +426,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
      * @param wakeUpTime : wake-up datetime (UNIX format)
      * @param secBeforeSleep : number of seconds before going into sleep mode
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -441,7 +443,7 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
     /**
      * Resets the sleep countdown.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async resetSleepCountDown() {
@@ -450,9 +452,14 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
         return this._yapi.SUCCESS;
     }
     /**
-     * Returns the next WakeUpMonitor
+     * Continues the enumeration of wake-up monitors started using yFirstWakeUpMonitor().
+     * Caution: You can't make any assumption about the returned wake-up monitors order.
+     * If you want to find a specific a wake-up monitor, use WakeUpMonitor.findWakeUpMonitor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YWakeUpMonitor}
+     * @return a pointer to a YWakeUpMonitor object, corresponding to
+     *         a wake-up monitor currently online, or a null pointer
+     *         if there are no more wake-up monitors to enumerate.
      */
     nextWakeUpMonitor() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -464,9 +471,13 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
         return YWakeUpMonitor.FindWakeUpMonitorInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first WakeUpMonitor in a YAPI context
+     * Starts the enumeration of wake-up monitors currently accessible.
+     * Use the method YWakeUpMonitor.nextWakeUpMonitor() to iterate on
+     * next wake-up monitors.
      *
-     * @returns {YWakeUpMonitor}
+     * @return a pointer to a YWakeUpMonitor object, corresponding to
+     *         the first wake-up monitor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWakeUpMonitor() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('WakeUpMonitor');
@@ -475,11 +486,15 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
         return YWakeUpMonitor.FindWakeUpMonitor(next_hwid);
     }
     /**
-     * Retrieves the first WakeUpMonitor in a given context
+     * Starts the enumeration of wake-up monitors currently accessible.
+     * Use the method YWakeUpMonitor.nextWakeUpMonitor() to iterate on
+     * next wake-up monitors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YWakeUpMonitor}
+     * @return a pointer to a YWakeUpMonitor object, corresponding to
+     *         the first wake-up monitor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWakeUpMonitorInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('WakeUpMonitor');

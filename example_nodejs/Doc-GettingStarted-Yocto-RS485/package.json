@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-yocto-rs485",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-GettingStarted-Yocto-RS485 example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

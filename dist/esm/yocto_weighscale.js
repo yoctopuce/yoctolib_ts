@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_weighscale.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -119,7 +119,7 @@ export class YWeighScale extends YSensor {
      *
      * @param newval : a string corresponding to the measuring unit for the weight
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -131,10 +131,10 @@ export class YWeighScale extends YSensor {
     /**
      * Returns the current load cell bridge excitation method.
      *
-     * @return a value among Y_EXCITATION_OFF, Y_EXCITATION_DC and Y_EXCITATION_AC corresponding to the
-     * current load cell bridge excitation method
+     * @return a value among YWeighScale.EXCITATION_OFF, YWeighScale.EXCITATION_DC and
+     * YWeighScale.EXCITATION_AC corresponding to the current load cell bridge excitation method
      *
-     * On failure, throws an exception or returns Y_EXCITATION_INVALID.
+     * On failure, throws an exception or returns YWeighScale.EXCITATION_INVALID.
      */
     async get_excitation() {
         let res;
@@ -151,10 +151,10 @@ export class YWeighScale extends YSensor {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_EXCITATION_OFF, Y_EXCITATION_DC and Y_EXCITATION_AC corresponding
-     * to the current load cell bridge excitation method
+     * @param newval : a value among YWeighScale.EXCITATION_OFF, YWeighScale.EXCITATION_DC and
+     * YWeighScale.EXCITATION_AC corresponding to the current load cell bridge excitation method
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -174,7 +174,7 @@ export class YWeighScale extends YSensor {
      *
      * @param newval : a floating point number corresponding to the averaged temperature update rate, in per mille
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -192,7 +192,7 @@ export class YWeighScale extends YSensor {
      *
      * @return a floating point number corresponding to the averaged temperature update rate, in per mille
      *
-     * On failure, throws an exception or returns Y_TEMPAVGADAPTRATIO_INVALID.
+     * On failure, throws an exception or returns YWeighScale.TEMPAVGADAPTRATIO_INVALID.
      */
     async get_tempAvgAdaptRatio() {
         let res;
@@ -214,7 +214,7 @@ export class YWeighScale extends YSensor {
      *
      * @param newval : a floating point number corresponding to the temperature change update rate, in per mille
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -231,7 +231,7 @@ export class YWeighScale extends YSensor {
      *
      * @return a floating point number corresponding to the temperature change update rate, in per mille
      *
-     * On failure, throws an exception or returns Y_TEMPCHGADAPTRATIO_INVALID.
+     * On failure, throws an exception or returns YWeighScale.TEMPCHGADAPTRATIO_INVALID.
      */
     async get_tempChgAdaptRatio() {
         let res;
@@ -248,7 +248,7 @@ export class YWeighScale extends YSensor {
      *
      * @return a floating point number corresponding to the current averaged temperature, used for thermal compensation
      *
-     * On failure, throws an exception or returns Y_COMPTEMPAVG_INVALID.
+     * On failure, throws an exception or returns YWeighScale.COMPTEMPAVG_INVALID.
      */
     async get_compTempAvg() {
         let res;
@@ -266,7 +266,7 @@ export class YWeighScale extends YSensor {
      * @return a floating point number corresponding to the current temperature variation, used for
      * thermal compensation
      *
-     * On failure, throws an exception or returns Y_COMPTEMPCHG_INVALID.
+     * On failure, throws an exception or returns YWeighScale.COMPTEMPCHG_INVALID.
      */
     async get_compTempChg() {
         let res;
@@ -283,7 +283,7 @@ export class YWeighScale extends YSensor {
      *
      * @return a floating point number corresponding to the current current thermal compensation value
      *
-     * On failure, throws an exception or returns Y_COMPENSATION_INVALID.
+     * On failure, throws an exception or returns YWeighScale.COMPENSATION_INVALID.
      */
     async get_compensation() {
         let res;
@@ -304,7 +304,7 @@ export class YWeighScale extends YSensor {
      *
      * @param newval : a floating point number corresponding to the zero tracking threshold value
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -320,7 +320,7 @@ export class YWeighScale extends YSensor {
      *
      * @return a floating point number corresponding to the zero tracking threshold value
      *
-     * On failure, throws an exception or returns Y_ZEROTRACKING_INVALID.
+     * On failure, throws an exception or returns YWeighScale.ZEROTRACKING_INVALID.
      */
     async get_zeroTracking() {
         let res;
@@ -348,7 +348,7 @@ export class YWeighScale extends YSensor {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a weighing scale sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -358,11 +358,11 @@ export class YWeighScale extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the weighing scale sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWeighScale.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWeighScale.isOnline() to test if the weighing scale sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a weighing scale sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -370,10 +370,10 @@ export class YWeighScale extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the weighing scale sensor, for instance
+     *         YWBRIDG1.weighScale1.
      *
-     * @return a YWeighScale object allowing you to drive $THEFUNCTION$.
+     * @return a YWeighScale object allowing you to drive the weighing scale sensor.
      */
     static FindWeighScale(func) {
         let obj;
@@ -385,7 +385,7 @@ export class YWeighScale extends YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a weighing scale sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -395,19 +395,19 @@ export class YWeighScale extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the weighing scale sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWeighScale.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWeighScale.isOnline() to test if the weighing scale sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a weighing scale sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the weighing scale sensor, for instance
+     *         YWBRIDG1.weighScale1.
      *
-     * @return a YWeighScale object allowing you to drive $THEFUNCTION$.
+     * @return a YWeighScale object allowing you to drive the weighing scale sensor.
      */
     static FindWeighScaleInContext(yctx, func) {
         let obj;
@@ -503,7 +503,7 @@ export class YWeighScale extends YSensor {
      * so that the current signal corresponds to a zero weight. Remember to call the
      * saveToFlash() method of the module if the modification must be kept.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -517,7 +517,7 @@ export class YWeighScale extends YSensor {
      * @param currWeight : reference weight presently on the load cell.
      * @param maxWeight : maximum weight to be expected on the load cell.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -608,7 +608,7 @@ export class YWeighScale extends YSensor {
      *         to apply for each of the temperature included in the first
      *         argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -626,7 +626,7 @@ export class YWeighScale extends YSensor {
      *         with the offset correction applied for each of the temperature
      *         included in the first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -644,7 +644,7 @@ export class YWeighScale extends YSensor {
      *         to apply for each of the temperature variation included in the first
      *         argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -662,7 +662,7 @@ export class YWeighScale extends YSensor {
      *         with the offset correction applied for each of the temperature
      *         variation included in the first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -680,7 +680,7 @@ export class YWeighScale extends YSensor {
      *         (in percents) to apply for each of the temperature included in the first
      *         argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -698,7 +698,7 @@ export class YWeighScale extends YSensor {
      *         with the span correction applied for each of the temperature
      *         included in the first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -716,7 +716,7 @@ export class YWeighScale extends YSensor {
      *         (in percents) to apply for each of the temperature variation included
      *         in the first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -734,7 +734,7 @@ export class YWeighScale extends YSensor {
      *         with the span correction applied for each of variation of temperature
      *         included in the first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -742,9 +742,14 @@ export class YWeighScale extends YSensor {
         return await this.loadCompensationTable(3, tempValues, compValues);
     }
     /**
-     * Returns the next WeighScale
+     * Continues the enumeration of weighing scale sensors started using yFirstWeighScale().
+     * Caution: You can't make any assumption about the returned weighing scale sensors order.
+     * If you want to find a specific a weighing scale sensor, use WeighScale.findWeighScale()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YWeighScale}
+     * @return a pointer to a YWeighScale object, corresponding to
+     *         a weighing scale sensor currently online, or a null pointer
+     *         if there are no more weighing scale sensors to enumerate.
      */
     nextWeighScale() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -756,9 +761,13 @@ export class YWeighScale extends YSensor {
         return YWeighScale.FindWeighScaleInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first WeighScale in a YAPI context
+     * Starts the enumeration of weighing scale sensors currently accessible.
+     * Use the method YWeighScale.nextWeighScale() to iterate on
+     * next weighing scale sensors.
      *
-     * @returns {YWeighScale}
+     * @return a pointer to a YWeighScale object, corresponding to
+     *         the first weighing scale sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWeighScale() {
         let next_hwid = YAPI.imm_getFirstHardwareId('WeighScale');
@@ -767,11 +776,15 @@ export class YWeighScale extends YSensor {
         return YWeighScale.FindWeighScale(next_hwid);
     }
     /**
-     * Retrieves the first WeighScale in a given context
+     * Starts the enumeration of weighing scale sensors currently accessible.
+     * Use the method YWeighScale.nextWeighScale() to iterate on
+     * next weighing scale sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YWeighScale}
+     * @return a pointer to a YWeighScale object, corresponding to
+     *         the first weighing scale sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWeighScaleInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('WeighScale');

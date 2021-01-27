@@ -32,6 +32,7 @@ const ROOT_URL: string = 'http://127.0.0.1:'+HTTP_PORT;
 
 const MimeTypes: StringDict = {
     '.js': 'application/javascript',
+    '.ts': 'application/typescript',
     '.map': 'application/json',
     '.html': 'text/html',
     '.css': 'text/css',

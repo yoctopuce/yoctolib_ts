@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_accelerometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -43,7 +43,8 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YAccelerometer definitions)
 //--- (YAccelerometer class start)
 /**
- * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2
+ * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2 or
+ * the Yocto-Inclinometer
  *
  * The YAccelerometer class allows you to read and configure Yoctopuce accelerometers.
  * It inherits from YSensor class the core functions to read measurements,
@@ -103,7 +104,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the measure update frequency, measured in Hz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.BANDWIDTH_INVALID.
      */
     async get_bandwidth() {
         let res;
@@ -123,7 +124,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      *
      * @param newval : an integer corresponding to the measure update frequency, measured in Hz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -137,7 +138,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      *
      * @return a floating point number corresponding to the X component of the acceleration, as a floating point number
      *
-     * On failure, throws an exception or returns Y_XVALUE_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.XVALUE_INVALID.
      */
     async get_xValue() {
         let res;
@@ -154,7 +155,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      *
      * @return a floating point number corresponding to the Y component of the acceleration, as a floating point number
      *
-     * On failure, throws an exception or returns Y_YVALUE_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.YVALUE_INVALID.
      */
     async get_yValue() {
         let res;
@@ -171,7 +172,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      *
      * @return a floating point number corresponding to the Z component of the acceleration, as a floating point number
      *
-     * On failure, throws an exception or returns Y_ZVALUE_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.ZVALUE_INVALID.
      */
     async get_zValue() {
         let res;
@@ -199,7 +200,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
         return await this._setAttr('gravityCancellation', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an accelerometer for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -209,11 +210,11 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the accelerometer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAccelerometer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAccelerometer.isOnline() to test if the accelerometer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an accelerometer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -221,10 +222,10 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the accelerometer, for instance
+     *         Y3DMK002.accelerometer.
      *
-     * @return a YAccelerometer object allowing you to drive $THEFUNCTION$.
+     * @return a YAccelerometer object allowing you to drive the accelerometer.
      */
     static FindAccelerometer(func) {
         let obj;
@@ -236,7 +237,7 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an accelerometer for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -246,19 +247,19 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the accelerometer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAccelerometer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAccelerometer.isOnline() to test if the accelerometer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an accelerometer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the accelerometer, for instance
+     *         Y3DMK002.accelerometer.
      *
-     * @return a YAccelerometer object allowing you to drive $THEFUNCTION$.
+     * @return a YAccelerometer object allowing you to drive the accelerometer.
      */
     static FindAccelerometerInContext(yctx, func) {
         let obj;
@@ -350,9 +351,14 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
         return 0;
     }
     /**
-     * Returns the next Accelerometer
+     * Continues the enumeration of accelerometers started using yFirstAccelerometer().
+     * Caution: You can't make any assumption about the returned accelerometers order.
+     * If you want to find a specific an accelerometer, use Accelerometer.findAccelerometer()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YAccelerometer}
+     * @return a pointer to a YAccelerometer object, corresponding to
+     *         an accelerometer currently online, or a null pointer
+     *         if there are no more accelerometers to enumerate.
      */
     nextAccelerometer() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -364,9 +370,13 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
         return YAccelerometer.FindAccelerometerInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Accelerometer in a YAPI context
+     * Starts the enumeration of accelerometers currently accessible.
+     * Use the method YAccelerometer.nextAccelerometer() to iterate on
+     * next accelerometers.
      *
-     * @returns {YAccelerometer}
+     * @return a pointer to a YAccelerometer object, corresponding to
+     *         the first accelerometer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAccelerometer() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Accelerometer');
@@ -375,11 +385,15 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
         return YAccelerometer.FindAccelerometer(next_hwid);
     }
     /**
-     * Retrieves the first Accelerometer in a given context
+     * Starts the enumeration of accelerometers currently accessible.
+     * Use the method YAccelerometer.nextAccelerometer() to iterate on
+     * next accelerometers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YAccelerometer}
+     * @return a pointer to a YAccelerometer object, corresponding to
+     *         the first accelerometer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAccelerometerInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Accelerometer');

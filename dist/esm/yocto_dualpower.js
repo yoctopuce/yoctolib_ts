@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_dualpower.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -92,10 +92,11 @@ export class YDualPower extends YFunction {
     /**
      * Returns the current power source for module functions that require lots of current.
      *
-     * @return a value among Y_POWERSTATE_OFF, Y_POWERSTATE_FROM_USB and Y_POWERSTATE_FROM_EXT
-     * corresponding to the current power source for module functions that require lots of current
+     * @return a value among YDualPower.POWERSTATE_OFF, YDualPower.POWERSTATE_FROM_USB and
+     * YDualPower.POWERSTATE_FROM_EXT corresponding to the current power source for module functions that
+     * require lots of current
      *
-     * On failure, throws an exception or returns Y_POWERSTATE_INVALID.
+     * On failure, throws an exception or returns YDualPower.POWERSTATE_INVALID.
      */
     async get_powerState() {
         let res;
@@ -110,10 +111,11 @@ export class YDualPower extends YFunction {
     /**
      * Returns the selected power source for module functions that require lots of current.
      *
-     * @return a value among Y_POWERCONTROL_AUTO, Y_POWERCONTROL_FROM_USB, Y_POWERCONTROL_FROM_EXT and
-     * Y_POWERCONTROL_OFF corresponding to the selected power source for module functions that require lots of current
+     * @return a value among YDualPower.POWERCONTROL_AUTO, YDualPower.POWERCONTROL_FROM_USB,
+     * YDualPower.POWERCONTROL_FROM_EXT and YDualPower.POWERCONTROL_OFF corresponding to the selected
+     * power source for module functions that require lots of current
      *
-     * On failure, throws an exception or returns Y_POWERCONTROL_INVALID.
+     * On failure, throws an exception or returns YDualPower.POWERCONTROL_INVALID.
      */
     async get_powerControl() {
         let res;
@@ -129,11 +131,11 @@ export class YDualPower extends YFunction {
      * Changes the selected power source for module functions that require lots of current.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_POWERCONTROL_AUTO, Y_POWERCONTROL_FROM_USB, Y_POWERCONTROL_FROM_EXT
-     * and Y_POWERCONTROL_OFF corresponding to the selected power source for module functions that require
-     * lots of current
+     * @param newval : a value among YDualPower.POWERCONTROL_AUTO, YDualPower.POWERCONTROL_FROM_USB,
+     * YDualPower.POWERCONTROL_FROM_EXT and YDualPower.POWERCONTROL_OFF corresponding to the selected
+     * power source for module functions that require lots of current
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -147,7 +149,7 @@ export class YDualPower extends YFunction {
      *
      * @return an integer corresponding to the measured voltage on the external power source, in millivolts
      *
-     * On failure, throws an exception or returns Y_EXTVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YDualPower.EXTVOLTAGE_INVALID.
      */
     async get_extVoltage() {
         let res;
@@ -160,7 +162,7 @@ export class YDualPower extends YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a dual power switch for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -170,11 +172,11 @@ export class YDualPower extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the dual power switch is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDualPower.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDualPower.isOnline() to test if the dual power switch is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a dual power switch by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -182,10 +184,10 @@ export class YDualPower extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the dual power switch, for instance
+     *         SERVORC1.dualPower.
      *
-     * @return a YDualPower object allowing you to drive $THEFUNCTION$.
+     * @return a YDualPower object allowing you to drive the dual power switch.
      */
     static FindDualPower(func) {
         let obj;
@@ -197,7 +199,7 @@ export class YDualPower extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a dual power switch for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -207,19 +209,19 @@ export class YDualPower extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the dual power switch is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDualPower.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDualPower.isOnline() to test if the dual power switch is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a dual power switch by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the dual power switch, for instance
+     *         SERVORC1.dualPower.
      *
-     * @return a YDualPower object allowing you to drive $THEFUNCTION$.
+     * @return a YDualPower object allowing you to drive the dual power switch.
      */
     static FindDualPowerInContext(yctx, func) {
         let obj;
@@ -274,9 +276,14 @@ export class YDualPower extends YFunction {
         return 0;
     }
     /**
-     * Returns the next DualPower
+     * Continues the enumeration of dual power switches started using yFirstDualPower().
+     * Caution: You can't make any assumption about the returned dual power switches order.
+     * If you want to find a specific a dual power switch, use DualPower.findDualPower()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDualPower}
+     * @return a pointer to a YDualPower object, corresponding to
+     *         a dual power switch currently online, or a null pointer
+     *         if there are no more dual power switches to enumerate.
      */
     nextDualPower() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -288,9 +295,13 @@ export class YDualPower extends YFunction {
         return YDualPower.FindDualPowerInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first DualPower in a YAPI context
+     * Starts the enumeration of dual power switches currently accessible.
+     * Use the method YDualPower.nextDualPower() to iterate on
+     * next dual power switches.
      *
-     * @returns {YDualPower}
+     * @return a pointer to a YDualPower object, corresponding to
+     *         the first dual power switch currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDualPower() {
         let next_hwid = YAPI.imm_getFirstHardwareId('DualPower');
@@ -299,11 +310,15 @@ export class YDualPower extends YFunction {
         return YDualPower.FindDualPower(next_hwid);
     }
     /**
-     * Retrieves the first DualPower in a given context
+     * Starts the enumeration of dual power switches currently accessible.
+     * Use the method YDualPower.nextDualPower() to iterate on
+     * next dual power switches.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDualPower}
+     * @return a pointer to a YDualPower object, corresponding to
+     *         the first dual power switch currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDualPowerInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('DualPower');

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_i2cport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -106,7 +106,7 @@ export class YI2cSnoopingRecord
 }
 
 //--- (generated code: YI2cPort definitions)
-export const enum Y_I2cVoltageLevel {
+export const enum YI2cPort_I2cVoltageLevel {
     OFF = 0,
     _3V3 = 1,
     _1V8 = 2,
@@ -143,7 +143,7 @@ export class YI2cPort extends YFunction
     _jobMaxSize: number = YI2cPort.JOBMAXSIZE_INVALID;
     _command: string = YI2cPort.COMMAND_INVALID;
     _protocol: string = YI2cPort.PROTOCOL_INVALID;
-    _i2cVoltageLevel: Y_I2cVoltageLevel = YI2cPort.I2CVOLTAGELEVEL_INVALID;
+    _i2cVoltageLevel: YI2cPort_I2cVoltageLevel = YI2cPort.I2CVOLTAGELEVEL_INVALID;
     _i2cMode: string = YI2cPort.I2CMODE_INVALID;
     _valueCallbackI2cPort: YI2cPortValueCallback | null = null;
     _rxptr: number = 0;
@@ -163,10 +163,10 @@ export class YI2cPort extends YFunction
     public readonly JOBMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public readonly PROTOCOL_INVALID: string = YAPI.INVALID_STRING;
-    public readonly I2CVOLTAGELEVEL_OFF: Y_I2cVoltageLevel = Y_I2cVoltageLevel.OFF;
-    public readonly I2CVOLTAGELEVEL_3V3: Y_I2cVoltageLevel = Y_I2cVoltageLevel._3V3;
-    public readonly I2CVOLTAGELEVEL_1V8: Y_I2cVoltageLevel = Y_I2cVoltageLevel._1V8;
-    public readonly I2CVOLTAGELEVEL_INVALID: Y_I2cVoltageLevel = Y_I2cVoltageLevel.INVALID;
+    public readonly I2CVOLTAGELEVEL_OFF: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.OFF;
+    public readonly I2CVOLTAGELEVEL_3V3: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._3V3;
+    public readonly I2CVOLTAGELEVEL_1V8: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._1V8;
+    public readonly I2CVOLTAGELEVEL_INVALID: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.INVALID;
     public readonly I2CMODE_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
@@ -182,10 +182,10 @@ export class YI2cPort extends YFunction
     public static readonly JOBMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public static readonly PROTOCOL_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly I2CVOLTAGELEVEL_OFF: Y_I2cVoltageLevel = Y_I2cVoltageLevel.OFF;
-    public static readonly I2CVOLTAGELEVEL_3V3: Y_I2cVoltageLevel = Y_I2cVoltageLevel._3V3;
-    public static readonly I2CVOLTAGELEVEL_1V8: Y_I2cVoltageLevel = Y_I2cVoltageLevel._1V8;
-    public static readonly I2CVOLTAGELEVEL_INVALID: Y_I2cVoltageLevel = Y_I2cVoltageLevel.INVALID;
+    public static readonly I2CVOLTAGELEVEL_OFF: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.OFF;
+    public static readonly I2CVOLTAGELEVEL_3V3: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._3V3;
+    public static readonly I2CVOLTAGELEVEL_1V8: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._1V8;
+    public static readonly I2CVOLTAGELEVEL_INVALID: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.INVALID;
     public static readonly I2CMODE_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of generated code: YI2cPort attributes declaration)
 
@@ -239,7 +239,7 @@ export class YI2cPort extends YFunction
             this._protocol = <string> <string> val;
             return 1;
         case 'i2cVoltageLevel':
-            this._i2cVoltageLevel = <Y_I2cVoltageLevel> <number> val;
+            this._i2cVoltageLevel = <YI2cPort_I2cVoltageLevel> <number> val;
             return 1;
         case 'i2cMode':
             this._i2cMode = <string> <string> val;
@@ -253,7 +253,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to the total number of bytes received since last reset
      *
-     * On failure, throws an exception or returns Y_RXCOUNT_INVALID.
+     * On failure, throws an exception or returns YI2cPort.RXCOUNT_INVALID.
      */
     async get_rxCount(): Promise<number>
     {
@@ -272,7 +272,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to the total number of bytes transmitted since last reset
      *
-     * On failure, throws an exception or returns Y_TXCOUNT_INVALID.
+     * On failure, throws an exception or returns YI2cPort.TXCOUNT_INVALID.
      */
     async get_txCount(): Promise<number>
     {
@@ -291,7 +291,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to the total number of communication errors detected since last reset
      *
-     * On failure, throws an exception or returns Y_ERRCOUNT_INVALID.
+     * On failure, throws an exception or returns YI2cPort.ERRCOUNT_INVALID.
      */
     async get_errCount(): Promise<number>
     {
@@ -310,7 +310,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to the total number of messages received since last reset
      *
-     * On failure, throws an exception or returns Y_RXMSGCOUNT_INVALID.
+     * On failure, throws an exception or returns YI2cPort.RXMSGCOUNT_INVALID.
      */
     async get_rxMsgCount(): Promise<number>
     {
@@ -329,7 +329,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to the total number of messages send since last reset
      *
-     * On failure, throws an exception or returns Y_TXMSGCOUNT_INVALID.
+     * On failure, throws an exception or returns YI2cPort.TXMSGCOUNT_INVALID.
      */
     async get_txMsgCount(): Promise<number>
     {
@@ -348,7 +348,7 @@ export class YI2cPort extends YFunction
      *
      * @return a string corresponding to the latest message fully received (for Line and Frame protocols)
      *
-     * On failure, throws an exception or returns Y_LASTMSG_INVALID.
+     * On failure, throws an exception or returns YI2cPort.LASTMSG_INVALID.
      */
     async get_lastMsg(): Promise<string>
     {
@@ -367,7 +367,7 @@ export class YI2cPort extends YFunction
      *
      * @return a string corresponding to the name of the job file currently in use
      *
-     * On failure, throws an exception or returns Y_CURRENTJOB_INVALID.
+     * On failure, throws an exception or returns YI2cPort.CURRENTJOB_INVALID.
      */
     async get_currentJob(): Promise<string>
     {
@@ -387,7 +387,7 @@ export class YI2cPort extends YFunction
      *
      * @param newval : a string
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -403,7 +403,7 @@ export class YI2cPort extends YFunction
      *
      * @return a string corresponding to the job file to use when the device is powered on
      *
-     * On failure, throws an exception or returns Y_STARTUPJOB_INVALID.
+     * On failure, throws an exception or returns YI2cPort.STARTUPJOB_INVALID.
      */
     async get_startupJob(): Promise<string>
     {
@@ -424,7 +424,7 @@ export class YI2cPort extends YFunction
      *
      * @param newval : a string corresponding to the job to use when the device is powered on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -440,7 +440,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to the maximum number of tasks in a job that the device can handle
      *
-     * On failure, throws an exception or returns Y_JOBMAXTASK_INVALID.
+     * On failure, throws an exception or returns YI2cPort.JOBMAXTASK_INVALID.
      */
     async get_jobMaxTask(): Promise<number>
     {
@@ -459,7 +459,7 @@ export class YI2cPort extends YFunction
      *
      * @return an integer corresponding to maximum size allowed for job files
      *
-     * On failure, throws an exception or returns Y_JOBMAXSIZE_INVALID.
+     * On failure, throws an exception or returns YI2cPort.JOBMAXSIZE_INVALID.
      */
     async get_jobMaxSize(): Promise<number>
     {
@@ -500,7 +500,7 @@ export class YI2cPort extends YFunction
      *
      * @return a string corresponding to the type of protocol used to send I2C messages, as a string
      *
-     * On failure, throws an exception or returns Y_PROTOCOL_INVALID.
+     * On failure, throws an exception or returns YI2cPort.PROTOCOL_INVALID.
      */
     async get_protocol(): Promise<string>
     {
@@ -526,7 +526,7 @@ export class YI2cPort extends YFunction
      *
      * @param newval : a string corresponding to the type of protocol used to send I2C messages
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -540,12 +540,12 @@ export class YI2cPort extends YFunction
     /**
      * Returns the voltage level used on the I2C bus.
      *
-     * @return a value among Y_I2CVOLTAGELEVEL_OFF, Y_I2CVOLTAGELEVEL_3V3 and Y_I2CVOLTAGELEVEL_1V8
-     * corresponding to the voltage level used on the I2C bus
+     * @return a value among YI2cPort.I2CVOLTAGELEVEL_OFF, YI2cPort.I2CVOLTAGELEVEL_3V3 and
+     * YI2cPort.I2CVOLTAGELEVEL_1V8 corresponding to the voltage level used on the I2C bus
      *
-     * On failure, throws an exception or returns Y_I2CVOLTAGELEVEL_INVALID.
+     * On failure, throws an exception or returns YI2cPort.I2CVOLTAGELEVEL_INVALID.
      */
-    async get_i2cVoltageLevel(): Promise<Y_I2cVoltageLevel>
+    async get_i2cVoltageLevel(): Promise<YI2cPort_I2cVoltageLevel>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -562,14 +562,14 @@ export class YI2cPort extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_I2CVOLTAGELEVEL_OFF, Y_I2CVOLTAGELEVEL_3V3 and
-     * Y_I2CVOLTAGELEVEL_1V8 corresponding to the voltage level used on the I2C bus
+     * @param newval : a value among YI2cPort.I2CVOLTAGELEVEL_OFF, YI2cPort.I2CVOLTAGELEVEL_3V3 and
+     * YI2cPort.I2CVOLTAGELEVEL_1V8 corresponding to the voltage level used on the I2C bus
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_i2cVoltageLevel(newval: Y_I2cVoltageLevel): Promise<number>
+    async set_i2cVoltageLevel(newval: YI2cPort_I2cVoltageLevel): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -586,7 +586,7 @@ export class YI2cPort extends YFunction
      * @return a string corresponding to the I2C port communication parameters, as a string such as
      *         "400kbps,2000ms,NoRestart"
      *
-     * On failure, throws an exception or returns Y_I2CMODE_INVALID.
+     * On failure, throws an exception or returns YI2cPort.I2CMODE_INVALID.
      */
     async get_i2cMode(): Promise<string>
     {
@@ -612,7 +612,7 @@ export class YI2cPort extends YFunction
      * @param newval : a string corresponding to the I2C port communication parameters, with a string such as
      *         "400kbps,2000ms"
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -624,7 +624,7 @@ export class YI2cPort extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an I2C port for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -634,11 +634,11 @@ export class YI2cPort extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the I2C port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YI2cPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YI2cPort.isOnline() to test if the I2C port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an I2C port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -646,10 +646,10 @@ export class YI2cPort extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the I2C port, for instance
+     *         YI2CMK01.i2cPort.
      *
-     * @return a YI2cPort object allowing you to drive $THEFUNCTION$.
+     * @return a YI2cPort object allowing you to drive the I2C port.
      */
     static FindI2cPort(func: string): YI2cPort
     {
@@ -663,7 +663,7 @@ export class YI2cPort extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an I2C port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -673,19 +673,19 @@ export class YI2cPort extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the I2C port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YI2cPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YI2cPort.isOnline() to test if the I2C port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an I2C port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the I2C port, for instance
+     *         YI2CMK01.i2cPort.
      *
-     * @return a YI2cPort object allowing you to drive $THEFUNCTION$.
+     * @return a YI2cPort object allowing you to drive the I2C port.
      */
     static FindI2cPortInContext(yctx: YAPIContext, func: string): YI2cPort
     {
@@ -794,14 +794,14 @@ export class YI2cPort extends YFunction
      * If no matching message is found, the search waits for one up to the specified maximum timeout
      * (in milliseconds).
      *
-     * @param pattern {string} : a limited regular expression describing the expected message format,
+     * @param pattern : a limited regular expression describing the expected message format,
      *         or an empty string if all messages should be returned (no filtering).
      *         When using binary protocols, the format applies to the hexadecimal
      *         representation of the message.
-     * @param maxWait {number} : the maximum number of milliseconds to wait for a message if none is found
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
      *
-     * @return {string[]} an array of strings containing the messages found, if any.
+     * @return an array of strings containing the messages found, if any.
      *         Binary messages are converted to hexadecimal representation.
      *
      * On failure, throws an exception or returns an empty array.
@@ -961,7 +961,7 @@ export class YI2cPort extends YFunction
      * @param jobfile : name of the job file to save on the device filesystem
      * @param jsonDef : a string containing a JSON definition of the job
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -978,7 +978,7 @@ export class YI2cPort extends YFunction
      *
      * @param jobfile : name of the job file (on the device filesystem)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -990,7 +990,7 @@ export class YI2cPort extends YFunction
     /**
      * Clears the serial port buffer and resets counters to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1010,7 +1010,7 @@ export class YI2cPort extends YFunction
      * @param slaveAddr : the 7-bit address of the slave device (without the direction bit)
      * @param buff : the binary buffer to be sent
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1052,7 +1052,7 @@ export class YI2cPort extends YFunction
      * @param slaveAddr : the 7-bit address of the slave device (without the direction bit)
      * @param values : a list of data bytes to be sent
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1145,11 +1145,11 @@ export class YI2cPort extends YFunction
      * then read back the specified number of bytes from device.
      * This function checks and reports communication errors on the I2C bus.
      *
-     * @param slaveAddr {number} : the 7-bit address of the slave device (without the direction bit)
-     * @param values {Integer[]} : a list of data bytes to be sent
-     * @param rcvCount {number} : the number of bytes to receive once the data bytes are sent
+     * @param slaveAddr : the 7-bit address of the slave device (without the direction bit)
+     * @param values : a list of data bytes to be sent
+     * @param rcvCount : the number of bytes to receive once the data bytes are sent
      *
-     * @return {Integer[]} a list of bytes with the data received from slave device.
+     * @return a list of bytes with the data received from slave device.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1216,7 +1216,7 @@ export class YI2cPort extends YFunction
      *
      * @param codes : the code stream to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1264,7 +1264,7 @@ export class YI2cPort extends YFunction
      *
      * @param codes : the code stream to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1287,7 +1287,7 @@ export class YI2cPort extends YFunction
      *
      * @param code : the byte to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1303,7 +1303,7 @@ export class YI2cPort extends YFunction
      *
      * @param hexString : a string of hexadecimal byte codes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1327,7 +1327,7 @@ export class YI2cPort extends YFunction
      *
      * @param buff : the binary buffer to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1356,7 +1356,7 @@ export class YI2cPort extends YFunction
      *
      * @param byteList : a list of byte codes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1384,10 +1384,10 @@ export class YI2cPort extends YFunction
      * If no message is found, the search waits for one up to the specified maximum timeout
      * (in milliseconds).
      *
-     * @param maxWait {number} : the maximum number of milliseconds to wait for a message if none is found
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
      *
-     * @return {YI2cSnoopingRecord[]} an array of YI2cSnoopingRecord objects containing the messages found, if any.
+     * @return an array of YI2cSnoopingRecord objects containing the messages found, if any.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1419,9 +1419,14 @@ export class YI2cPort extends YFunction
     }
 
     /**
-     * Returns the next I2cPort
+     * Continues the enumeration of I2C ports started using yFirstI2cPort().
+     * Caution: You can't make any assumption about the returned I2C ports order.
+     * If you want to find a specific an I2C port, use I2cPort.findI2cPort()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YI2cPort}
+     * @return a pointer to a YI2cPort object, corresponding to
+     *         an I2C port currently online, or a null pointer
+     *         if there are no more I2C ports to enumerate.
      */
     nextI2cPort(): YI2cPort | null
     {
@@ -1433,9 +1438,13 @@ export class YI2cPort extends YFunction
     }
 
     /**
-     * Retrieves the first I2cPort in a YAPI context
+     * Starts the enumeration of I2C ports currently accessible.
+     * Use the method YI2cPort.nextI2cPort() to iterate on
+     * next I2C ports.
      *
-     * @returns {YI2cPort}
+     * @return a pointer to a YI2cPort object, corresponding to
+     *         the first I2C port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstI2cPort(): YI2cPort | null
     {
@@ -1445,11 +1454,15 @@ export class YI2cPort extends YFunction
     }
 
     /**
-     * Retrieves the first I2cPort in a given context
+     * Starts the enumeration of I2C ports currently accessible.
+     * Use the method YI2cPort.nextI2cPort() to iterate on
+     * next I2C ports.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YI2cPort}
+     * @return a pointer to a YI2cPort object, corresponding to
+     *         the first I2C port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstI2cPortInContext(yctx: YAPIContext): YI2cPort | null
     {

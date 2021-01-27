@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_buzzer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -75,7 +75,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @param newval : a floating point number corresponding to the frequency of the signal sent to the buzzer
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -85,7 +85,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @return a floating point number corresponding to the  frequency of the signal sent to the buzzer/speaker
      *
-     * On failure, throws an exception or returns Y_FREQUENCY_INVALID.
+     * On failure, throws an exception or returns YBuzzer.FREQUENCY_INVALID.
      */
     get_frequency(): Promise<number>;
     /**
@@ -93,7 +93,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @return an integer corresponding to the volume of the signal sent to the buzzer/speaker
      *
-     * On failure, throws an exception or returns Y_VOLUME_INVALID.
+     * On failure, throws an exception or returns YBuzzer.VOLUME_INVALID.
      */
     get_volume(): Promise<number>;
     /**
@@ -102,7 +102,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @param newval : an integer corresponding to the volume of the signal sent to the buzzer/speaker
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -112,7 +112,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @return an integer corresponding to the current length of the playing sequence
      *
-     * On failure, throws an exception or returns Y_PLAYSEQSIZE_INVALID.
+     * On failure, throws an exception or returns YBuzzer.PLAYSEQSIZE_INVALID.
      */
     get_playSeqSize(): Promise<number>;
     /**
@@ -120,7 +120,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @return an integer corresponding to the maximum length of the playing sequence
      *
-     * On failure, throws an exception or returns Y_PLAYSEQMAXSIZE_INVALID.
+     * On failure, throws an exception or returns YBuzzer.PLAYSEQMAXSIZE_INVALID.
      */
     get_playSeqMaxSize(): Promise<number>;
     /**
@@ -131,13 +131,13 @@ export declare class YBuzzer extends YFunction {
      *
      * @return an integer corresponding to the playing sequence signature
      *
-     * On failure, throws an exception or returns Y_PLAYSEQSIGNATURE_INVALID.
+     * On failure, throws an exception or returns YBuzzer.PLAYSEQSIGNATURE_INVALID.
      */
     get_playSeqSignature(): Promise<number>;
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a buzzer for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -147,11 +147,11 @@ export declare class YBuzzer extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the buzzer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YBuzzer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YBuzzer.isOnline() to test if the buzzer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a buzzer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -159,14 +159,14 @@ export declare class YBuzzer extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the buzzer, for instance
+     *         YBUZZER2.buzzer.
      *
-     * @return a YBuzzer object allowing you to drive $THEFUNCTION$.
+     * @return a YBuzzer object allowing you to drive the buzzer.
      */
     static FindBuzzer(func: string): YBuzzer;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a buzzer for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -176,19 +176,19 @@ export declare class YBuzzer extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the buzzer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YBuzzer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YBuzzer.isOnline() to test if the buzzer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a buzzer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the buzzer, for instance
+     *         YBUZZER2.buzzer.
      *
-     * @return a YBuzzer object allowing you to drive $THEFUNCTION$.
+     * @return a YBuzzer object allowing you to drive the buzzer.
      */
     static FindBuzzerInContext(yctx: YAPIContext, func: string): YBuzzer;
     /**
@@ -211,7 +211,7 @@ export declare class YBuzzer extends YFunction {
      * @param freq    : desired frequency when the transition is completed, in Hz
      * @param msDelay : duration of the frequency transition, in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     addFreqMoveToPlaySeq(freq: number, msDelay: number): Promise<number>;
@@ -221,7 +221,7 @@ export declare class YBuzzer extends YFunction {
      * @param freq : pulse frequency, in Hz
      * @param msDuration : pulse duration, in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     addPulseToPlaySeq(freq: number, msDuration: number): Promise<number>;
@@ -232,7 +232,7 @@ export declare class YBuzzer extends YFunction {
      * @param volume    : desired volume when the transition is completed, as a percentage.
      * @param msDuration : duration of the volume transition, in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     addVolMoveToPlaySeq(volume: number, msDuration: number): Promise<number>;
@@ -246,7 +246,7 @@ export declare class YBuzzer extends YFunction {
      *
      * @param notes : notes to be played, as a text string.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     addNotesToPlaySeq(notes: string): Promise<number>;
@@ -255,42 +255,42 @@ export declare class YBuzzer extends YFunction {
      * runs in loop until it is stopped by stopPlaySeq or an explicit
      * change. To play the sequence only once, use oncePlaySeq().
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     startPlaySeq(): Promise<number>;
     /**
      * Stops the preprogrammed playing sequence and sets the frequency to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     stopPlaySeq(): Promise<number>;
     /**
      * Resets the preprogrammed playing sequence and sets the frequency to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     resetPlaySeq(): Promise<number>;
     /**
      * Starts the preprogrammed playing sequence and run it once only.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     oncePlaySeq(): Promise<number>;
     /**
      * Saves the preprogrammed playing sequence to flash memory.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     savePlaySeq(): Promise<number>;
     /**
      * Reloads the preprogrammed playing sequence from the flash memory.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     reloadPlaySeq(): Promise<number>;
@@ -300,7 +300,7 @@ export declare class YBuzzer extends YFunction {
      * @param frequency : pulse frequency, in hertz
      * @param duration : pulse duration in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -311,7 +311,7 @@ export declare class YBuzzer extends YFunction {
      * @param frequency : frequency to reach, in hertz. A frequency under 25Hz stops the buzzer.
      * @param duration :  pulse duration in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -322,7 +322,7 @@ export declare class YBuzzer extends YFunction {
      * @param volume : volume to reach in %
      * @param duration : change duration in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -337,28 +337,41 @@ export declare class YBuzzer extends YFunction {
      *
      * @param notes : notes to be played, as a text string.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     playNotes(notes: string): Promise<number>;
     /**
-     * Returns the next Buzzer
+     * Continues the enumeration of buzzers started using yFirstBuzzer().
+     * Caution: You can't make any assumption about the returned buzzers order.
+     * If you want to find a specific a buzzer, use Buzzer.findBuzzer()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YBuzzer}
+     * @return a pointer to a YBuzzer object, corresponding to
+     *         a buzzer currently online, or a null pointer
+     *         if there are no more buzzers to enumerate.
      */
     nextBuzzer(): YBuzzer | null;
     /**
-     * Retrieves the first Buzzer in a YAPI context
+     * Starts the enumeration of buzzers currently accessible.
+     * Use the method YBuzzer.nextBuzzer() to iterate on
+     * next buzzers.
      *
-     * @returns {YBuzzer}
+     * @return a pointer to a YBuzzer object, corresponding to
+     *         the first buzzer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstBuzzer(): YBuzzer | null;
     /**
-     * Retrieves the first Buzzer in a given context
+     * Starts the enumeration of buzzers currently accessible.
+     * Use the method YBuzzer.nextBuzzer() to iterate on
+     * next buzzers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YBuzzer}
+     * @return a pointer to a YBuzzer object, corresponding to
+     *         the first buzzer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstBuzzerInContext(yctx: YAPIContext): YBuzzer | null;
 }

@@ -10,8 +10,8 @@
  *
  *********************************************************************/
 
-import { YAPI, YErrorMsg, YModule, YFunction, YSensor, YMeasure } from 'yoctolib-ts/dist/cjs/yocto_api_nodejs.js';
-import { YAnButton } from 'yoctolib-ts/dist/cjs/yocto_anbutton.js';
+import { YAPI, YErrorMsg, YModule, YFunction, YSensor, YMeasure } from 'yoctolib-cjs/yocto_api_nodejs.js';
+import { YAnButton } from 'yoctolib-cjs/yocto_anbutton.js';
 
 class DeviceInfo
 {

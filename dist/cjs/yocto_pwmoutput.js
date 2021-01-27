@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_pwmoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -115,9 +115,9 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
     /**
      * Returns the state of the PWM generators.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the state of the PWM generators
+     * @return either YPwmOutput.ENABLED_FALSE or YPwmOutput.ENABLED_TRUE, according to the state of the PWM generators
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.ENABLED_INVALID.
      */
     async get_enabled() {
         let res;
@@ -132,9 +132,9 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
     /**
      * Stops or starts the PWM.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE
+     * @param newval : either YPwmOutput.ENABLED_FALSE or YPwmOutput.ENABLED_TRUE
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -154,7 +154,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM frequency
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -168,7 +168,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the PWM frequency in Hz
      *
-     * On failure, throws an exception or returns Y_FREQUENCY_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.FREQUENCY_INVALID.
      */
     async get_frequency() {
         let res;
@@ -189,7 +189,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM period in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -203,7 +203,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the PWM period in milliseconds
      *
-     * On failure, throws an exception or returns Y_PERIOD_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.PERIOD_INVALID.
      */
     async get_period() {
         let res;
@@ -220,7 +220,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM duty cycle, in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -234,7 +234,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the PWM duty cycle, in per cents
      *
-     * On failure, throws an exception or returns Y_DUTYCYCLE_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.DUTYCYCLE_INVALID.
      */
     async get_dutyCycle() {
         let res;
@@ -252,7 +252,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM pulse length, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -267,7 +267,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * @return a floating point number corresponding to the PWM pulse length in milliseconds, as a
      * floating point number
      *
-     * On failure, throws an exception or returns Y_PULSEDURATION_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.PULSEDURATION_INVALID.
      */
     async get_pulseDuration() {
         let res;
@@ -297,10 +297,10 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
     /**
      * Returns the state of the PWM at device power on.
      *
-     * @return either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE, according to the state of the
-     * PWM at device power on
+     * @return either YPwmOutput.ENABLEDATPOWERON_FALSE or YPwmOutput.ENABLEDATPOWERON_TRUE, according to
+     * the state of the PWM at device power on
      *
-     * On failure, throws an exception or returns Y_ENABLEDATPOWERON_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.ENABLEDATPOWERON_INVALID.
      */
     async get_enabledAtPowerOn() {
         let res;
@@ -316,10 +316,10 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * Changes the state of the PWM at device power on. Remember to call the matching module saveToFlash()
      * method, otherwise this call will have no effect.
      *
-     * @param newval : either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE, according to the state
-     * of the PWM at device power on
+     * @param newval : either YPwmOutput.ENABLEDATPOWERON_FALSE or YPwmOutput.ENABLEDATPOWERON_TRUE,
+     * according to the state of the PWM at device power on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -334,7 +334,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM duty cycle at device power on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -349,7 +349,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * @return a floating point number corresponding to the PWM generators duty cycle at device power on
      * as a floating point number between 0 and 100
      *
-     * On failure, throws an exception or returns Y_DUTYCYCLEATPOWERON_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.DUTYCYCLEATPOWERON_INVALID.
      */
     async get_dutyCycleAtPowerOn() {
         let res;
@@ -362,7 +362,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a PWM generator for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -372,11 +372,11 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM generator is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmOutput.isOnline() to test if the PWM generator is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM generator by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -384,10 +384,10 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM generator, for instance
+     *         YPWMTX01.pwmOutput1.
      *
-     * @return a YPwmOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmOutput object allowing you to drive the PWM generator.
      */
     static FindPwmOutput(func) {
         let obj;
@@ -399,7 +399,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a PWM generator for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -409,19 +409,19 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM generator is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmOutput.isOnline() to test if the PWM generator is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM generator by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM generator, for instance
+     *         YPWMTX01.pwmOutput1.
      *
-     * @return a YPwmOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmOutput object allowing you to drive the PWM generator.
      */
     static FindPwmOutputInContext(yctx, func) {
         let obj;
@@ -483,7 +483,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *         (floating-point number, representing the pulse duration in milliseconds)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -503,7 +503,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *         (percentage, floating-point number between 0 and 100)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -525,7 +525,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * @param target      : new frequency at the end of the transition (floating-point number)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -547,7 +547,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * @param target      : phase shift at the end of the transition, in milliseconds (floating-point number)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -564,7 +564,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *         (floating-point number, representing the pulse duration in milliseconds)
      * @param n_pulses  : desired pulse count
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -584,7 +584,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      *         (percentage, floating-point number between 0 and 100)
      * @param n_pulses : desired pulse count
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -606,7 +606,7 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
      * @param target   : desired frequency for the generated pulses (floating-point number)
      * @param n_pulses : desired pulse count
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -625,9 +625,14 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
         return await this.set_pwmTransition('R');
     }
     /**
-     * Returns the next PwmOutput
+     * Continues the enumeration of PWM generators started using yFirstPwmOutput().
+     * Caution: You can't make any assumption about the returned PWM generators order.
+     * If you want to find a specific a PWM generator, use PwmOutput.findPwmOutput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPwmOutput}
+     * @return a pointer to a YPwmOutput object, corresponding to
+     *         a PWM generator currently online, or a null pointer
+     *         if there are no more PWM generators to enumerate.
      */
     nextPwmOutput() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -639,9 +644,13 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
         return YPwmOutput.FindPwmOutputInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first PwmOutput in a YAPI context
+     * Starts the enumeration of PWM generators currently accessible.
+     * Use the method YPwmOutput.nextPwmOutput() to iterate on
+     * next PWM generators.
      *
-     * @returns {YPwmOutput}
+     * @return a pointer to a YPwmOutput object, corresponding to
+     *         the first PWM generator currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmOutput() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('PwmOutput');
@@ -650,11 +659,15 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
         return YPwmOutput.FindPwmOutput(next_hwid);
     }
     /**
-     * Retrieves the first PwmOutput in a given context
+     * Starts the enumeration of PWM generators currently accessible.
+     * Use the method YPwmOutput.nextPwmOutput() to iterate on
+     * next PWM generators.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPwmOutput}
+     * @return a pointer to a YPwmOutput object, corresponding to
+     *         the first PWM generator currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmOutputInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('PwmOutput');

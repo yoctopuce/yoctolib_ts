@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_pwmoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -37,12 +37,12 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_Enabled {
+export declare const enum YPwmOutput_Enabled {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
 }
-export declare const enum Y_EnabledAtPowerOn {
+export declare const enum YPwmOutput_EnabledAtPowerOn {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -59,59 +59,59 @@ export interface YPwmOutputValueCallback {
  */
 export declare class YPwmOutput extends YFunction {
     _className: string;
-    _enabled: Y_Enabled;
+    _enabled: YPwmOutput_Enabled;
     _frequency: number;
     _period: number;
     _dutyCycle: number;
     _pulseDuration: number;
     _pwmTransition: string;
-    _enabledAtPowerOn: Y_EnabledAtPowerOn;
+    _enabledAtPowerOn: YPwmOutput_EnabledAtPowerOn;
     _dutyCycleAtPowerOn: number;
     _valueCallbackPwmOutput: YPwmOutputValueCallback | null;
-    readonly ENABLED_FALSE: Y_Enabled;
-    readonly ENABLED_TRUE: Y_Enabled;
-    readonly ENABLED_INVALID: Y_Enabled;
+    readonly ENABLED_FALSE: YPwmOutput_Enabled;
+    readonly ENABLED_TRUE: YPwmOutput_Enabled;
+    readonly ENABLED_INVALID: YPwmOutput_Enabled;
     readonly FREQUENCY_INVALID: number;
     readonly PERIOD_INVALID: number;
     readonly DUTYCYCLE_INVALID: number;
     readonly PULSEDURATION_INVALID: number;
     readonly PWMTRANSITION_INVALID: string;
-    readonly ENABLEDATPOWERON_FALSE: Y_EnabledAtPowerOn;
-    readonly ENABLEDATPOWERON_TRUE: Y_EnabledAtPowerOn;
-    readonly ENABLEDATPOWERON_INVALID: Y_EnabledAtPowerOn;
+    readonly ENABLEDATPOWERON_FALSE: YPwmOutput_EnabledAtPowerOn;
+    readonly ENABLEDATPOWERON_TRUE: YPwmOutput_EnabledAtPowerOn;
+    readonly ENABLEDATPOWERON_INVALID: YPwmOutput_EnabledAtPowerOn;
     readonly DUTYCYCLEATPOWERON_INVALID: number;
-    static readonly ENABLED_FALSE: Y_Enabled;
-    static readonly ENABLED_TRUE: Y_Enabled;
-    static readonly ENABLED_INVALID: Y_Enabled;
+    static readonly ENABLED_FALSE: YPwmOutput_Enabled;
+    static readonly ENABLED_TRUE: YPwmOutput_Enabled;
+    static readonly ENABLED_INVALID: YPwmOutput_Enabled;
     static readonly FREQUENCY_INVALID: number;
     static readonly PERIOD_INVALID: number;
     static readonly DUTYCYCLE_INVALID: number;
     static readonly PULSEDURATION_INVALID: number;
     static readonly PWMTRANSITION_INVALID: string;
-    static readonly ENABLEDATPOWERON_FALSE: Y_EnabledAtPowerOn;
-    static readonly ENABLEDATPOWERON_TRUE: Y_EnabledAtPowerOn;
-    static readonly ENABLEDATPOWERON_INVALID: Y_EnabledAtPowerOn;
+    static readonly ENABLEDATPOWERON_FALSE: YPwmOutput_EnabledAtPowerOn;
+    static readonly ENABLEDATPOWERON_TRUE: YPwmOutput_EnabledAtPowerOn;
+    static readonly ENABLEDATPOWERON_INVALID: YPwmOutput_EnabledAtPowerOn;
     static readonly DUTYCYCLEATPOWERON_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
      * Returns the state of the PWM generators.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the state of the PWM generators
+     * @return either YPwmOutput.ENABLED_FALSE or YPwmOutput.ENABLED_TRUE, according to the state of the PWM generators
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.ENABLED_INVALID.
      */
-    get_enabled(): Promise<Y_Enabled>;
+    get_enabled(): Promise<YPwmOutput_Enabled>;
     /**
      * Stops or starts the PWM.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE
+     * @param newval : either YPwmOutput.ENABLED_FALSE or YPwmOutput.ENABLED_TRUE
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: Y_Enabled): Promise<number>;
+    set_enabled(newval: YPwmOutput_Enabled): Promise<number>;
     /**
      * Changes the PWM frequency. The duty cycle is kept unchanged thanks to an
      * automatic pulse width change, in other words, the change will not be applied
@@ -123,7 +123,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM frequency
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -133,7 +133,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @return a floating point number corresponding to the PWM frequency in Hz
      *
-     * On failure, throws an exception or returns Y_FREQUENCY_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.FREQUENCY_INVALID.
      */
     get_frequency(): Promise<number>;
     /**
@@ -145,7 +145,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM period in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -155,7 +155,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @return a floating point number corresponding to the PWM period in milliseconds
      *
-     * On failure, throws an exception or returns Y_PERIOD_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.PERIOD_INVALID.
      */
     get_period(): Promise<number>;
     /**
@@ -163,7 +163,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM duty cycle, in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -173,7 +173,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @return a floating point number corresponding to the PWM duty cycle, in per cents
      *
-     * On failure, throws an exception or returns Y_DUTYCYCLE_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.DUTYCYCLE_INVALID.
      */
     get_dutyCycle(): Promise<number>;
     /**
@@ -182,7 +182,7 @@ export declare class YPwmOutput extends YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM pulse length, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -193,7 +193,7 @@ export declare class YPwmOutput extends YFunction {
      * @return a floating point number corresponding to the PWM pulse length in milliseconds, as a
      * floating point number
      *
-     * On failure, throws an exception or returns Y_PULSEDURATION_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.PULSEDURATION_INVALID.
      */
     get_pulseDuration(): Promise<number>;
     get_pwmTransition(): Promise<string>;
@@ -201,31 +201,31 @@ export declare class YPwmOutput extends YFunction {
     /**
      * Returns the state of the PWM at device power on.
      *
-     * @return either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE, according to the state of the
-     * PWM at device power on
+     * @return either YPwmOutput.ENABLEDATPOWERON_FALSE or YPwmOutput.ENABLEDATPOWERON_TRUE, according to
+     * the state of the PWM at device power on
      *
-     * On failure, throws an exception or returns Y_ENABLEDATPOWERON_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.ENABLEDATPOWERON_INVALID.
      */
-    get_enabledAtPowerOn(): Promise<Y_EnabledAtPowerOn>;
+    get_enabledAtPowerOn(): Promise<YPwmOutput_EnabledAtPowerOn>;
     /**
      * Changes the state of the PWM at device power on. Remember to call the matching module saveToFlash()
      * method, otherwise this call will have no effect.
      *
-     * @param newval : either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE, according to the state
-     * of the PWM at device power on
+     * @param newval : either YPwmOutput.ENABLEDATPOWERON_FALSE or YPwmOutput.ENABLEDATPOWERON_TRUE,
+     * according to the state of the PWM at device power on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabledAtPowerOn(newval: Y_EnabledAtPowerOn): Promise<number>;
+    set_enabledAtPowerOn(newval: YPwmOutput_EnabledAtPowerOn): Promise<number>;
     /**
      * Changes the PWM duty cycle at device power on. Remember to call the matching
      * module saveToFlash() method, otherwise this call will have no effect.
      *
      * @param newval : a floating point number corresponding to the PWM duty cycle at device power on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -236,11 +236,11 @@ export declare class YPwmOutput extends YFunction {
      * @return a floating point number corresponding to the PWM generators duty cycle at device power on
      * as a floating point number between 0 and 100
      *
-     * On failure, throws an exception or returns Y_DUTYCYCLEATPOWERON_INVALID.
+     * On failure, throws an exception or returns YPwmOutput.DUTYCYCLEATPOWERON_INVALID.
      */
     get_dutyCycleAtPowerOn(): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a PWM generator for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -250,11 +250,11 @@ export declare class YPwmOutput extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM generator is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmOutput.isOnline() to test if the PWM generator is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM generator by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -262,14 +262,14 @@ export declare class YPwmOutput extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM generator, for instance
+     *         YPWMTX01.pwmOutput1.
      *
-     * @return a YPwmOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmOutput object allowing you to drive the PWM generator.
      */
     static FindPwmOutput(func: string): YPwmOutput;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a PWM generator for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -279,19 +279,19 @@ export declare class YPwmOutput extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM generator is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmOutput.isOnline() to test if the PWM generator is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM generator by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM generator, for instance
+     *         YPWMTX01.pwmOutput1.
      *
-     * @return a YPwmOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmOutput object allowing you to drive the PWM generator.
      */
     static FindPwmOutputInContext(yctx: YAPIContext, func: string): YPwmOutput;
     /**
@@ -315,7 +315,7 @@ export declare class YPwmOutput extends YFunction {
      *         (floating-point number, representing the pulse duration in milliseconds)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -328,7 +328,7 @@ export declare class YPwmOutput extends YFunction {
      *         (percentage, floating-point number between 0 and 100)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -340,7 +340,7 @@ export declare class YPwmOutput extends YFunction {
      * @param target      : new frequency at the end of the transition (floating-point number)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -355,7 +355,7 @@ export declare class YPwmOutput extends YFunction {
      * @param target      : phase shift at the end of the transition, in milliseconds (floating-point number)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -368,7 +368,7 @@ export declare class YPwmOutput extends YFunction {
      *         (floating-point number, representing the pulse duration in milliseconds)
      * @param n_pulses  : desired pulse count
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -381,7 +381,7 @@ export declare class YPwmOutput extends YFunction {
      *         (percentage, floating-point number between 0 and 100)
      * @param n_pulses : desired pulse count
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -393,7 +393,7 @@ export declare class YPwmOutput extends YFunction {
      * @param target   : desired frequency for the generated pulses (floating-point number)
      * @param n_pulses : desired pulse count
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -401,23 +401,36 @@ export declare class YPwmOutput extends YFunction {
     markForRepeat(): Promise<number>;
     repeatFromMark(): Promise<number>;
     /**
-     * Returns the next PwmOutput
+     * Continues the enumeration of PWM generators started using yFirstPwmOutput().
+     * Caution: You can't make any assumption about the returned PWM generators order.
+     * If you want to find a specific a PWM generator, use PwmOutput.findPwmOutput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPwmOutput}
+     * @return a pointer to a YPwmOutput object, corresponding to
+     *         a PWM generator currently online, or a null pointer
+     *         if there are no more PWM generators to enumerate.
      */
     nextPwmOutput(): YPwmOutput | null;
     /**
-     * Retrieves the first PwmOutput in a YAPI context
+     * Starts the enumeration of PWM generators currently accessible.
+     * Use the method YPwmOutput.nextPwmOutput() to iterate on
+     * next PWM generators.
      *
-     * @returns {YPwmOutput}
+     * @return a pointer to a YPwmOutput object, corresponding to
+     *         the first PWM generator currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmOutput(): YPwmOutput | null;
     /**
-     * Retrieves the first PwmOutput in a given context
+     * Starts the enumeration of PWM generators currently accessible.
+     * Use the method YPwmOutput.nextPwmOutput() to iterate on
+     * next PWM generators.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPwmOutput}
+     * @return a pointer to a YPwmOutput object, corresponding to
+     *         the first PWM generator currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmOutputInContext(yctx: YAPIContext): YPwmOutput | null;
 }

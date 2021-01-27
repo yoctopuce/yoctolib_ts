@@ -49,6 +49,7 @@ const DEFAULT_FILE = path.join(DEMO_PATH, 'app.html');
 const ROOT_URL = 'http://127.0.0.1:' + HTTP_PORT;
 const MimeTypes = {
     '.js': 'application/javascript',
+    '.ts': 'application/typescript',
     '.map': 'application/json',
     '.html': 'text/html',
     '.css': 'text/css',

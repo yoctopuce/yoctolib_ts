@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_gps.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -40,18 +40,18 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YGps definitions)
-export const enum Y_IsFixed {
+export const enum YGps_IsFixed {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
 }
-export const enum Y_CoordSystem {
+export const enum YGps_CoordSystem {
     GPS_DMS = 0,
     GPS_DM = 1,
     GPS_D = 2,
     INVALID = -1
 }
-export const enum Y_Constellation {
+export const enum YGps_Constellation {
     GNSS = 0,
     GPS = 1,
     GLONASS = 2,
@@ -81,12 +81,12 @@ export class YGps extends YFunction
 {
     //--- (YGps attributes declaration)
     _className: string;
-    _isFixed: Y_IsFixed = YGps.ISFIXED_INVALID;
+    _isFixed: YGps_IsFixed = YGps.ISFIXED_INVALID;
     _satCount: number = YGps.SATCOUNT_INVALID;
     _satPerConst: number = YGps.SATPERCONST_INVALID;
     _gpsRefreshRate: number = YGps.GPSREFRESHRATE_INVALID;
-    _coordSystem: Y_CoordSystem = YGps.COORDSYSTEM_INVALID;
-    _constellation: Y_Constellation = YGps.CONSTELLATION_INVALID;
+    _coordSystem: YGps_CoordSystem = YGps.COORDSYSTEM_INVALID;
+    _constellation: YGps_Constellation = YGps.CONSTELLATION_INVALID;
     _latitude: string = YGps.LATITUDE_INVALID;
     _longitude: string = YGps.LONGITUDE_INVALID;
     _dilution: number = YGps.DILUTION_INVALID;
@@ -100,24 +100,24 @@ export class YGps extends YFunction
     _valueCallbackGps: YGpsValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly ISFIXED_FALSE: Y_IsFixed = Y_IsFixed.FALSE;
-    public readonly ISFIXED_TRUE: Y_IsFixed = Y_IsFixed.TRUE;
-    public readonly ISFIXED_INVALID: Y_IsFixed = Y_IsFixed.INVALID;
+    public readonly ISFIXED_FALSE: YGps_IsFixed = YGps_IsFixed.FALSE;
+    public readonly ISFIXED_TRUE: YGps_IsFixed = YGps_IsFixed.TRUE;
+    public readonly ISFIXED_INVALID: YGps_IsFixed = YGps_IsFixed.INVALID;
     public readonly SATCOUNT_INVALID: number = YAPI.INVALID_LONG;
     public readonly SATPERCONST_INVALID: number = YAPI.INVALID_LONG;
     public readonly GPSREFRESHRATE_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly COORDSYSTEM_GPS_DMS: Y_CoordSystem = Y_CoordSystem.GPS_DMS;
-    public readonly COORDSYSTEM_GPS_DM: Y_CoordSystem = Y_CoordSystem.GPS_DM;
-    public readonly COORDSYSTEM_GPS_D: Y_CoordSystem = Y_CoordSystem.GPS_D;
-    public readonly COORDSYSTEM_INVALID: Y_CoordSystem = Y_CoordSystem.INVALID;
-    public readonly CONSTELLATION_GNSS: Y_Constellation = Y_Constellation.GNSS;
-    public readonly CONSTELLATION_GPS: Y_Constellation = Y_Constellation.GPS;
-    public readonly CONSTELLATION_GLONASS: Y_Constellation = Y_Constellation.GLONASS;
-    public readonly CONSTELLATION_GALILEO: Y_Constellation = Y_Constellation.GALILEO;
-    public readonly CONSTELLATION_GPS_GLONASS: Y_Constellation = Y_Constellation.GPS_GLONASS;
-    public readonly CONSTELLATION_GPS_GALILEO: Y_Constellation = Y_Constellation.GPS_GALILEO;
-    public readonly CONSTELLATION_GLONASS_GALILEO: Y_Constellation = Y_Constellation.GLONASS_GALILEO;
-    public readonly CONSTELLATION_INVALID: Y_Constellation = Y_Constellation.INVALID;
+    public readonly COORDSYSTEM_GPS_DMS: YGps_CoordSystem = YGps_CoordSystem.GPS_DMS;
+    public readonly COORDSYSTEM_GPS_DM: YGps_CoordSystem = YGps_CoordSystem.GPS_DM;
+    public readonly COORDSYSTEM_GPS_D: YGps_CoordSystem = YGps_CoordSystem.GPS_D;
+    public readonly COORDSYSTEM_INVALID: YGps_CoordSystem = YGps_CoordSystem.INVALID;
+    public readonly CONSTELLATION_GNSS: YGps_Constellation = YGps_Constellation.GNSS;
+    public readonly CONSTELLATION_GPS: YGps_Constellation = YGps_Constellation.GPS;
+    public readonly CONSTELLATION_GLONASS: YGps_Constellation = YGps_Constellation.GLONASS;
+    public readonly CONSTELLATION_GALILEO: YGps_Constellation = YGps_Constellation.GALILEO;
+    public readonly CONSTELLATION_GPS_GLONASS: YGps_Constellation = YGps_Constellation.GPS_GLONASS;
+    public readonly CONSTELLATION_GPS_GALILEO: YGps_Constellation = YGps_Constellation.GPS_GALILEO;
+    public readonly CONSTELLATION_GLONASS_GALILEO: YGps_Constellation = YGps_Constellation.GLONASS_GALILEO;
+    public readonly CONSTELLATION_INVALID: YGps_Constellation = YGps_Constellation.INVALID;
     public readonly LATITUDE_INVALID: string = YAPI.INVALID_STRING;
     public readonly LONGITUDE_INVALID: string = YAPI.INVALID_STRING;
     public readonly DILUTION_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -130,24 +130,24 @@ export class YGps extends YFunction
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly ISFIXED_FALSE: Y_IsFixed = Y_IsFixed.FALSE;
-    public static readonly ISFIXED_TRUE: Y_IsFixed = Y_IsFixed.TRUE;
-    public static readonly ISFIXED_INVALID: Y_IsFixed = Y_IsFixed.INVALID;
+    public static readonly ISFIXED_FALSE: YGps_IsFixed = YGps_IsFixed.FALSE;
+    public static readonly ISFIXED_TRUE: YGps_IsFixed = YGps_IsFixed.TRUE;
+    public static readonly ISFIXED_INVALID: YGps_IsFixed = YGps_IsFixed.INVALID;
     public static readonly SATCOUNT_INVALID: number = YAPI.INVALID_LONG;
     public static readonly SATPERCONST_INVALID: number = YAPI.INVALID_LONG;
     public static readonly GPSREFRESHRATE_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly COORDSYSTEM_GPS_DMS: Y_CoordSystem = Y_CoordSystem.GPS_DMS;
-    public static readonly COORDSYSTEM_GPS_DM: Y_CoordSystem = Y_CoordSystem.GPS_DM;
-    public static readonly COORDSYSTEM_GPS_D: Y_CoordSystem = Y_CoordSystem.GPS_D;
-    public static readonly COORDSYSTEM_INVALID: Y_CoordSystem = Y_CoordSystem.INVALID;
-    public static readonly CONSTELLATION_GNSS: Y_Constellation = Y_Constellation.GNSS;
-    public static readonly CONSTELLATION_GPS: Y_Constellation = Y_Constellation.GPS;
-    public static readonly CONSTELLATION_GLONASS: Y_Constellation = Y_Constellation.GLONASS;
-    public static readonly CONSTELLATION_GALILEO: Y_Constellation = Y_Constellation.GALILEO;
-    public static readonly CONSTELLATION_GPS_GLONASS: Y_Constellation = Y_Constellation.GPS_GLONASS;
-    public static readonly CONSTELLATION_GPS_GALILEO: Y_Constellation = Y_Constellation.GPS_GALILEO;
-    public static readonly CONSTELLATION_GLONASS_GALILEO: Y_Constellation = Y_Constellation.GLONASS_GALILEO;
-    public static readonly CONSTELLATION_INVALID: Y_Constellation = Y_Constellation.INVALID;
+    public static readonly COORDSYSTEM_GPS_DMS: YGps_CoordSystem = YGps_CoordSystem.GPS_DMS;
+    public static readonly COORDSYSTEM_GPS_DM: YGps_CoordSystem = YGps_CoordSystem.GPS_DM;
+    public static readonly COORDSYSTEM_GPS_D: YGps_CoordSystem = YGps_CoordSystem.GPS_D;
+    public static readonly COORDSYSTEM_INVALID: YGps_CoordSystem = YGps_CoordSystem.INVALID;
+    public static readonly CONSTELLATION_GNSS: YGps_Constellation = YGps_Constellation.GNSS;
+    public static readonly CONSTELLATION_GPS: YGps_Constellation = YGps_Constellation.GPS;
+    public static readonly CONSTELLATION_GLONASS: YGps_Constellation = YGps_Constellation.GLONASS;
+    public static readonly CONSTELLATION_GALILEO: YGps_Constellation = YGps_Constellation.GALILEO;
+    public static readonly CONSTELLATION_GPS_GLONASS: YGps_Constellation = YGps_Constellation.GPS_GLONASS;
+    public static readonly CONSTELLATION_GPS_GALILEO: YGps_Constellation = YGps_Constellation.GPS_GALILEO;
+    public static readonly CONSTELLATION_GLONASS_GALILEO: YGps_Constellation = YGps_Constellation.GLONASS_GALILEO;
+    public static readonly CONSTELLATION_INVALID: YGps_Constellation = YGps_Constellation.INVALID;
     public static readonly LATITUDE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly LONGITUDE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly DILUTION_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -177,7 +177,7 @@ export class YGps extends YFunction
     {
         switch(name) {
         case 'isFixed':
-            this._isFixed = <Y_IsFixed> <number> val;
+            this._isFixed = <YGps_IsFixed> <number> val;
             return 1;
         case 'satCount':
             this._satCount = <number> <number> val;
@@ -189,10 +189,10 @@ export class YGps extends YFunction
             this._gpsRefreshRate = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'coordSystem':
-            this._coordSystem = <Y_CoordSystem> <number> val;
+            this._coordSystem = <YGps_CoordSystem> <number> val;
             return 1;
         case 'constellation':
-            this._constellation = <Y_Constellation> <number> val;
+            this._constellation = <YGps_Constellation> <number> val;
             return 1;
         case 'latitude':
             this._latitude = <string> <string> val;
@@ -231,12 +231,12 @@ export class YGps extends YFunction
     /**
      * Returns TRUE if the receiver has found enough satellites to work.
      *
-     * @return either Y_ISFIXED_FALSE or Y_ISFIXED_TRUE, according to TRUE if the receiver has found
+     * @return either YGps.ISFIXED_FALSE or YGps.ISFIXED_TRUE, according to TRUE if the receiver has found
      * enough satellites to work
      *
-     * On failure, throws an exception or returns Y_ISFIXED_INVALID.
+     * On failure, throws an exception or returns YGps.ISFIXED_INVALID.
      */
-    async get_isFixed(): Promise<Y_IsFixed>
+    async get_isFixed(): Promise<YGps_IsFixed>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -253,7 +253,7 @@ export class YGps extends YFunction
      *
      * @return an integer corresponding to the total count of satellites used to compute GPS position
      *
-     * On failure, throws an exception or returns Y_SATCOUNT_INVALID.
+     * On failure, throws an exception or returns YGps.SATCOUNT_INVALID.
      */
     async get_satCount(): Promise<number>
     {
@@ -275,7 +275,7 @@ export class YGps extends YFunction
      * @return an integer corresponding to the count of visible satellites per constellation encoded
      *         on a 32 bit integer: bits 0.
      *
-     * On failure, throws an exception or returns Y_SATPERCONST_INVALID.
+     * On failure, throws an exception or returns YGps.SATPERCONST_INVALID.
      */
     async get_satPerConst(): Promise<number>
     {
@@ -295,7 +295,7 @@ export class YGps extends YFunction
      *
      * @return a floating point number corresponding to effective GPS data refresh frequency
      *
-     * On failure, throws an exception or returns Y_GPSREFRESHRATE_INVALID.
+     * On failure, throws an exception or returns YGps.GPSREFRESHRATE_INVALID.
      */
     async get_gpsRefreshRate(): Promise<number>
     {
@@ -312,12 +312,12 @@ export class YGps extends YFunction
     /**
      * Returns the representation system used for positioning data.
      *
-     * @return a value among Y_COORDSYSTEM_GPS_DMS, Y_COORDSYSTEM_GPS_DM and Y_COORDSYSTEM_GPS_D
+     * @return a value among YGps.COORDSYSTEM_GPS_DMS, YGps.COORDSYSTEM_GPS_DM and YGps.COORDSYSTEM_GPS_D
      * corresponding to the representation system used for positioning data
      *
-     * On failure, throws an exception or returns Y_COORDSYSTEM_INVALID.
+     * On failure, throws an exception or returns YGps.COORDSYSTEM_INVALID.
      */
-    async get_coordSystem(): Promise<Y_CoordSystem>
+    async get_coordSystem(): Promise<YGps_CoordSystem>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -334,14 +334,14 @@ export class YGps extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_COORDSYSTEM_GPS_DMS, Y_COORDSYSTEM_GPS_DM and Y_COORDSYSTEM_GPS_D
-     * corresponding to the representation system used for positioning data
+     * @param newval : a value among YGps.COORDSYSTEM_GPS_DMS, YGps.COORDSYSTEM_GPS_DM and
+     * YGps.COORDSYSTEM_GPS_D corresponding to the representation system used for positioning data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_coordSystem(newval: Y_CoordSystem): Promise<number>
+    async set_coordSystem(newval: YGps_CoordSystem): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -352,14 +352,14 @@ export class YGps extends YFunction
      * Returns the the satellites constellation used to compute
      * positioning data.
      *
-     * @return a value among Y_CONSTELLATION_GNSS, Y_CONSTELLATION_GPS, Y_CONSTELLATION_GLONASS,
-     * Y_CONSTELLATION_GALILEO, Y_CONSTELLATION_GPS_GLONASS, Y_CONSTELLATION_GPS_GALILEO and
-     * Y_CONSTELLATION_GLONASS_GALILEO corresponding to the the satellites constellation used to compute
+     * @return a value among YGps.CONSTELLATION_GNSS, YGps.CONSTELLATION_GPS, YGps.CONSTELLATION_GLONASS,
+     * YGps.CONSTELLATION_GALILEO, YGps.CONSTELLATION_GPS_GLONASS, YGps.CONSTELLATION_GPS_GALILEO and
+     * YGps.CONSTELLATION_GLONASS_GALILEO corresponding to the the satellites constellation used to compute
      *         positioning data
      *
-     * On failure, throws an exception or returns Y_CONSTELLATION_INVALID.
+     * On failure, throws an exception or returns YGps.CONSTELLATION_INVALID.
      */
-    async get_constellation(): Promise<Y_Constellation>
+    async get_constellation(): Promise<YGps_Constellation>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -376,16 +376,17 @@ export class YGps extends YFunction
      * positioning data. Possible  constellations are GNSS ( = all supported constellations),
      * GPS, Glonass, Galileo , and the 3 possible pairs. This setting has  no effect on Yocto-GPS (V1).
      *
-     * @param newval : a value among Y_CONSTELLATION_GNSS, Y_CONSTELLATION_GPS, Y_CONSTELLATION_GLONASS,
-     * Y_CONSTELLATION_GALILEO, Y_CONSTELLATION_GPS_GLONASS, Y_CONSTELLATION_GPS_GALILEO and
-     * Y_CONSTELLATION_GLONASS_GALILEO corresponding to the satellites constellation used to compute
+     * @param newval : a value among YGps.CONSTELLATION_GNSS, YGps.CONSTELLATION_GPS,
+     * YGps.CONSTELLATION_GLONASS, YGps.CONSTELLATION_GALILEO, YGps.CONSTELLATION_GPS_GLONASS,
+     * YGps.CONSTELLATION_GPS_GALILEO and YGps.CONSTELLATION_GLONASS_GALILEO corresponding to the
+     * satellites constellation used to compute
      *         positioning data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_constellation(newval: Y_Constellation): Promise<number>
+    async set_constellation(newval: YGps_Constellation): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -397,7 +398,7 @@ export class YGps extends YFunction
      *
      * @return a string corresponding to the current latitude
      *
-     * On failure, throws an exception or returns Y_LATITUDE_INVALID.
+     * On failure, throws an exception or returns YGps.LATITUDE_INVALID.
      */
     async get_latitude(): Promise<string>
     {
@@ -416,7 +417,7 @@ export class YGps extends YFunction
      *
      * @return a string corresponding to the current longitude
      *
-     * On failure, throws an exception or returns Y_LONGITUDE_INVALID.
+     * On failure, throws an exception or returns YGps.LONGITUDE_INVALID.
      */
     async get_longitude(): Promise<string>
     {
@@ -437,7 +438,7 @@ export class YGps extends YFunction
      * @return a floating point number corresponding to the current horizontal dilution of precision,
      *         the smaller that number is, the better
      *
-     * On failure, throws an exception or returns Y_DILUTION_INVALID.
+     * On failure, throws an exception or returns YGps.DILUTION_INVALID.
      */
     async get_dilution(): Promise<number>
     {
@@ -457,7 +458,7 @@ export class YGps extends YFunction
      *
      * @return a floating point number corresponding to the current altitude
      *
-     * On failure, throws an exception or returns Y_ALTITUDE_INVALID.
+     * On failure, throws an exception or returns YGps.ALTITUDE_INVALID.
      */
     async get_altitude(): Promise<number>
     {
@@ -476,7 +477,7 @@ export class YGps extends YFunction
      *
      * @return a floating point number corresponding to the current ground speed in Km/h
      *
-     * On failure, throws an exception or returns Y_GROUNDSPEED_INVALID.
+     * On failure, throws an exception or returns YGps.GROUNDSPEED_INVALID.
      */
     async get_groundSpeed(): Promise<number>
     {
@@ -497,7 +498,7 @@ export class YGps extends YFunction
      * @return a floating point number corresponding to the current move bearing in degrees, zero
      *         is the true (geographic) north
      *
-     * On failure, throws an exception or returns Y_DIRECTION_INVALID.
+     * On failure, throws an exception or returns YGps.DIRECTION_INVALID.
      */
     async get_direction(): Promise<number>
     {
@@ -518,7 +519,7 @@ export class YGps extends YFunction
      * @return an integer corresponding to the current time in Unix format (number of
      *         seconds elapsed since Jan 1st, 1970)
      *
-     * On failure, throws an exception or returns Y_UNIXTIME_INVALID.
+     * On failure, throws an exception or returns YGps.UNIXTIME_INVALID.
      */
     async get_unixTime(): Promise<number>
     {
@@ -537,7 +538,7 @@ export class YGps extends YFunction
      *
      * @return a string corresponding to the current time in the form "YYYY/MM/DD hh:mm:ss"
      *
-     * On failure, throws an exception or returns Y_DATETIME_INVALID.
+     * On failure, throws an exception or returns YGps.DATETIME_INVALID.
      */
     async get_dateTime(): Promise<string>
     {
@@ -556,7 +557,7 @@ export class YGps extends YFunction
      *
      * @return an integer corresponding to the number of seconds between current time and UTC time (time zone)
      *
-     * On failure, throws an exception or returns Y_UTCOFFSET_INVALID.
+     * On failure, throws an exception or returns YGps.UTCOFFSET_INVALID.
      */
     async get_utcOffset(): Promise<number>
     {
@@ -579,7 +580,7 @@ export class YGps extends YFunction
      *
      * @param newval : an integer corresponding to the number of seconds between current time and UTC time (time zone)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -610,7 +611,7 @@ export class YGps extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a geolocalization module for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -620,11 +621,11 @@ export class YGps extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the geolocalization module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGps.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGps.isOnline() to test if the geolocalization module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a geolocalization module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -632,10 +633,10 @@ export class YGps extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the geolocalization module, for instance
+     *         YGNSSMK2.gps.
      *
-     * @return a YGps object allowing you to drive $THEFUNCTION$.
+     * @return a YGps object allowing you to drive the geolocalization module.
      */
     static FindGps(func: string): YGps
     {
@@ -649,7 +650,7 @@ export class YGps extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a geolocalization module for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -659,19 +660,19 @@ export class YGps extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the geolocalization module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGps.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGps.isOnline() to test if the geolocalization module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a geolocalization module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the geolocalization module, for instance
+     *         YGNSSMK2.gps.
      *
-     * @return a YGps object allowing you to drive $THEFUNCTION$.
+     * @return a YGps object allowing you to drive the geolocalization module.
      */
     static FindGpsInContext(yctx: YAPIContext, func: string): YGps
     {
@@ -729,9 +730,14 @@ export class YGps extends YFunction
     }
 
     /**
-     * Returns the next Gps
+     * Continues the enumeration of geolocalization modules started using yFirstGps().
+     * Caution: You can't make any assumption about the returned geolocalization modules order.
+     * If you want to find a specific a geolocalization module, use Gps.findGps()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YGps}
+     * @return a pointer to a YGps object, corresponding to
+     *         a geolocalization module currently online, or a null pointer
+     *         if there are no more geolocalization modules to enumerate.
      */
     nextGps(): YGps | null
     {
@@ -743,9 +749,13 @@ export class YGps extends YFunction
     }
 
     /**
-     * Retrieves the first Gps in a YAPI context
+     * Starts the enumeration of geolocalization modules currently accessible.
+     * Use the method YGps.nextGps() to iterate on
+     * next geolocalization modules.
      *
-     * @returns {YGps}
+     * @return a pointer to a YGps object, corresponding to
+     *         the first geolocalization module currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGps(): YGps | null
     {
@@ -755,11 +765,15 @@ export class YGps extends YFunction
     }
 
     /**
-     * Retrieves the first Gps in a given context
+     * Starts the enumeration of geolocalization modules currently accessible.
+     * Use the method YGps.nextGps() to iterate on
+     * next geolocalization modules.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YGps}
+     * @return a pointer to a YGps object, corresponding to
+     *         the first geolocalization module currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGpsInContext(yctx: YAPIContext): YGps | null
     {

@@ -6,6 +6,6 @@
     "demo": "tsc && node --enable-source-maps demo.js"
   },
   "dependencies": {
-    "yoctolib-ts": "file:..\\.."
+    "yoctolib-cjs": "file:../../dist/cjs"
   }
 }

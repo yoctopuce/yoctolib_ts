@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_hubport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -41,7 +41,7 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (YHubPort class start)
 /**
  * YHubPort Class: YoctoHub slave port control interface, available for instance in the
- * YoctoHub-Ethernet, the YoctoHub-GSM-3G-EU, the YoctoHub-Shield or the YoctoHub-Wireless-n
+ * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Shield or the YoctoHub-Wireless-n
  *
  * The YHubPort class provides control over the power supply for slave ports
  * on a YoctoHub. It provide information about the device connected to it.
@@ -92,10 +92,10 @@ export class YHubPort extends YFunction {
     /**
      * Returns true if the YoctoHub port is powered, false otherwise.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to true if the YoctoHub port is
-     * powered, false otherwise
+     * @return either YHubPort.ENABLED_FALSE or YHubPort.ENABLED_TRUE, according to true if the YoctoHub
+     * port is powered, false otherwise
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YHubPort.ENABLED_INVALID.
      */
     async get_enabled() {
         let res;
@@ -111,9 +111,10 @@ export class YHubPort extends YFunction {
      * Changes the activation of the YoctoHub port. If the port is enabled, the
      * connected module is powered. Otherwise, port power is shut down.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation of the YoctoHub port
+     * @param newval : either YHubPort.ENABLED_FALSE or YHubPort.ENABLED_TRUE, according to the activation
+     * of the YoctoHub port
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -125,10 +126,10 @@ export class YHubPort extends YFunction {
     /**
      * Returns the current state of the YoctoHub port.
      *
-     * @return a value among Y_PORTSTATE_OFF, Y_PORTSTATE_OVRLD, Y_PORTSTATE_ON, Y_PORTSTATE_RUN and
-     * Y_PORTSTATE_PROG corresponding to the current state of the YoctoHub port
+     * @return a value among YHubPort.PORTSTATE_OFF, YHubPort.PORTSTATE_OVRLD, YHubPort.PORTSTATE_ON,
+     * YHubPort.PORTSTATE_RUN and YHubPort.PORTSTATE_PROG corresponding to the current state of the YoctoHub port
      *
-     * On failure, throws an exception or returns Y_PORTSTATE_INVALID.
+     * On failure, throws an exception or returns YHubPort.PORTSTATE_INVALID.
      */
     async get_portState() {
         let res;
@@ -147,7 +148,7 @@ export class YHubPort extends YFunction {
      *
      * @return an integer corresponding to the current baud rate used by this YoctoHub port, in kbps
      *
-     * On failure, throws an exception or returns Y_BAUDRATE_INVALID.
+     * On failure, throws an exception or returns YHubPort.BAUDRATE_INVALID.
      */
     async get_baudRate() {
         let res;
@@ -160,7 +161,7 @@ export class YHubPort extends YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a YoctoHub slave port for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -170,11 +171,11 @@ export class YHubPort extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the YoctoHub slave port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YHubPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YHubPort.isOnline() to test if the YoctoHub slave port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a YoctoHub slave port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -182,10 +183,10 @@ export class YHubPort extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the YoctoHub slave port, for instance
+     *         YHUBETH1.hubPort1.
      *
-     * @return a YHubPort object allowing you to drive $THEFUNCTION$.
+     * @return a YHubPort object allowing you to drive the YoctoHub slave port.
      */
     static FindHubPort(func) {
         let obj;
@@ -197,7 +198,7 @@ export class YHubPort extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a YoctoHub slave port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -207,19 +208,19 @@ export class YHubPort extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the YoctoHub slave port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YHubPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YHubPort.isOnline() to test if the YoctoHub slave port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a YoctoHub slave port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the YoctoHub slave port, for instance
+     *         YHUBETH1.hubPort1.
      *
-     * @return a YHubPort object allowing you to drive $THEFUNCTION$.
+     * @return a YHubPort object allowing you to drive the YoctoHub slave port.
      */
     static FindHubPortInContext(yctx, func) {
         let obj;
@@ -274,9 +275,14 @@ export class YHubPort extends YFunction {
         return 0;
     }
     /**
-     * Returns the next HubPort
+     * Continues the enumeration of YoctoHub slave ports started using yFirstHubPort().
+     * Caution: You can't make any assumption about the returned YoctoHub slave ports order.
+     * If you want to find a specific a YoctoHub slave port, use HubPort.findHubPort()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YHubPort}
+     * @return a pointer to a YHubPort object, corresponding to
+     *         a YoctoHub slave port currently online, or a null pointer
+     *         if there are no more YoctoHub slave ports to enumerate.
      */
     nextHubPort() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -288,9 +294,13 @@ export class YHubPort extends YFunction {
         return YHubPort.FindHubPortInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first HubPort in a YAPI context
+     * Starts the enumeration of YoctoHub slave ports currently accessible.
+     * Use the method YHubPort.nextHubPort() to iterate on
+     * next YoctoHub slave ports.
      *
-     * @returns {YHubPort}
+     * @return a pointer to a YHubPort object, corresponding to
+     *         the first YoctoHub slave port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstHubPort() {
         let next_hwid = YAPI.imm_getFirstHardwareId('HubPort');
@@ -299,11 +309,15 @@ export class YHubPort extends YFunction {
         return YHubPort.FindHubPort(next_hwid);
     }
     /**
-     * Retrieves the first HubPort in a given context
+     * Starts the enumeration of YoctoHub slave ports currently accessible.
+     * Use the method YHubPort.nextHubPort() to iterate on
+     * next YoctoHub slave ports.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YHubPort}
+     * @return a pointer to a YHubPort object, corresponding to
+     *         the first YoctoHub slave port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstHubPortInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('HubPort');

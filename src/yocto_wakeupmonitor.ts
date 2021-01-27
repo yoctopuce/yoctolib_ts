@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_wakeupmonitor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YWakeUpMonitor definitions)
-export const enum Y_WakeUpReason {
+export const enum YWakeUpMonitor_WakeUpReason {
     USBPOWER = 0,
     EXTPOWER = 1,
     ENDOFSLEEP = 2,
@@ -49,7 +49,7 @@ export const enum Y_WakeUpReason {
     SCHEDULE2 = 5,
     INVALID = -1
 }
-export const enum Y_WakeUpState {
+export const enum YWakeUpMonitor_WakeUpState {
     SLEEPING = 0,
     AWAKE = 1,
     INVALID = -1
@@ -60,7 +60,7 @@ export interface YWakeUpMonitorValueCallback { (func: YWakeUpMonitor, value: str
 //--- (YWakeUpMonitor class start)
 /**
  * YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
- * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * The YWakeUpMonitor class handles globally all wake-up sources, as well
  * as automated sleep mode.
@@ -74,8 +74,8 @@ export class YWakeUpMonitor extends YFunction
     _powerDuration: number = YWakeUpMonitor.POWERDURATION_INVALID;
     _sleepCountdown: number = YWakeUpMonitor.SLEEPCOUNTDOWN_INVALID;
     _nextWakeUp: number = YWakeUpMonitor.NEXTWAKEUP_INVALID;
-    _wakeUpReason: Y_WakeUpReason = YWakeUpMonitor.WAKEUPREASON_INVALID;
-    _wakeUpState: Y_WakeUpState = YWakeUpMonitor.WAKEUPSTATE_INVALID;
+    _wakeUpReason: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor.WAKEUPREASON_INVALID;
+    _wakeUpState: YWakeUpMonitor_WakeUpState = YWakeUpMonitor.WAKEUPSTATE_INVALID;
     _rtcTime: number = YWakeUpMonitor.RTCTIME_INVALID;
     _endOfTime: number = 2145960000;
     _valueCallbackWakeUpMonitor: YWakeUpMonitorValueCallback | null = null;
@@ -84,32 +84,32 @@ export class YWakeUpMonitor extends YFunction
     public readonly POWERDURATION_INVALID: number = YAPI.INVALID_UINT;
     public readonly SLEEPCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
     public readonly NEXTWAKEUP_INVALID: number = YAPI.INVALID_LONG;
-    public readonly WAKEUPREASON_USBPOWER: Y_WakeUpReason = Y_WakeUpReason.USBPOWER;
-    public readonly WAKEUPREASON_EXTPOWER: Y_WakeUpReason = Y_WakeUpReason.EXTPOWER;
-    public readonly WAKEUPREASON_ENDOFSLEEP: Y_WakeUpReason = Y_WakeUpReason.ENDOFSLEEP;
-    public readonly WAKEUPREASON_EXTSIG1: Y_WakeUpReason = Y_WakeUpReason.EXTSIG1;
-    public readonly WAKEUPREASON_SCHEDULE1: Y_WakeUpReason = Y_WakeUpReason.SCHEDULE1;
-    public readonly WAKEUPREASON_SCHEDULE2: Y_WakeUpReason = Y_WakeUpReason.SCHEDULE2;
-    public readonly WAKEUPREASON_INVALID: Y_WakeUpReason = Y_WakeUpReason.INVALID;
-    public readonly WAKEUPSTATE_SLEEPING: Y_WakeUpState = Y_WakeUpState.SLEEPING;
-    public readonly WAKEUPSTATE_AWAKE: Y_WakeUpState = Y_WakeUpState.AWAKE;
-    public readonly WAKEUPSTATE_INVALID: Y_WakeUpState = Y_WakeUpState.INVALID;
+    public readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.USBPOWER;
+    public readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTPOWER;
+    public readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.ENDOFSLEEP;
+    public readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTSIG1;
+    public readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE1;
+    public readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE2;
+    public readonly WAKEUPREASON_INVALID: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.INVALID;
+    public readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.SLEEPING;
+    public readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.AWAKE;
+    public readonly WAKEUPSTATE_INVALID: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.INVALID;
     public readonly RTCTIME_INVALID: number = YAPI.INVALID_LONG;
 
     // API symbols as static members
     public static readonly POWERDURATION_INVALID: number = YAPI.INVALID_UINT;
     public static readonly SLEEPCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
     public static readonly NEXTWAKEUP_INVALID: number = YAPI.INVALID_LONG;
-    public static readonly WAKEUPREASON_USBPOWER: Y_WakeUpReason = Y_WakeUpReason.USBPOWER;
-    public static readonly WAKEUPREASON_EXTPOWER: Y_WakeUpReason = Y_WakeUpReason.EXTPOWER;
-    public static readonly WAKEUPREASON_ENDOFSLEEP: Y_WakeUpReason = Y_WakeUpReason.ENDOFSLEEP;
-    public static readonly WAKEUPREASON_EXTSIG1: Y_WakeUpReason = Y_WakeUpReason.EXTSIG1;
-    public static readonly WAKEUPREASON_SCHEDULE1: Y_WakeUpReason = Y_WakeUpReason.SCHEDULE1;
-    public static readonly WAKEUPREASON_SCHEDULE2: Y_WakeUpReason = Y_WakeUpReason.SCHEDULE2;
-    public static readonly WAKEUPREASON_INVALID: Y_WakeUpReason = Y_WakeUpReason.INVALID;
-    public static readonly WAKEUPSTATE_SLEEPING: Y_WakeUpState = Y_WakeUpState.SLEEPING;
-    public static readonly WAKEUPSTATE_AWAKE: Y_WakeUpState = Y_WakeUpState.AWAKE;
-    public static readonly WAKEUPSTATE_INVALID: Y_WakeUpState = Y_WakeUpState.INVALID;
+    public static readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.USBPOWER;
+    public static readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTPOWER;
+    public static readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.ENDOFSLEEP;
+    public static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTSIG1;
+    public static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE1;
+    public static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE2;
+    public static readonly WAKEUPREASON_INVALID: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.INVALID;
+    public static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.SLEEPING;
+    public static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.AWAKE;
+    public static readonly WAKEUPSTATE_INVALID: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.INVALID;
     public static readonly RTCTIME_INVALID: number = YAPI.INVALID_LONG;
     //--- (end of YWakeUpMonitor attributes declaration)
 
@@ -139,10 +139,10 @@ export class YWakeUpMonitor extends YFunction
             this._nextWakeUp = <number> <number> val;
             return 1;
         case 'wakeUpReason':
-            this._wakeUpReason = <Y_WakeUpReason> <number> val;
+            this._wakeUpReason = <YWakeUpMonitor_WakeUpReason> <number> val;
             return 1;
         case 'wakeUpState':
-            this._wakeUpState = <Y_WakeUpState> <number> val;
+            this._wakeUpState = <YWakeUpMonitor_WakeUpState> <number> val;
             return 1;
         case 'rtcTime':
             this._rtcTime = <number> <number> val;
@@ -156,7 +156,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * @return an integer corresponding to the maximal wake up time (in seconds) before automatically going to sleep
      *
-     * On failure, throws an exception or returns Y_POWERDURATION_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.POWERDURATION_INVALID.
      */
     async get_powerDuration(): Promise<number>
     {
@@ -178,7 +178,7 @@ export class YWakeUpMonitor extends YFunction
      * @param newval : an integer corresponding to the maximal wake up time (seconds) before automatically
      * going to sleep
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -194,7 +194,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * @return an integer corresponding to the delay before the  next sleep period
      *
-     * On failure, throws an exception or returns Y_SLEEPCOUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.SLEEPCOUNTDOWN_INVALID.
      */
     async get_sleepCountdown(): Promise<number>
     {
@@ -213,7 +213,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * @param newval : an integer corresponding to the delay before the next sleep period
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -229,7 +229,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * @return an integer corresponding to the next scheduled wake up date/time (UNIX format)
      *
-     * On failure, throws an exception or returns Y_NEXTWAKEUP_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.NEXTWAKEUP_INVALID.
      */
     async get_nextWakeUp(): Promise<number>
     {
@@ -248,7 +248,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * @param newval : an integer corresponding to the days of the week when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -262,13 +262,14 @@ export class YWakeUpMonitor extends YFunction
     /**
      * Returns the latest wake up reason.
      *
-     * @return a value among Y_WAKEUPREASON_USBPOWER, Y_WAKEUPREASON_EXTPOWER, Y_WAKEUPREASON_ENDOFSLEEP,
-     * Y_WAKEUPREASON_EXTSIG1, Y_WAKEUPREASON_SCHEDULE1 and Y_WAKEUPREASON_SCHEDULE2 corresponding to the
-     * latest wake up reason
+     * @return a value among YWakeUpMonitor.WAKEUPREASON_USBPOWER, YWakeUpMonitor.WAKEUPREASON_EXTPOWER,
+     * YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP, YWakeUpMonitor.WAKEUPREASON_EXTSIG1,
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 and YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 corresponding to
+     * the latest wake up reason
      *
-     * On failure, throws an exception or returns Y_WAKEUPREASON_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
-    async get_wakeUpReason(): Promise<Y_WakeUpReason>
+    async get_wakeUpReason(): Promise<YWakeUpMonitor_WakeUpReason>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -283,11 +284,12 @@ export class YWakeUpMonitor extends YFunction
     /**
      * Returns  the current state of the monitor.
      *
-     * @return either Y_WAKEUPSTATE_SLEEPING or Y_WAKEUPSTATE_AWAKE, according to  the current state of the monitor
+     * @return either YWakeUpMonitor.WAKEUPSTATE_SLEEPING or YWakeUpMonitor.WAKEUPSTATE_AWAKE, according
+     * to  the current state of the monitor
      *
-     * On failure, throws an exception or returns Y_WAKEUPSTATE_INVALID.
+     * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPSTATE_INVALID.
      */
-    async get_wakeUpState(): Promise<Y_WakeUpState>
+    async get_wakeUpState(): Promise<YWakeUpMonitor_WakeUpState>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -299,7 +301,7 @@ export class YWakeUpMonitor extends YFunction
         return res;
     }
 
-    async set_wakeUpState(newval: Y_WakeUpState): Promise<number>
+    async set_wakeUpState(newval: YWakeUpMonitor_WakeUpState): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -319,7 +321,7 @@ export class YWakeUpMonitor extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a wake-up monitor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -329,11 +331,11 @@ export class YWakeUpMonitor extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wake-up monitor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWakeUpMonitor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWakeUpMonitor.isOnline() to test if the wake-up monitor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wake-up monitor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -341,10 +343,10 @@ export class YWakeUpMonitor extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wake-up monitor, for instance
+     *         YHUBGSM3.wakeUpMonitor.
      *
-     * @return a YWakeUpMonitor object allowing you to drive $THEFUNCTION$.
+     * @return a YWakeUpMonitor object allowing you to drive the wake-up monitor.
      */
     static FindWakeUpMonitor(func: string): YWakeUpMonitor
     {
@@ -358,7 +360,7 @@ export class YWakeUpMonitor extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a wake-up monitor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -368,19 +370,19 @@ export class YWakeUpMonitor extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wake-up monitor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWakeUpMonitor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWakeUpMonitor.isOnline() to test if the wake-up monitor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wake-up monitor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wake-up monitor, for instance
+     *         YHUBGSM3.wakeUpMonitor.
      *
-     * @return a YWakeUpMonitor object allowing you to drive $THEFUNCTION$.
+     * @return a YWakeUpMonitor object allowing you to drive the wake-up monitor.
      */
     static FindWakeUpMonitorInContext(yctx: YAPIContext, func: string): YWakeUpMonitor
     {
@@ -451,7 +453,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * @param secBeforeSleep : number of seconds before going into sleep mode,
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -475,7 +477,7 @@ export class YWakeUpMonitor extends YFunction
      * @param secUntilWakeUp : number of seconds before next wake up
      * @param secBeforeSleep : number of seconds before going into sleep mode
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -499,7 +501,7 @@ export class YWakeUpMonitor extends YFunction
      * @param wakeUpTime : wake-up datetime (UNIX format)
      * @param secBeforeSleep : number of seconds before going into sleep mode
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -518,7 +520,7 @@ export class YWakeUpMonitor extends YFunction
     /**
      * Resets the sleep countdown.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async resetSleepCountDown(): Promise<number>
@@ -529,9 +531,14 @@ export class YWakeUpMonitor extends YFunction
     }
 
     /**
-     * Returns the next WakeUpMonitor
+     * Continues the enumeration of wake-up monitors started using yFirstWakeUpMonitor().
+     * Caution: You can't make any assumption about the returned wake-up monitors order.
+     * If you want to find a specific a wake-up monitor, use WakeUpMonitor.findWakeUpMonitor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YWakeUpMonitor}
+     * @return a pointer to a YWakeUpMonitor object, corresponding to
+     *         a wake-up monitor currently online, or a null pointer
+     *         if there are no more wake-up monitors to enumerate.
      */
     nextWakeUpMonitor(): YWakeUpMonitor | null
     {
@@ -543,9 +550,13 @@ export class YWakeUpMonitor extends YFunction
     }
 
     /**
-     * Retrieves the first WakeUpMonitor in a YAPI context
+     * Starts the enumeration of wake-up monitors currently accessible.
+     * Use the method YWakeUpMonitor.nextWakeUpMonitor() to iterate on
+     * next wake-up monitors.
      *
-     * @returns {YWakeUpMonitor}
+     * @return a pointer to a YWakeUpMonitor object, corresponding to
+     *         the first wake-up monitor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWakeUpMonitor(): YWakeUpMonitor | null
     {
@@ -555,11 +566,15 @@ export class YWakeUpMonitor extends YFunction
     }
 
     /**
-     * Retrieves the first WakeUpMonitor in a given context
+     * Starts the enumeration of wake-up monitors currently accessible.
+     * Use the method YWakeUpMonitor.nextWakeUpMonitor() to iterate on
+     * next wake-up monitors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YWakeUpMonitor}
+     * @return a pointer to a YWakeUpMonitor object, corresponding to
+     *         the first wake-up monitor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWakeUpMonitorInContext(yctx: YAPIContext): YWakeUpMonitor | null
     {

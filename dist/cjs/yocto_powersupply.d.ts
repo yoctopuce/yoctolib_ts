@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_powersupply.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -37,12 +37,12 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_PowerOutput {
+export declare const enum YPowerSupply_PowerOutput {
     OFF = 0,
     ON = 1,
     INVALID = -1
 }
-export declare const enum Y_VoltageSense {
+export declare const enum YPowerSupply_VoltageSense {
     INT = 0,
     EXT = 1,
     INVALID = -1
@@ -61,8 +61,8 @@ export declare class YPowerSupply extends YFunction {
     _className: string;
     _voltageSetPoint: number;
     _currentLimit: number;
-    _powerOutput: Y_PowerOutput;
-    _voltageSense: Y_VoltageSense;
+    _powerOutput: YPowerSupply_PowerOutput;
+    _voltageSense: YPowerSupply_VoltageSense;
     _measuredVoltage: number;
     _measuredCurrent: number;
     _inputVoltage: number;
@@ -75,12 +75,12 @@ export declare class YPowerSupply extends YFunction {
     _valueCallbackPowerSupply: YPowerSupplyValueCallback | null;
     readonly VOLTAGESETPOINT_INVALID: number;
     readonly CURRENTLIMIT_INVALID: number;
-    readonly POWEROUTPUT_OFF: Y_PowerOutput;
-    readonly POWEROUTPUT_ON: Y_PowerOutput;
-    readonly POWEROUTPUT_INVALID: Y_PowerOutput;
-    readonly VOLTAGESENSE_INT: Y_VoltageSense;
-    readonly VOLTAGESENSE_EXT: Y_VoltageSense;
-    readonly VOLTAGESENSE_INVALID: Y_VoltageSense;
+    readonly POWEROUTPUT_OFF: YPowerSupply_PowerOutput;
+    readonly POWEROUTPUT_ON: YPowerSupply_PowerOutput;
+    readonly POWEROUTPUT_INVALID: YPowerSupply_PowerOutput;
+    readonly VOLTAGESENSE_INT: YPowerSupply_VoltageSense;
+    readonly VOLTAGESENSE_EXT: YPowerSupply_VoltageSense;
+    readonly VOLTAGESENSE_INVALID: YPowerSupply_VoltageSense;
     readonly MEASUREDVOLTAGE_INVALID: number;
     readonly MEASUREDCURRENT_INVALID: number;
     readonly INPUTVOLTAGE_INVALID: number;
@@ -92,12 +92,12 @@ export declare class YPowerSupply extends YFunction {
     readonly COMMAND_INVALID: string;
     static readonly VOLTAGESETPOINT_INVALID: number;
     static readonly CURRENTLIMIT_INVALID: number;
-    static readonly POWEROUTPUT_OFF: Y_PowerOutput;
-    static readonly POWEROUTPUT_ON: Y_PowerOutput;
-    static readonly POWEROUTPUT_INVALID: Y_PowerOutput;
-    static readonly VOLTAGESENSE_INT: Y_VoltageSense;
-    static readonly VOLTAGESENSE_EXT: Y_VoltageSense;
-    static readonly VOLTAGESENSE_INVALID: Y_VoltageSense;
+    static readonly POWEROUTPUT_OFF: YPowerSupply_PowerOutput;
+    static readonly POWEROUTPUT_ON: YPowerSupply_PowerOutput;
+    static readonly POWEROUTPUT_INVALID: YPowerSupply_PowerOutput;
+    static readonly VOLTAGESENSE_INT: YPowerSupply_VoltageSense;
+    static readonly VOLTAGESENSE_EXT: YPowerSupply_VoltageSense;
+    static readonly VOLTAGESENSE_INVALID: YPowerSupply_VoltageSense;
     static readonly MEASUREDVOLTAGE_INVALID: number;
     static readonly MEASUREDCURRENT_INVALID: number;
     static readonly INPUTVOLTAGE_INVALID: number;
@@ -114,7 +114,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @param newval : a floating point number corresponding to the voltage set point, in V
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -124,7 +124,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the voltage set point, in V
      *
-     * On failure, throws an exception or returns Y_VOLTAGESETPOINT_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.VOLTAGESETPOINT_INVALID.
      */
     get_voltageSetPoint(): Promise<number>;
     /**
@@ -132,7 +132,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @param newval : a floating point number corresponding to the current limit, in mA
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -142,51 +142,55 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the current limit, in mA
      *
-     * On failure, throws an exception or returns Y_CURRENTLIMIT_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.CURRENTLIMIT_INVALID.
      */
     get_currentLimit(): Promise<number>;
     /**
      * Returns the power supply output switch state.
      *
-     * @return either Y_POWEROUTPUT_OFF or Y_POWEROUTPUT_ON, according to the power supply output switch state
+     * @return either YPowerSupply.POWEROUTPUT_OFF or YPowerSupply.POWEROUTPUT_ON, according to the power
+     * supply output switch state
      *
-     * On failure, throws an exception or returns Y_POWEROUTPUT_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.POWEROUTPUT_INVALID.
      */
-    get_powerOutput(): Promise<Y_PowerOutput>;
+    get_powerOutput(): Promise<YPowerSupply_PowerOutput>;
     /**
      * Changes the power supply output switch state.
      *
-     * @param newval : either Y_POWEROUTPUT_OFF or Y_POWEROUTPUT_ON, according to the power supply output switch state
+     * @param newval : either YPowerSupply.POWEROUTPUT_OFF or YPowerSupply.POWEROUTPUT_ON, according to
+     * the power supply output switch state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_powerOutput(newval: Y_PowerOutput): Promise<number>;
+    set_powerOutput(newval: YPowerSupply_PowerOutput): Promise<number>;
     /**
      * Returns the output voltage control point.
      *
-     * @return either Y_VOLTAGESENSE_INT or Y_VOLTAGESENSE_EXT, according to the output voltage control point
+     * @return either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to the
+     * output voltage control point
      *
-     * On failure, throws an exception or returns Y_VOLTAGESENSE_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.VOLTAGESENSE_INVALID.
      */
-    get_voltageSense(): Promise<Y_VoltageSense>;
+    get_voltageSense(): Promise<YPowerSupply_VoltageSense>;
     /**
      * Changes the voltage control point.
      *
-     * @param newval : either Y_VOLTAGESENSE_INT or Y_VOLTAGESENSE_EXT, according to the voltage control point
+     * @param newval : either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to
+     * the voltage control point
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_voltageSense(newval: Y_VoltageSense): Promise<number>;
+    set_voltageSense(newval: YPowerSupply_VoltageSense): Promise<number>;
     /**
      * Returns the measured output voltage, in V.
      *
      * @return a floating point number corresponding to the measured output voltage, in V
      *
-     * On failure, throws an exception or returns Y_MEASUREDVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.MEASUREDVOLTAGE_INVALID.
      */
     get_measuredVoltage(): Promise<number>;
     /**
@@ -194,7 +198,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the measured output current, in mA
      *
-     * On failure, throws an exception or returns Y_MEASUREDCURRENT_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.MEASUREDCURRENT_INVALID.
      */
     get_measuredCurrent(): Promise<number>;
     /**
@@ -202,7 +206,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the measured input voltage, in V
      *
-     * On failure, throws an exception or returns Y_INPUTVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.INPUTVOLTAGE_INVALID.
      */
     get_inputVoltage(): Promise<number>;
     /**
@@ -210,7 +214,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the internal voltage, in V
      *
-     * On failure, throws an exception or returns Y_VINT_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.VINT_INVALID.
      */
     get_vInt(): Promise<number>;
     /**
@@ -218,7 +222,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the LDO temperature, in Celsius
      *
-     * On failure, throws an exception or returns Y_LDOTEMPERATURE_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.LDOTEMPERATURE_INVALID.
      */
     get_ldoTemperature(): Promise<number>;
     get_voltageTransition(): Promise<string>;
@@ -229,7 +233,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @param newval : a floating point number corresponding to the voltage set point at device start up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -239,7 +243,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the selected voltage set point at device startup, in V
      *
-     * On failure, throws an exception or returns Y_VOLTAGEATSTARTUP_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.VOLTAGEATSTARTUP_INVALID.
      */
     get_voltageAtStartUp(): Promise<number>;
     /**
@@ -248,7 +252,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * @param newval : a floating point number corresponding to the current limit at device start up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -258,13 +262,13 @@ export declare class YPowerSupply extends YFunction {
      *
      * @return a floating point number corresponding to the selected current limit at device startup, in mA
      *
-     * On failure, throws an exception or returns Y_CURRENTATSTARTUP_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.CURRENTATSTARTUP_INVALID.
      */
     get_currentAtStartUp(): Promise<number>;
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a regulated power supply for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -274,11 +278,11 @@ export declare class YPowerSupply extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the regulated power supply is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPowerSupply.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPowerSupply.isOnline() to test if the regulated power supply is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a regulated power supply by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -286,14 +290,14 @@ export declare class YPowerSupply extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the regulated power supply, for instance
+     *         MyDevice.powerSupply.
      *
-     * @return a YPowerSupply object allowing you to drive $THEFUNCTION$.
+     * @return a YPowerSupply object allowing you to drive the regulated power supply.
      */
     static FindPowerSupply(func: string): YPowerSupply;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a regulated power supply for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -303,19 +307,19 @@ export declare class YPowerSupply extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the regulated power supply is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPowerSupply.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPowerSupply.isOnline() to test if the regulated power supply is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a regulated power supply by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the regulated power supply, for instance
+     *         MyDevice.powerSupply.
      *
-     * @return a YPowerSupply object allowing you to drive $THEFUNCTION$.
+     * @return a YPowerSupply object allowing you to drive the regulated power supply.
      */
     static FindPowerSupplyInContext(yctx: YAPIContext, func: string): YPowerSupply;
     /**
@@ -339,27 +343,40 @@ export declare class YPowerSupply extends YFunction {
      *         (floating-point number, representing the end voltage in V)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      */
     voltageMove(V_target: number, ms_duration: number): Promise<number>;
     /**
-     * Returns the next PowerSupply
+     * Continues the enumeration of regulated power supplies started using yFirstPowerSupply().
+     * Caution: You can't make any assumption about the returned regulated power supplies order.
+     * If you want to find a specific a regulated power supply, use PowerSupply.findPowerSupply()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPowerSupply}
+     * @return a pointer to a YPowerSupply object, corresponding to
+     *         a regulated power supply currently online, or a null pointer
+     *         if there are no more regulated power supplies to enumerate.
      */
     nextPowerSupply(): YPowerSupply | null;
     /**
-     * Retrieves the first PowerSupply in a YAPI context
+     * Starts the enumeration of regulated power supplies currently accessible.
+     * Use the method YPowerSupply.nextPowerSupply() to iterate on
+     * next regulated power supplies.
      *
-     * @returns {YPowerSupply}
+     * @return a pointer to a YPowerSupply object, corresponding to
+     *         the first regulated power supply currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerSupply(): YPowerSupply | null;
     /**
-     * Retrieves the first PowerSupply in a given context
+     * Starts the enumeration of regulated power supplies currently accessible.
+     * Use the method YPowerSupply.nextPowerSupply() to iterate on
+     * next regulated power supplies.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPowerSupply}
+     * @return a pointer to a YPowerSupply object, corresponding to
+     *         the first regulated power supply currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerSupplyInContext(yctx: YAPIContext): YPowerSupply | null;
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_quadraturedecoder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -84,7 +84,7 @@ export class YQuadratureDecoder extends YSensor {
      *
      * @param newval : a floating point number corresponding to the current expected position of the quadrature decoder
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -98,7 +98,7 @@ export class YQuadratureDecoder extends YSensor {
      *
      * @return a floating point number corresponding to the increments frequency, in Hz
      *
-     * On failure, throws an exception or returns Y_SPEED_INVALID.
+     * On failure, throws an exception or returns YQuadratureDecoder.SPEED_INVALID.
      */
     async get_speed() {
         let res;
@@ -113,10 +113,10 @@ export class YQuadratureDecoder extends YSensor {
     /**
      * Returns the current activation state of the quadrature decoder.
      *
-     * @return either Y_DECODING_OFF or Y_DECODING_ON, according to the current activation state of the
-     * quadrature decoder
+     * @return either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according to the
+     * current activation state of the quadrature decoder
      *
-     * On failure, throws an exception or returns Y_DECODING_INVALID.
+     * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
     async get_decoding() {
         let res;
@@ -133,10 +133,10 @@ export class YQuadratureDecoder extends YSensor {
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either Y_DECODING_OFF or Y_DECODING_ON, according to the activation state of the
-     * quadrature decoder
+     * @param newval : either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according
+     * to the activation state of the quadrature decoder
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -146,7 +146,7 @@ export class YQuadratureDecoder extends YSensor {
         return await this._setAttr('decoding', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a quadrature decoder for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -156,11 +156,11 @@ export class YQuadratureDecoder extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the quadrature decoder is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YQuadratureDecoder.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YQuadratureDecoder.isOnline() to test if the quadrature decoder is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a quadrature decoder by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -168,10 +168,10 @@ export class YQuadratureDecoder extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the quadrature decoder, for instance
+     *         YPWMRX01.quadratureDecoder.
      *
-     * @return a YQuadratureDecoder object allowing you to drive $THEFUNCTION$.
+     * @return a YQuadratureDecoder object allowing you to drive the quadrature decoder.
      */
     static FindQuadratureDecoder(func) {
         let obj;
@@ -183,7 +183,7 @@ export class YQuadratureDecoder extends YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a quadrature decoder for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -193,19 +193,19 @@ export class YQuadratureDecoder extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the quadrature decoder is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YQuadratureDecoder.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YQuadratureDecoder.isOnline() to test if the quadrature decoder is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a quadrature decoder by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the quadrature decoder, for instance
+     *         YPWMRX01.quadratureDecoder.
      *
-     * @return a YQuadratureDecoder object allowing you to drive $THEFUNCTION$.
+     * @return a YQuadratureDecoder object allowing you to drive the quadrature decoder.
      */
     static FindQuadratureDecoderInContext(yctx, func) {
         let obj;
@@ -297,9 +297,14 @@ export class YQuadratureDecoder extends YSensor {
         return 0;
     }
     /**
-     * Returns the next QuadratureDecoder
+     * Continues the enumeration of quadrature decoders started using yFirstQuadratureDecoder().
+     * Caution: You can't make any assumption about the returned quadrature decoders order.
+     * If you want to find a specific a quadrature decoder, use QuadratureDecoder.findQuadratureDecoder()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YQuadratureDecoder}
+     * @return a pointer to a YQuadratureDecoder object, corresponding to
+     *         a quadrature decoder currently online, or a null pointer
+     *         if there are no more quadrature decoders to enumerate.
      */
     nextQuadratureDecoder() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -311,9 +316,13 @@ export class YQuadratureDecoder extends YSensor {
         return YQuadratureDecoder.FindQuadratureDecoderInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first QuadratureDecoder in a YAPI context
+     * Starts the enumeration of quadrature decoders currently accessible.
+     * Use the method YQuadratureDecoder.nextQuadratureDecoder() to iterate on
+     * next quadrature decoders.
      *
-     * @returns {YQuadratureDecoder}
+     * @return a pointer to a YQuadratureDecoder object, corresponding to
+     *         the first quadrature decoder currently online, or a null pointer
+     *         if there are none.
      */
     static FirstQuadratureDecoder() {
         let next_hwid = YAPI.imm_getFirstHardwareId('QuadratureDecoder');
@@ -322,11 +331,15 @@ export class YQuadratureDecoder extends YSensor {
         return YQuadratureDecoder.FindQuadratureDecoder(next_hwid);
     }
     /**
-     * Retrieves the first QuadratureDecoder in a given context
+     * Starts the enumeration of quadrature decoders currently accessible.
+     * Use the method YQuadratureDecoder.nextQuadratureDecoder() to iterate on
+     * next quadrature decoders.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YQuadratureDecoder}
+     * @return a pointer to a YQuadratureDecoder object, corresponding to
+     *         the first quadrature decoder currently online, or a null pointer
+     *         if there are none.
      */
     static FirstQuadratureDecoderInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('QuadratureDecoder');

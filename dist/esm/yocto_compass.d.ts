@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_compass.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum Y_Axis {
+export declare const enum YCompass_Axis {
     X = 0,
     Y = 1,
     Z = 2,
@@ -59,21 +59,21 @@ export interface YCompassTimedReportCallback {
 export declare class YCompass extends YSensor {
     _className: string;
     _bandwidth: number;
-    _axis: Y_Axis;
+    _axis: YCompass_Axis;
     _magneticHeading: number;
     _valueCallbackCompass: YCompassValueCallback | null;
     _timedReportCallbackCompass: YCompassTimedReportCallback | null;
     readonly BANDWIDTH_INVALID: number;
-    readonly AXIS_X: Y_Axis;
-    readonly AXIS_Y: Y_Axis;
-    readonly AXIS_Z: Y_Axis;
-    readonly AXIS_INVALID: Y_Axis;
+    readonly AXIS_X: YCompass_Axis;
+    readonly AXIS_Y: YCompass_Axis;
+    readonly AXIS_Z: YCompass_Axis;
+    readonly AXIS_INVALID: YCompass_Axis;
     readonly MAGNETICHEADING_INVALID: number;
     static readonly BANDWIDTH_INVALID: number;
-    static readonly AXIS_X: Y_Axis;
-    static readonly AXIS_Y: Y_Axis;
-    static readonly AXIS_Z: Y_Axis;
-    static readonly AXIS_INVALID: Y_Axis;
+    static readonly AXIS_X: YCompass_Axis;
+    static readonly AXIS_Y: YCompass_Axis;
+    static readonly AXIS_Z: YCompass_Axis;
+    static readonly AXIS_INVALID: YCompass_Axis;
     static readonly MAGNETICHEADING_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -82,7 +82,7 @@ export declare class YCompass extends YSensor {
      *
      * @return an integer corresponding to the measure update frequency, measured in Hz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YCompass.BANDWIDTH_INVALID.
      */
     get_bandwidth(): Promise<number>;
     /**
@@ -93,22 +93,22 @@ export declare class YCompass extends YSensor {
      *
      * @param newval : an integer corresponding to the measure update frequency, measured in Hz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     set_bandwidth(newval: number): Promise<number>;
-    get_axis(): Promise<Y_Axis>;
+    get_axis(): Promise<YCompass_Axis>;
     /**
      * Returns the magnetic heading, regardless of the configured bearing.
      *
      * @return a floating point number corresponding to the magnetic heading, regardless of the configured bearing
      *
-     * On failure, throws an exception or returns Y_MAGNETICHEADING_INVALID.
+     * On failure, throws an exception or returns YCompass.MAGNETICHEADING_INVALID.
      */
     get_magneticHeading(): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a compass function for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -118,11 +118,11 @@ export declare class YCompass extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the compass function is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCompass.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCompass.isOnline() to test if the compass function is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a compass function by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -130,14 +130,14 @@ export declare class YCompass extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the compass function, for instance
+     *         Y3DMK002.compass.
      *
-     * @return a YCompass object allowing you to drive $THEFUNCTION$.
+     * @return a YCompass object allowing you to drive the compass function.
      */
     static FindCompass(func: string): YCompass;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a compass function for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -147,19 +147,19 @@ export declare class YCompass extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the compass function is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCompass.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCompass.isOnline() to test if the compass function is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a compass function by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the compass function, for instance
+     *         Y3DMK002.compass.
      *
-     * @return a YCompass object allowing you to drive $THEFUNCTION$.
+     * @return a YCompass object allowing you to drive the compass function.
      */
     static FindCompassInContext(yctx: YAPIContext, func: string): YCompass;
     /**
@@ -189,23 +189,36 @@ export declare class YCompass extends YSensor {
     registerTimedReportCallback(callback: YCompassTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next Compass
+     * Continues the enumeration of compass functions started using yFirstCompass().
+     * Caution: You can't make any assumption about the returned compass functions order.
+     * If you want to find a specific a compass function, use Compass.findCompass()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YCompass}
+     * @return a pointer to a YCompass object, corresponding to
+     *         a compass function currently online, or a null pointer
+     *         if there are no more compass functions to enumerate.
      */
     nextCompass(): YCompass | null;
     /**
-     * Retrieves the first Compass in a YAPI context
+     * Starts the enumeration of compass functions currently accessible.
+     * Use the method YCompass.nextCompass() to iterate on
+     * next compass functions.
      *
-     * @returns {YCompass}
+     * @return a pointer to a YCompass object, corresponding to
+     *         the first compass function currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCompass(): YCompass | null;
     /**
-     * Retrieves the first Compass in a given context
+     * Starts the enumeration of compass functions currently accessible.
+     * Use the method YCompass.nextCompass() to iterate on
+     * next compass functions.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YCompass}
+     * @return a pointer to a YCompass object, corresponding to
+     *         the first compass function currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCompassInContext(yctx: YAPIContext): YCompass | null;
 }

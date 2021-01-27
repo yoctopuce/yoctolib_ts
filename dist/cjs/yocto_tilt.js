@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_tilt.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Tilt functions
  *
@@ -43,7 +43,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YTilt definitions)
 //--- (YTilt class start)
 /**
- * YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2
+ * YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2 or the Yocto-Inclinometer
  *
  * The YSensor class is the parent class for all Yoctopuce sensor types. It can be
  * used to read the current value and unit of any sensor, read the min/max
@@ -93,7 +93,7 @@ class YTilt extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the measure update frequency, measured in Hz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YTilt.BANDWIDTH_INVALID.
      */
     async get_bandwidth() {
         let res;
@@ -113,7 +113,7 @@ class YTilt extends yocto_api_js_1.YSensor {
      *
      * @param newval : an integer corresponding to the measure update frequency, measured in Hz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -133,7 +133,7 @@ class YTilt extends yocto_api_js_1.YSensor {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a tilt sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -143,11 +143,11 @@ class YTilt extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the tilt sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTilt.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTilt.isOnline() to test if the tilt sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a tilt sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -155,10 +155,10 @@ class YTilt extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the tilt sensor, for instance
+     *         Y3DMK002.tilt1.
      *
-     * @return a YTilt object allowing you to drive $THEFUNCTION$.
+     * @return a YTilt object allowing you to drive the tilt sensor.
      */
     static FindTilt(func) {
         let obj;
@@ -170,7 +170,7 @@ class YTilt extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a tilt sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -180,19 +180,19 @@ class YTilt extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the tilt sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTilt.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTilt.isOnline() to test if the tilt sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a tilt sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the tilt sensor, for instance
+     *         Y3DMK002.tilt1.
      *
-     * @return a YTilt object allowing you to drive $THEFUNCTION$.
+     * @return a YTilt object allowing you to drive the tilt sensor.
      */
     static FindTiltInContext(yctx, func) {
         let obj;
@@ -289,7 +289,7 @@ class YTilt extends yocto_api_js_1.YSensor {
      * is applied so that the current position is reported as a zero angle.
      * Be aware that this shift will also affect the measurement boundaries.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -308,7 +308,7 @@ class YTilt extends yocto_api_js_1.YSensor {
      * Cancels any previous zero calibration for the tilt measurement (Yocto-Inclinometer only).
      * This function restores the factory zero calibration.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -316,9 +316,14 @@ class YTilt extends yocto_api_js_1.YSensor {
         return await this._setAttr('calibrationParam', '0');
     }
     /**
-     * Returns the next Tilt
+     * Continues the enumeration of tilt sensors started using yFirstTilt().
+     * Caution: You can't make any assumption about the returned tilt sensors order.
+     * If you want to find a specific a tilt sensor, use Tilt.findTilt()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YTilt}
+     * @return a pointer to a YTilt object, corresponding to
+     *         a tilt sensor currently online, or a null pointer
+     *         if there are no more tilt sensors to enumerate.
      */
     nextTilt() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -330,9 +335,13 @@ class YTilt extends yocto_api_js_1.YSensor {
         return YTilt.FindTiltInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Tilt in a YAPI context
+     * Starts the enumeration of tilt sensors currently accessible.
+     * Use the method YTilt.nextTilt() to iterate on
+     * next tilt sensors.
      *
-     * @returns {YTilt}
+     * @return a pointer to a YTilt object, corresponding to
+     *         the first tilt sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTilt() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Tilt');
@@ -341,11 +350,15 @@ class YTilt extends yocto_api_js_1.YSensor {
         return YTilt.FindTilt(next_hwid);
     }
     /**
-     * Retrieves the first Tilt in a given context
+     * Starts the enumeration of tilt sensors currently accessible.
+     * Use the method YTilt.nextTilt() to iterate on
+     * next tilt sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YTilt}
+     * @return a pointer to a YTilt object, corresponding to
+     *         the first tilt sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTiltInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Tilt');

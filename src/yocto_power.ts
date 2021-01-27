@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_power.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -124,7 +124,7 @@ export class YPower extends YSensor
      * @return a floating point number corresponding to the power factor (the ratio between the real power consumed,
      *         measured in W, and the apparent power provided, measured in VA)
      *
-     * On failure, throws an exception or returns Y_COSPHI_INVALID.
+     * On failure, throws an exception or returns YPower.COSPHI_INVALID.
      */
     async get_cosPhi(): Promise<number>
     {
@@ -153,7 +153,7 @@ export class YPower extends YSensor
      * integrating the power consumption over time,
      *         but only when positive
      *
-     * On failure, throws an exception or returns Y_METER_INVALID.
+     * On failure, throws an exception or returns YPower.METER_INVALID.
      */
     async get_meter(): Promise<number>
     {
@@ -175,7 +175,7 @@ export class YPower extends YSensor
      * integrating the power consumption over time,
      *         but only when positive
      *
-     * On failure, throws an exception or returns Y_DELIVEREDENERGYMETER_INVALID.
+     * On failure, throws an exception or returns YPower.DELIVEREDENERGYMETER_INVALID.
      */
     async get_deliveredEnergyMeter(): Promise<number>
     {
@@ -197,7 +197,7 @@ export class YPower extends YSensor
      * integrating the power consumption over time,
      *         but only when negative
      *
-     * On failure, throws an exception or returns Y_RECEIVEDENERGYMETER_INVALID.
+     * On failure, throws an exception or returns YPower.RECEIVEDENERGYMETER_INVALID.
      */
     async get_receivedEnergyMeter(): Promise<number>
     {
@@ -216,7 +216,7 @@ export class YPower extends YSensor
      *
      * @return an integer corresponding to the elapsed time since last energy counter reset, in seconds
      *
-     * On failure, throws an exception or returns Y_METERTIMER_INVALID.
+     * On failure, throws an exception or returns YPower.METERTIMER_INVALID.
      */
     async get_meterTimer(): Promise<number>
     {
@@ -231,7 +231,7 @@ export class YPower extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a electrical power sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -241,11 +241,11 @@ export class YPower extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the electrical power sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPower.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPower.isOnline() to test if the electrical power sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a electrical power sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -253,10 +253,10 @@ export class YPower extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the electrical power sensor, for instance
+     *         YWATTMK1.power.
      *
-     * @return a YPower object allowing you to drive $THEFUNCTION$.
+     * @return a YPower object allowing you to drive the electrical power sensor.
      */
     static FindPower(func: string): YPower
     {
@@ -270,7 +270,7 @@ export class YPower extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a electrical power sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -280,19 +280,19 @@ export class YPower extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the electrical power sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPower.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPower.isOnline() to test if the electrical power sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a electrical power sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the electrical power sensor, for instance
+     *         YWATTMK1.power.
      *
-     * @return a YPower object allowing you to drive $THEFUNCTION$.
+     * @return a YPower object allowing you to drive the electrical power sensor.
      */
     static FindPowerInContext(yctx: YAPIContext, func: string): YPower
     {
@@ -390,7 +390,7 @@ export class YPower extends YSensor
     /**
      * Resets the energy counters.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -400,9 +400,14 @@ export class YPower extends YSensor
     }
 
     /**
-     * Returns the next Power
+     * Continues the enumeration of electrical power sensors started using yFirstPower().
+     * Caution: You can't make any assumption about the returned electrical power sensors order.
+     * If you want to find a specific a electrical power sensor, use Power.findPower()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPower}
+     * @return a pointer to a YPower object, corresponding to
+     *         a electrical power sensor currently online, or a null pointer
+     *         if there are no more electrical power sensors to enumerate.
      */
     nextPower(): YPower | null
     {
@@ -414,9 +419,13 @@ export class YPower extends YSensor
     }
 
     /**
-     * Retrieves the first Power in a YAPI context
+     * Starts the enumeration of electrical power sensors currently accessible.
+     * Use the method YPower.nextPower() to iterate on
+     * next electrical power sensors.
      *
-     * @returns {YPower}
+     * @return a pointer to a YPower object, corresponding to
+     *         the first electrical power sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPower(): YPower | null
     {
@@ -426,11 +435,15 @@ export class YPower extends YSensor
     }
 
     /**
-     * Retrieves the first Power in a given context
+     * Starts the enumeration of electrical power sensors currently accessible.
+     * Use the method YPower.nextPower() to iterate on
+     * next electrical power sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPower}
+     * @return a pointer to a YPower object, corresponding to
+     *         the first electrical power sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerInContext(yctx: YAPIContext): YPower | null
     {

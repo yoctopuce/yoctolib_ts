@@ -1,39 +1,46 @@
 {
-	"name": "yoctolib-ts",
-	"author": "Yoctopuce",
-	"description": "Yoctopuce library for Node.js (fully asynchronous) as an ECMAScript module",
-	"version": "1.10.29282-dev.2",
-	"license": "SEE LICENSE IN LICENSE.txt",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/yoctopuce/yoctolib_ts.git"
-	},
-	"bugs": {
-		"url": "https://github.com/yoctopuce/yoctolib_ts/issues"
-	},
-	"keywords": [
-		"Yoctopuce",
-		"yoctoapi",
-		"TypeScript"
-	],
-	"files": [
-		"dist"
-	],
-	"main": "dist/cjs/index.js",
-	"types": "dist/cjs/index.d.ts",
-	"scripts": {
-		"app-server": "node bin/app-server.js",
-		"build_mjs": "tsc --outDir dist/esm --module es2015",
-		"build_cjs": "tsc --outDir dist/cjs --module commonjs",
-		"build_tools": "cd bin && tsc",
-		"build": "npm run build_mjs && npm run build_cjs && npm run build_tools"
-	},
-	"bin" : { "tsc-browser" : "bin/app-server.js"},
-	"dependencies": {
-		"ws": "^7.3.1"
-	},
-	"devDependencies": {
-		"@types/ws": "^7.2.6",
-		"typescript": "^4.0.2"
-	}
+  "name": "yoctolib-ts",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce library for TypeScript",
+  "version": "1.10.43561",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoctopuce/yoctolib_ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yoctopuce/yoctolib_ts/issues"
+  },
+  "keywords": [
+    "Yoctopuce",
+    "yoctoapi",
+    "TypeScript"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "scripts": {
+    "build_tools": "cd bin && tsc",
+    "newbuild": "node bin/build.js newbuild",
+    "build_esm": "tsc --outDir dist/esm --module es2015",
+    "build_cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build": "npm run build_tools && npm run newbuild && npm run build_mjs && npm run build_cjs",
+    "check_examples": "node bin/build.js checkExamples",
+    "clean_examples": "node bin/build.js cleanExamples",
+    "app-server": "node bin/app-server.js"
+  },
+  "bin": {
+    "app-server": "bin/app-server.js"
+  },
+  "dependencies": {
+    "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2",
+    "@types/semver": "^7.3.4",
+    "@types/ws": "^7.2.6",
+    "semver": "^5.1.0"
+  }
 }

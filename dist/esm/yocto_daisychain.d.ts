@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_daisychain.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_DaisyState {
+export declare const enum YDaisyChain_DaisyState {
     READY = 0,
     IS_CHILD = 1,
     FIRMWARE_MISMATCH = 2,
@@ -57,24 +57,24 @@ export interface YDaisyChainValueCallback {
  */
 export declare class YDaisyChain extends YFunction {
     _className: string;
-    _daisyState: Y_DaisyState;
+    _daisyState: YDaisyChain_DaisyState;
     _childCount: number;
     _requiredChildCount: number;
     _valueCallbackDaisyChain: YDaisyChainValueCallback | null;
-    readonly DAISYSTATE_READY: Y_DaisyState;
-    readonly DAISYSTATE_IS_CHILD: Y_DaisyState;
-    readonly DAISYSTATE_FIRMWARE_MISMATCH: Y_DaisyState;
-    readonly DAISYSTATE_CHILD_MISSING: Y_DaisyState;
-    readonly DAISYSTATE_CHILD_LOST: Y_DaisyState;
-    readonly DAISYSTATE_INVALID: Y_DaisyState;
+    readonly DAISYSTATE_READY: YDaisyChain_DaisyState;
+    readonly DAISYSTATE_IS_CHILD: YDaisyChain_DaisyState;
+    readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain_DaisyState;
+    readonly DAISYSTATE_CHILD_MISSING: YDaisyChain_DaisyState;
+    readonly DAISYSTATE_CHILD_LOST: YDaisyChain_DaisyState;
+    readonly DAISYSTATE_INVALID: YDaisyChain_DaisyState;
     readonly CHILDCOUNT_INVALID: number;
     readonly REQUIREDCHILDCOUNT_INVALID: number;
-    static readonly DAISYSTATE_READY: Y_DaisyState;
-    static readonly DAISYSTATE_IS_CHILD: Y_DaisyState;
-    static readonly DAISYSTATE_FIRMWARE_MISMATCH: Y_DaisyState;
-    static readonly DAISYSTATE_CHILD_MISSING: Y_DaisyState;
-    static readonly DAISYSTATE_CHILD_LOST: Y_DaisyState;
-    static readonly DAISYSTATE_INVALID: Y_DaisyState;
+    static readonly DAISYSTATE_READY: YDaisyChain_DaisyState;
+    static readonly DAISYSTATE_IS_CHILD: YDaisyChain_DaisyState;
+    static readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain_DaisyState;
+    static readonly DAISYSTATE_CHILD_MISSING: YDaisyChain_DaisyState;
+    static readonly DAISYSTATE_CHILD_LOST: YDaisyChain_DaisyState;
+    static readonly DAISYSTATE_INVALID: YDaisyChain_DaisyState;
     static readonly CHILDCOUNT_INVALID: number;
     static readonly REQUIREDCHILDCOUNT_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
@@ -82,19 +82,19 @@ export declare class YDaisyChain extends YFunction {
     /**
      * Returns the state of the daisy-link between modules.
      *
-     * @return a value among Y_DAISYSTATE_READY, Y_DAISYSTATE_IS_CHILD, Y_DAISYSTATE_FIRMWARE_MISMATCH,
-     * Y_DAISYSTATE_CHILD_MISSING and Y_DAISYSTATE_CHILD_LOST corresponding to the state of the daisy-link
-     * between modules
+     * @return a value among YDaisyChain.DAISYSTATE_READY, YDaisyChain.DAISYSTATE_IS_CHILD,
+     * YDaisyChain.DAISYSTATE_FIRMWARE_MISMATCH, YDaisyChain.DAISYSTATE_CHILD_MISSING and
+     * YDaisyChain.DAISYSTATE_CHILD_LOST corresponding to the state of the daisy-link between modules
      *
-     * On failure, throws an exception or returns Y_DAISYSTATE_INVALID.
+     * On failure, throws an exception or returns YDaisyChain.DAISYSTATE_INVALID.
      */
-    get_daisyState(): Promise<Y_DaisyState>;
+    get_daisyState(): Promise<YDaisyChain_DaisyState>;
     /**
      * Returns the number of child nodes currently detected.
      *
      * @return an integer corresponding to the number of child nodes currently detected
      *
-     * On failure, throws an exception or returns Y_CHILDCOUNT_INVALID.
+     * On failure, throws an exception or returns YDaisyChain.CHILDCOUNT_INVALID.
      */
     get_childCount(): Promise<number>;
     /**
@@ -102,7 +102,7 @@ export declare class YDaisyChain extends YFunction {
      *
      * @return an integer corresponding to the number of child nodes expected in normal conditions
      *
-     * On failure, throws an exception or returns Y_REQUIREDCHILDCOUNT_INVALID.
+     * On failure, throws an exception or returns YDaisyChain.REQUIREDCHILDCOUNT_INVALID.
      */
     get_requiredChildCount(): Promise<number>;
     /**
@@ -114,13 +114,13 @@ export declare class YDaisyChain extends YFunction {
      *
      * @param newval : an integer corresponding to the number of child nodes expected in normal conditions
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     set_requiredChildCount(newval: number): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a module chain for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -130,11 +130,11 @@ export declare class YDaisyChain extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module chain is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDaisyChain.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDaisyChain.isOnline() to test if the module chain is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module chain by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -142,14 +142,14 @@ export declare class YDaisyChain extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the module chain, for instance
+     *         MyDevice.daisyChain.
      *
-     * @return a YDaisyChain object allowing you to drive $THEFUNCTION$.
+     * @return a YDaisyChain object allowing you to drive the module chain.
      */
     static FindDaisyChain(func: string): YDaisyChain;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a module chain for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -159,19 +159,19 @@ export declare class YDaisyChain extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module chain is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDaisyChain.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDaisyChain.isOnline() to test if the module chain is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module chain by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the module chain, for instance
+     *         MyDevice.daisyChain.
      *
-     * @return a YDaisyChain object allowing you to drive $THEFUNCTION$.
+     * @return a YDaisyChain object allowing you to drive the module chain.
      */
     static FindDaisyChainInContext(yctx: YAPIContext, func: string): YDaisyChain;
     /**
@@ -188,23 +188,36 @@ export declare class YDaisyChain extends YFunction {
     registerValueCallback(callback: YDaisyChainValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
-     * Returns the next DaisyChain
+     * Continues the enumeration of module chains started using yFirstDaisyChain().
+     * Caution: You can't make any assumption about the returned module chains order.
+     * If you want to find a specific a module chain, use DaisyChain.findDaisyChain()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDaisyChain}
+     * @return a pointer to a YDaisyChain object, corresponding to
+     *         a module chain currently online, or a null pointer
+     *         if there are no more module chains to enumerate.
      */
     nextDaisyChain(): YDaisyChain | null;
     /**
-     * Retrieves the first DaisyChain in a YAPI context
+     * Starts the enumeration of module chains currently accessible.
+     * Use the method YDaisyChain.nextDaisyChain() to iterate on
+     * next module chains.
      *
-     * @returns {YDaisyChain}
+     * @return a pointer to a YDaisyChain object, corresponding to
+     *         the first module chain currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDaisyChain(): YDaisyChain | null;
     /**
-     * Retrieves the first DaisyChain in a given context
+     * Starts the enumeration of module chains currently accessible.
+     * Use the method YDaisyChain.nextDaisyChain() to iterate on
+     * next module chains.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDaisyChain}
+     * @return a pointer to a YDaisyChain object, corresponding to
+     *         the first module chain currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDaisyChainInContext(yctx: YAPIContext): YDaisyChain | null;
 }

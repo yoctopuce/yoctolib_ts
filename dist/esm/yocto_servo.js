@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_servo.ts 43533 2021-01-25 16:33:41Z mvuilleu $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -117,7 +117,7 @@ export class YServo extends YFunction {
      *
      * @return an integer corresponding to the current servo position
      *
-     * On failure, throws an exception or returns Y_POSITION_INVALID.
+     * On failure, throws an exception or returns YServo.POSITION_INVALID.
      */
     async get_position() {
         let res;
@@ -134,7 +134,7 @@ export class YServo extends YFunction {
      *
      * @param newval : an integer corresponding to immediately the servo driving position
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -146,9 +146,9 @@ export class YServo extends YFunction {
     /**
      * Returns the state of the RC servo motors.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the state of the RC servo motors
+     * @return either YServo.ENABLED_FALSE or YServo.ENABLED_TRUE, according to the state of the RC servo motors
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YServo.ENABLED_INVALID.
      */
     async get_enabled() {
         let res;
@@ -163,9 +163,9 @@ export class YServo extends YFunction {
     /**
      * Stops or starts the RC servo motor.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE
+     * @param newval : either YServo.ENABLED_FALSE or YServo.ENABLED_TRUE
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -179,7 +179,7 @@ export class YServo extends YFunction {
      *
      * @return an integer corresponding to the current range of use of the servo
      *
-     * On failure, throws an exception or returns Y_RANGE_INVALID.
+     * On failure, throws an exception or returns YServo.RANGE_INVALID.
      */
     async get_range() {
         let res;
@@ -202,7 +202,7 @@ export class YServo extends YFunction {
      *
      * @param newval : an integer corresponding to the range of use of the servo, specified in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -216,7 +216,7 @@ export class YServo extends YFunction {
      *
      * @return an integer corresponding to the duration in microseconds of a neutral pulse for the servo
      *
-     * On failure, throws an exception or returns Y_NEUTRAL_INVALID.
+     * On failure, throws an exception or returns YServo.NEUTRAL_INVALID.
      */
     async get_neutral() {
         let res;
@@ -239,7 +239,7 @@ export class YServo extends YFunction {
      * @param newval : an integer corresponding to the duration of the pulse corresponding to the neutral
      * position of the servo
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -269,7 +269,7 @@ export class YServo extends YFunction {
      * @param target      : new position at the end of the move
      * @param ms_duration : total duration of the move, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -283,7 +283,7 @@ export class YServo extends YFunction {
      *
      * @return an integer corresponding to the servo position at device power up
      *
-     * On failure, throws an exception or returns Y_POSITIONATPOWERON_INVALID.
+     * On failure, throws an exception or returns YServo.POSITIONATPOWERON_INVALID.
      */
     async get_positionAtPowerOn() {
         let res;
@@ -301,7 +301,7 @@ export class YServo extends YFunction {
      *
      * @param newval : an integer
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -313,10 +313,10 @@ export class YServo extends YFunction {
     /**
      * Returns the servo signal generator state at power up.
      *
-     * @return either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE, according to the servo signal
-     * generator state at power up
+     * @return either YServo.ENABLEDATPOWERON_FALSE or YServo.ENABLEDATPOWERON_TRUE, according to the
+     * servo signal generator state at power up
      *
-     * On failure, throws an exception or returns Y_ENABLEDATPOWERON_INVALID.
+     * On failure, throws an exception or returns YServo.ENABLEDATPOWERON_INVALID.
      */
     async get_enabledAtPowerOn() {
         let res;
@@ -332,9 +332,9 @@ export class YServo extends YFunction {
      * Configure the servo signal generator state at power up. Remember to call the matching module saveToFlash()
      * method, otherwise this call will have no effect.
      *
-     * @param newval : either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE
+     * @param newval : either YServo.ENABLEDATPOWERON_FALSE or YServo.ENABLEDATPOWERON_TRUE
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -344,7 +344,7 @@ export class YServo extends YFunction {
         return await this._setAttr('enabledAtPowerOn', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a RC servo motor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -354,11 +354,11 @@ export class YServo extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RC servo motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YServo.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YServo.isOnline() to test if the RC servo motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a RC servo motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -366,10 +366,10 @@ export class YServo extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RC servo motor, for instance
+     *         SERVORC1.servo1.
      *
-     * @return a YServo object allowing you to drive $THEFUNCTION$.
+     * @return a YServo object allowing you to drive the RC servo motor.
      */
     static FindServo(func) {
         let obj;
@@ -381,7 +381,7 @@ export class YServo extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a RC servo motor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -391,19 +391,19 @@ export class YServo extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RC servo motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YServo.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YServo.isOnline() to test if the RC servo motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a RC servo motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RC servo motor, for instance
+     *         SERVORC1.servo1.
      *
-     * @return a YServo object allowing you to drive $THEFUNCTION$.
+     * @return a YServo object allowing you to drive the RC servo motor.
      */
     static FindServoInContext(yctx, func) {
         let obj;
@@ -458,9 +458,14 @@ export class YServo extends YFunction {
         return 0;
     }
     /**
-     * Returns the next Servo
+     * Continues the enumeration of RC servo motors started using yFirstServo().
+     * Caution: You can't make any assumption about the returned RC servo motors order.
+     * If you want to find a specific a RC servo motor, use Servo.findServo()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YServo}
+     * @return a pointer to a YServo object, corresponding to
+     *         a RC servo motor currently online, or a null pointer
+     *         if there are no more RC servo motors to enumerate.
      */
     nextServo() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -472,9 +477,13 @@ export class YServo extends YFunction {
         return YServo.FindServoInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Servo in a YAPI context
+     * Starts the enumeration of RC servo motors currently accessible.
+     * Use the method YServo.nextServo() to iterate on
+     * next RC servo motors.
      *
-     * @returns {YServo}
+     * @return a pointer to a YServo object, corresponding to
+     *         the first RC servo motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstServo() {
         let next_hwid = YAPI.imm_getFirstHardwareId('Servo');
@@ -483,11 +492,15 @@ export class YServo extends YFunction {
         return YServo.FindServo(next_hwid);
     }
     /**
-     * Retrieves the first Servo in a given context
+     * Starts the enumeration of RC servo motors currently accessible.
+     * Use the method YServo.nextServo() to iterate on
+     * next RC servo motors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YServo}
+     * @return a pointer to a YServo object, corresponding to
+     *         the first RC servo motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstServoInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Servo');

@@ -1,16 +1,16 @@
 /*********************************************************************
  *
- *  $Id: app.ts 32624 2018-10-10 13:23:29Z seb $
+ *  $Id: svn_id $
  *
- *  Yoctopuce TypeScript library example
+ *  Doc-Inventory example
  *
  *  You can find more information on our web site:
- *   EcmaScript API Reference:
- *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-ecmascript-EN.html
+ *   TypeScript API Reference:
+ *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-typescript-EN.html
  *
  *********************************************************************/
 
-import { YAPI, YErrorMsg, YModule } from 'yoctolib-ts/dist/cjs/yocto_api_nodejs.js';
+import { YAPI, YErrorMsg, YModule } from 'yoctolib-cjs/yocto_api_nodejs.js';
 
 async function startDemo(): Promise<void>
 {
@@ -28,7 +28,7 @@ async function startDemo(): Promise<void>
 async function refresh(): Promise<void>
 {
     try {
-        let errmsg = new YErrorMsg();
+        let errmsg: YErrorMsg = new YErrorMsg();
         await YAPI.UpdateDeviceList(errmsg);
 
         let module = YModule.FirstModule();

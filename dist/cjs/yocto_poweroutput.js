@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_poweroutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -81,10 +81,11 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
     /**
      * Returns the voltage on the power output featured by the module.
      *
-     * @return a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3, Y_VOLTAGE_OUT5V, Y_VOLTAGE_OUT4V7 and
-     * Y_VOLTAGE_OUT1V8 corresponding to the voltage on the power output featured by the module
+     * @return a value among YPowerOutput.VOLTAGE_OFF, YPowerOutput.VOLTAGE_OUT3V3,
+     * YPowerOutput.VOLTAGE_OUT5V, YPowerOutput.VOLTAGE_OUT4V7 and YPowerOutput.VOLTAGE_OUT1V8
+     * corresponding to the voltage on the power output featured by the module
      *
-     * On failure, throws an exception or returns Y_VOLTAGE_INVALID.
+     * On failure, throws an exception or returns YPowerOutput.VOLTAGE_INVALID.
      */
     async get_voltage() {
         let res;
@@ -101,11 +102,12 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
      * module. Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3, Y_VOLTAGE_OUT5V, Y_VOLTAGE_OUT4V7
-     * and Y_VOLTAGE_OUT1V8 corresponding to the voltage on the power output provided by the
+     * @param newval : a value among YPowerOutput.VOLTAGE_OFF, YPowerOutput.VOLTAGE_OUT3V3,
+     * YPowerOutput.VOLTAGE_OUT5V, YPowerOutput.VOLTAGE_OUT4V7 and YPowerOutput.VOLTAGE_OUT1V8
+     * corresponding to the voltage on the power output provided by the
      *         module
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -115,7 +117,7 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
         return await this._setAttr('voltage', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a power output for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -125,11 +127,11 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the power output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPowerOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPowerOutput.isOnline() to test if the power output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a power output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -137,10 +139,10 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the power output, for instance
+     *         YI2CMK01.powerOutput.
      *
-     * @return a YPowerOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPowerOutput object allowing you to drive the power output.
      */
     static FindPowerOutput(func) {
         let obj;
@@ -152,7 +154,7 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a power output for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -162,19 +164,19 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the power output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPowerOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPowerOutput.isOnline() to test if the power output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a power output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the power output, for instance
+     *         YI2CMK01.powerOutput.
      *
-     * @return a YPowerOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPowerOutput object allowing you to drive the power output.
      */
     static FindPowerOutputInContext(yctx, func) {
         let obj;
@@ -229,9 +231,14 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
         return 0;
     }
     /**
-     * Returns the next PowerOutput
+     * Continues the enumeration of power output started using yFirstPowerOutput().
+     * Caution: You can't make any assumption about the returned power output order.
+     * If you want to find a specific a power output, use PowerOutput.findPowerOutput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPowerOutput}
+     * @return a pointer to a YPowerOutput object, corresponding to
+     *         a power output currently online, or a null pointer
+     *         if there are no more power output to enumerate.
      */
     nextPowerOutput() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -243,9 +250,13 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
         return YPowerOutput.FindPowerOutputInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first PowerOutput in a YAPI context
+     * Starts the enumeration of power output currently accessible.
+     * Use the method YPowerOutput.nextPowerOutput() to iterate on
+     * next power output.
      *
-     * @returns {YPowerOutput}
+     * @return a pointer to a YPowerOutput object, corresponding to
+     *         the first power output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerOutput() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('PowerOutput');
@@ -254,11 +265,15 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
         return YPowerOutput.FindPowerOutput(next_hwid);
     }
     /**
-     * Retrieves the first PowerOutput in a given context
+     * Starts the enumeration of power output currently accessible.
+     * Use the method YPowerOutput.nextPowerOutput() to iterate on
+     * next power output.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPowerOutput}
+     * @return a pointer to a YPowerOutput object, corresponding to
+     *         the first power output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerOutputInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('PowerOutput');

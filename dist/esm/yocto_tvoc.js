@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_tvoc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -63,7 +63,7 @@ export class YTvoc extends YSensor {
     }
     //--- (YTvoc implementation)
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a Total  Volatile Organic Compound sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -73,11 +73,11 @@ export class YTvoc extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the Total  Volatile Organic Compound sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTvoc.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTvoc.isOnline() to test if the Total  Volatile Organic Compound sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a Total  Volatile Organic Compound sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -85,10 +85,10 @@ export class YTvoc extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the Total  Volatile Organic Compound sensor, for instance
+     *         YVOCMK03.tvoc.
      *
-     * @return a YTvoc object allowing you to drive $THEFUNCTION$.
+     * @return a YTvoc object allowing you to drive the Total  Volatile Organic Compound sensor.
      */
     static FindTvoc(func) {
         let obj;
@@ -100,7 +100,7 @@ export class YTvoc extends YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a Total  Volatile Organic Compound sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -110,19 +110,19 @@ export class YTvoc extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the Total  Volatile Organic Compound sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTvoc.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTvoc.isOnline() to test if the Total  Volatile Organic Compound sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a Total  Volatile Organic Compound sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the Total  Volatile Organic Compound sensor, for instance
+     *         YVOCMK03.tvoc.
      *
-     * @return a YTvoc object allowing you to drive $THEFUNCTION$.
+     * @return a YTvoc object allowing you to drive the Total  Volatile Organic Compound sensor.
      */
     static FindTvocInContext(yctx, func) {
         let obj;
@@ -214,9 +214,14 @@ export class YTvoc extends YSensor {
         return 0;
     }
     /**
-     * Returns the next Tvoc
+     * Continues the enumeration of Total Volatile Organic Compound sensors started using yFirstTvoc().
+     * Caution: You can't make any assumption about the returned Total Volatile Organic Compound sensors order.
+     * If you want to find a specific a Total  Volatile Organic Compound sensor, use Tvoc.findTvoc()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YTvoc}
+     * @return a pointer to a YTvoc object, corresponding to
+     *         a Total  Volatile Organic Compound sensor currently online, or a null pointer
+     *         if there are no more Total Volatile Organic Compound sensors to enumerate.
      */
     nextTvoc() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -228,9 +233,13 @@ export class YTvoc extends YSensor {
         return YTvoc.FindTvocInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Tvoc in a YAPI context
+     * Starts the enumeration of Total Volatile Organic Compound sensors currently accessible.
+     * Use the method YTvoc.nextTvoc() to iterate on
+     * next Total Volatile Organic Compound sensors.
      *
-     * @returns {YTvoc}
+     * @return a pointer to a YTvoc object, corresponding to
+     *         the first Total Volatile Organic Compound sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTvoc() {
         let next_hwid = YAPI.imm_getFirstHardwareId('Tvoc');
@@ -239,11 +248,15 @@ export class YTvoc extends YSensor {
         return YTvoc.FindTvoc(next_hwid);
     }
     /**
-     * Retrieves the first Tvoc in a given context
+     * Starts the enumeration of Total Volatile Organic Compound sensors currently accessible.
+     * Use the method YTvoc.nextTvoc() to iterate on
+     * next Total Volatile Organic Compound sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YTvoc}
+     * @return a pointer to a YTvoc object, corresponding to
+     *         the first Total Volatile Organic Compound sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTvocInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Tvoc');

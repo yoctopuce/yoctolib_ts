@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_cellular.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -270,7 +270,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the link quality, expressed in percent
      *
-     * On failure, throws an exception or returns Y_LINKQUALITY_INVALID.
+     * On failure, throws an exception or returns YCellular.LINKQUALITY_INVALID.
      */
     async get_linkQuality() {
         let res;
@@ -287,7 +287,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the name of the cell operator currently in use
      *
-     * On failure, throws an exception or returns Y_CELLOPERATOR_INVALID.
+     * On failure, throws an exception or returns YCellular.CELLOPERATOR_INVALID.
      */
     async get_cellOperator() {
         let res;
@@ -305,7 +305,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * @return a string corresponding to the unique identifier of the cellular antenna in use: MCC, MNC,
      * LAC and Cell ID
      *
-     * On failure, throws an exception or returns Y_CELLIDENTIFIER_INVALID.
+     * On failure, throws an exception or returns YCellular.CELLIDENTIFIER_INVALID.
      */
     async get_cellIdentifier() {
         let res;
@@ -320,10 +320,11 @@ class YCellular extends yocto_api_js_1.YFunction {
     /**
      * Active cellular connection type.
      *
-     * @return a value among Y_CELLTYPE_GPRS, Y_CELLTYPE_EGPRS, Y_CELLTYPE_WCDMA, Y_CELLTYPE_HSDPA,
-     * Y_CELLTYPE_NONE, Y_CELLTYPE_CDMA, Y_CELLTYPE_LTE_M, Y_CELLTYPE_NB_IOT and Y_CELLTYPE_EC_GSM_IOT
+     * @return a value among YCellular.CELLTYPE_GPRS, YCellular.CELLTYPE_EGPRS, YCellular.CELLTYPE_WCDMA,
+     * YCellular.CELLTYPE_HSDPA, YCellular.CELLTYPE_NONE, YCellular.CELLTYPE_CDMA,
+     * YCellular.CELLTYPE_LTE_M, YCellular.CELLTYPE_NB_IOT and YCellular.CELLTYPE_EC_GSM_IOT
      *
-     * On failure, throws an exception or returns Y_CELLTYPE_INVALID.
+     * On failure, throws an exception or returns YCellular.CELLTYPE_INVALID.
      */
     async get_cellType() {
         let res;
@@ -344,7 +345,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * @return a string corresponding to the International Mobile Subscriber Identity (MSI) that uniquely identifies
      *         the SIM card
      *
-     * On failure, throws an exception or returns Y_IMSI_INVALID.
+     * On failure, throws an exception or returns YCellular.IMSI_INVALID.
      */
     async get_imsi() {
         let res;
@@ -361,7 +362,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the latest status message from the wireless interface
      *
-     * On failure, throws an exception or returns Y_MESSAGE_INVALID.
+     * On failure, throws an exception or returns YCellular.MESSAGE_INVALID.
      */
     async get_message() {
         let res;
@@ -382,7 +383,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *         the SIM card, or an empty string if none has been configured or if the code provided
      *         was rejected by the SIM card
      *
-     * On failure, throws an exception or returns Y_PIN_INVALID.
+     * On failure, throws an exception or returns YCellular.PIN_INVALID.
      */
     async get_pin() {
         let res;
@@ -409,7 +410,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string corresponding to the PIN code used by the module to access the SIM card
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -427,7 +428,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the type of protocol used over the serial line, as a string
      *
-     * On failure, throws an exception or returns Y_RADIOCONFIG_INVALID.
+     * On failure, throws an exception or returns YCellular.RADIOCONFIG_INVALID.
      */
     async get_radioConfig() {
         let res;
@@ -452,7 +453,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string corresponding to the type of protocol used over the serial line
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -470,7 +471,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *         or an empty string if the SIM card will automatically choose among available
      *         cell operators
      *
-     * On failure, throws an exception or returns Y_LOCKEDOPERATOR_INVALID.
+     * On failure, throws an exception or returns YCellular.LOCKEDOPERATOR_INVALID.
      */
     async get_lockedOperator() {
         let res;
@@ -491,7 +492,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string corresponding to the name of the cell operator to be used
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -503,10 +504,10 @@ class YCellular extends yocto_api_js_1.YFunction {
     /**
      * Returns true if the airplane mode is active (radio turned off).
      *
-     * @return either Y_AIRPLANEMODE_OFF or Y_AIRPLANEMODE_ON, according to true if the airplane mode is
-     * active (radio turned off)
+     * @return either YCellular.AIRPLANEMODE_OFF or YCellular.AIRPLANEMODE_ON, according to true if the
+     * airplane mode is active (radio turned off)
      *
-     * On failure, throws an exception or returns Y_AIRPLANEMODE_INVALID.
+     * On failure, throws an exception or returns YCellular.AIRPLANEMODE_INVALID.
      */
     async get_airplaneMode() {
         let res;
@@ -521,10 +522,10 @@ class YCellular extends yocto_api_js_1.YFunction {
     /**
      * Changes the activation state of airplane mode (radio turned off).
      *
-     * @param newval : either Y_AIRPLANEMODE_OFF or Y_AIRPLANEMODE_ON, according to the activation state
-     * of airplane mode (radio turned off)
+     * @param newval : either YCellular.AIRPLANEMODE_OFF or YCellular.AIRPLANEMODE_ON, according to the
+     * activation state of airplane mode (radio turned off)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -537,10 +538,11 @@ class YCellular extends yocto_api_js_1.YFunction {
      * Returns the condition for enabling IP data services (GPRS).
      * When data services are disabled, SMS are the only mean of communication.
      *
-     * @return a value among Y_ENABLEDATA_HOMENETWORK, Y_ENABLEDATA_ROAMING, Y_ENABLEDATA_NEVER and
-     * Y_ENABLEDATA_NEUTRALITY corresponding to the condition for enabling IP data services (GPRS)
+     * @return a value among YCellular.ENABLEDATA_HOMENETWORK, YCellular.ENABLEDATA_ROAMING,
+     * YCellular.ENABLEDATA_NEVER and YCellular.ENABLEDATA_NEUTRALITY corresponding to the condition for
+     * enabling IP data services (GPRS)
      *
-     * On failure, throws an exception or returns Y_ENABLEDATA_INVALID.
+     * On failure, throws an exception or returns YCellular.ENABLEDATA_INVALID.
      */
     async get_enableData() {
         let res;
@@ -562,10 +564,11 @@ class YCellular extends yocto_api_js_1.YFunction {
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_ENABLEDATA_HOMENETWORK, Y_ENABLEDATA_ROAMING, Y_ENABLEDATA_NEVER
-     * and Y_ENABLEDATA_NEUTRALITY corresponding to the condition for enabling IP data services (GPRS)
+     * @param newval : a value among YCellular.ENABLEDATA_HOMENETWORK, YCellular.ENABLEDATA_ROAMING,
+     * YCellular.ENABLEDATA_NEVER and YCellular.ENABLEDATA_NEUTRALITY corresponding to the condition for
+     * enabling IP data services (GPRS)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -580,7 +583,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the Access Point Name (APN) to be used, if needed
      *
-     * On failure, throws an exception or returns Y_APN_INVALID.
+     * On failure, throws an exception or returns YCellular.APN_INVALID.
      */
     async get_apn() {
         let res;
@@ -600,7 +603,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -617,7 +620,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * @return a string corresponding to an opaque string if APN authentication parameters have been configured
      *         in the device, or an empty string otherwise
      *
-     * On failure, throws an exception or returns Y_APNSECRET_INVALID.
+     * On failure, throws an exception or returns YCellular.APNSECRET_INVALID.
      */
     async get_apnSecret() {
         let res;
@@ -639,7 +642,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the automated connectivity check interval, in seconds
      *
-     * On failure, throws an exception or returns Y_PINGINTERVAL_INVALID.
+     * On failure, throws an exception or returns YCellular.PINGINTERVAL_INVALID.
      */
     async get_pingInterval() {
         let res;
@@ -658,7 +661,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the automated connectivity check interval, in seconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -672,7 +675,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the number of bytes sent so far
      *
-     * On failure, throws an exception or returns Y_DATASENT_INVALID.
+     * On failure, throws an exception or returns YCellular.DATASENT_INVALID.
      */
     async get_dataSent() {
         let res;
@@ -689,7 +692,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the value of the outgoing data counter
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -703,7 +706,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the number of bytes received so far
      *
-     * On failure, throws an exception or returns Y_DATARECEIVED_INVALID.
+     * On failure, throws an exception or returns YCellular.DATARECEIVED_INVALID.
      */
     async get_dataReceived() {
         let res;
@@ -720,7 +723,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the value of the incoming data counter
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -745,7 +748,7 @@ class YCellular extends yocto_api_js_1.YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a cellular interface for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -755,11 +758,11 @@ class YCellular extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the cellular interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCellular.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCellular.isOnline() to test if the cellular interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a cellular interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -767,10 +770,10 @@ class YCellular extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the cellular interface, for instance
+     *         YHUBGSM1.cellular.
      *
-     * @return a YCellular object allowing you to drive $THEFUNCTION$.
+     * @return a YCellular object allowing you to drive the cellular interface.
      */
     static FindCellular(func) {
         let obj;
@@ -782,7 +785,7 @@ class YCellular extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a cellular interface for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -792,19 +795,19 @@ class YCellular extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the cellular interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCellular.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCellular.isOnline() to test if the cellular interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a cellular interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the cellular interface, for instance
+     *         YHUBGSM1.cellular.
      *
-     * @return a YCellular object allowing you to drive $THEFUNCTION$.
+     * @return a YCellular object allowing you to drive the cellular interface.
      */
     static FindCellularInContext(yctx, func) {
         let obj;
@@ -868,7 +871,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * @param puk : the SIM PUK code
      * @param newPin : new PIN code to configure into the SIM card
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -890,7 +893,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * @param username : APN username
      * @param password : APN password
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -900,7 +903,7 @@ class YCellular extends yocto_api_js_1.YFunction {
     /**
      * Clear the transmitted data counters.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -990,7 +993,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * operators. All networks returned by this function might therefore
      * not be available for connection.
      *
-     * @return {string[]} a list of string (cell operator names).
+     * @return a list of string (cell operator names).
      */
     async get_availableOperators() {
         let cops;
@@ -1023,7 +1026,7 @@ class YCellular extends yocto_api_js_1.YFunction {
      * cell, and the next ones are the neighbor cells reported by the
      * serving cell.
      *
-     * @return {YCellRecord[]} a list of YCellRecords.
+     * @return a list of YCellRecords.
      */
     async quickCellSurvey() {
         let moni;
@@ -5893,9 +5896,14 @@ class YCellular extends yocto_api_js_1.YFunction {
         return this.imm_decodePLMN(mccmnc);
     }
     /**
-     * Returns the next Cellular
+     * Continues the enumeration of cellular interfaces started using yFirstCellular().
+     * Caution: You can't make any assumption about the returned cellular interfaces order.
+     * If you want to find a specific a cellular interface, use Cellular.findCellular()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YCellular}
+     * @return a pointer to a YCellular object, corresponding to
+     *         a cellular interface currently online, or a null pointer
+     *         if there are no more cellular interfaces to enumerate.
      */
     nextCellular() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -5907,9 +5915,13 @@ class YCellular extends yocto_api_js_1.YFunction {
         return YCellular.FindCellularInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Cellular in a YAPI context
+     * Starts the enumeration of cellular interfaces currently accessible.
+     * Use the method YCellular.nextCellular() to iterate on
+     * next cellular interfaces.
      *
-     * @returns {YCellular}
+     * @return a pointer to a YCellular object, corresponding to
+     *         the first cellular interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCellular() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Cellular');
@@ -5918,11 +5930,15 @@ class YCellular extends yocto_api_js_1.YFunction {
         return YCellular.FindCellular(next_hwid);
     }
     /**
-     * Retrieves the first Cellular in a given context
+     * Starts the enumeration of cellular interfaces currently accessible.
+     * Use the method YCellular.nextCellular() to iterate on
+     * next cellular interfaces.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YCellular}
+     * @return a pointer to a YCellular object, corresponding to
+     *         the first cellular interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCellularInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Cellular');

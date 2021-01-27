@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_hubport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -40,12 +40,12 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YHubPort definitions)
-export const enum Y_Enabled {
+export const enum YHubPort_Enabled {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
 }
-export const enum Y_PortState {
+export const enum YHubPort_PortState {
     OFF = 0,
     OVRLD = 1,
     ON = 2,
@@ -59,7 +59,7 @@ export interface YHubPortValueCallback { (func: YHubPort, value: string): void }
 //--- (YHubPort class start)
 /**
  * YHubPort Class: YoctoHub slave port control interface, available for instance in the
- * YoctoHub-Ethernet, the YoctoHub-GSM-3G-EU, the YoctoHub-Shield or the YoctoHub-Wireless-n
+ * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Shield or the YoctoHub-Wireless-n
  *
  * The YHubPort class provides control over the power supply for slave ports
  * on a YoctoHub. It provide information about the device connected to it.
@@ -72,33 +72,33 @@ export class YHubPort extends YFunction
 {
     //--- (YHubPort attributes declaration)
     _className: string;
-    _enabled: Y_Enabled = YHubPort.ENABLED_INVALID;
-    _portState: Y_PortState = YHubPort.PORTSTATE_INVALID;
+    _enabled: YHubPort_Enabled = YHubPort.ENABLED_INVALID;
+    _portState: YHubPort_PortState = YHubPort.PORTSTATE_INVALID;
     _baudRate: number = YHubPort.BAUDRATE_INVALID;
     _valueCallbackHubPort: YHubPortValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly ENABLED_FALSE: Y_Enabled = Y_Enabled.FALSE;
-    public readonly ENABLED_TRUE: Y_Enabled = Y_Enabled.TRUE;
-    public readonly ENABLED_INVALID: Y_Enabled = Y_Enabled.INVALID;
-    public readonly PORTSTATE_OFF: Y_PortState = Y_PortState.OFF;
-    public readonly PORTSTATE_OVRLD: Y_PortState = Y_PortState.OVRLD;
-    public readonly PORTSTATE_ON: Y_PortState = Y_PortState.ON;
-    public readonly PORTSTATE_RUN: Y_PortState = Y_PortState.RUN;
-    public readonly PORTSTATE_PROG: Y_PortState = Y_PortState.PROG;
-    public readonly PORTSTATE_INVALID: Y_PortState = Y_PortState.INVALID;
+    public readonly ENABLED_FALSE: YHubPort_Enabled = YHubPort_Enabled.FALSE;
+    public readonly ENABLED_TRUE: YHubPort_Enabled = YHubPort_Enabled.TRUE;
+    public readonly ENABLED_INVALID: YHubPort_Enabled = YHubPort_Enabled.INVALID;
+    public readonly PORTSTATE_OFF: YHubPort_PortState = YHubPort_PortState.OFF;
+    public readonly PORTSTATE_OVRLD: YHubPort_PortState = YHubPort_PortState.OVRLD;
+    public readonly PORTSTATE_ON: YHubPort_PortState = YHubPort_PortState.ON;
+    public readonly PORTSTATE_RUN: YHubPort_PortState = YHubPort_PortState.RUN;
+    public readonly PORTSTATE_PROG: YHubPort_PortState = YHubPort_PortState.PROG;
+    public readonly PORTSTATE_INVALID: YHubPort_PortState = YHubPort_PortState.INVALID;
     public readonly BAUDRATE_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
-    public static readonly ENABLED_FALSE: Y_Enabled = Y_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: Y_Enabled = Y_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: Y_Enabled = Y_Enabled.INVALID;
-    public static readonly PORTSTATE_OFF: Y_PortState = Y_PortState.OFF;
-    public static readonly PORTSTATE_OVRLD: Y_PortState = Y_PortState.OVRLD;
-    public static readonly PORTSTATE_ON: Y_PortState = Y_PortState.ON;
-    public static readonly PORTSTATE_RUN: Y_PortState = Y_PortState.RUN;
-    public static readonly PORTSTATE_PROG: Y_PortState = Y_PortState.PROG;
-    public static readonly PORTSTATE_INVALID: Y_PortState = Y_PortState.INVALID;
+    public static readonly ENABLED_FALSE: YHubPort_Enabled = YHubPort_Enabled.FALSE;
+    public static readonly ENABLED_TRUE: YHubPort_Enabled = YHubPort_Enabled.TRUE;
+    public static readonly ENABLED_INVALID: YHubPort_Enabled = YHubPort_Enabled.INVALID;
+    public static readonly PORTSTATE_OFF: YHubPort_PortState = YHubPort_PortState.OFF;
+    public static readonly PORTSTATE_OVRLD: YHubPort_PortState = YHubPort_PortState.OVRLD;
+    public static readonly PORTSTATE_ON: YHubPort_PortState = YHubPort_PortState.ON;
+    public static readonly PORTSTATE_RUN: YHubPort_PortState = YHubPort_PortState.RUN;
+    public static readonly PORTSTATE_PROG: YHubPort_PortState = YHubPort_PortState.PROG;
+    public static readonly PORTSTATE_INVALID: YHubPort_PortState = YHubPort_PortState.INVALID;
     public static readonly BAUDRATE_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YHubPort attributes declaration)
 
@@ -119,10 +119,10 @@ export class YHubPort extends YFunction
     {
         switch(name) {
         case 'enabled':
-            this._enabled = <Y_Enabled> <number> val;
+            this._enabled = <YHubPort_Enabled> <number> val;
             return 1;
         case 'portState':
-            this._portState = <Y_PortState> <number> val;
+            this._portState = <YHubPort_PortState> <number> val;
             return 1;
         case 'baudRate':
             this._baudRate = <number> <number> val;
@@ -134,12 +134,12 @@ export class YHubPort extends YFunction
     /**
      * Returns true if the YoctoHub port is powered, false otherwise.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to true if the YoctoHub port is
-     * powered, false otherwise
+     * @return either YHubPort.ENABLED_FALSE or YHubPort.ENABLED_TRUE, according to true if the YoctoHub
+     * port is powered, false otherwise
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YHubPort.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<Y_Enabled>
+    async get_enabled(): Promise<YHubPort_Enabled>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -155,13 +155,14 @@ export class YHubPort extends YFunction
      * Changes the activation of the YoctoHub port. If the port is enabled, the
      * connected module is powered. Otherwise, port power is shut down.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation of the YoctoHub port
+     * @param newval : either YHubPort.ENABLED_FALSE or YHubPort.ENABLED_TRUE, according to the activation
+     * of the YoctoHub port
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: Y_Enabled): Promise<number>
+    async set_enabled(newval: YHubPort_Enabled): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -171,12 +172,12 @@ export class YHubPort extends YFunction
     /**
      * Returns the current state of the YoctoHub port.
      *
-     * @return a value among Y_PORTSTATE_OFF, Y_PORTSTATE_OVRLD, Y_PORTSTATE_ON, Y_PORTSTATE_RUN and
-     * Y_PORTSTATE_PROG corresponding to the current state of the YoctoHub port
+     * @return a value among YHubPort.PORTSTATE_OFF, YHubPort.PORTSTATE_OVRLD, YHubPort.PORTSTATE_ON,
+     * YHubPort.PORTSTATE_RUN and YHubPort.PORTSTATE_PROG corresponding to the current state of the YoctoHub port
      *
-     * On failure, throws an exception or returns Y_PORTSTATE_INVALID.
+     * On failure, throws an exception or returns YHubPort.PORTSTATE_INVALID.
      */
-    async get_portState(): Promise<Y_PortState>
+    async get_portState(): Promise<YHubPort_PortState>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -195,7 +196,7 @@ export class YHubPort extends YFunction
      *
      * @return an integer corresponding to the current baud rate used by this YoctoHub port, in kbps
      *
-     * On failure, throws an exception or returns Y_BAUDRATE_INVALID.
+     * On failure, throws an exception or returns YHubPort.BAUDRATE_INVALID.
      */
     async get_baudRate(): Promise<number>
     {
@@ -210,7 +211,7 @@ export class YHubPort extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a YoctoHub slave port for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -220,11 +221,11 @@ export class YHubPort extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the YoctoHub slave port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YHubPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YHubPort.isOnline() to test if the YoctoHub slave port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a YoctoHub slave port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -232,10 +233,10 @@ export class YHubPort extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the YoctoHub slave port, for instance
+     *         YHUBETH1.hubPort1.
      *
-     * @return a YHubPort object allowing you to drive $THEFUNCTION$.
+     * @return a YHubPort object allowing you to drive the YoctoHub slave port.
      */
     static FindHubPort(func: string): YHubPort
     {
@@ -249,7 +250,7 @@ export class YHubPort extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a YoctoHub slave port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -259,19 +260,19 @@ export class YHubPort extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the YoctoHub slave port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YHubPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YHubPort.isOnline() to test if the YoctoHub slave port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a YoctoHub slave port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the YoctoHub slave port, for instance
+     *         YHUBETH1.hubPort1.
      *
-     * @return a YHubPort object allowing you to drive $THEFUNCTION$.
+     * @return a YHubPort object allowing you to drive the YoctoHub slave port.
      */
     static FindHubPortInContext(yctx: YAPIContext, func: string): YHubPort
     {
@@ -329,9 +330,14 @@ export class YHubPort extends YFunction
     }
 
     /**
-     * Returns the next HubPort
+     * Continues the enumeration of YoctoHub slave ports started using yFirstHubPort().
+     * Caution: You can't make any assumption about the returned YoctoHub slave ports order.
+     * If you want to find a specific a YoctoHub slave port, use HubPort.findHubPort()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YHubPort}
+     * @return a pointer to a YHubPort object, corresponding to
+     *         a YoctoHub slave port currently online, or a null pointer
+     *         if there are no more YoctoHub slave ports to enumerate.
      */
     nextHubPort(): YHubPort | null
     {
@@ -343,9 +349,13 @@ export class YHubPort extends YFunction
     }
 
     /**
-     * Retrieves the first HubPort in a YAPI context
+     * Starts the enumeration of YoctoHub slave ports currently accessible.
+     * Use the method YHubPort.nextHubPort() to iterate on
+     * next YoctoHub slave ports.
      *
-     * @returns {YHubPort}
+     * @return a pointer to a YHubPort object, corresponding to
+     *         the first YoctoHub slave port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstHubPort(): YHubPort | null
     {
@@ -355,11 +365,15 @@ export class YHubPort extends YFunction
     }
 
     /**
-     * Retrieves the first HubPort in a given context
+     * Starts the enumeration of YoctoHub slave ports currently accessible.
+     * Use the method YHubPort.nextHubPort() to iterate on
+     * next YoctoHub slave ports.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YHubPort}
+     * @return a pointer to a YHubPort object, corresponding to
+     *         the first YoctoHub slave port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstHubPortInContext(yctx: YAPIContext): YHubPort | null
     {

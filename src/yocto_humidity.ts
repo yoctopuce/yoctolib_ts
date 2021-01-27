@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_humidity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -110,7 +110,7 @@ export class YHumidity extends YSensor
      *
      * @param newval : a string corresponding to the primary unit for measuring humidity
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -126,7 +126,7 @@ export class YHumidity extends YSensor
      *
      * @return a floating point number corresponding to the current relative humidity, in per cents
      *
-     * On failure, throws an exception or returns Y_RELHUM_INVALID.
+     * On failure, throws an exception or returns YHumidity.RELHUM_INVALID.
      */
     async get_relHum(): Promise<number>
     {
@@ -145,7 +145,7 @@ export class YHumidity extends YSensor
      *
      * @return a floating point number corresponding to the current absolute humidity, in grams per cubic meter of air
      *
-     * On failure, throws an exception or returns Y_ABSHUM_INVALID.
+     * On failure, throws an exception or returns YHumidity.ABSHUM_INVALID.
      */
     async get_absHum(): Promise<number>
     {
@@ -160,7 +160,7 @@ export class YHumidity extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a humidity sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -170,11 +170,11 @@ export class YHumidity extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the humidity sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YHumidity.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YHumidity.isOnline() to test if the humidity sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a humidity sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -182,10 +182,10 @@ export class YHumidity extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the humidity sensor, for instance
+     *         YCO2MK02.humidity.
      *
-     * @return a YHumidity object allowing you to drive $THEFUNCTION$.
+     * @return a YHumidity object allowing you to drive the humidity sensor.
      */
     static FindHumidity(func: string): YHumidity
     {
@@ -199,7 +199,7 @@ export class YHumidity extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a humidity sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -209,19 +209,19 @@ export class YHumidity extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the humidity sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YHumidity.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YHumidity.isOnline() to test if the humidity sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a humidity sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the humidity sensor, for instance
+     *         YCO2MK02.humidity.
      *
-     * @return a YHumidity object allowing you to drive $THEFUNCTION$.
+     * @return a YHumidity object allowing you to drive the humidity sensor.
      */
     static FindHumidityInContext(yctx: YAPIContext, func: string): YHumidity
     {
@@ -317,9 +317,14 @@ export class YHumidity extends YSensor
     }
 
     /**
-     * Returns the next Humidity
+     * Continues the enumeration of humidity sensors started using yFirstHumidity().
+     * Caution: You can't make any assumption about the returned humidity sensors order.
+     * If you want to find a specific a humidity sensor, use Humidity.findHumidity()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YHumidity}
+     * @return a pointer to a YHumidity object, corresponding to
+     *         a humidity sensor currently online, or a null pointer
+     *         if there are no more humidity sensors to enumerate.
      */
     nextHumidity(): YHumidity | null
     {
@@ -331,9 +336,13 @@ export class YHumidity extends YSensor
     }
 
     /**
-     * Retrieves the first Humidity in a YAPI context
+     * Starts the enumeration of humidity sensors currently accessible.
+     * Use the method YHumidity.nextHumidity() to iterate on
+     * next humidity sensors.
      *
-     * @returns {YHumidity}
+     * @return a pointer to a YHumidity object, corresponding to
+     *         the first humidity sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstHumidity(): YHumidity | null
     {
@@ -343,11 +352,15 @@ export class YHumidity extends YSensor
     }
 
     /**
-     * Retrieves the first Humidity in a given context
+     * Starts the enumeration of humidity sensors currently accessible.
+     * Use the method YHumidity.nextHumidity() to iterate on
+     * next humidity sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YHumidity}
+     * @return a pointer to a YHumidity object, corresponding to
+     *         the first humidity sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstHumidityInContext(yctx: YAPIContext): YHumidity | null
     {

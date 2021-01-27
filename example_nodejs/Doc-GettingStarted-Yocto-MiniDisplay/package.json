@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-yocto-minidisplay",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-GettingStarted-Yocto-MiniDisplay example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

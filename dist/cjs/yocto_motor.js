@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_motor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -137,10 +137,11 @@ class YMotor extends yocto_api_js_1.YFunction {
      * When an error condition occurred (LOVOLT, HICURR, HIHEAT, FAILSF), the controller
      * status must be explicitly reset using the resetStatus function.
      *
-     * @return a value among Y_MOTORSTATUS_IDLE, Y_MOTORSTATUS_BRAKE, Y_MOTORSTATUS_FORWD,
-     * Y_MOTORSTATUS_BACKWD, Y_MOTORSTATUS_LOVOLT, Y_MOTORSTATUS_HICURR, Y_MOTORSTATUS_HIHEAT and Y_MOTORSTATUS_FAILSF
+     * @return a value among YMotor.MOTORSTATUS_IDLE, YMotor.MOTORSTATUS_BRAKE, YMotor.MOTORSTATUS_FORWD,
+     * YMotor.MOTORSTATUS_BACKWD, YMotor.MOTORSTATUS_LOVOLT, YMotor.MOTORSTATUS_HICURR,
+     * YMotor.MOTORSTATUS_HIHEAT and YMotor.MOTORSTATUS_FAILSF
      *
-     * On failure, throws an exception or returns Y_MOTORSTATUS_INVALID.
+     * On failure, throws an exception or returns YMotor.MOTORSTATUS_INVALID.
      */
     async get_motorStatus() {
         let res;
@@ -166,7 +167,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to immediately the power sent to the motor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -181,7 +182,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * @return a floating point number corresponding to the power sent to the motor, as a percentage
      * between -100% and +100%
      *
-     * On failure, throws an exception or returns Y_DRIVINGFORCE_INVALID.
+     * On failure, throws an exception or returns YMotor.DRIVINGFORCE_INVALID.
      */
     async get_drivingForce() {
         let res;
@@ -201,7 +202,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * @param newval : a floating point number corresponding to immediately the braking force applied to
      * the motor (in percents)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -216,7 +217,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the braking force applied to the motor, as a percentage
      *
-     * On failure, throws an exception or returns Y_BRAKINGFORCE_INVALID.
+     * On failure, throws an exception or returns YMotor.BRAKINGFORCE_INVALID.
      */
     async get_brakingForce() {
         let res;
@@ -241,7 +242,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * controller automatically switches to error state
      *         and prevents further current draw
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -259,7 +260,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * automatically switches to error state
      *         and prevents further current draw
      *
-     * On failure, throws an exception or returns Y_CUTOFFVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YMotor.CUTOFFVOLTAGE_INVALID.
      */
     async get_cutOffVoltage() {
         let res;
@@ -278,7 +279,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * @return an integer corresponding to the current threshold (in mA) above which the controller automatically
      *         switches to error state
      *
-     * On failure, throws an exception or returns Y_OVERCURRENTLIMIT_INVALID.
+     * On failure, throws an exception or returns YMotor.OVERCURRENTLIMIT_INVALID.
      */
     async get_overCurrentLimit() {
         let res;
@@ -301,7 +302,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * controller automatically
      *         switches to error state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -319,7 +320,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the PWM frequency used to control the motor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -333,7 +334,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the PWM frequency used to control the motor
      *
-     * On failure, throws an exception or returns Y_FREQUENCY_INVALID.
+     * On failure, throws an exception or returns YMotor.FREQUENCY_INVALID.
      */
     async get_frequency() {
         let res;
@@ -353,7 +354,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * frequency to help
      *         it start up
      *
-     * On failure, throws an exception or returns Y_STARTERTIME_INVALID.
+     * On failure, throws an exception or returns YMotor.STARTERTIME_INVALID.
      */
     async get_starterTime() {
         let res;
@@ -374,7 +375,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * at low frequency to help
      *         it start up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -393,7 +394,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * autonomously without
      *         receiving any instruction from the control process
      *
-     * On failure, throws an exception or returns Y_FAILSAFETIMEOUT_INVALID.
+     * On failure, throws an exception or returns YMotor.FAILSAFETIMEOUT_INVALID.
      */
     async get_failSafeTimeout() {
         let res;
@@ -417,7 +418,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * run autonomously without
      *         receiving any instruction from the control process
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -442,7 +443,7 @@ class YMotor extends yocto_api_js_1.YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a motor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -452,11 +453,11 @@ class YMotor extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMotor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMotor.isOnline() to test if the motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -464,10 +465,10 @@ class YMotor extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the motor, for instance
+     *         MOTORCTL.motor.
      *
-     * @return a YMotor object allowing you to drive $THEFUNCTION$.
+     * @return a YMotor object allowing you to drive the motor.
      */
     static FindMotor(func) {
         let obj;
@@ -479,7 +480,7 @@ class YMotor extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a motor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -489,19 +490,19 @@ class YMotor extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMotor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMotor.isOnline() to test if the motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the motor, for instance
+     *         MOTORCTL.motor.
      *
-     * @return a YMotor object allowing you to drive $THEFUNCTION$.
+     * @return a YMotor object allowing you to drive the motor.
      */
     static FindMotorInContext(yctx, func) {
         let obj;
@@ -577,7 +578,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * @param targetPower : desired motor power, in percents (between -100% and +100%)
      * @param delay : duration (in ms) of the transition
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -590,7 +591,7 @@ class YMotor extends yocto_api_js_1.YFunction {
      * @param targetPower : desired braking force, in percents
      * @param delay : duration (in ms) of the transition
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -598,9 +599,14 @@ class YMotor extends yocto_api_js_1.YFunction {
         return await this.set_command('B' + String(Math.round(Math.round(targetPower * 10))) + ',' + String(Math.round(delay)));
     }
     /**
-     * Returns the next Motor
+     * Continues the enumeration of motors started using yFirstMotor().
+     * Caution: You can't make any assumption about the returned motors order.
+     * If you want to find a specific a motor, use Motor.findMotor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMotor}
+     * @return a pointer to a YMotor object, corresponding to
+     *         a motor currently online, or a null pointer
+     *         if there are no more motors to enumerate.
      */
     nextMotor() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -612,9 +618,13 @@ class YMotor extends yocto_api_js_1.YFunction {
         return YMotor.FindMotorInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Motor in a YAPI context
+     * Starts the enumeration of motors currently accessible.
+     * Use the method YMotor.nextMotor() to iterate on
+     * next motors.
      *
-     * @returns {YMotor}
+     * @return a pointer to a YMotor object, corresponding to
+     *         the first motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMotor() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Motor');
@@ -623,11 +633,15 @@ class YMotor extends yocto_api_js_1.YFunction {
         return YMotor.FindMotor(next_hwid);
     }
     /**
-     * Retrieves the first Motor in a given context
+     * Starts the enumeration of motors currently accessible.
+     * Use the method YMotor.nextMotor() to iterate on
+     * next motors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMotor}
+     * @return a pointer to a YMotor object, corresponding to
+     *         the first motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMotorInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Motor');

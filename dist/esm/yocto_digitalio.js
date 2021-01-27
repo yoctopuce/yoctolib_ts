@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_digitalio.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -128,7 +128,7 @@ export class YDigitalIO extends YFunction {
      * @return an integer corresponding to the digital IO port state as an integer with each bit
      *         representing a channel
      *
-     * On failure, throws an exception or returns Y_PORTSTATE_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.PORTSTATE_INVALID.
      */
     async get_portState() {
         let res;
@@ -155,7 +155,7 @@ export class YDigitalIO extends YFunction {
      * @param newval : an integer corresponding to the state of all digital IO port's channels at once: the parameter
      *         is an integer where each bit represents a channel, with bit 0 matching channel #0
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -170,7 +170,7 @@ export class YDigitalIO extends YFunction {
      * @return an integer corresponding to the I/O direction of all channels of the port (bitmap): 0 makes
      * a bit an input, 1 makes it an output
      *
-     * On failure, throws an exception or returns Y_PORTDIRECTION_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.PORTDIRECTION_INVALID.
      */
     async get_portDirection() {
         let res;
@@ -189,7 +189,7 @@ export class YDigitalIO extends YFunction {
      * @param newval : an integer corresponding to the I/O direction of all channels of the port (bitmap):
      * 0 makes a bit an input, 1 makes it an output
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -205,7 +205,7 @@ export class YDigitalIO extends YFunction {
      *
      * @return an integer corresponding to the electrical interface for each bit of the port
      *
-     * On failure, throws an exception or returns Y_PORTOPENDRAIN_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.PORTOPENDRAIN_INVALID.
      */
     async get_portOpenDrain() {
         let res;
@@ -224,7 +224,7 @@ export class YDigitalIO extends YFunction {
      *
      * @param newval : an integer corresponding to the electrical interface for each bit of the port
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -239,7 +239,7 @@ export class YDigitalIO extends YFunction {
      *
      * @return an integer corresponding to the polarity of all the bits of the port
      *
-     * On failure, throws an exception or returns Y_PORTPOLARITY_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.PORTPOLARITY_INVALID.
      */
     async get_portPolarity() {
         let res;
@@ -260,7 +260,7 @@ export class YDigitalIO extends YFunction {
      * set to 0, the matching I/O works the regular,
      *         intuitive way; for each bit set to 1, the I/O works in reverse mode
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -276,7 +276,7 @@ export class YDigitalIO extends YFunction {
      *
      * @return an integer corresponding to the port state diagnostics (Yocto-IO and Yocto-MaxiIO-V2 only)
      *
-     * On failure, throws an exception or returns Y_PORTDIAGS_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.PORTDIAGS_INVALID.
      */
     async get_portDiags() {
         let res;
@@ -293,7 +293,7 @@ export class YDigitalIO extends YFunction {
      *
      * @return an integer corresponding to the number of bits (i.e
      *
-     * On failure, throws an exception or returns Y_PORTSIZE_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.PORTSIZE_INVALID.
      */
     async get_portSize() {
         let res;
@@ -308,10 +308,10 @@ export class YDigitalIO extends YFunction {
     /**
      * Returns the voltage source used to drive output bits.
      *
-     * @return a value among Y_OUTPUTVOLTAGE_USB_5V, Y_OUTPUTVOLTAGE_USB_3V and Y_OUTPUTVOLTAGE_EXT_V
-     * corresponding to the voltage source used to drive output bits
+     * @return a value among YDigitalIO.OUTPUTVOLTAGE_USB_5V, YDigitalIO.OUTPUTVOLTAGE_USB_3V and
+     * YDigitalIO.OUTPUTVOLTAGE_EXT_V corresponding to the voltage source used to drive output bits
      *
-     * On failure, throws an exception or returns Y_OUTPUTVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YDigitalIO.OUTPUTVOLTAGE_INVALID.
      */
     async get_outputVoltage() {
         let res;
@@ -327,10 +327,10 @@ export class YDigitalIO extends YFunction {
      * Changes the voltage source used to drive output bits.
      * Remember to call the saveToFlash() method  to make sure the setting is kept after a reboot.
      *
-     * @param newval : a value among Y_OUTPUTVOLTAGE_USB_5V, Y_OUTPUTVOLTAGE_USB_3V and
-     * Y_OUTPUTVOLTAGE_EXT_V corresponding to the voltage source used to drive output bits
+     * @param newval : a value among YDigitalIO.OUTPUTVOLTAGE_USB_5V, YDigitalIO.OUTPUTVOLTAGE_USB_3V and
+     * YDigitalIO.OUTPUTVOLTAGE_EXT_V corresponding to the voltage source used to drive output bits
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -355,7 +355,7 @@ export class YDigitalIO extends YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a digital IO port for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -365,11 +365,11 @@ export class YDigitalIO extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the digital IO port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDigitalIO.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDigitalIO.isOnline() to test if the digital IO port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a digital IO port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -377,10 +377,10 @@ export class YDigitalIO extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the digital IO port, for instance
+     *         YMINIIO0.digitalIO.
      *
-     * @return a YDigitalIO object allowing you to drive $THEFUNCTION$.
+     * @return a YDigitalIO object allowing you to drive the digital IO port.
      */
     static FindDigitalIO(func) {
         let obj;
@@ -392,7 +392,7 @@ export class YDigitalIO extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a digital IO port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -402,19 +402,19 @@ export class YDigitalIO extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the digital IO port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDigitalIO.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDigitalIO.isOnline() to test if the digital IO port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a digital IO port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the digital IO port, for instance
+     *         YMINIIO0.digitalIO.
      *
-     * @return a YDigitalIO object allowing you to drive $THEFUNCTION$.
+     * @return a YDigitalIO object allowing you to drive the digital IO port.
      */
     static FindDigitalIOInContext(yctx, func) {
         let obj;
@@ -474,7 +474,7 @@ export class YDigitalIO extends YFunction {
      * @param bitno : the bit number; lowest bit has index 0
      * @param bitstate : the state of the bit (1 or 0)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -506,7 +506,7 @@ export class YDigitalIO extends YFunction {
      *
      * @param bitno : the bit number; lowest bit has index 0
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -520,7 +520,7 @@ export class YDigitalIO extends YFunction {
      * @param bitdirection : direction to set, 0 makes the bit an input, 1 makes it an output.
      *         Remember to call the   saveToFlash() method to make sure the setting is kept after a reboot.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -539,7 +539,7 @@ export class YDigitalIO extends YFunction {
      *
      * @param bitno : the bit number; lowest bit has index 0
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -556,7 +556,7 @@ export class YDigitalIO extends YFunction {
      * in reverse mode.
      *         Remember to call the   saveToFlash() method to make sure the setting is kept after a reboot.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -575,7 +575,7 @@ export class YDigitalIO extends YFunction {
      *
      * @param bitno : the bit number; lowest bit has index 0
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -592,7 +592,7 @@ export class YDigitalIO extends YFunction {
      *         it an open-drain (open-collector) input/output. Remember to call the
      *         saveToFlash() method to make sure the setting is kept after a reboot.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -629,7 +629,7 @@ export class YDigitalIO extends YFunction {
      * @param ms_duration : desired pulse duration in milliseconds. Be aware that the device time
      *         resolution is not guaranteed up to the millisecond.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -645,7 +645,7 @@ export class YDigitalIO extends YFunction {
      * @param ms_duration : desired pulse duration in milliseconds. Be aware that the device time
      *         resolution is not guaranteed up to the millisecond.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -653,9 +653,14 @@ export class YDigitalIO extends YFunction {
         return await this.set_command('Z' + String(Math.round(bitno)) + ',' + String(Math.round(ms_delay)) + ',' + String(Math.round(ms_duration)));
     }
     /**
-     * Returns the next DigitalIO
+     * Continues the enumeration of digital IO ports started using yFirstDigitalIO().
+     * Caution: You can't make any assumption about the returned digital IO ports order.
+     * If you want to find a specific a digital IO port, use DigitalIO.findDigitalIO()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDigitalIO}
+     * @return a pointer to a YDigitalIO object, corresponding to
+     *         a digital IO port currently online, or a null pointer
+     *         if there are no more digital IO ports to enumerate.
      */
     nextDigitalIO() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -667,9 +672,13 @@ export class YDigitalIO extends YFunction {
         return YDigitalIO.FindDigitalIOInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first DigitalIO in a YAPI context
+     * Starts the enumeration of digital IO ports currently accessible.
+     * Use the method YDigitalIO.nextDigitalIO() to iterate on
+     * next digital IO ports.
      *
-     * @returns {YDigitalIO}
+     * @return a pointer to a YDigitalIO object, corresponding to
+     *         the first digital IO port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDigitalIO() {
         let next_hwid = YAPI.imm_getFirstHardwareId('DigitalIO');
@@ -678,11 +687,15 @@ export class YDigitalIO extends YFunction {
         return YDigitalIO.FindDigitalIO(next_hwid);
     }
     /**
-     * Retrieves the first DigitalIO in a given context
+     * Starts the enumeration of digital IO ports currently accessible.
+     * Use the method YDigitalIO.nextDigitalIO() to iterate on
+     * next digital IO ports.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDigitalIO}
+     * @return a pointer to a YDigitalIO object, corresponding to
+     *         the first digital IO port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDigitalIOInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('DigitalIO');

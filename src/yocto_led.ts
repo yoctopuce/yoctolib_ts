@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_led.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Led functions
  *
@@ -40,12 +40,12 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YLed definitions)
-export const enum Y_Power {
+export const enum YLed_Power {
     OFF = 0,
     ON = 1,
     INVALID = -1
 }
-export const enum Y_Blinking {
+export const enum YLed_Blinking {
     STILL = 0,
     RELAX = 1,
     AWARE = 2,
@@ -72,36 +72,36 @@ export class YLed extends YFunction
 {
     //--- (YLed attributes declaration)
     _className: string;
-    _power: Y_Power = YLed.POWER_INVALID;
+    _power: YLed_Power = YLed.POWER_INVALID;
     _luminosity: number = YLed.LUMINOSITY_INVALID;
-    _blinking: Y_Blinking = YLed.BLINKING_INVALID;
+    _blinking: YLed_Blinking = YLed.BLINKING_INVALID;
     _valueCallbackLed: YLedValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly POWER_OFF: Y_Power = Y_Power.OFF;
-    public readonly POWER_ON: Y_Power = Y_Power.ON;
-    public readonly POWER_INVALID: Y_Power = Y_Power.INVALID;
+    public readonly POWER_OFF: YLed_Power = YLed_Power.OFF;
+    public readonly POWER_ON: YLed_Power = YLed_Power.ON;
+    public readonly POWER_INVALID: YLed_Power = YLed_Power.INVALID;
     public readonly LUMINOSITY_INVALID: number = YAPI.INVALID_UINT;
-    public readonly BLINKING_STILL: Y_Blinking = Y_Blinking.STILL;
-    public readonly BLINKING_RELAX: Y_Blinking = Y_Blinking.RELAX;
-    public readonly BLINKING_AWARE: Y_Blinking = Y_Blinking.AWARE;
-    public readonly BLINKING_RUN: Y_Blinking = Y_Blinking.RUN;
-    public readonly BLINKING_CALL: Y_Blinking = Y_Blinking.CALL;
-    public readonly BLINKING_PANIC: Y_Blinking = Y_Blinking.PANIC;
-    public readonly BLINKING_INVALID: Y_Blinking = Y_Blinking.INVALID;
+    public readonly BLINKING_STILL: YLed_Blinking = YLed_Blinking.STILL;
+    public readonly BLINKING_RELAX: YLed_Blinking = YLed_Blinking.RELAX;
+    public readonly BLINKING_AWARE: YLed_Blinking = YLed_Blinking.AWARE;
+    public readonly BLINKING_RUN: YLed_Blinking = YLed_Blinking.RUN;
+    public readonly BLINKING_CALL: YLed_Blinking = YLed_Blinking.CALL;
+    public readonly BLINKING_PANIC: YLed_Blinking = YLed_Blinking.PANIC;
+    public readonly BLINKING_INVALID: YLed_Blinking = YLed_Blinking.INVALID;
 
     // API symbols as static members
-    public static readonly POWER_OFF: Y_Power = Y_Power.OFF;
-    public static readonly POWER_ON: Y_Power = Y_Power.ON;
-    public static readonly POWER_INVALID: Y_Power = Y_Power.INVALID;
+    public static readonly POWER_OFF: YLed_Power = YLed_Power.OFF;
+    public static readonly POWER_ON: YLed_Power = YLed_Power.ON;
+    public static readonly POWER_INVALID: YLed_Power = YLed_Power.INVALID;
     public static readonly LUMINOSITY_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly BLINKING_STILL: Y_Blinking = Y_Blinking.STILL;
-    public static readonly BLINKING_RELAX: Y_Blinking = Y_Blinking.RELAX;
-    public static readonly BLINKING_AWARE: Y_Blinking = Y_Blinking.AWARE;
-    public static readonly BLINKING_RUN: Y_Blinking = Y_Blinking.RUN;
-    public static readonly BLINKING_CALL: Y_Blinking = Y_Blinking.CALL;
-    public static readonly BLINKING_PANIC: Y_Blinking = Y_Blinking.PANIC;
-    public static readonly BLINKING_INVALID: Y_Blinking = Y_Blinking.INVALID;
+    public static readonly BLINKING_STILL: YLed_Blinking = YLed_Blinking.STILL;
+    public static readonly BLINKING_RELAX: YLed_Blinking = YLed_Blinking.RELAX;
+    public static readonly BLINKING_AWARE: YLed_Blinking = YLed_Blinking.AWARE;
+    public static readonly BLINKING_RUN: YLed_Blinking = YLed_Blinking.RUN;
+    public static readonly BLINKING_CALL: YLed_Blinking = YLed_Blinking.CALL;
+    public static readonly BLINKING_PANIC: YLed_Blinking = YLed_Blinking.PANIC;
+    public static readonly BLINKING_INVALID: YLed_Blinking = YLed_Blinking.INVALID;
     //--- (end of YLed attributes declaration)
 
 //--- (YLed return codes)
@@ -121,13 +121,13 @@ export class YLed extends YFunction
     {
         switch(name) {
         case 'power':
-            this._power = <Y_Power> <number> val;
+            this._power = <YLed_Power> <number> val;
             return 1;
         case 'luminosity':
             this._luminosity = <number> <number> val;
             return 1;
         case 'blinking':
-            this._blinking = <Y_Blinking> <number> val;
+            this._blinking = <YLed_Blinking> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -136,11 +136,11 @@ export class YLed extends YFunction
     /**
      * Returns the current LED state.
      *
-     * @return either Y_POWER_OFF or Y_POWER_ON, according to the current LED state
+     * @return either YLed.POWER_OFF or YLed.POWER_ON, according to the current LED state
      *
-     * On failure, throws an exception or returns Y_POWER_INVALID.
+     * On failure, throws an exception or returns YLed.POWER_INVALID.
      */
-    async get_power(): Promise<Y_Power>
+    async get_power(): Promise<YLed_Power>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -155,13 +155,13 @@ export class YLed extends YFunction
     /**
      * Changes the state of the LED.
      *
-     * @param newval : either Y_POWER_OFF or Y_POWER_ON, according to the state of the LED
+     * @param newval : either YLed.POWER_OFF or YLed.POWER_ON, according to the state of the LED
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_power(newval: Y_Power): Promise<number>
+    async set_power(newval: YLed_Power): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -173,7 +173,7 @@ export class YLed extends YFunction
      *
      * @return an integer corresponding to the current LED intensity (in per cent)
      *
-     * On failure, throws an exception or returns Y_LUMINOSITY_INVALID.
+     * On failure, throws an exception or returns YLed.LUMINOSITY_INVALID.
      */
     async get_luminosity(): Promise<number>
     {
@@ -193,7 +193,7 @@ export class YLed extends YFunction
      *
      * @param newval : an integer corresponding to the current LED intensity (in per cent)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -207,12 +207,12 @@ export class YLed extends YFunction
     /**
      * Returns the current LED signaling mode.
      *
-     * @return a value among Y_BLINKING_STILL, Y_BLINKING_RELAX, Y_BLINKING_AWARE, Y_BLINKING_RUN,
-     * Y_BLINKING_CALL and Y_BLINKING_PANIC corresponding to the current LED signaling mode
+     * @return a value among YLed.BLINKING_STILL, YLed.BLINKING_RELAX, YLed.BLINKING_AWARE,
+     * YLed.BLINKING_RUN, YLed.BLINKING_CALL and YLed.BLINKING_PANIC corresponding to the current LED signaling mode
      *
-     * On failure, throws an exception or returns Y_BLINKING_INVALID.
+     * On failure, throws an exception or returns YLed.BLINKING_INVALID.
      */
-    async get_blinking(): Promise<Y_Blinking>
+    async get_blinking(): Promise<YLed_Blinking>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -227,14 +227,14 @@ export class YLed extends YFunction
     /**
      * Changes the current LED signaling mode.
      *
-     * @param newval : a value among Y_BLINKING_STILL, Y_BLINKING_RELAX, Y_BLINKING_AWARE, Y_BLINKING_RUN,
-     * Y_BLINKING_CALL and Y_BLINKING_PANIC corresponding to the current LED signaling mode
+     * @param newval : a value among YLed.BLINKING_STILL, YLed.BLINKING_RELAX, YLed.BLINKING_AWARE,
+     * YLed.BLINKING_RUN, YLed.BLINKING_CALL and YLed.BLINKING_PANIC corresponding to the current LED signaling mode
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_blinking(newval: Y_Blinking): Promise<number>
+    async set_blinking(newval: YLed_Blinking): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -242,7 +242,7 @@ export class YLed extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a monochrome LED for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -252,11 +252,11 @@ export class YLed extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the monochrome LED is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLed.isOnline() to test if the monochrome LED is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a monochrome LED by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -264,10 +264,10 @@ export class YLed extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the monochrome LED, for instance
+     *         YBUZZER2.led1.
      *
-     * @return a YLed object allowing you to drive $THEFUNCTION$.
+     * @return a YLed object allowing you to drive the monochrome LED.
      */
     static FindLed(func: string): YLed
     {
@@ -281,7 +281,7 @@ export class YLed extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a monochrome LED for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -291,19 +291,19 @@ export class YLed extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the monochrome LED is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLed.isOnline() to test if the monochrome LED is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a monochrome LED by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the monochrome LED, for instance
+     *         YBUZZER2.led1.
      *
-     * @return a YLed object allowing you to drive $THEFUNCTION$.
+     * @return a YLed object allowing you to drive the monochrome LED.
      */
     static FindLedInContext(yctx: YAPIContext, func: string): YLed
     {
@@ -361,9 +361,14 @@ export class YLed extends YFunction
     }
 
     /**
-     * Returns the next Led
+     * Continues the enumeration of monochrome LEDs started using yFirstLed().
+     * Caution: You can't make any assumption about the returned monochrome LEDs order.
+     * If you want to find a specific a monochrome LED, use Led.findLed()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YLed}
+     * @return a pointer to a YLed object, corresponding to
+     *         a monochrome LED currently online, or a null pointer
+     *         if there are no more monochrome LEDs to enumerate.
      */
     nextLed(): YLed | null
     {
@@ -375,9 +380,13 @@ export class YLed extends YFunction
     }
 
     /**
-     * Retrieves the first Led in a YAPI context
+     * Starts the enumeration of monochrome LEDs currently accessible.
+     * Use the method YLed.nextLed() to iterate on
+     * next monochrome LEDs.
      *
-     * @returns {YLed}
+     * @return a pointer to a YLed object, corresponding to
+     *         the first monochrome LED currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLed(): YLed | null
     {
@@ -387,11 +396,15 @@ export class YLed extends YFunction
     }
 
     /**
-     * Retrieves the first Led in a given context
+     * Starts the enumeration of monochrome LEDs currently accessible.
+     * Use the method YLed.nextLed() to iterate on
+     * next monochrome LEDs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YLed}
+     * @return a pointer to a YLed object, corresponding to
+     *         the first monochrome LED currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLedInContext(yctx: YAPIContext): YLed | null
     {

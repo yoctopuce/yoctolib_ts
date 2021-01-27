@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 41769 2020-09-03 17:34:23Z mvuilleu $
+ * $Id: yocto_api_html.ts 43403 2021-01-19 11:58:02Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -147,7 +147,6 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
         if (this.notifPos > 0) {
             args += '&abs=' + this.notifPos.toString();
         }
-        this._hubAdded = false;
         if (!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             this.notbynOpenPromise = new Promise((resolve, reject) => {
@@ -162,7 +161,6 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                             return;
                         }
                         if (xmlHttpRequest.readyState >= 3) {
-                            resolve({ errorType: yocto_api_js_1.YAPI.SUCCESS, errorMsg: "" });
                             if (xmlHttpRequest.readyState == 4 &&
                                 (xmlHttpRequest.status >> 0) != 200 &&
                                 (xmlHttpRequest.status >> 0) != 304) {
@@ -173,6 +171,11 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                             }
                             else {
                                 // receiving data properly
+                                if (!this._hubAdded) {
+                                    this.signalHubConnected().then(() => {
+                                        resolve({ errorType: yocto_api_js_1.YAPI_SUCCESS, errorMsg: "" });
+                                    });
+                                }
                                 if (xmlHttpRequest.readyState == 3) {
                                     // when using reconnection mode, ignore state 3
                                     if (this.notiflen == 1)
@@ -199,10 +202,6 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
         let res_struct = await this.notbynOpenPromise;
         if (errmsg) {
             errmsg.msg = res_struct.errorMsg;
-        }
-        if (res_struct.errorType == yocto_api_js_1.YAPI.SUCCESS && !this._hubAdded && this._connectionType != this._HUB_TESTONLY) {
-            this._hubAdded = true;
-            await this._yapi._addHub(this);
         }
         this.notbynOpenPromise = null;
         return res_struct.errorType;

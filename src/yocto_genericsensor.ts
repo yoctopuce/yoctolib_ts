@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_genericsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YGenericSensor definitions)
-export const enum Y_SignalSampling {
+export const enum YGenericSensor_SignalSampling {
     HIGH_RATE = 0,
     HIGH_RATE_FILTERED = 1,
     LOW_NOISE = 2,
@@ -48,7 +48,7 @@ export const enum Y_SignalSampling {
     HIGHEST_RATE = 4,
     INVALID = -1
 }
-export const enum Y_Enabled {
+export const enum YGenericSensor_Enabled {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -60,7 +60,7 @@ export interface YGenericSensorTimedReportCallback { (func: YGenericSensor, meas
 //--- (YGenericSensor class start)
 /**
  * YGenericSensor Class: GenericSensor control interface, available for instance in the
- * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-RS485-V2 or the Yocto-milliVolt-Rx
+ * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-Serial or the Yocto-milliVolt-Rx
  *
  * The YGenericSensor class allows you to read and configure Yoctopuce signal
  * transducers. It inherits from YSensor class the core functions to read measurements,
@@ -79,8 +79,8 @@ export class YGenericSensor extends YSensor
     _signalRange: string = YGenericSensor.SIGNALRANGE_INVALID;
     _valueRange: string = YGenericSensor.VALUERANGE_INVALID;
     _signalBias: number = YGenericSensor.SIGNALBIAS_INVALID;
-    _signalSampling: Y_SignalSampling = YGenericSensor.SIGNALSAMPLING_INVALID;
-    _enabled: Y_Enabled = YGenericSensor.ENABLED_INVALID;
+    _signalSampling: YGenericSensor_SignalSampling = YGenericSensor.SIGNALSAMPLING_INVALID;
+    _enabled: YGenericSensor_Enabled = YGenericSensor.ENABLED_INVALID;
     _valueCallbackGenericSensor: YGenericSensorValueCallback | null = null;
     _timedReportCallbackGenericSensor: YGenericSensorTimedReportCallback | null = null;
 
@@ -90,15 +90,15 @@ export class YGenericSensor extends YSensor
     public readonly SIGNALRANGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly VALUERANGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly SIGNALBIAS_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly SIGNALSAMPLING_HIGH_RATE: Y_SignalSampling = Y_SignalSampling.HIGH_RATE;
-    public readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: Y_SignalSampling = Y_SignalSampling.HIGH_RATE_FILTERED;
-    public readonly SIGNALSAMPLING_LOW_NOISE: Y_SignalSampling = Y_SignalSampling.LOW_NOISE;
-    public readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: Y_SignalSampling = Y_SignalSampling.LOW_NOISE_FILTERED;
-    public readonly SIGNALSAMPLING_HIGHEST_RATE: Y_SignalSampling = Y_SignalSampling.HIGHEST_RATE;
-    public readonly SIGNALSAMPLING_INVALID: Y_SignalSampling = Y_SignalSampling.INVALID;
-    public readonly ENABLED_FALSE: Y_Enabled = Y_Enabled.FALSE;
-    public readonly ENABLED_TRUE: Y_Enabled = Y_Enabled.TRUE;
-    public readonly ENABLED_INVALID: Y_Enabled = Y_Enabled.INVALID;
+    public readonly SIGNALSAMPLING_HIGH_RATE: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.HIGH_RATE;
+    public readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.HIGH_RATE_FILTERED;
+    public readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.LOW_NOISE;
+    public readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.LOW_NOISE_FILTERED;
+    public readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.HIGHEST_RATE;
+    public readonly SIGNALSAMPLING_INVALID: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.INVALID;
+    public readonly ENABLED_FALSE: YGenericSensor_Enabled = YGenericSensor_Enabled.FALSE;
+    public readonly ENABLED_TRUE: YGenericSensor_Enabled = YGenericSensor_Enabled.TRUE;
+    public readonly ENABLED_INVALID: YGenericSensor_Enabled = YGenericSensor_Enabled.INVALID;
 
     // API symbols as static members
     public static readonly SIGNALVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -106,15 +106,15 @@ export class YGenericSensor extends YSensor
     public static readonly SIGNALRANGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly VALUERANGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SIGNALBIAS_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly SIGNALSAMPLING_HIGH_RATE: Y_SignalSampling = Y_SignalSampling.HIGH_RATE;
-    public static readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: Y_SignalSampling = Y_SignalSampling.HIGH_RATE_FILTERED;
-    public static readonly SIGNALSAMPLING_LOW_NOISE: Y_SignalSampling = Y_SignalSampling.LOW_NOISE;
-    public static readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: Y_SignalSampling = Y_SignalSampling.LOW_NOISE_FILTERED;
-    public static readonly SIGNALSAMPLING_HIGHEST_RATE: Y_SignalSampling = Y_SignalSampling.HIGHEST_RATE;
-    public static readonly SIGNALSAMPLING_INVALID: Y_SignalSampling = Y_SignalSampling.INVALID;
-    public static readonly ENABLED_FALSE: Y_Enabled = Y_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: Y_Enabled = Y_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: Y_Enabled = Y_Enabled.INVALID;
+    public static readonly SIGNALSAMPLING_HIGH_RATE: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.HIGH_RATE;
+    public static readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.HIGH_RATE_FILTERED;
+    public static readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.LOW_NOISE;
+    public static readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.LOW_NOISE_FILTERED;
+    public static readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.HIGHEST_RATE;
+    public static readonly SIGNALSAMPLING_INVALID: YGenericSensor_SignalSampling = YGenericSensor_SignalSampling.INVALID;
+    public static readonly ENABLED_FALSE: YGenericSensor_Enabled = YGenericSensor_Enabled.FALSE;
+    public static readonly ENABLED_TRUE: YGenericSensor_Enabled = YGenericSensor_Enabled.TRUE;
+    public static readonly ENABLED_INVALID: YGenericSensor_Enabled = YGenericSensor_Enabled.INVALID;
     //--- (end of YGenericSensor attributes declaration)
 
 //--- (YGenericSensor return codes)
@@ -149,10 +149,10 @@ export class YGenericSensor extends YSensor
             this._signalBias = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'signalSampling':
-            this._signalSampling = <Y_SignalSampling> <number> val;
+            this._signalSampling = <YGenericSensor_SignalSampling> <number> val;
             return 1;
         case 'enabled':
-            this._enabled = <Y_Enabled> <number> val;
+            this._enabled = <YGenericSensor_Enabled> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -165,7 +165,7 @@ export class YGenericSensor extends YSensor
      *
      * @param newval : a string corresponding to the measuring unit for the measured value
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -182,7 +182,7 @@ export class YGenericSensor extends YSensor
      * @return a floating point number corresponding to the current value of the electrical signal
      * measured by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALVALUE_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.SIGNALVALUE_INVALID.
      */
     async get_signalValue(): Promise<number>
     {
@@ -201,7 +201,7 @@ export class YGenericSensor extends YSensor
      *
      * @return a string corresponding to the measuring unit of the electrical signal used by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALUNIT_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.SIGNALUNIT_INVALID.
      */
     async get_signalUnit(): Promise<string>
     {
@@ -220,7 +220,7 @@ export class YGenericSensor extends YSensor
      *
      * @return a string corresponding to the input signal range used by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALRANGE_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.SIGNALRANGE_INVALID.
      */
     async get_signalRange(): Promise<string>
     {
@@ -250,7 +250,7 @@ export class YGenericSensor extends YSensor
      *
      * @param newval : a string corresponding to the input signal range used by the sensor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -266,7 +266,7 @@ export class YGenericSensor extends YSensor
      *
      * @return a string corresponding to the physical value range measured by the sensor
      *
-     * On failure, throws an exception or returns Y_VALUERANGE_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.VALUERANGE_INVALID.
      */
     async get_valueRange(): Promise<string>
     {
@@ -293,7 +293,7 @@ export class YGenericSensor extends YSensor
      * @param newval : a string corresponding to the output value range, corresponding to the physical value measured
      *         by the sensor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -313,7 +313,7 @@ export class YGenericSensor extends YSensor
      *
      * @param newval : a floating point number corresponding to the electric signal bias for zero shift adjustment
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -331,7 +331,7 @@ export class YGenericSensor extends YSensor
      *
      * @return a floating point number corresponding to the electric signal bias for zero shift adjustment
      *
-     * On failure, throws an exception or returns Y_SIGNALBIAS_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.SIGNALBIAS_INVALID.
      */
     async get_signalBias(): Promise<number>
     {
@@ -353,13 +353,14 @@ export class YGenericSensor extends YSensor
      * The LOW_NOISE_FILTERED method combines a reduced frequency with the median filter
      * to get measures as stable as possible when working on a noisy signal.
      *
-     * @return a value among Y_SIGNALSAMPLING_HIGH_RATE, Y_SIGNALSAMPLING_HIGH_RATE_FILTERED,
-     * Y_SIGNALSAMPLING_LOW_NOISE, Y_SIGNALSAMPLING_LOW_NOISE_FILTERED and Y_SIGNALSAMPLING_HIGHEST_RATE
+     * @return a value among YGenericSensor.SIGNALSAMPLING_HIGH_RATE,
+     * YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED, YGenericSensor.SIGNALSAMPLING_LOW_NOISE,
+     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED and YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE
      * corresponding to the electric signal sampling method to use
      *
-     * On failure, throws an exception or returns Y_SIGNALSAMPLING_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.SIGNALSAMPLING_INVALID.
      */
-    async get_signalSampling(): Promise<Y_SignalSampling>
+    async get_signalSampling(): Promise<YGenericSensor_SignalSampling>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -381,15 +382,16 @@ export class YGenericSensor extends YSensor
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_SIGNALSAMPLING_HIGH_RATE, Y_SIGNALSAMPLING_HIGH_RATE_FILTERED,
-     * Y_SIGNALSAMPLING_LOW_NOISE, Y_SIGNALSAMPLING_LOW_NOISE_FILTERED and Y_SIGNALSAMPLING_HIGHEST_RATE
+     * @param newval : a value among YGenericSensor.SIGNALSAMPLING_HIGH_RATE,
+     * YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED, YGenericSensor.SIGNALSAMPLING_LOW_NOISE,
+     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED and YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE
      * corresponding to the electric signal sampling method to use
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_signalSampling(newval: Y_SignalSampling): Promise<number>
+    async set_signalSampling(newval: YGenericSensor_SignalSampling): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -399,11 +401,12 @@ export class YGenericSensor extends YSensor
     /**
      * Returns the activation state of this input.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this input
+     * @return either YGenericSensor.ENABLED_FALSE or YGenericSensor.ENABLED_TRUE, according to the
+     * activation state of this input
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YGenericSensor.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<Y_Enabled>
+    async get_enabled(): Promise<YGenericSensor_Enabled>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -422,13 +425,14 @@ export class YGenericSensor extends YSensor
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this input
+     * @param newval : either YGenericSensor.ENABLED_FALSE or YGenericSensor.ENABLED_TRUE, according to
+     * the activation state of this input
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: Y_Enabled): Promise<number>
+    async set_enabled(newval: YGenericSensor_Enabled): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -436,7 +440,7 @@ export class YGenericSensor extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a generic sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -446,11 +450,11 @@ export class YGenericSensor extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the generic sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGenericSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGenericSensor.isOnline() to test if the generic sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a generic sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -458,10 +462,10 @@ export class YGenericSensor extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the generic sensor, for instance
+     *         RX010V01.genericSensor1.
      *
-     * @return a YGenericSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YGenericSensor object allowing you to drive the generic sensor.
      */
     static FindGenericSensor(func: string): YGenericSensor
     {
@@ -475,7 +479,7 @@ export class YGenericSensor extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a generic sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -485,19 +489,19 @@ export class YGenericSensor extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the generic sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGenericSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGenericSensor.isOnline() to test if the generic sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a generic sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the generic sensor, for instance
+     *         RX010V01.genericSensor1.
      *
-     * @return a YGenericSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YGenericSensor object allowing you to drive the generic sensor.
      */
     static FindGenericSensorInContext(yctx: YAPIContext, func: string): YGenericSensor
     {
@@ -597,7 +601,7 @@ export class YGenericSensor extends YSensor
      * precisely as zero. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -611,9 +615,14 @@ export class YGenericSensor extends YSensor
     }
 
     /**
-     * Returns the next GenericSensor
+     * Continues the enumeration of generic sensors started using yFirstGenericSensor().
+     * Caution: You can't make any assumption about the returned generic sensors order.
+     * If you want to find a specific a generic sensor, use GenericSensor.findGenericSensor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YGenericSensor}
+     * @return a pointer to a YGenericSensor object, corresponding to
+     *         a generic sensor currently online, or a null pointer
+     *         if there are no more generic sensors to enumerate.
      */
     nextGenericSensor(): YGenericSensor | null
     {
@@ -625,9 +634,13 @@ export class YGenericSensor extends YSensor
     }
 
     /**
-     * Retrieves the first GenericSensor in a YAPI context
+     * Starts the enumeration of generic sensors currently accessible.
+     * Use the method YGenericSensor.nextGenericSensor() to iterate on
+     * next generic sensors.
      *
-     * @returns {YGenericSensor}
+     * @return a pointer to a YGenericSensor object, corresponding to
+     *         the first generic sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGenericSensor(): YGenericSensor | null
     {
@@ -637,11 +650,15 @@ export class YGenericSensor extends YSensor
     }
 
     /**
-     * Retrieves the first GenericSensor in a given context
+     * Starts the enumeration of generic sensors currently accessible.
+     * Use the method YGenericSensor.nextGenericSensor() to iterate on
+     * next generic sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YGenericSensor}
+     * @return a pointer to a YGenericSensor object, corresponding to
+     *         the first generic sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGenericSensorInContext(yctx: YAPIContext): YGenericSensor | null
     {

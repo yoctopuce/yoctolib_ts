@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_accelerometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum Y_GravityCancellation {
+export declare const enum YAccelerometer_GravityCancellation {
     OFF = 0,
     ON = 1,
     INVALID = -1
@@ -49,7 +49,8 @@ export interface YAccelerometerTimedReportCallback {
     (func: YAccelerometer, measure: YMeasure): void;
 }
 /**
- * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2
+ * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2 or
+ * the Yocto-Inclinometer
  *
  * The YAccelerometer class allows you to read and configure Yoctopuce accelerometers.
  * It inherits from YSensor class the core functions to read measurements,
@@ -63,23 +64,23 @@ export declare class YAccelerometer extends YSensor {
     _xValue: number;
     _yValue: number;
     _zValue: number;
-    _gravityCancellation: Y_GravityCancellation;
+    _gravityCancellation: YAccelerometer_GravityCancellation;
     _valueCallbackAccelerometer: YAccelerometerValueCallback | null;
     _timedReportCallbackAccelerometer: YAccelerometerTimedReportCallback | null;
     readonly BANDWIDTH_INVALID: number;
     readonly XVALUE_INVALID: number;
     readonly YVALUE_INVALID: number;
     readonly ZVALUE_INVALID: number;
-    readonly GRAVITYCANCELLATION_OFF: Y_GravityCancellation;
-    readonly GRAVITYCANCELLATION_ON: Y_GravityCancellation;
-    readonly GRAVITYCANCELLATION_INVALID: Y_GravityCancellation;
+    readonly GRAVITYCANCELLATION_OFF: YAccelerometer_GravityCancellation;
+    readonly GRAVITYCANCELLATION_ON: YAccelerometer_GravityCancellation;
+    readonly GRAVITYCANCELLATION_INVALID: YAccelerometer_GravityCancellation;
     static readonly BANDWIDTH_INVALID: number;
     static readonly XVALUE_INVALID: number;
     static readonly YVALUE_INVALID: number;
     static readonly ZVALUE_INVALID: number;
-    static readonly GRAVITYCANCELLATION_OFF: Y_GravityCancellation;
-    static readonly GRAVITYCANCELLATION_ON: Y_GravityCancellation;
-    static readonly GRAVITYCANCELLATION_INVALID: Y_GravityCancellation;
+    static readonly GRAVITYCANCELLATION_OFF: YAccelerometer_GravityCancellation;
+    static readonly GRAVITYCANCELLATION_ON: YAccelerometer_GravityCancellation;
+    static readonly GRAVITYCANCELLATION_INVALID: YAccelerometer_GravityCancellation;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -87,7 +88,7 @@ export declare class YAccelerometer extends YSensor {
      *
      * @return an integer corresponding to the measure update frequency, measured in Hz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.BANDWIDTH_INVALID.
      */
     get_bandwidth(): Promise<number>;
     /**
@@ -98,7 +99,7 @@ export declare class YAccelerometer extends YSensor {
      *
      * @param newval : an integer corresponding to the measure update frequency, measured in Hz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -108,7 +109,7 @@ export declare class YAccelerometer extends YSensor {
      *
      * @return a floating point number corresponding to the X component of the acceleration, as a floating point number
      *
-     * On failure, throws an exception or returns Y_XVALUE_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.XVALUE_INVALID.
      */
     get_xValue(): Promise<number>;
     /**
@@ -116,7 +117,7 @@ export declare class YAccelerometer extends YSensor {
      *
      * @return a floating point number corresponding to the Y component of the acceleration, as a floating point number
      *
-     * On failure, throws an exception or returns Y_YVALUE_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.YVALUE_INVALID.
      */
     get_yValue(): Promise<number>;
     /**
@@ -124,13 +125,13 @@ export declare class YAccelerometer extends YSensor {
      *
      * @return a floating point number corresponding to the Z component of the acceleration, as a floating point number
      *
-     * On failure, throws an exception or returns Y_ZVALUE_INVALID.
+     * On failure, throws an exception or returns YAccelerometer.ZVALUE_INVALID.
      */
     get_zValue(): Promise<number>;
-    get_gravityCancellation(): Promise<Y_GravityCancellation>;
-    set_gravityCancellation(newval: Y_GravityCancellation): Promise<number>;
+    get_gravityCancellation(): Promise<YAccelerometer_GravityCancellation>;
+    set_gravityCancellation(newval: YAccelerometer_GravityCancellation): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an accelerometer for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -140,11 +141,11 @@ export declare class YAccelerometer extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the accelerometer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAccelerometer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAccelerometer.isOnline() to test if the accelerometer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an accelerometer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -152,14 +153,14 @@ export declare class YAccelerometer extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the accelerometer, for instance
+     *         Y3DMK002.accelerometer.
      *
-     * @return a YAccelerometer object allowing you to drive $THEFUNCTION$.
+     * @return a YAccelerometer object allowing you to drive the accelerometer.
      */
     static FindAccelerometer(func: string): YAccelerometer;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an accelerometer for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -169,19 +170,19 @@ export declare class YAccelerometer extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the accelerometer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAccelerometer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAccelerometer.isOnline() to test if the accelerometer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an accelerometer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the accelerometer, for instance
+     *         Y3DMK002.accelerometer.
      *
-     * @return a YAccelerometer object allowing you to drive $THEFUNCTION$.
+     * @return a YAccelerometer object allowing you to drive the accelerometer.
      */
     static FindAccelerometerInContext(yctx: YAPIContext, func: string): YAccelerometer;
     /**
@@ -211,23 +212,36 @@ export declare class YAccelerometer extends YSensor {
     registerTimedReportCallback(callback: YAccelerometerTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next Accelerometer
+     * Continues the enumeration of accelerometers started using yFirstAccelerometer().
+     * Caution: You can't make any assumption about the returned accelerometers order.
+     * If you want to find a specific an accelerometer, use Accelerometer.findAccelerometer()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YAccelerometer}
+     * @return a pointer to a YAccelerometer object, corresponding to
+     *         an accelerometer currently online, or a null pointer
+     *         if there are no more accelerometers to enumerate.
      */
     nextAccelerometer(): YAccelerometer | null;
     /**
-     * Retrieves the first Accelerometer in a YAPI context
+     * Starts the enumeration of accelerometers currently accessible.
+     * Use the method YAccelerometer.nextAccelerometer() to iterate on
+     * next accelerometers.
      *
-     * @returns {YAccelerometer}
+     * @return a pointer to a YAccelerometer object, corresponding to
+     *         the first accelerometer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAccelerometer(): YAccelerometer | null;
     /**
-     * Retrieves the first Accelerometer in a given context
+     * Starts the enumeration of accelerometers currently accessible.
+     * Use the method YAccelerometer.nextAccelerometer() to iterate on
+     * next accelerometers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YAccelerometer}
+     * @return a pointer to a YAccelerometer object, corresponding to
+     *         the first accelerometer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAccelerometerInContext(yctx: YAPIContext): YAccelerometer | null;
 }

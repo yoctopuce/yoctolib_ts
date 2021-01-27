@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_wakeupschedule.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -44,7 +44,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (YWakeUpSchedule class start)
 /**
  * YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
- * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * The YWakeUpSchedule class implements a wake up condition. The wake up time is
  * specified as a set of months and/or days and/or hours and/or minutes when the
@@ -109,7 +109,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the minutes in the 00-29 interval of each hour scheduled for wake up
      *
-     * On failure, throws an exception or returns Y_MINUTESA_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.MINUTESA_INVALID.
      */
     async get_minutesA() {
         let res;
@@ -128,7 +128,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the minutes in the 00-29 interval when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -142,7 +142,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the minutes in the 30-59 interval of each hour scheduled for wake up
      *
-     * On failure, throws an exception or returns Y_MINUTESB_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.MINUTESB_INVALID.
      */
     async get_minutesB() {
         let res;
@@ -161,7 +161,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the minutes in the 30-59 interval when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -175,7 +175,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the hours scheduled for wake up
      *
-     * On failure, throws an exception or returns Y_HOURS_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.HOURS_INVALID.
      */
     async get_hours() {
         let res;
@@ -194,7 +194,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the hours when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -208,7 +208,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the days of the week scheduled for wake up
      *
-     * On failure, throws an exception or returns Y_WEEKDAYS_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.WEEKDAYS_INVALID.
      */
     async get_weekDays() {
         let res;
@@ -227,7 +227,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the days of the week when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -241,7 +241,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the days of the month scheduled for wake up
      *
-     * On failure, throws an exception or returns Y_MONTHDAYS_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.MONTHDAYS_INVALID.
      */
     async get_monthDays() {
         let res;
@@ -260,7 +260,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the days of the month when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -274,7 +274,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the months scheduled for wake up
      *
-     * On failure, throws an exception or returns Y_MONTHS_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.MONTHS_INVALID.
      */
     async get_months() {
         let res;
@@ -293,7 +293,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the months when a wake up must take place
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -307,7 +307,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the date/time (seconds) of the next wake up occurrence
      *
-     * On failure, throws an exception or returns Y_NEXTOCCURENCE_INVALID.
+     * On failure, throws an exception or returns YWakeUpSchedule.NEXTOCCURENCE_INVALID.
      */
     async get_nextOccurence() {
         let res;
@@ -320,7 +320,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a wake up schedule for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -330,11 +330,11 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wake up schedule is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWakeUpSchedule.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWakeUpSchedule.isOnline() to test if the wake up schedule is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wake up schedule by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -342,10 +342,10 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wake up schedule, for instance
+     *         YHUBGSM3.wakeUpSchedule1.
      *
-     * @return a YWakeUpSchedule object allowing you to drive $THEFUNCTION$.
+     * @return a YWakeUpSchedule object allowing you to drive the wake up schedule.
      */
     static FindWakeUpSchedule(func) {
         let obj;
@@ -357,7 +357,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a wake up schedule for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -367,19 +367,19 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wake up schedule is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWakeUpSchedule.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWakeUpSchedule.isOnline() to test if the wake up schedule is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wake up schedule by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wake up schedule, for instance
+     *         YHUBGSM3.wakeUpSchedule1.
      *
-     * @return a YWakeUpSchedule object allowing you to drive $THEFUNCTION$.
+     * @return a YWakeUpSchedule object allowing you to drive the wake up schedule.
      */
     static FindWakeUpScheduleInContext(yctx, func) {
         let obj;
@@ -448,7 +448,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      *
      * @param bitmap : Minutes 00-59 of each hour scheduled for wake up.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -458,9 +458,14 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
         return await this.set_minutesB(((bitmap) & (0x3fffffff)));
     }
     /**
-     * Returns the next WakeUpSchedule
+     * Continues the enumeration of wake up schedules started using yFirstWakeUpSchedule().
+     * Caution: You can't make any assumption about the returned wake up schedules order.
+     * If you want to find a specific a wake up schedule, use WakeUpSchedule.findWakeUpSchedule()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YWakeUpSchedule}
+     * @return a pointer to a YWakeUpSchedule object, corresponding to
+     *         a wake up schedule currently online, or a null pointer
+     *         if there are no more wake up schedules to enumerate.
      */
     nextWakeUpSchedule() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -472,9 +477,13 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
         return YWakeUpSchedule.FindWakeUpScheduleInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first WakeUpSchedule in a YAPI context
+     * Starts the enumeration of wake up schedules currently accessible.
+     * Use the method YWakeUpSchedule.nextWakeUpSchedule() to iterate on
+     * next wake up schedules.
      *
-     * @returns {YWakeUpSchedule}
+     * @return a pointer to a YWakeUpSchedule object, corresponding to
+     *         the first wake up schedule currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWakeUpSchedule() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('WakeUpSchedule');
@@ -483,11 +492,15 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
         return YWakeUpSchedule.FindWakeUpSchedule(next_hwid);
     }
     /**
-     * Retrieves the first WakeUpSchedule in a given context
+     * Starts the enumeration of wake up schedules currently accessible.
+     * Use the method YWakeUpSchedule.nextWakeUpSchedule() to iterate on
+     * next wake up schedules.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YWakeUpSchedule}
+     * @return a pointer to a YWakeUpSchedule object, corresponding to
+     *         the first wake up schedule currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWakeUpScheduleInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('WakeUpSchedule');

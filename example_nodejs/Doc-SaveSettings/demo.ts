@@ -10,24 +10,24 @@
  *
  *********************************************************************/
 
-import { YAPI, YErrorMsg, YModule } from 'yoctolib-ts/dist/cjs/yocto_api_nodejs.js';
+import { YAPI, YErrorMsg, YModule } from 'yoctolib-cjs/yocto_api_nodejs.js';
 
 async function startDemo(args: string[]): Promise<void>
 {
     await YAPI.LogUnhandledPromiseRejections();
 
     // Setup the API to use the VirtualHub on local machine
-    let errmsg = new YErrorMsg();
+    let errmsg: YErrorMsg = new YErrorMsg();
     if (await YAPI.RegisterHub('127.0.0.1', errmsg) != YAPI.SUCCESS) {
         console.log('Cannot contact VirtualHub on 127.0.0.1: '+errmsg.msg);
         return;
     }
 
-    // Select the relay to use
-    let module = YModule.FindModule(args[0]);
+    // Select the device to use
+    let module: YModule = YModule.FindModule(args[0]);
     if(await module.isOnline()) {
         if(args.length > 1) {
-            let newname = args[1];
+            let newname: string = args[1];
             if (!await YAPI.CheckLogicalName(newname)) {
                 console.log("Invalid name (" + newname + ")");
                 process.exit(1);

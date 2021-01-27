@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_serialport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -207,7 +207,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the total number of bytes received since last reset
      *
-     * On failure, throws an exception or returns Y_RXCOUNT_INVALID.
+     * On failure, throws an exception or returns YSerialPort.RXCOUNT_INVALID.
      */
     async get_rxCount() {
         let res;
@@ -224,7 +224,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the total number of bytes transmitted since last reset
      *
-     * On failure, throws an exception or returns Y_TXCOUNT_INVALID.
+     * On failure, throws an exception or returns YSerialPort.TXCOUNT_INVALID.
      */
     async get_txCount() {
         let res;
@@ -241,7 +241,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the total number of communication errors detected since last reset
      *
-     * On failure, throws an exception or returns Y_ERRCOUNT_INVALID.
+     * On failure, throws an exception or returns YSerialPort.ERRCOUNT_INVALID.
      */
     async get_errCount() {
         let res;
@@ -258,7 +258,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the total number of messages received since last reset
      *
-     * On failure, throws an exception or returns Y_RXMSGCOUNT_INVALID.
+     * On failure, throws an exception or returns YSerialPort.RXMSGCOUNT_INVALID.
      */
     async get_rxMsgCount() {
         let res;
@@ -275,7 +275,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the total number of messages send since last reset
      *
-     * On failure, throws an exception or returns Y_TXMSGCOUNT_INVALID.
+     * On failure, throws an exception or returns YSerialPort.TXMSGCOUNT_INVALID.
      */
     async get_txMsgCount() {
         let res;
@@ -292,7 +292,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the latest message fully received (for Line, Frame and Modbus protocols)
      *
-     * On failure, throws an exception or returns Y_LASTMSG_INVALID.
+     * On failure, throws an exception or returns YSerialPort.LASTMSG_INVALID.
      */
     async get_lastMsg() {
         let res;
@@ -309,7 +309,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the name of the job file currently in use
      *
-     * On failure, throws an exception or returns Y_CURRENTJOB_INVALID.
+     * On failure, throws an exception or returns YSerialPort.CURRENTJOB_INVALID.
      */
     async get_currentJob() {
         let res;
@@ -327,7 +327,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -341,7 +341,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the job file to use when the device is powered on
      *
-     * On failure, throws an exception or returns Y_STARTUPJOB_INVALID.
+     * On failure, throws an exception or returns YSerialPort.STARTUPJOB_INVALID.
      */
     async get_startupJob() {
         let res;
@@ -360,7 +360,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string corresponding to the job to use when the device is powered on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -374,7 +374,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the maximum number of tasks in a job that the device can handle
      *
-     * On failure, throws an exception or returns Y_JOBMAXTASK_INVALID.
+     * On failure, throws an exception or returns YSerialPort.JOBMAXTASK_INVALID.
      */
     async get_jobMaxTask() {
         let res;
@@ -391,7 +391,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to maximum size allowed for job files
      *
-     * On failure, throws an exception or returns Y_JOBMAXSIZE_INVALID.
+     * On failure, throws an exception or returns YSerialPort.JOBMAXSIZE_INVALID.
      */
     async get_jobMaxSize() {
         let res;
@@ -432,7 +432,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the type of protocol used over the serial line, as a string
      *
-     * On failure, throws an exception or returns Y_PROTOCOL_INVALID.
+     * On failure, throws an exception or returns YSerialPort.PROTOCOL_INVALID.
      */
     async get_protocol() {
         let res;
@@ -462,7 +462,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string corresponding to the type of protocol used over the serial line
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -474,11 +474,12 @@ class YSerialPort extends yocto_api_js_1.YFunction {
     /**
      * Returns the voltage level used on the serial line.
      *
-     * @return a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V, Y_VOLTAGELEVEL_TTL3VR,
-     * Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232, Y_VOLTAGELEVEL_RS485 and
-     * Y_VOLTAGELEVEL_TTL1V8 corresponding to the voltage level used on the serial line
+     * @return a value among YSerialPort.VOLTAGELEVEL_OFF, YSerialPort.VOLTAGELEVEL_TTL3V,
+     * YSerialPort.VOLTAGELEVEL_TTL3VR, YSerialPort.VOLTAGELEVEL_TTL5V, YSerialPort.VOLTAGELEVEL_TTL5VR,
+     * YSerialPort.VOLTAGELEVEL_RS232, YSerialPort.VOLTAGELEVEL_RS485 and YSerialPort.VOLTAGELEVEL_TTL1V8
+     * corresponding to the voltage level used on the serial line
      *
-     * On failure, throws an exception or returns Y_VOLTAGELEVEL_INVALID.
+     * On failure, throws an exception or returns YSerialPort.VOLTAGELEVEL_INVALID.
      */
     async get_voltageLevel() {
         let res;
@@ -499,11 +500,12 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V, Y_VOLTAGELEVEL_TTL3VR,
-     * Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232, Y_VOLTAGELEVEL_RS485 and
-     * Y_VOLTAGELEVEL_TTL1V8 corresponding to the voltage type used on the serial line
+     * @param newval : a value among YSerialPort.VOLTAGELEVEL_OFF, YSerialPort.VOLTAGELEVEL_TTL3V,
+     * YSerialPort.VOLTAGELEVEL_TTL3VR, YSerialPort.VOLTAGELEVEL_TTL5V, YSerialPort.VOLTAGELEVEL_TTL5VR,
+     * YSerialPort.VOLTAGELEVEL_RS232, YSerialPort.VOLTAGELEVEL_RS485 and YSerialPort.VOLTAGELEVEL_TTL1V8
+     * corresponding to the voltage type used on the serial line
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -523,7 +525,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * @return a string corresponding to the serial port communication parameters, as a string such as
      *         "9600,8N1"
      *
-     * On failure, throws an exception or returns Y_SERIALMODE_INVALID.
+     * On failure, throws an exception or returns YSerialPort.SERIALMODE_INVALID.
      */
     async get_serialMode() {
         let res;
@@ -548,7 +550,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * @param newval : a string corresponding to the serial port communication parameters, with a string such as
      *         "9600,8N1"
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -558,7 +560,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         return await this._setAttr('serialMode', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a serial port for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -568,11 +570,11 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the serial port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSerialPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSerialPort.isOnline() to test if the serial port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a serial port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -580,10 +582,10 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the serial port, for instance
+     *         RS232MK1.serialPort.
      *
-     * @return a YSerialPort object allowing you to drive $THEFUNCTION$.
+     * @return a YSerialPort object allowing you to drive the serial port.
      */
     static FindSerialPort(func) {
         let obj;
@@ -595,7 +597,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a serial port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -605,19 +607,19 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the serial port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSerialPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSerialPort.isOnline() to test if the serial port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a serial port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the serial port, for instance
+     *         RS232MK1.serialPort.
      *
-     * @return a YSerialPort object allowing you to drive $THEFUNCTION$.
+     * @return a YSerialPort object allowing you to drive the serial port.
      */
     static FindSerialPortInContext(yctx, func) {
         let obj;
@@ -718,14 +720,14 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * If no matching message is found, the search waits for one up to the specified maximum timeout
      * (in milliseconds).
      *
-     * @param pattern {string} : a limited regular expression describing the expected message format,
+     * @param pattern : a limited regular expression describing the expected message format,
      *         or an empty string if all messages should be returned (no filtering).
      *         When using binary protocols, the format applies to the hexadecimal
      *         representation of the message.
-     * @param maxWait {number} : the maximum number of milliseconds to wait for a message if none is found
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
      *
-     * @return {string[]} an array of strings containing the messages found, if any.
+     * @return an array of strings containing the messages found, if any.
      *         Binary messages are converted to hexadecimal representation.
      *
      * On failure, throws an exception or returns an empty array.
@@ -869,7 +871,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * @param jobfile : name of the job file to save on the device filesystem
      * @param jsonDef : a string containing a JSON definition of the job
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -884,7 +886,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param jobfile : name of the job file (on the device filesystem)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -894,7 +896,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
     /**
      * Clears the serial port buffer and resets counters to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -909,7 +911,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param code : the byte to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -921,7 +923,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param text : the text string to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -957,7 +959,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param buff : the binary buffer to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -969,7 +971,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param byteList : a list of byte codes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -995,7 +997,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param hexString : a string of hexadecimal byte codes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1025,7 +1027,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param text : the text string to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1059,7 +1061,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
     /**
      * Reads one byte from the receive buffer, starting at current stream position.
      * If data at current stream position is not available anymore in the receive buffer,
-     * or if there is no data available yet, the function returns YAPI_NO_MORE_DATA.
+     * or if there is no data available yet, the function returns YAPI.NO_MORE_DATA.
      *
      * @return the next byte
      *
@@ -1199,9 +1201,9 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * If data at current stream position is not available anymore in the receive buffer, the
      * function performs a short read.
      *
-     * @param nChars {number} : the maximum number of bytes to read
+     * @param nChars : the maximum number of bytes to read
      *
-     * @return {Integer[]} a sequence of bytes with receive buffer contents
+     * @return a sequence of bytes with receive buffer contents
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1284,7 +1286,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param val : 1 to turn RTS on, 0 to turn RTS off
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1317,10 +1319,10 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * If no message is found, the search waits for one up to the specified maximum timeout
      * (in milliseconds).
      *
-     * @param maxWait {number} : the maximum number of milliseconds to wait for a message if none is found
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
      *
-     * @return {YSnoopingRecord[]} an array of YSnoopingRecord objects containing the messages found, if any.
+     * @return an array of YSnoopingRecord objects containing the messages found, if any.
      *         Binary messages are converted to hexadecimal representation.
      *
      * On failure, throws an exception or returns an empty array.
@@ -1355,7 +1357,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param text : the text string to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1372,7 +1374,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      *
      * @param hexString : a hexadecimal message string, including device address but no CRC/LRC
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1383,11 +1385,11 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * Sends a message to a specified MODBUS slave connected to the serial port, and reads the
      * reply, if any. The message is the PDU, provided as a vector of bytes.
      *
-     * @param slaveNo {number} : the address of the slave MODBUS device to query
-     * @param pduBytes {Integer[]} : the message to send (PDU), as a vector of bytes. The first byte of the
+     * @param slaveNo : the address of the slave MODBUS device to query
+     * @param pduBytes : the message to send (PDU), as a vector of bytes. The first byte of the
      *         PDU is the MODBUS function code.
      *
-     * @return {Integer[]} the received reply, as a vector of bytes.
+     * @return the received reply, as a vector of bytes.
      *
      * On failure, throws an exception or returns an empty array (or a MODBUS error reply).
      */
@@ -1450,11 +1452,11 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * Reads one or more contiguous internal bits (or coil status) from a MODBUS serial device.
      * This method uses the MODBUS function code 0x01 (Read Coils).
      *
-     * @param slaveNo {number} : the address of the slave MODBUS device to query
-     * @param pduAddr {number} : the relative address of the first bit/coil to read (zero-based)
-     * @param nBits {number} : the number of bits/coils to read
+     * @param slaveNo : the address of the slave MODBUS device to query
+     * @param pduAddr : the relative address of the first bit/coil to read (zero-based)
+     * @param nBits : the number of bits/coils to read
      *
-     * @return {Integer[]} a vector of integers, each corresponding to one bit.
+     * @return a vector of integers, each corresponding to one bit.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1505,11 +1507,11 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * Reads one or more contiguous input bits (or discrete inputs) from a MODBUS serial device.
      * This method uses the MODBUS function code 0x02 (Read Discrete Inputs).
      *
-     * @param slaveNo {number} : the address of the slave MODBUS device to query
-     * @param pduAddr {number} : the relative address of the first bit/input to read (zero-based)
-     * @param nBits {number} : the number of bits/inputs to read
+     * @param slaveNo : the address of the slave MODBUS device to query
+     * @param pduAddr : the relative address of the first bit/input to read (zero-based)
+     * @param nBits : the number of bits/inputs to read
      *
-     * @return {Integer[]} a vector of integers, each corresponding to one bit.
+     * @return a vector of integers, each corresponding to one bit.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1560,11 +1562,11 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * Reads one or more contiguous internal registers (holding registers) from a MODBUS serial device.
      * This method uses the MODBUS function code 0x03 (Read Holding Registers).
      *
-     * @param slaveNo {number} : the address of the slave MODBUS device to query
-     * @param pduAddr {number} : the relative address of the first holding register to read (zero-based)
-     * @param nWords {number} : the number of holding registers to read
+     * @param slaveNo : the address of the slave MODBUS device to query
+     * @param pduAddr : the relative address of the first holding register to read (zero-based)
+     * @param nWords : the number of holding registers to read
      *
-     * @return {Integer[]} a vector of integers, each corresponding to one 16-bit register value.
+     * @return a vector of integers, each corresponding to one 16-bit register value.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1603,11 +1605,11 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * Reads one or more contiguous input registers (read-only registers) from a MODBUS serial device.
      * This method uses the MODBUS function code 0x04 (Read Input Registers).
      *
-     * @param slaveNo {number} : the address of the slave MODBUS device to query
-     * @param pduAddr {number} : the relative address of the first input register to read (zero-based)
-     * @param nWords {number} : the number of input registers to read
+     * @param slaveNo : the address of the slave MODBUS device to query
+     * @param pduAddr : the relative address of the first input register to read (zero-based)
+     * @param nWords : the number of input registers to read
      *
-     * @return {Integer[]} a vector of integers, each corresponding to one 16-bit input value.
+     * @return a vector of integers, each corresponding to one 16-bit input value.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1822,13 +1824,13 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * then performs a contiguous read of a set of (possibly different) internal registers.
      * This method uses the MODBUS function code 0x17 (Read/Write Multiple Registers).
      *
-     * @param slaveNo {number} : the address of the slave MODBUS device to drive
-     * @param pduWriteAddr {number} : the relative address of the first internal register to set (zero-based)
-     * @param values {Integer[]} : the vector of 16 bit values to set
-     * @param pduReadAddr {number} : the relative address of the first internal register to read (zero-based)
-     * @param nReadWords {number} : the number of 16 bit values to read
+     * @param slaveNo : the address of the slave MODBUS device to drive
+     * @param pduWriteAddr : the relative address of the first internal register to set (zero-based)
+     * @param values : the vector of 16 bit values to set
+     * @param pduReadAddr : the relative address of the first internal register to read (zero-based)
+     * @param nReadWords : the number of 16 bit values to read
      *
-     * @return {Integer[]} a vector of integers, each corresponding to one 16-bit register value read.
+     * @return a vector of integers, each corresponding to one 16-bit register value read.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1880,9 +1882,14 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Returns the next SerialPort
+     * Continues the enumeration of serial ports started using yFirstSerialPort().
+     * Caution: You can't make any assumption about the returned serial ports order.
+     * If you want to find a specific a serial port, use SerialPort.findSerialPort()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YSerialPort}
+     * @return a pointer to a YSerialPort object, corresponding to
+     *         a serial port currently online, or a null pointer
+     *         if there are no more serial ports to enumerate.
      */
     nextSerialPort() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -1894,9 +1901,13 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         return YSerialPort.FindSerialPortInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first SerialPort in a YAPI context
+     * Starts the enumeration of serial ports currently accessible.
+     * Use the method YSerialPort.nextSerialPort() to iterate on
+     * next serial ports.
      *
-     * @returns {YSerialPort}
+     * @return a pointer to a YSerialPort object, corresponding to
+     *         the first serial port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSerialPort() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('SerialPort');
@@ -1905,11 +1916,15 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         return YSerialPort.FindSerialPort(next_hwid);
     }
     /**
-     * Retrieves the first SerialPort in a given context
+     * Starts the enumeration of serial ports currently accessible.
+     * Use the method YSerialPort.nextSerialPort() to iterate on
+     * next serial ports.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YSerialPort}
+     * @return a pointer to a YSerialPort object, corresponding to
+     *         the first serial port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSerialPortInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('SerialPort');

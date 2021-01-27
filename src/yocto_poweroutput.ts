@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_poweroutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YPowerOutput definitions)
-export const enum Y_Voltage {
+export const enum YPowerOutput_Voltage {
     OFF = 0,
     OUT3V3 = 1,
     OUT5V = 2,
@@ -65,24 +65,24 @@ export class YPowerOutput extends YFunction
 {
     //--- (YPowerOutput attributes declaration)
     _className: string;
-    _voltage: Y_Voltage = YPowerOutput.VOLTAGE_INVALID;
+    _voltage: YPowerOutput_Voltage = YPowerOutput.VOLTAGE_INVALID;
     _valueCallbackPowerOutput: YPowerOutputValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly VOLTAGE_OFF: Y_Voltage = Y_Voltage.OFF;
-    public readonly VOLTAGE_OUT3V3: Y_Voltage = Y_Voltage.OUT3V3;
-    public readonly VOLTAGE_OUT5V: Y_Voltage = Y_Voltage.OUT5V;
-    public readonly VOLTAGE_OUT4V7: Y_Voltage = Y_Voltage.OUT4V7;
-    public readonly VOLTAGE_OUT1V8: Y_Voltage = Y_Voltage.OUT1V8;
-    public readonly VOLTAGE_INVALID: Y_Voltage = Y_Voltage.INVALID;
+    public readonly VOLTAGE_OFF: YPowerOutput_Voltage = YPowerOutput_Voltage.OFF;
+    public readonly VOLTAGE_OUT3V3: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT3V3;
+    public readonly VOLTAGE_OUT5V: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT5V;
+    public readonly VOLTAGE_OUT4V7: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT4V7;
+    public readonly VOLTAGE_OUT1V8: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT1V8;
+    public readonly VOLTAGE_INVALID: YPowerOutput_Voltage = YPowerOutput_Voltage.INVALID;
 
     // API symbols as static members
-    public static readonly VOLTAGE_OFF: Y_Voltage = Y_Voltage.OFF;
-    public static readonly VOLTAGE_OUT3V3: Y_Voltage = Y_Voltage.OUT3V3;
-    public static readonly VOLTAGE_OUT5V: Y_Voltage = Y_Voltage.OUT5V;
-    public static readonly VOLTAGE_OUT4V7: Y_Voltage = Y_Voltage.OUT4V7;
-    public static readonly VOLTAGE_OUT1V8: Y_Voltage = Y_Voltage.OUT1V8;
-    public static readonly VOLTAGE_INVALID: Y_Voltage = Y_Voltage.INVALID;
+    public static readonly VOLTAGE_OFF: YPowerOutput_Voltage = YPowerOutput_Voltage.OFF;
+    public static readonly VOLTAGE_OUT3V3: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT3V3;
+    public static readonly VOLTAGE_OUT5V: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT5V;
+    public static readonly VOLTAGE_OUT4V7: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT4V7;
+    public static readonly VOLTAGE_OUT1V8: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT1V8;
+    public static readonly VOLTAGE_INVALID: YPowerOutput_Voltage = YPowerOutput_Voltage.INVALID;
     //--- (end of YPowerOutput attributes declaration)
 
 //--- (YPowerOutput return codes)
@@ -102,7 +102,7 @@ export class YPowerOutput extends YFunction
     {
         switch(name) {
         case 'voltage':
-            this._voltage = <Y_Voltage> <number> val;
+            this._voltage = <YPowerOutput_Voltage> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -111,12 +111,13 @@ export class YPowerOutput extends YFunction
     /**
      * Returns the voltage on the power output featured by the module.
      *
-     * @return a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3, Y_VOLTAGE_OUT5V, Y_VOLTAGE_OUT4V7 and
-     * Y_VOLTAGE_OUT1V8 corresponding to the voltage on the power output featured by the module
+     * @return a value among YPowerOutput.VOLTAGE_OFF, YPowerOutput.VOLTAGE_OUT3V3,
+     * YPowerOutput.VOLTAGE_OUT5V, YPowerOutput.VOLTAGE_OUT4V7 and YPowerOutput.VOLTAGE_OUT1V8
+     * corresponding to the voltage on the power output featured by the module
      *
-     * On failure, throws an exception or returns Y_VOLTAGE_INVALID.
+     * On failure, throws an exception or returns YPowerOutput.VOLTAGE_INVALID.
      */
-    async get_voltage(): Promise<Y_Voltage>
+    async get_voltage(): Promise<YPowerOutput_Voltage>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -133,15 +134,16 @@ export class YPowerOutput extends YFunction
      * module. Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_VOLTAGE_OFF, Y_VOLTAGE_OUT3V3, Y_VOLTAGE_OUT5V, Y_VOLTAGE_OUT4V7
-     * and Y_VOLTAGE_OUT1V8 corresponding to the voltage on the power output provided by the
+     * @param newval : a value among YPowerOutput.VOLTAGE_OFF, YPowerOutput.VOLTAGE_OUT3V3,
+     * YPowerOutput.VOLTAGE_OUT5V, YPowerOutput.VOLTAGE_OUT4V7 and YPowerOutput.VOLTAGE_OUT1V8
+     * corresponding to the voltage on the power output provided by the
      *         module
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_voltage(newval: Y_Voltage): Promise<number>
+    async set_voltage(newval: YPowerOutput_Voltage): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -149,7 +151,7 @@ export class YPowerOutput extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a power output for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -159,11 +161,11 @@ export class YPowerOutput extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the power output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPowerOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPowerOutput.isOnline() to test if the power output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a power output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -171,10 +173,10 @@ export class YPowerOutput extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the power output, for instance
+     *         YI2CMK01.powerOutput.
      *
-     * @return a YPowerOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPowerOutput object allowing you to drive the power output.
      */
     static FindPowerOutput(func: string): YPowerOutput
     {
@@ -188,7 +190,7 @@ export class YPowerOutput extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a power output for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -198,19 +200,19 @@ export class YPowerOutput extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the power output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPowerOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPowerOutput.isOnline() to test if the power output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a power output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the power output, for instance
+     *         YI2CMK01.powerOutput.
      *
-     * @return a YPowerOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YPowerOutput object allowing you to drive the power output.
      */
     static FindPowerOutputInContext(yctx: YAPIContext, func: string): YPowerOutput
     {
@@ -268,9 +270,14 @@ export class YPowerOutput extends YFunction
     }
 
     /**
-     * Returns the next PowerOutput
+     * Continues the enumeration of power output started using yFirstPowerOutput().
+     * Caution: You can't make any assumption about the returned power output order.
+     * If you want to find a specific a power output, use PowerOutput.findPowerOutput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPowerOutput}
+     * @return a pointer to a YPowerOutput object, corresponding to
+     *         a power output currently online, or a null pointer
+     *         if there are no more power output to enumerate.
      */
     nextPowerOutput(): YPowerOutput | null
     {
@@ -282,9 +289,13 @@ export class YPowerOutput extends YFunction
     }
 
     /**
-     * Retrieves the first PowerOutput in a YAPI context
+     * Starts the enumeration of power output currently accessible.
+     * Use the method YPowerOutput.nextPowerOutput() to iterate on
+     * next power output.
      *
-     * @returns {YPowerOutput}
+     * @return a pointer to a YPowerOutput object, corresponding to
+     *         the first power output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerOutput(): YPowerOutput | null
     {
@@ -294,11 +305,15 @@ export class YPowerOutput extends YFunction
     }
 
     /**
-     * Retrieves the first PowerOutput in a given context
+     * Starts the enumeration of power output currently accessible.
+     * Use the method YPowerOutput.nextPowerOutput() to iterate on
+     * next power output.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPowerOutput}
+     * @return a pointer to a YPowerOutput object, corresponding to
+     *         the first power output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPowerOutputInContext(yctx: YAPIContext): YPowerOutput | null
     {

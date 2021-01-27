@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_multisenscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YMultiSensController definitions)
-export const enum Y_MaintenanceMode {
+export const enum YMultiSensController_MaintenanceMode {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -64,24 +64,24 @@ export class YMultiSensController extends YFunction
     _className: string;
     _nSensors: number = YMultiSensController.NSENSORS_INVALID;
     _maxSensors: number = YMultiSensController.MAXSENSORS_INVALID;
-    _maintenanceMode: Y_MaintenanceMode = YMultiSensController.MAINTENANCEMODE_INVALID;
+    _maintenanceMode: YMultiSensController_MaintenanceMode = YMultiSensController.MAINTENANCEMODE_INVALID;
     _command: string = YMultiSensController.COMMAND_INVALID;
     _valueCallbackMultiSensController: YMultiSensControllerValueCallback | null = null;
 
     // API symbols as object properties
     public readonly NSENSORS_INVALID: number = YAPI.INVALID_UINT;
     public readonly MAXSENSORS_INVALID: number = YAPI.INVALID_UINT;
-    public readonly MAINTENANCEMODE_FALSE: Y_MaintenanceMode = Y_MaintenanceMode.FALSE;
-    public readonly MAINTENANCEMODE_TRUE: Y_MaintenanceMode = Y_MaintenanceMode.TRUE;
-    public readonly MAINTENANCEMODE_INVALID: Y_MaintenanceMode = Y_MaintenanceMode.INVALID;
+    public readonly MAINTENANCEMODE_FALSE: YMultiSensController_MaintenanceMode = YMultiSensController_MaintenanceMode.FALSE;
+    public readonly MAINTENANCEMODE_TRUE: YMultiSensController_MaintenanceMode = YMultiSensController_MaintenanceMode.TRUE;
+    public readonly MAINTENANCEMODE_INVALID: YMultiSensController_MaintenanceMode = YMultiSensController_MaintenanceMode.INVALID;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
     public static readonly NSENSORS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly MAXSENSORS_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly MAINTENANCEMODE_FALSE: Y_MaintenanceMode = Y_MaintenanceMode.FALSE;
-    public static readonly MAINTENANCEMODE_TRUE: Y_MaintenanceMode = Y_MaintenanceMode.TRUE;
-    public static readonly MAINTENANCEMODE_INVALID: Y_MaintenanceMode = Y_MaintenanceMode.INVALID;
+    public static readonly MAINTENANCEMODE_FALSE: YMultiSensController_MaintenanceMode = YMultiSensController_MaintenanceMode.FALSE;
+    public static readonly MAINTENANCEMODE_TRUE: YMultiSensController_MaintenanceMode = YMultiSensController_MaintenanceMode.TRUE;
+    public static readonly MAINTENANCEMODE_INVALID: YMultiSensController_MaintenanceMode = YMultiSensController_MaintenanceMode.INVALID;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YMultiSensController attributes declaration)
 
@@ -108,7 +108,7 @@ export class YMultiSensController extends YFunction
             this._maxSensors = <number> <number> val;
             return 1;
         case 'maintenanceMode':
-            this._maintenanceMode = <Y_MaintenanceMode> <number> val;
+            this._maintenanceMode = <YMultiSensController_MaintenanceMode> <number> val;
             return 1;
         case 'command':
             this._command = <string> <string> val;
@@ -122,7 +122,7 @@ export class YMultiSensController extends YFunction
      *
      * @return an integer corresponding to the number of sensors to poll
      *
-     * On failure, throws an exception or returns Y_NSENSORS_INVALID.
+     * On failure, throws an exception or returns YMultiSensController.NSENSORS_INVALID.
      */
     async get_nSensors(): Promise<number>
     {
@@ -145,7 +145,7 @@ export class YMultiSensController extends YFunction
      *
      * @param newval : an integer corresponding to the number of sensors to poll
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -161,7 +161,7 @@ export class YMultiSensController extends YFunction
      *
      * @return an integer corresponding to the maximum configurable sensor count allowed on this device
      *
-     * On failure, throws an exception or returns Y_MAXSENSORS_INVALID.
+     * On failure, throws an exception or returns YMultiSensController.MAXSENSORS_INVALID.
      */
     async get_maxSensors(): Promise<number>
     {
@@ -178,12 +178,12 @@ export class YMultiSensController extends YFunction
     /**
      * Returns true when the device is in maintenance mode.
      *
-     * @return either Y_MAINTENANCEMODE_FALSE or Y_MAINTENANCEMODE_TRUE, according to true when the device
-     * is in maintenance mode
+     * @return either YMultiSensController.MAINTENANCEMODE_FALSE or
+     * YMultiSensController.MAINTENANCEMODE_TRUE, according to true when the device is in maintenance mode
      *
-     * On failure, throws an exception or returns Y_MAINTENANCEMODE_INVALID.
+     * On failure, throws an exception or returns YMultiSensController.MAINTENANCEMODE_INVALID.
      */
-    async get_maintenanceMode(): Promise<Y_MaintenanceMode>
+    async get_maintenanceMode(): Promise<YMultiSensController_MaintenanceMode>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -200,14 +200,15 @@ export class YMultiSensController extends YFunction
      * This way, the device does not automatically restart when it cannot
      * communicate with one of the sensors.
      *
-     * @param newval : either Y_MAINTENANCEMODE_FALSE or Y_MAINTENANCEMODE_TRUE, according to the device
-     * mode to enable maintenance and to stop sensor polling
+     * @param newval : either YMultiSensController.MAINTENANCEMODE_FALSE or
+     * YMultiSensController.MAINTENANCEMODE_TRUE, according to the device mode to enable maintenance and
+     * to stop sensor polling
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_maintenanceMode(newval: Y_MaintenanceMode): Promise<number>
+    async set_maintenanceMode(newval: YMultiSensController_MaintenanceMode): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -234,7 +235,7 @@ export class YMultiSensController extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a multi-sensor controller for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -244,11 +245,11 @@ export class YMultiSensController extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the multi-sensor controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMultiSensController.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMultiSensController.isOnline() to test if the multi-sensor controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a multi-sensor controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -256,10 +257,10 @@ export class YMultiSensController extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the multi-sensor controller, for instance
+     *         YTEMPIR1.multiSensController.
      *
-     * @return a YMultiSensController object allowing you to drive $THEFUNCTION$.
+     * @return a YMultiSensController object allowing you to drive the multi-sensor controller.
      */
     static FindMultiSensController(func: string): YMultiSensController
     {
@@ -273,7 +274,7 @@ export class YMultiSensController extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a multi-sensor controller for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -283,19 +284,19 @@ export class YMultiSensController extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the multi-sensor controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMultiSensController.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMultiSensController.isOnline() to test if the multi-sensor controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a multi-sensor controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the multi-sensor controller, for instance
+     *         YTEMPIR1.multiSensController.
      *
-     * @return a YMultiSensController object allowing you to drive $THEFUNCTION$.
+     * @return a YMultiSensController object allowing you to drive the multi-sensor controller.
      */
     static FindMultiSensControllerInContext(yctx: YAPIContext, func: string): YMultiSensController
     {
@@ -363,7 +364,7 @@ export class YMultiSensController extends YFunction
      *
      * @param addr : new address of the connected sensor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async setupAddress(addr: number): Promise<number>
@@ -374,9 +375,14 @@ export class YMultiSensController extends YFunction
     }
 
     /**
-     * Returns the next MultiSensController
+     * Continues the enumeration of multi-sensor controllers started using yFirstMultiSensController().
+     * Caution: You can't make any assumption about the returned multi-sensor controllers order.
+     * If you want to find a specific a multi-sensor controller, use MultiSensController.findMultiSensController()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMultiSensController}
+     * @return a pointer to a YMultiSensController object, corresponding to
+     *         a multi-sensor controller currently online, or a null pointer
+     *         if there are no more multi-sensor controllers to enumerate.
      */
     nextMultiSensController(): YMultiSensController | null
     {
@@ -388,9 +394,13 @@ export class YMultiSensController extends YFunction
     }
 
     /**
-     * Retrieves the first MultiSensController in a YAPI context
+     * Starts the enumeration of multi-sensor controllers currently accessible.
+     * Use the method YMultiSensController.nextMultiSensController() to iterate on
+     * next multi-sensor controllers.
      *
-     * @returns {YMultiSensController}
+     * @return a pointer to a YMultiSensController object, corresponding to
+     *         the first multi-sensor controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMultiSensController(): YMultiSensController | null
     {
@@ -400,11 +410,15 @@ export class YMultiSensController extends YFunction
     }
 
     /**
-     * Retrieves the first MultiSensController in a given context
+     * Starts the enumeration of multi-sensor controllers currently accessible.
+     * Use the method YMultiSensController.nextMultiSensController() to iterate on
+     * next multi-sensor controllers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMultiSensController}
+     * @return a pointer to a YMultiSensController object, corresponding to
+     *         the first multi-sensor controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMultiSensControllerInContext(yctx: YAPIContext): YMultiSensController | null
     {

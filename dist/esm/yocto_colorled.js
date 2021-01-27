@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_colorled.ts 43533 2021-01-25 16:33:41Z mvuilleu $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -125,7 +125,7 @@ export class YColorLed extends YFunction {
      *
      * @return an integer corresponding to the current RGB color of the LED
      *
-     * On failure, throws an exception or returns Y_RGBCOLOR_INVALID.
+     * On failure, throws an exception or returns YColorLed.RGBCOLOR_INVALID.
      */
     async get_rgbColor() {
         let res;
@@ -142,7 +142,7 @@ export class YColorLed extends YFunction {
      *
      * @param newval : an integer corresponding to the current color of the LED, using an RGB color
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -156,7 +156,7 @@ export class YColorLed extends YFunction {
      *
      * @return an integer corresponding to the current HSL color of the LED
      *
-     * On failure, throws an exception or returns Y_HSLCOLOR_INVALID.
+     * On failure, throws an exception or returns YColorLed.HSLCOLOR_INVALID.
      */
     async get_hslColor() {
         let res;
@@ -173,7 +173,7 @@ export class YColorLed extends YFunction {
      *
      * @param newval : an integer corresponding to the current color of the LED, using a color HSL
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -203,7 +203,7 @@ export class YColorLed extends YFunction {
      * @param rgb_target  : desired RGB color at the end of the transition
      * @param ms_duration : duration of the transition, in millisecond
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -233,7 +233,7 @@ export class YColorLed extends YFunction {
      * @param hsl_target  : desired HSL color at the end of the transition
      * @param ms_duration : duration of the transition, in millisecond
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -247,7 +247,7 @@ export class YColorLed extends YFunction {
      *
      * @return an integer corresponding to the configured color to be displayed when the module is turned on
      *
-     * On failure, throws an exception or returns Y_RGBCOLORATPOWERON_INVALID.
+     * On failure, throws an exception or returns YColorLed.RGBCOLORATPOWERON_INVALID.
      */
     async get_rgbColorAtPowerOn() {
         let res;
@@ -267,7 +267,7 @@ export class YColorLed extends YFunction {
      * @param newval : an integer corresponding to the color that the LED displays by default when the
      * module is turned on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -281,7 +281,7 @@ export class YColorLed extends YFunction {
      *
      * @return an integer corresponding to the current length of the blinking sequence
      *
-     * On failure, throws an exception or returns Y_BLINKSEQSIZE_INVALID.
+     * On failure, throws an exception or returns YColorLed.BLINKSEQSIZE_INVALID.
      */
     async get_blinkSeqSize() {
         let res;
@@ -298,7 +298,7 @@ export class YColorLed extends YFunction {
      *
      * @return an integer corresponding to the maximum length of the blinking sequence
      *
-     * On failure, throws an exception or returns Y_BLINKSEQMAXSIZE_INVALID.
+     * On failure, throws an exception or returns YColorLed.BLINKSEQMAXSIZE_INVALID.
      */
     async get_blinkSeqMaxSize() {
         let res;
@@ -318,7 +318,7 @@ export class YColorLed extends YFunction {
      *
      * @return an integer
      *
-     * On failure, throws an exception or returns Y_BLINKSEQSIGNATURE_INVALID.
+     * On failure, throws an exception or returns YColorLed.BLINKSEQSIGNATURE_INVALID.
      */
     async get_blinkSeqSignature() {
         let res;
@@ -346,7 +346,7 @@ export class YColorLed extends YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an RGB LED for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -356,11 +356,11 @@ export class YColorLed extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RGB LED is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YColorLed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YColorLed.isOnline() to test if the RGB LED is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an RGB LED by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -368,10 +368,10 @@ export class YColorLed extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RGB LED, for instance
+     *         YRGBLED2.colorLed1.
      *
-     * @return a YColorLed object allowing you to drive $THEFUNCTION$.
+     * @return a YColorLed object allowing you to drive the RGB LED.
      */
     static FindColorLed(func) {
         let obj;
@@ -383,7 +383,7 @@ export class YColorLed extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an RGB LED for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -393,19 +393,19 @@ export class YColorLed extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RGB LED is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YColorLed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YColorLed.isOnline() to test if the RGB LED is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an RGB LED by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RGB LED, for instance
+     *         YRGBLED2.colorLed1.
      *
-     * @return a YColorLed object allowing you to drive $THEFUNCTION$.
+     * @return a YColorLed object allowing you to drive the RGB LED.
      */
     static FindColorLedInContext(yctx, func) {
         let obj;
@@ -469,7 +469,7 @@ export class YColorLed extends YFunction {
      * @param HSLcolor : desired HSL color when the transition is completed
      * @param msDelay : duration of the color transition, in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async addHslMoveToBlinkSeq(HSLcolor, msDelay) {
@@ -482,7 +482,7 @@ export class YColorLed extends YFunction {
      * @param RGBcolor : desired RGB color when the transition is completed
      * @param msDelay : duration of the color transition, in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async addRgbMoveToBlinkSeq(RGBcolor, msDelay) {
@@ -493,7 +493,7 @@ export class YColorLed extends YFunction {
      * run in a loop until it is stopped by stopBlinkSeq or an explicit
      * change.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async startBlinkSeq() {
@@ -502,7 +502,7 @@ export class YColorLed extends YFunction {
     /**
      * Stops the preprogrammed blinking sequence.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async stopBlinkSeq() {
@@ -511,16 +511,21 @@ export class YColorLed extends YFunction {
     /**
      * Resets the preprogrammed blinking sequence.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async resetBlinkSeq() {
         return await this.sendCommand('Z');
     }
     /**
-     * Returns the next ColorLed
+     * Continues the enumeration of RGB LEDs started using yFirstColorLed().
+     * Caution: You can't make any assumption about the returned RGB LEDs order.
+     * If you want to find a specific an RGB LED, use ColorLed.findColorLed()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YColorLed}
+     * @return a pointer to a YColorLed object, corresponding to
+     *         an RGB LED currently online, or a null pointer
+     *         if there are no more RGB LEDs to enumerate.
      */
     nextColorLed() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -532,9 +537,13 @@ export class YColorLed extends YFunction {
         return YColorLed.FindColorLedInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first ColorLed in a YAPI context
+     * Starts the enumeration of RGB LEDs currently accessible.
+     * Use the method YColorLed.nextColorLed() to iterate on
+     * next RGB LEDs.
      *
-     * @returns {YColorLed}
+     * @return a pointer to a YColorLed object, corresponding to
+     *         the first RGB LED currently online, or a null pointer
+     *         if there are none.
      */
     static FirstColorLed() {
         let next_hwid = YAPI.imm_getFirstHardwareId('ColorLed');
@@ -543,11 +552,15 @@ export class YColorLed extends YFunction {
         return YColorLed.FindColorLed(next_hwid);
     }
     /**
-     * Retrieves the first ColorLed in a given context
+     * Starts the enumeration of RGB LEDs currently accessible.
+     * Use the method YColorLed.nextColorLed() to iterate on
+     * next RGB LEDs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YColorLed}
+     * @return a pointer to a YColorLed object, corresponding to
+     *         the first RGB LED currently online, or a null pointer
+     *         if there are none.
      */
     static FirstColorLedInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('ColorLed');

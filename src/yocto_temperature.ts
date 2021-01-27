@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_temperature.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YTemperature definitions)
-export const enum Y_SensorType {
+export const enum YTemperature_SensorType {
     DIGITAL = 0,
     TYPE_K = 1,
     TYPE_E = 2,
@@ -82,7 +82,7 @@ export class YTemperature extends YSensor
 {
     //--- (YTemperature attributes declaration)
     _className: string;
-    _sensorType: Y_SensorType = YTemperature.SENSORTYPE_INVALID;
+    _sensorType: YTemperature_SensorType = YTemperature.SENSORTYPE_INVALID;
     _signalValue: number = YTemperature.SIGNALVALUE_INVALID;
     _signalUnit: string = YTemperature.SIGNALUNIT_INVALID;
     _command: string = YTemperature.COMMAND_INVALID;
@@ -90,49 +90,49 @@ export class YTemperature extends YSensor
     _timedReportCallbackTemperature: YTemperatureTimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly SENSORTYPE_DIGITAL: Y_SensorType = Y_SensorType.DIGITAL;
-    public readonly SENSORTYPE_TYPE_K: Y_SensorType = Y_SensorType.TYPE_K;
-    public readonly SENSORTYPE_TYPE_E: Y_SensorType = Y_SensorType.TYPE_E;
-    public readonly SENSORTYPE_TYPE_J: Y_SensorType = Y_SensorType.TYPE_J;
-    public readonly SENSORTYPE_TYPE_N: Y_SensorType = Y_SensorType.TYPE_N;
-    public readonly SENSORTYPE_TYPE_R: Y_SensorType = Y_SensorType.TYPE_R;
-    public readonly SENSORTYPE_TYPE_S: Y_SensorType = Y_SensorType.TYPE_S;
-    public readonly SENSORTYPE_TYPE_T: Y_SensorType = Y_SensorType.TYPE_T;
-    public readonly SENSORTYPE_PT100_4WIRES: Y_SensorType = Y_SensorType.PT100_4WIRES;
-    public readonly SENSORTYPE_PT100_3WIRES: Y_SensorType = Y_SensorType.PT100_3WIRES;
-    public readonly SENSORTYPE_PT100_2WIRES: Y_SensorType = Y_SensorType.PT100_2WIRES;
-    public readonly SENSORTYPE_RES_OHM: Y_SensorType = Y_SensorType.RES_OHM;
-    public readonly SENSORTYPE_RES_NTC: Y_SensorType = Y_SensorType.RES_NTC;
-    public readonly SENSORTYPE_RES_LINEAR: Y_SensorType = Y_SensorType.RES_LINEAR;
-    public readonly SENSORTYPE_RES_INTERNAL: Y_SensorType = Y_SensorType.RES_INTERNAL;
-    public readonly SENSORTYPE_IR: Y_SensorType = Y_SensorType.IR;
-    public readonly SENSORTYPE_RES_PT1000: Y_SensorType = Y_SensorType.RES_PT1000;
-    public readonly SENSORTYPE_CHANNEL_OFF: Y_SensorType = Y_SensorType.CHANNEL_OFF;
-    public readonly SENSORTYPE_INVALID: Y_SensorType = Y_SensorType.INVALID;
+    public readonly SENSORTYPE_DIGITAL: YTemperature_SensorType = YTemperature_SensorType.DIGITAL;
+    public readonly SENSORTYPE_TYPE_K: YTemperature_SensorType = YTemperature_SensorType.TYPE_K;
+    public readonly SENSORTYPE_TYPE_E: YTemperature_SensorType = YTemperature_SensorType.TYPE_E;
+    public readonly SENSORTYPE_TYPE_J: YTemperature_SensorType = YTemperature_SensorType.TYPE_J;
+    public readonly SENSORTYPE_TYPE_N: YTemperature_SensorType = YTemperature_SensorType.TYPE_N;
+    public readonly SENSORTYPE_TYPE_R: YTemperature_SensorType = YTemperature_SensorType.TYPE_R;
+    public readonly SENSORTYPE_TYPE_S: YTemperature_SensorType = YTemperature_SensorType.TYPE_S;
+    public readonly SENSORTYPE_TYPE_T: YTemperature_SensorType = YTemperature_SensorType.TYPE_T;
+    public readonly SENSORTYPE_PT100_4WIRES: YTemperature_SensorType = YTemperature_SensorType.PT100_4WIRES;
+    public readonly SENSORTYPE_PT100_3WIRES: YTemperature_SensorType = YTemperature_SensorType.PT100_3WIRES;
+    public readonly SENSORTYPE_PT100_2WIRES: YTemperature_SensorType = YTemperature_SensorType.PT100_2WIRES;
+    public readonly SENSORTYPE_RES_OHM: YTemperature_SensorType = YTemperature_SensorType.RES_OHM;
+    public readonly SENSORTYPE_RES_NTC: YTemperature_SensorType = YTemperature_SensorType.RES_NTC;
+    public readonly SENSORTYPE_RES_LINEAR: YTemperature_SensorType = YTemperature_SensorType.RES_LINEAR;
+    public readonly SENSORTYPE_RES_INTERNAL: YTemperature_SensorType = YTemperature_SensorType.RES_INTERNAL;
+    public readonly SENSORTYPE_IR: YTemperature_SensorType = YTemperature_SensorType.IR;
+    public readonly SENSORTYPE_RES_PT1000: YTemperature_SensorType = YTemperature_SensorType.RES_PT1000;
+    public readonly SENSORTYPE_CHANNEL_OFF: YTemperature_SensorType = YTemperature_SensorType.CHANNEL_OFF;
+    public readonly SENSORTYPE_INVALID: YTemperature_SensorType = YTemperature_SensorType.INVALID;
     public readonly SIGNALVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly SIGNALUNIT_INVALID: string = YAPI.INVALID_STRING;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly SENSORTYPE_DIGITAL: Y_SensorType = Y_SensorType.DIGITAL;
-    public static readonly SENSORTYPE_TYPE_K: Y_SensorType = Y_SensorType.TYPE_K;
-    public static readonly SENSORTYPE_TYPE_E: Y_SensorType = Y_SensorType.TYPE_E;
-    public static readonly SENSORTYPE_TYPE_J: Y_SensorType = Y_SensorType.TYPE_J;
-    public static readonly SENSORTYPE_TYPE_N: Y_SensorType = Y_SensorType.TYPE_N;
-    public static readonly SENSORTYPE_TYPE_R: Y_SensorType = Y_SensorType.TYPE_R;
-    public static readonly SENSORTYPE_TYPE_S: Y_SensorType = Y_SensorType.TYPE_S;
-    public static readonly SENSORTYPE_TYPE_T: Y_SensorType = Y_SensorType.TYPE_T;
-    public static readonly SENSORTYPE_PT100_4WIRES: Y_SensorType = Y_SensorType.PT100_4WIRES;
-    public static readonly SENSORTYPE_PT100_3WIRES: Y_SensorType = Y_SensorType.PT100_3WIRES;
-    public static readonly SENSORTYPE_PT100_2WIRES: Y_SensorType = Y_SensorType.PT100_2WIRES;
-    public static readonly SENSORTYPE_RES_OHM: Y_SensorType = Y_SensorType.RES_OHM;
-    public static readonly SENSORTYPE_RES_NTC: Y_SensorType = Y_SensorType.RES_NTC;
-    public static readonly SENSORTYPE_RES_LINEAR: Y_SensorType = Y_SensorType.RES_LINEAR;
-    public static readonly SENSORTYPE_RES_INTERNAL: Y_SensorType = Y_SensorType.RES_INTERNAL;
-    public static readonly SENSORTYPE_IR: Y_SensorType = Y_SensorType.IR;
-    public static readonly SENSORTYPE_RES_PT1000: Y_SensorType = Y_SensorType.RES_PT1000;
-    public static readonly SENSORTYPE_CHANNEL_OFF: Y_SensorType = Y_SensorType.CHANNEL_OFF;
-    public static readonly SENSORTYPE_INVALID: Y_SensorType = Y_SensorType.INVALID;
+    public static readonly SENSORTYPE_DIGITAL: YTemperature_SensorType = YTemperature_SensorType.DIGITAL;
+    public static readonly SENSORTYPE_TYPE_K: YTemperature_SensorType = YTemperature_SensorType.TYPE_K;
+    public static readonly SENSORTYPE_TYPE_E: YTemperature_SensorType = YTemperature_SensorType.TYPE_E;
+    public static readonly SENSORTYPE_TYPE_J: YTemperature_SensorType = YTemperature_SensorType.TYPE_J;
+    public static readonly SENSORTYPE_TYPE_N: YTemperature_SensorType = YTemperature_SensorType.TYPE_N;
+    public static readonly SENSORTYPE_TYPE_R: YTemperature_SensorType = YTemperature_SensorType.TYPE_R;
+    public static readonly SENSORTYPE_TYPE_S: YTemperature_SensorType = YTemperature_SensorType.TYPE_S;
+    public static readonly SENSORTYPE_TYPE_T: YTemperature_SensorType = YTemperature_SensorType.TYPE_T;
+    public static readonly SENSORTYPE_PT100_4WIRES: YTemperature_SensorType = YTemperature_SensorType.PT100_4WIRES;
+    public static readonly SENSORTYPE_PT100_3WIRES: YTemperature_SensorType = YTemperature_SensorType.PT100_3WIRES;
+    public static readonly SENSORTYPE_PT100_2WIRES: YTemperature_SensorType = YTemperature_SensorType.PT100_2WIRES;
+    public static readonly SENSORTYPE_RES_OHM: YTemperature_SensorType = YTemperature_SensorType.RES_OHM;
+    public static readonly SENSORTYPE_RES_NTC: YTemperature_SensorType = YTemperature_SensorType.RES_NTC;
+    public static readonly SENSORTYPE_RES_LINEAR: YTemperature_SensorType = YTemperature_SensorType.RES_LINEAR;
+    public static readonly SENSORTYPE_RES_INTERNAL: YTemperature_SensorType = YTemperature_SensorType.RES_INTERNAL;
+    public static readonly SENSORTYPE_IR: YTemperature_SensorType = YTemperature_SensorType.IR;
+    public static readonly SENSORTYPE_RES_PT1000: YTemperature_SensorType = YTemperature_SensorType.RES_PT1000;
+    public static readonly SENSORTYPE_CHANNEL_OFF: YTemperature_SensorType = YTemperature_SensorType.CHANNEL_OFF;
+    public static readonly SENSORTYPE_INVALID: YTemperature_SensorType = YTemperature_SensorType.INVALID;
     public static readonly SIGNALVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly SIGNALUNIT_INVALID: string = YAPI.INVALID_STRING;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
@@ -155,7 +155,7 @@ export class YTemperature extends YSensor
     {
         switch(name) {
         case 'sensorType':
-            this._sensorType = <Y_SensorType> <number> val;
+            this._sensorType = <YTemperature_SensorType> <number> val;
             return 1;
         case 'signalValue':
             this._signalValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -183,7 +183,7 @@ export class YTemperature extends YSensor
      *
      * @param newval : a string corresponding to the measuring unit for the measured temperature
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -197,16 +197,19 @@ export class YTemperature extends YSensor
     /**
      * Returns the temperature sensor type.
      *
-     * @return a value among Y_SENSORTYPE_DIGITAL, Y_SENSORTYPE_TYPE_K, Y_SENSORTYPE_TYPE_E,
-     * Y_SENSORTYPE_TYPE_J, Y_SENSORTYPE_TYPE_N, Y_SENSORTYPE_TYPE_R, Y_SENSORTYPE_TYPE_S,
-     * Y_SENSORTYPE_TYPE_T, Y_SENSORTYPE_PT100_4WIRES, Y_SENSORTYPE_PT100_3WIRES,
-     * Y_SENSORTYPE_PT100_2WIRES, Y_SENSORTYPE_RES_OHM, Y_SENSORTYPE_RES_NTC, Y_SENSORTYPE_RES_LINEAR,
-     * Y_SENSORTYPE_RES_INTERNAL, Y_SENSORTYPE_IR, Y_SENSORTYPE_RES_PT1000 and Y_SENSORTYPE_CHANNEL_OFF
-     * corresponding to the temperature sensor type
+     * @return a value among YTemperature.SENSORTYPE_DIGITAL, YTemperature.SENSORTYPE_TYPE_K,
+     * YTemperature.SENSORTYPE_TYPE_E, YTemperature.SENSORTYPE_TYPE_J, YTemperature.SENSORTYPE_TYPE_N,
+     * YTemperature.SENSORTYPE_TYPE_R, YTemperature.SENSORTYPE_TYPE_S, YTemperature.SENSORTYPE_TYPE_T,
+     * YTemperature.SENSORTYPE_PT100_4WIRES, YTemperature.SENSORTYPE_PT100_3WIRES,
+     * YTemperature.SENSORTYPE_PT100_2WIRES, YTemperature.SENSORTYPE_RES_OHM,
+     * YTemperature.SENSORTYPE_RES_NTC, YTemperature.SENSORTYPE_RES_LINEAR,
+     * YTemperature.SENSORTYPE_RES_INTERNAL, YTemperature.SENSORTYPE_IR,
+     * YTemperature.SENSORTYPE_RES_PT1000 and YTemperature.SENSORTYPE_CHANNEL_OFF corresponding to the
+     * temperature sensor type
      *
-     * On failure, throws an exception or returns Y_SENSORTYPE_INVALID.
+     * On failure, throws an exception or returns YTemperature.SENSORTYPE_INVALID.
      */
-    async get_sensorType(): Promise<Y_SensorType>
+    async get_sensorType(): Promise<YTemperature_SensorType>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -225,18 +228,21 @@ export class YTemperature extends YSensor
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_SENSORTYPE_DIGITAL, Y_SENSORTYPE_TYPE_K, Y_SENSORTYPE_TYPE_E,
-     * Y_SENSORTYPE_TYPE_J, Y_SENSORTYPE_TYPE_N, Y_SENSORTYPE_TYPE_R, Y_SENSORTYPE_TYPE_S,
-     * Y_SENSORTYPE_TYPE_T, Y_SENSORTYPE_PT100_4WIRES, Y_SENSORTYPE_PT100_3WIRES,
-     * Y_SENSORTYPE_PT100_2WIRES, Y_SENSORTYPE_RES_OHM, Y_SENSORTYPE_RES_NTC, Y_SENSORTYPE_RES_LINEAR,
-     * Y_SENSORTYPE_RES_INTERNAL, Y_SENSORTYPE_IR, Y_SENSORTYPE_RES_PT1000 and Y_SENSORTYPE_CHANNEL_OFF
-     * corresponding to the temperature sensor type
+     * @param newval : a value among YTemperature.SENSORTYPE_DIGITAL, YTemperature.SENSORTYPE_TYPE_K,
+     * YTemperature.SENSORTYPE_TYPE_E, YTemperature.SENSORTYPE_TYPE_J, YTemperature.SENSORTYPE_TYPE_N,
+     * YTemperature.SENSORTYPE_TYPE_R, YTemperature.SENSORTYPE_TYPE_S, YTemperature.SENSORTYPE_TYPE_T,
+     * YTemperature.SENSORTYPE_PT100_4WIRES, YTemperature.SENSORTYPE_PT100_3WIRES,
+     * YTemperature.SENSORTYPE_PT100_2WIRES, YTemperature.SENSORTYPE_RES_OHM,
+     * YTemperature.SENSORTYPE_RES_NTC, YTemperature.SENSORTYPE_RES_LINEAR,
+     * YTemperature.SENSORTYPE_RES_INTERNAL, YTemperature.SENSORTYPE_IR,
+     * YTemperature.SENSORTYPE_RES_PT1000 and YTemperature.SENSORTYPE_CHANNEL_OFF corresponding to the
+     * temperature sensor type
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_sensorType(newval: Y_SensorType): Promise<number>
+    async set_sensorType(newval: YTemperature_SensorType): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -249,7 +255,7 @@ export class YTemperature extends YSensor
      * @return a floating point number corresponding to the current value of the electrical signal
      * measured by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALVALUE_INVALID.
+     * On failure, throws an exception or returns YTemperature.SIGNALVALUE_INVALID.
      */
     async get_signalValue(): Promise<number>
     {
@@ -268,7 +274,7 @@ export class YTemperature extends YSensor
      *
      * @return a string corresponding to the measuring unit of the electrical signal used by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALUNIT_INVALID.
+     * On failure, throws an exception or returns YTemperature.SIGNALUNIT_INVALID.
      */
     async get_signalUnit(): Promise<string>
     {
@@ -302,7 +308,7 @@ export class YTemperature extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a temperature sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -312,11 +318,11 @@ export class YTemperature extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the temperature sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTemperature.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTemperature.isOnline() to test if the temperature sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a temperature sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -324,10 +330,10 @@ export class YTemperature extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the temperature sensor, for instance
+     *         METEOMK2.temperature.
      *
-     * @return a YTemperature object allowing you to drive $THEFUNCTION$.
+     * @return a YTemperature object allowing you to drive the temperature sensor.
      */
     static FindTemperature(func: string): YTemperature
     {
@@ -341,7 +347,7 @@ export class YTemperature extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a temperature sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -351,19 +357,19 @@ export class YTemperature extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the temperature sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTemperature.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTemperature.isOnline() to test if the temperature sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a temperature sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the temperature sensor, for instance
+     *         METEOMK2.temperature.
      *
-     * @return a YTemperature object allowing you to drive $THEFUNCTION$.
+     * @return a YTemperature object allowing you to drive the temperature sensor.
      */
     static FindTemperatureInContext(yctx: YAPIContext, func: string): YTemperature
     {
@@ -467,7 +473,7 @@ export class YTemperature extends YSensor
      * @param res25 : thermistor resistance at 25 degrees Celsius
      * @param beta : Beta value
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -502,7 +508,7 @@ export class YTemperature extends YSensor
      *         values (in Ohms) for each of the temperature included in the first
      *         argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -568,7 +574,7 @@ export class YTemperature extends YSensor
      *         with the value (in Ohms) for each of the temperature included in the
      *         first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -633,9 +639,14 @@ export class YTemperature extends YSensor
     }
 
     /**
-     * Returns the next Temperature
+     * Continues the enumeration of temperature sensors started using yFirstTemperature().
+     * Caution: You can't make any assumption about the returned temperature sensors order.
+     * If you want to find a specific a temperature sensor, use Temperature.findTemperature()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YTemperature}
+     * @return a pointer to a YTemperature object, corresponding to
+     *         a temperature sensor currently online, or a null pointer
+     *         if there are no more temperature sensors to enumerate.
      */
     nextTemperature(): YTemperature | null
     {
@@ -647,9 +658,13 @@ export class YTemperature extends YSensor
     }
 
     /**
-     * Retrieves the first Temperature in a YAPI context
+     * Starts the enumeration of temperature sensors currently accessible.
+     * Use the method YTemperature.nextTemperature() to iterate on
+     * next temperature sensors.
      *
-     * @returns {YTemperature}
+     * @return a pointer to a YTemperature object, corresponding to
+     *         the first temperature sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTemperature(): YTemperature | null
     {
@@ -659,11 +674,15 @@ export class YTemperature extends YSensor
     }
 
     /**
-     * Retrieves the first Temperature in a given context
+     * Starts the enumeration of temperature sensors currently accessible.
+     * Use the method YTemperature.nextTemperature() to iterate on
+     * next temperature sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YTemperature}
+     * @return a pointer to a YTemperature object, corresponding to
+     *         the first temperature sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTemperatureInContext(yctx: YAPIContext): YTemperature | null
     {

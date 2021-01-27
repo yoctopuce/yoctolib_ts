@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_watchdog.ts 43533 2021-01-25 16:33:41Z mvuilleu $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -151,10 +151,10 @@ export class YWatchdog extends YFunction {
     /**
      * Returns the state of the watchdog (A for the idle position, B for the active position).
      *
-     * @return either Y_STATE_A or Y_STATE_B, according to the state of the watchdog (A for the idle
-     * position, B for the active position)
+     * @return either YWatchdog.STATE_A or YWatchdog.STATE_B, according to the state of the watchdog (A
+     * for the idle position, B for the active position)
      *
-     * On failure, throws an exception or returns Y_STATE_INVALID.
+     * On failure, throws an exception or returns YWatchdog.STATE_INVALID.
      */
     async get_state() {
         let res;
@@ -169,10 +169,10 @@ export class YWatchdog extends YFunction {
     /**
      * Changes the state of the watchdog (A for the idle position, B for the active position).
      *
-     * @param newval : either Y_STATE_A or Y_STATE_B, according to the state of the watchdog (A for the
-     * idle position, B for the active position)
+     * @param newval : either YWatchdog.STATE_A or YWatchdog.STATE_B, according to the state of the
+     * watchdog (A for the idle position, B for the active position)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -185,11 +185,12 @@ export class YWatchdog extends YFunction {
      * Returns the state of the watchdog at device startup (A for the idle position,
      * B for the active position, UNCHANGED to leave the relay state as is).
      *
-     * @return a value among Y_STATEATPOWERON_UNCHANGED, Y_STATEATPOWERON_A and Y_STATEATPOWERON_B
-     * corresponding to the state of the watchdog at device startup (A for the idle position,
+     * @return a value among YWatchdog.STATEATPOWERON_UNCHANGED, YWatchdog.STATEATPOWERON_A and
+     * YWatchdog.STATEATPOWERON_B corresponding to the state of the watchdog at device startup (A for the
+     * idle position,
      *         B for the active position, UNCHANGED to leave the relay state as is)
      *
-     * On failure, throws an exception or returns Y_STATEATPOWERON_INVALID.
+     * On failure, throws an exception or returns YWatchdog.STATEATPOWERON_INVALID.
      */
     async get_stateAtPowerOn() {
         let res;
@@ -207,11 +208,12 @@ export class YWatchdog extends YFunction {
      * Remember to call the matching module saveToFlash()
      * method, otherwise this call will have no effect.
      *
-     * @param newval : a value among Y_STATEATPOWERON_UNCHANGED, Y_STATEATPOWERON_A and Y_STATEATPOWERON_B
-     * corresponding to the state of the watchdog at device startup (A for the idle position,
+     * @param newval : a value among YWatchdog.STATEATPOWERON_UNCHANGED, YWatchdog.STATEATPOWERON_A and
+     * YWatchdog.STATEATPOWERON_B corresponding to the state of the watchdog at device startup (A for the
+     * idle position,
      *         B for the active position, UNCHANGED to leave the relay state as is)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -227,7 +229,7 @@ export class YWatchdog extends YFunction {
      * @return an integer corresponding to the maximum time (ms) allowed for the watchdog to stay in state
      *         A before automatically switching back in to B state
      *
-     * On failure, throws an exception or returns Y_MAXTIMEONSTATEA_INVALID.
+     * On failure, throws an exception or returns YWatchdog.MAXTIMEONSTATEA_INVALID.
      */
     async get_maxTimeOnStateA() {
         let res;
@@ -248,7 +250,7 @@ export class YWatchdog extends YFunction {
      * @param newval : an integer corresponding to the maximum time (ms) allowed for the watchdog to stay in state A
      *         before automatically switching back in to B state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -263,7 +265,7 @@ export class YWatchdog extends YFunction {
      *
      * @return an integer
      *
-     * On failure, throws an exception or returns Y_MAXTIMEONSTATEB_INVALID.
+     * On failure, throws an exception or returns YWatchdog.MAXTIMEONSTATEB_INVALID.
      */
     async get_maxTimeOnStateB() {
         let res;
@@ -285,7 +287,7 @@ export class YWatchdog extends YFunction {
      * in state B before
      *         automatically switching back in to A state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -297,10 +299,10 @@ export class YWatchdog extends YFunction {
     /**
      * Returns the output state of the watchdog, when used as a simple switch (single throw).
      *
-     * @return either Y_OUTPUT_OFF or Y_OUTPUT_ON, according to the output state of the watchdog, when
-     * used as a simple switch (single throw)
+     * @return either YWatchdog.OUTPUT_OFF or YWatchdog.OUTPUT_ON, according to the output state of the
+     * watchdog, when used as a simple switch (single throw)
      *
-     * On failure, throws an exception or returns Y_OUTPUT_INVALID.
+     * On failure, throws an exception or returns YWatchdog.OUTPUT_INVALID.
      */
     async get_output() {
         let res;
@@ -315,10 +317,10 @@ export class YWatchdog extends YFunction {
     /**
      * Changes the output state of the watchdog, when used as a simple switch (single throw).
      *
-     * @param newval : either Y_OUTPUT_OFF or Y_OUTPUT_ON, according to the output state of the watchdog,
-     * when used as a simple switch (single throw)
+     * @param newval : either YWatchdog.OUTPUT_OFF or YWatchdog.OUTPUT_ON, according to the output state
+     * of the watchdog, when used as a simple switch (single throw)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -335,7 +337,7 @@ export class YWatchdog extends YFunction {
      * returned to idle position
      *         (state A), during a measured pulse generation
      *
-     * On failure, throws an exception or returns Y_PULSETIMER_INVALID.
+     * On failure, throws an exception or returns YWatchdog.PULSETIMER_INVALID.
      */
     async get_pulseTimer() {
         let res;
@@ -358,7 +360,7 @@ export class YWatchdog extends YFunction {
      *
      * @param ms_duration : pulse duration, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -388,7 +390,7 @@ export class YWatchdog extends YFunction {
      * @param ms_delay : waiting time before the pulse, in milliseconds
      * @param ms_duration : pulse duration, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -404,7 +406,7 @@ export class YWatchdog extends YFunction {
      * @return an integer corresponding to the number of milliseconds remaining before a pulse (delayedPulse() call)
      *         When there is no scheduled pulse, returns zero
      *
-     * On failure, throws an exception or returns Y_COUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YWatchdog.COUNTDOWN_INVALID.
      */
     async get_countdown() {
         let res;
@@ -419,9 +421,10 @@ export class YWatchdog extends YFunction {
     /**
      * Returns the watchdog running state at module power on.
      *
-     * @return either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the watchdog running state at module power on
+     * @return either YWatchdog.AUTOSTART_OFF or YWatchdog.AUTOSTART_ON, according to the watchdog running
+     * state at module power on
      *
-     * On failure, throws an exception or returns Y_AUTOSTART_INVALID.
+     * On failure, throws an exception or returns YWatchdog.AUTOSTART_INVALID.
      */
     async get_autoStart() {
         let res;
@@ -437,10 +440,10 @@ export class YWatchdog extends YFunction {
      * Changes the watchdog running state at module power on. Remember to call the
      * saveToFlash() method and then to reboot the module to apply this setting.
      *
-     * @param newval : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the watchdog running state
-     * at module power on
+     * @param newval : either YWatchdog.AUTOSTART_OFF or YWatchdog.AUTOSTART_ON, according to the watchdog
+     * running state at module power on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -452,9 +455,9 @@ export class YWatchdog extends YFunction {
     /**
      * Returns the watchdog running state.
      *
-     * @return either Y_RUNNING_OFF or Y_RUNNING_ON, according to the watchdog running state
+     * @return either YWatchdog.RUNNING_OFF or YWatchdog.RUNNING_ON, according to the watchdog running state
      *
-     * On failure, throws an exception or returns Y_RUNNING_INVALID.
+     * On failure, throws an exception or returns YWatchdog.RUNNING_INVALID.
      */
     async get_running() {
         let res;
@@ -469,9 +472,10 @@ export class YWatchdog extends YFunction {
     /**
      * Changes the running state of the watchdog.
      *
-     * @param newval : either Y_RUNNING_OFF or Y_RUNNING_ON, according to the running state of the watchdog
+     * @param newval : either YWatchdog.RUNNING_OFF or YWatchdog.RUNNING_ON, according to the running
+     * state of the watchdog
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -485,7 +489,7 @@ export class YWatchdog extends YFunction {
      * must be called on a regular basis to prevent the watchdog to
      * trigger
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -500,7 +504,7 @@ export class YWatchdog extends YFunction {
      * @return an integer corresponding to  the waiting duration before a reset is automatically triggered
      * by the watchdog, in milliseconds
      *
-     * On failure, throws an exception or returns Y_TRIGGERDELAY_INVALID.
+     * On failure, throws an exception or returns YWatchdog.TRIGGERDELAY_INVALID.
      */
     async get_triggerDelay() {
         let res;
@@ -520,7 +524,7 @@ export class YWatchdog extends YFunction {
      * @param newval : an integer corresponding to the waiting delay before a reset is triggered by the watchdog,
      *         in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -534,7 +538,7 @@ export class YWatchdog extends YFunction {
      *
      * @return an integer corresponding to the duration of resets caused by the watchdog, in milliseconds
      *
-     * On failure, throws an exception or returns Y_TRIGGERDURATION_INVALID.
+     * On failure, throws an exception or returns YWatchdog.TRIGGERDURATION_INVALID.
      */
     async get_triggerDuration() {
         let res;
@@ -553,7 +557,7 @@ export class YWatchdog extends YFunction {
      *
      * @param newval : an integer corresponding to the duration of resets caused by the watchdog, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -563,7 +567,7 @@ export class YWatchdog extends YFunction {
         return await this._setAttr('triggerDuration', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a watchdog for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -573,11 +577,11 @@ export class YWatchdog extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the watchdog is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWatchdog.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWatchdog.isOnline() to test if the watchdog is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a watchdog by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -585,10 +589,10 @@ export class YWatchdog extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the watchdog, for instance
+     *         WDOGDC01.watchdog1.
      *
-     * @return a YWatchdog object allowing you to drive $THEFUNCTION$.
+     * @return a YWatchdog object allowing you to drive the watchdog.
      */
     static FindWatchdog(func) {
         let obj;
@@ -600,7 +604,7 @@ export class YWatchdog extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a watchdog for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -610,19 +614,19 @@ export class YWatchdog extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the watchdog is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWatchdog.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWatchdog.isOnline() to test if the watchdog is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a watchdog by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the watchdog, for instance
+     *         WDOGDC01.watchdog1.
      *
-     * @return a YWatchdog object allowing you to drive $THEFUNCTION$.
+     * @return a YWatchdog object allowing you to drive the watchdog.
      */
     static FindWatchdogInContext(yctx, func) {
         let obj;
@@ -679,7 +683,7 @@ export class YWatchdog extends YFunction {
     /**
      * Switch the relay to the opposite state.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -713,9 +717,14 @@ export class YWatchdog extends YFunction {
         }
     }
     /**
-     * Returns the next Watchdog
+     * Continues the enumeration of watchdog started using yFirstWatchdog().
+     * Caution: You can't make any assumption about the returned watchdog order.
+     * If you want to find a specific a watchdog, use Watchdog.findWatchdog()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YWatchdog}
+     * @return a pointer to a YWatchdog object, corresponding to
+     *         a watchdog currently online, or a null pointer
+     *         if there are no more watchdog to enumerate.
      */
     nextWatchdog() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -727,9 +736,13 @@ export class YWatchdog extends YFunction {
         return YWatchdog.FindWatchdogInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Watchdog in a YAPI context
+     * Starts the enumeration of watchdog currently accessible.
+     * Use the method YWatchdog.nextWatchdog() to iterate on
+     * next watchdog.
      *
-     * @returns {YWatchdog}
+     * @return a pointer to a YWatchdog object, corresponding to
+     *         the first watchdog currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWatchdog() {
         let next_hwid = YAPI.imm_getFirstHardwareId('Watchdog');
@@ -738,11 +751,15 @@ export class YWatchdog extends YFunction {
         return YWatchdog.FindWatchdog(next_hwid);
     }
     /**
-     * Retrieves the first Watchdog in a given context
+     * Starts the enumeration of watchdog currently accessible.
+     * Use the method YWatchdog.nextWatchdog() to iterate on
+     * next watchdog.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YWatchdog}
+     * @return a pointer to a YWatchdog object, corresponding to
+     *         the first watchdog currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWatchdogInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Watchdog');

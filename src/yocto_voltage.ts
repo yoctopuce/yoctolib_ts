@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_voltage.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YVoltage definitions)
-export const enum Y_Enabled {
+export const enum YVoltage_Enabled {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -64,19 +64,19 @@ export class YVoltage extends YSensor
 {
     //--- (YVoltage attributes declaration)
     _className: string;
-    _enabled: Y_Enabled = YVoltage.ENABLED_INVALID;
+    _enabled: YVoltage_Enabled = YVoltage.ENABLED_INVALID;
     _valueCallbackVoltage: YVoltageValueCallback | null = null;
     _timedReportCallbackVoltage: YVoltageTimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly ENABLED_FALSE: Y_Enabled = Y_Enabled.FALSE;
-    public readonly ENABLED_TRUE: Y_Enabled = Y_Enabled.TRUE;
-    public readonly ENABLED_INVALID: Y_Enabled = Y_Enabled.INVALID;
+    public readonly ENABLED_FALSE: YVoltage_Enabled = YVoltage_Enabled.FALSE;
+    public readonly ENABLED_TRUE: YVoltage_Enabled = YVoltage_Enabled.TRUE;
+    public readonly ENABLED_INVALID: YVoltage_Enabled = YVoltage_Enabled.INVALID;
 
     // API symbols as static members
-    public static readonly ENABLED_FALSE: Y_Enabled = Y_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: Y_Enabled = Y_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: Y_Enabled = Y_Enabled.INVALID;
+    public static readonly ENABLED_FALSE: YVoltage_Enabled = YVoltage_Enabled.FALSE;
+    public static readonly ENABLED_TRUE: YVoltage_Enabled = YVoltage_Enabled.TRUE;
+    public static readonly ENABLED_INVALID: YVoltage_Enabled = YVoltage_Enabled.INVALID;
     //--- (end of YVoltage attributes declaration)
 
 //--- (YVoltage return codes)
@@ -96,7 +96,7 @@ export class YVoltage extends YSensor
     {
         switch(name) {
         case 'enabled':
-            this._enabled = <Y_Enabled> <number> val;
+            this._enabled = <YVoltage_Enabled> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -105,11 +105,11 @@ export class YVoltage extends YSensor
     /**
      * Returns the activation state of this input.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this input
+     * @return either YVoltage.ENABLED_FALSE or YVoltage.ENABLED_TRUE, according to the activation state of this input
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YVoltage.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<Y_Enabled>
+    async get_enabled(): Promise<YVoltage_Enabled>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -129,14 +129,14 @@ export class YVoltage extends YSensor
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the activation state of this
-     * voltage input
+     * @param newval : either YVoltage.ENABLED_FALSE or YVoltage.ENABLED_TRUE, according to the activation
+     * state of this voltage input
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: Y_Enabled): Promise<number>
+    async set_enabled(newval: YVoltage_Enabled): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -144,7 +144,7 @@ export class YVoltage extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a voltage sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -154,11 +154,11 @@ export class YVoltage extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the voltage sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YVoltage.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YVoltage.isOnline() to test if the voltage sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a voltage sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -166,10 +166,10 @@ export class YVoltage extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the voltage sensor, for instance
+     *         MOTORCTL.voltage.
      *
-     * @return a YVoltage object allowing you to drive $THEFUNCTION$.
+     * @return a YVoltage object allowing you to drive the voltage sensor.
      */
     static FindVoltage(func: string): YVoltage
     {
@@ -183,7 +183,7 @@ export class YVoltage extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a voltage sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -193,19 +193,19 @@ export class YVoltage extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the voltage sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YVoltage.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YVoltage.isOnline() to test if the voltage sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a voltage sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the voltage sensor, for instance
+     *         MOTORCTL.voltage.
      *
-     * @return a YVoltage object allowing you to drive $THEFUNCTION$.
+     * @return a YVoltage object allowing you to drive the voltage sensor.
      */
     static FindVoltageInContext(yctx: YAPIContext, func: string): YVoltage
     {
@@ -301,9 +301,14 @@ export class YVoltage extends YSensor
     }
 
     /**
-     * Returns the next Voltage
+     * Continues the enumeration of voltage sensors started using yFirstVoltage().
+     * Caution: You can't make any assumption about the returned voltage sensors order.
+     * If you want to find a specific a voltage sensor, use Voltage.findVoltage()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YVoltage}
+     * @return a pointer to a YVoltage object, corresponding to
+     *         a voltage sensor currently online, or a null pointer
+     *         if there are no more voltage sensors to enumerate.
      */
     nextVoltage(): YVoltage | null
     {
@@ -315,9 +320,13 @@ export class YVoltage extends YSensor
     }
 
     /**
-     * Retrieves the first Voltage in a YAPI context
+     * Starts the enumeration of voltage sensors currently accessible.
+     * Use the method YVoltage.nextVoltage() to iterate on
+     * next voltage sensors.
      *
-     * @returns {YVoltage}
+     * @return a pointer to a YVoltage object, corresponding to
+     *         the first voltage sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstVoltage(): YVoltage | null
     {
@@ -327,11 +336,15 @@ export class YVoltage extends YSensor
     }
 
     /**
-     * Retrieves the first Voltage in a given context
+     * Starts the enumeration of voltage sensors currently accessible.
+     * Use the method YVoltage.nextVoltage() to iterate on
+     * next voltage sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YVoltage}
+     * @return a pointer to a YVoltage object, corresponding to
+     *         the first voltage sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstVoltageInContext(yctx: YAPIContext): YVoltage | null
     {

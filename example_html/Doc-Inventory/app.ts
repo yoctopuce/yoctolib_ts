@@ -12,15 +12,17 @@
 
 import { YAPI, YErrorMsg, YModule } from "../../dist/esm/yocto_api_html.js"
 
+function error(msg: string)
+{
+    document.body.innerHTML = "<h3>Error: "+msg+"</h3>";
+}
+
 async function startDemo()
 {
-    await YAPI.LogUnhandledPromiseRejections();
-    await YAPI.DisableExceptions();
-
-    // Setup the API to use the VirtualHub on local machine
+    document.body.innerHTML = 'Trying to contact VirtualHub on local machine...';
     let errmsg = new YErrorMsg();
     if(await YAPI.RegisterHub('127.0.0.1', errmsg) != YAPI.SUCCESS) {
-        alert('Cannot contact VirtualHub on 127.0.0.1: '+errmsg.msg);
+        error('Cannot contact VirtualHub on 127.0.0.1: '+errmsg.msg);
     }
     refresh();
 }

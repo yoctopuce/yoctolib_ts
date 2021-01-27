@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_wireless.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -121,7 +121,7 @@ export class YWlanRecord
 }
 
 //--- (generated code: YWireless definitions)
-export const enum Y_Security {
+export const enum YWireless_Security {
     UNKNOWN = 0,
     OPEN = 1,
     WEP = 2,
@@ -129,7 +129,7 @@ export const enum Y_Security {
     WPA2 = 4,
     INVALID = -1
 }
-export const enum Y_WlanState {
+export const enum YWireless_WlanState {
     DOWN = 0,
     SCANNING = 1,
     CONNECTED = 2,
@@ -157,47 +157,47 @@ export class YWireless extends YFunction
     _linkQuality: number = YWireless.LINKQUALITY_INVALID;
     _ssid: string = YWireless.SSID_INVALID;
     _channel: number = YWireless.CHANNEL_INVALID;
-    _security: Y_Security = YWireless.SECURITY_INVALID;
+    _security: YWireless_Security = YWireless.SECURITY_INVALID;
     _message: string = YWireless.MESSAGE_INVALID;
     _wlanConfig: string = YWireless.WLANCONFIG_INVALID;
-    _wlanState: Y_WlanState = YWireless.WLANSTATE_INVALID;
+    _wlanState: YWireless_WlanState = YWireless.WLANSTATE_INVALID;
     _valueCallbackWireless: YWirelessValueCallback | null = null;
 
     // API symbols as object properties
     public readonly LINKQUALITY_INVALID: number = YAPI.INVALID_UINT;
     public readonly SSID_INVALID: string = YAPI.INVALID_STRING;
     public readonly CHANNEL_INVALID: number = YAPI.INVALID_UINT;
-    public readonly SECURITY_UNKNOWN: Y_Security = Y_Security.UNKNOWN;
-    public readonly SECURITY_OPEN: Y_Security = Y_Security.OPEN;
-    public readonly SECURITY_WEP: Y_Security = Y_Security.WEP;
-    public readonly SECURITY_WPA: Y_Security = Y_Security.WPA;
-    public readonly SECURITY_WPA2: Y_Security = Y_Security.WPA2;
-    public readonly SECURITY_INVALID: Y_Security = Y_Security.INVALID;
+    public readonly SECURITY_UNKNOWN: YWireless_Security = YWireless_Security.UNKNOWN;
+    public readonly SECURITY_OPEN: YWireless_Security = YWireless_Security.OPEN;
+    public readonly SECURITY_WEP: YWireless_Security = YWireless_Security.WEP;
+    public readonly SECURITY_WPA: YWireless_Security = YWireless_Security.WPA;
+    public readonly SECURITY_WPA2: YWireless_Security = YWireless_Security.WPA2;
+    public readonly SECURITY_INVALID: YWireless_Security = YWireless_Security.INVALID;
     public readonly MESSAGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly WLANCONFIG_INVALID: string = YAPI.INVALID_STRING;
-    public readonly WLANSTATE_DOWN: Y_WlanState = Y_WlanState.DOWN;
-    public readonly WLANSTATE_SCANNING: Y_WlanState = Y_WlanState.SCANNING;
-    public readonly WLANSTATE_CONNECTED: Y_WlanState = Y_WlanState.CONNECTED;
-    public readonly WLANSTATE_REJECTED: Y_WlanState = Y_WlanState.REJECTED;
-    public readonly WLANSTATE_INVALID: Y_WlanState = Y_WlanState.INVALID;
+    public readonly WLANSTATE_DOWN: YWireless_WlanState = YWireless_WlanState.DOWN;
+    public readonly WLANSTATE_SCANNING: YWireless_WlanState = YWireless_WlanState.SCANNING;
+    public readonly WLANSTATE_CONNECTED: YWireless_WlanState = YWireless_WlanState.CONNECTED;
+    public readonly WLANSTATE_REJECTED: YWireless_WlanState = YWireless_WlanState.REJECTED;
+    public readonly WLANSTATE_INVALID: YWireless_WlanState = YWireless_WlanState.INVALID;
 
     // API symbols as static members
     public static readonly LINKQUALITY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly SSID_INVALID: string = YAPI.INVALID_STRING;
     public static readonly CHANNEL_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly SECURITY_UNKNOWN: Y_Security = Y_Security.UNKNOWN;
-    public static readonly SECURITY_OPEN: Y_Security = Y_Security.OPEN;
-    public static readonly SECURITY_WEP: Y_Security = Y_Security.WEP;
-    public static readonly SECURITY_WPA: Y_Security = Y_Security.WPA;
-    public static readonly SECURITY_WPA2: Y_Security = Y_Security.WPA2;
-    public static readonly SECURITY_INVALID: Y_Security = Y_Security.INVALID;
+    public static readonly SECURITY_UNKNOWN: YWireless_Security = YWireless_Security.UNKNOWN;
+    public static readonly SECURITY_OPEN: YWireless_Security = YWireless_Security.OPEN;
+    public static readonly SECURITY_WEP: YWireless_Security = YWireless_Security.WEP;
+    public static readonly SECURITY_WPA: YWireless_Security = YWireless_Security.WPA;
+    public static readonly SECURITY_WPA2: YWireless_Security = YWireless_Security.WPA2;
+    public static readonly SECURITY_INVALID: YWireless_Security = YWireless_Security.INVALID;
     public static readonly MESSAGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly WLANCONFIG_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly WLANSTATE_DOWN: Y_WlanState = Y_WlanState.DOWN;
-    public static readonly WLANSTATE_SCANNING: Y_WlanState = Y_WlanState.SCANNING;
-    public static readonly WLANSTATE_CONNECTED: Y_WlanState = Y_WlanState.CONNECTED;
-    public static readonly WLANSTATE_REJECTED: Y_WlanState = Y_WlanState.REJECTED;
-    public static readonly WLANSTATE_INVALID: Y_WlanState = Y_WlanState.INVALID;
+    public static readonly WLANSTATE_DOWN: YWireless_WlanState = YWireless_WlanState.DOWN;
+    public static readonly WLANSTATE_SCANNING: YWireless_WlanState = YWireless_WlanState.SCANNING;
+    public static readonly WLANSTATE_CONNECTED: YWireless_WlanState = YWireless_WlanState.CONNECTED;
+    public static readonly WLANSTATE_REJECTED: YWireless_WlanState = YWireless_WlanState.REJECTED;
+    public static readonly WLANSTATE_INVALID: YWireless_WlanState = YWireless_WlanState.INVALID;
     //--- (end of generated code: YWireless attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -223,7 +223,7 @@ export class YWireless extends YFunction
             this._channel = <number> <number> val;
             return 1;
         case 'security':
-            this._security = <Y_Security> <number> val;
+            this._security = <YWireless_Security> <number> val;
             return 1;
         case 'message':
             this._message = <string> <string> val;
@@ -232,7 +232,7 @@ export class YWireless extends YFunction
             this._wlanConfig = <string> <string> val;
             return 1;
         case 'wlanState':
-            this._wlanState = <Y_WlanState> <number> val;
+            this._wlanState = <YWireless_WlanState> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -243,7 +243,7 @@ export class YWireless extends YFunction
      *
      * @return an integer corresponding to the link quality, expressed in percent
      *
-     * On failure, throws an exception or returns Y_LINKQUALITY_INVALID.
+     * On failure, throws an exception or returns YWireless.LINKQUALITY_INVALID.
      */
     async get_linkQuality(): Promise<number>
     {
@@ -262,7 +262,7 @@ export class YWireless extends YFunction
      *
      * @return a string corresponding to the wireless network name (SSID)
      *
-     * On failure, throws an exception or returns Y_SSID_INVALID.
+     * On failure, throws an exception or returns YWireless.SSID_INVALID.
      */
     async get_ssid(): Promise<string>
     {
@@ -282,7 +282,7 @@ export class YWireless extends YFunction
      * @return an integer corresponding to the 802.11 channel currently used, or 0 when the selected
      * network has not been found
      *
-     * On failure, throws an exception or returns Y_CHANNEL_INVALID.
+     * On failure, throws an exception or returns YWireless.CHANNEL_INVALID.
      */
     async get_channel(): Promise<number>
     {
@@ -299,12 +299,13 @@ export class YWireless extends YFunction
     /**
      * Returns the security algorithm used by the selected wireless network.
      *
-     * @return a value among Y_SECURITY_UNKNOWN, Y_SECURITY_OPEN, Y_SECURITY_WEP, Y_SECURITY_WPA and
-     * Y_SECURITY_WPA2 corresponding to the security algorithm used by the selected wireless network
+     * @return a value among YWireless.SECURITY_UNKNOWN, YWireless.SECURITY_OPEN, YWireless.SECURITY_WEP,
+     * YWireless.SECURITY_WPA and YWireless.SECURITY_WPA2 corresponding to the security algorithm used by
+     * the selected wireless network
      *
-     * On failure, throws an exception or returns Y_SECURITY_INVALID.
+     * On failure, throws an exception or returns YWireless.SECURITY_INVALID.
      */
-    async get_security(): Promise<Y_Security>
+    async get_security(): Promise<YWireless_Security>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -321,7 +322,7 @@ export class YWireless extends YFunction
      *
      * @return a string corresponding to the latest status message from the wireless interface
      *
-     * On failure, throws an exception or returns Y_MESSAGE_INVALID.
+     * On failure, throws an exception or returns YWireless.MESSAGE_INVALID.
      */
     async get_message(): Promise<string>
     {
@@ -355,27 +356,28 @@ export class YWireless extends YFunction
     }
 
     /**
-     * Returns the current state of the wireless interface. The state Y_WLANSTATE_DOWN means that the
-     * network interface is
-     * not connected to a network. The state Y_WLANSTATE_SCANNING means that the network interface is
-     * scanning available
+     * Returns the current state of the wireless interface. The state YWireless.WLANSTATE_DOWN means that
+     * the network interface is
+     * not connected to a network. The state YWireless.WLANSTATE_SCANNING means that the network interface
+     * is scanning available
      * frequencies. During this stage, the device is not reachable, and the network settings are not yet
      * applied. The state
-     * Y_WLANSTATE_CONNECTED means that the network settings have been successfully applied ant that the
-     * device is reachable
+     * YWireless.WLANSTATE_CONNECTED means that the network settings have been successfully applied ant
+     * that the device is reachable
      * from the wireless network. If the device is configured to use ad-hoc or Soft AP mode, it means that
      * the wireless network
-     * is up and that other devices can join the network. The state Y_WLANSTATE_REJECTED means that the
-     * network interface has
+     * is up and that other devices can join the network. The state YWireless.WLANSTATE_REJECTED means
+     * that the network interface has
      * not been able to join the requested network. The description of the error can be obtain with the
      * get_message() method.
      *
-     * @return a value among Y_WLANSTATE_DOWN, Y_WLANSTATE_SCANNING, Y_WLANSTATE_CONNECTED and
-     * Y_WLANSTATE_REJECTED corresponding to the current state of the wireless interface
+     * @return a value among YWireless.WLANSTATE_DOWN, YWireless.WLANSTATE_SCANNING,
+     * YWireless.WLANSTATE_CONNECTED and YWireless.WLANSTATE_REJECTED corresponding to the current state
+     * of the wireless interface
      *
-     * On failure, throws an exception or returns Y_WLANSTATE_INVALID.
+     * On failure, throws an exception or returns YWireless.WLANSTATE_INVALID.
      */
-    async get_wlanState(): Promise<Y_WlanState>
+    async get_wlanState(): Promise<YWireless_WlanState>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -388,7 +390,7 @@ export class YWireless extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a wireless LAN interface for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -398,11 +400,11 @@ export class YWireless extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wireless LAN interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWireless.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWireless.isOnline() to test if the wireless LAN interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wireless LAN interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -410,10 +412,10 @@ export class YWireless extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wireless LAN interface, for instance
+     *         YHUBWLN1.wireless.
      *
-     * @return a YWireless object allowing you to drive $THEFUNCTION$.
+     * @return a YWireless object allowing you to drive the wireless LAN interface.
      */
     static FindWireless(func: string): YWireless
     {
@@ -427,7 +429,7 @@ export class YWireless extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a wireless LAN interface for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -437,19 +439,19 @@ export class YWireless extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the wireless LAN interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YWireless.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YWireless.isOnline() to test if the wireless LAN interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a wireless LAN interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the wireless LAN interface, for instance
+     *         YHUBWLN1.wireless.
      *
-     * @return a YWireless object allowing you to drive $THEFUNCTION$.
+     * @return a YWireless object allowing you to drive the wireless LAN interface.
      */
     static FindWirelessInContext(yctx: YAPIContext, func: string): YWireless
     {
@@ -510,8 +512,8 @@ export class YWireless extends YFunction
      * Triggers a scan of the wireless frequency and builds the list of available networks.
      * The scan forces a disconnection from the current network. At then end of the process, the
      * the network interface attempts to reconnect to the previous network. During the scan, the wlanState
-     * switches to Y_WLANSTATE_DOWN, then to Y_WLANSTATE_SCANNING. When the scan is completed,
-     * get_wlanState() returns either Y_WLANSTATE_DOWN or Y_WLANSTATE_SCANNING. At this
+     * switches to YWireless.WLANSTATE_DOWN, then to YWireless.WLANSTATE_SCANNING. When the scan is completed,
+     * get_wlanState() returns either YWireless.WLANSTATE_DOWN or YWireless.WLANSTATE_SCANNING. At this
      * point, the list of detected network can be retrieved with the get_detectedWlans() method.
      *
      * On failure, throws an exception or returns a negative error code.
@@ -532,7 +534,7 @@ export class YWireless extends YFunction
      * @param ssid : the name of the network to connect to
      * @param securityKey : the network key, as a character string
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -558,7 +560,7 @@ export class YWireless extends YFunction
      * @param ssid : the name of the network to connect to
      * @param securityKey : the network key, as a character string
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -585,7 +587,7 @@ export class YWireless extends YFunction
      * @param ssid : the name of the network to connect to
      * @param securityKey : the network key, as a character string
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -600,7 +602,7 @@ export class YWireless extends YFunction
      * To force an update of this list, startWlanScan() must be called.
      * Note that an languages without garbage collections, the returned list must be freed by the caller.
      *
-     * @return {YWlanRecord[]} a list of YWlanRecord objects, containing the SSID, channel,
+     * @return a list of YWlanRecord objects, containing the SSID, channel,
      *         link quality and the type of security of the wireless network.
      *
      * On failure, throws an exception or returns an empty list.
@@ -621,9 +623,14 @@ export class YWireless extends YFunction
     }
 
     /**
-     * Returns the next Wireless
+     * Continues the enumeration of wireless LAN interfaces started using yFirstWireless().
+     * Caution: You can't make any assumption about the returned wireless LAN interfaces order.
+     * If you want to find a specific a wireless LAN interface, use Wireless.findWireless()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YWireless}
+     * @return a pointer to a YWireless object, corresponding to
+     *         a wireless LAN interface currently online, or a null pointer
+     *         if there are no more wireless LAN interfaces to enumerate.
      */
     nextWireless(): YWireless | null
     {
@@ -635,9 +642,13 @@ export class YWireless extends YFunction
     }
 
     /**
-     * Retrieves the first Wireless in a YAPI context
+     * Starts the enumeration of wireless LAN interfaces currently accessible.
+     * Use the method YWireless.nextWireless() to iterate on
+     * next wireless LAN interfaces.
      *
-     * @returns {YWireless}
+     * @return a pointer to a YWireless object, corresponding to
+     *         the first wireless LAN interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWireless(): YWireless | null
     {
@@ -647,11 +658,15 @@ export class YWireless extends YFunction
     }
 
     /**
-     * Retrieves the first Wireless in a given context
+     * Starts the enumeration of wireless LAN interfaces currently accessible.
+     * Use the method YWireless.nextWireless() to iterate on
+     * next wireless LAN interfaces.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YWireless}
+     * @return a pointer to a YWireless object, corresponding to
+     *         the first wireless LAN interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstWirelessInContext(yctx: YAPIContext): YWireless | null
     {

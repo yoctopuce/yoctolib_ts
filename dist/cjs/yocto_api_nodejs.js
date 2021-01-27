@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 41769 2020-09-03 17:34:23Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 43403 2021-01-19 11:58:02Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -204,9 +204,8 @@ class YHttpCallbackHub extends yocto_api_js_1.YGenericHub {
                 return yocto_api_js_1.YAPI.UNAUTHORIZED;
             }
         }
-        if (!this._hubAdded && this._connectionType != this._HUB_TESTONLY) {
-            this._hubAdded = true;
-            await this._yapi._addHub(this);
+        if (!this._hubAdded) {
+            await this.signalHubConnected();
         }
         return yocto_api_js_1.YAPI.SUCCESS;
     }
@@ -303,7 +302,6 @@ class YHttpNodeHub extends yocto_api_js_1.YGenericHub {
             port: this.urlInfo.port,
             path: '/not.byn' + args
         };
-        this._hubAdded = false;
         if (!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             this.notbynOpenPromise = new Promise((resolve, reject) => {
@@ -323,7 +321,6 @@ class YHttpNodeHub extends yocto_api_js_1.YGenericHub {
                             }
                         }
                         else {
-                            resolve({ errorType: yocto_api_js_1.YAPI.SUCCESS, errorMsg: "" });
                             res.on('data', (chunk) => {
                                 // receiving data properly
                                 this._yapi.parseEvents(this, this._yapi.imm_bin2str(chunk));
@@ -334,6 +331,11 @@ class YHttpNodeHub extends yocto_api_js_1.YGenericHub {
                                 this.currPos = 0;
                                 this.testHub(0, errmsg);
                             });
+                            if (!this._hubAdded) {
+                                this.signalHubConnected().then(() => {
+                                    resolve({ errorType: yocto_api_js_1.YAPI_SUCCESS, errorMsg: "" });
+                                });
+                            }
                         }
                     });
                     this.notbynRequest.on('error', () => {
@@ -350,10 +352,6 @@ class YHttpNodeHub extends yocto_api_js_1.YGenericHub {
         let res_struct = await this.notbynOpenPromise;
         if (errmsg) {
             errmsg.msg = res_struct.errorMsg;
-        }
-        if (res_struct.errorType == yocto_api_js_1.YAPI.SUCCESS && !this._hubAdded && this._connectionType != this._HUB_TESTONLY) {
-            this._hubAdded = true;
-            await this._yapi._addHub(this);
         }
         this.notbynOpenPromise = null;
         return res_struct.errorType;

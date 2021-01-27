@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_spiport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -106,7 +106,7 @@ export class YSpiSnoopingRecord
 }
 
 //--- (generated code: YSpiPort definitions)
-export const enum Y_VoltageLevel {
+export const enum YSpiPort_VoltageLevel {
     OFF = 0,
     TTL3V = 1,
     TTL3VR = 2,
@@ -117,12 +117,12 @@ export const enum Y_VoltageLevel {
     TTL1V8 = 7,
     INVALID = -1
 }
-export const enum Y_SsPolarity {
+export const enum YSpiPort_SsPolarity {
     ACTIVE_LOW = 0,
     ACTIVE_HIGH = 1,
     INVALID = -1
 }
-export const enum Y_ShiftSampling {
+export const enum YSpiPort_ShiftSampling {
     OFF = 0,
     ON = 1,
     INVALID = -1
@@ -158,10 +158,10 @@ export class YSpiPort extends YFunction
     _jobMaxSize: number = YSpiPort.JOBMAXSIZE_INVALID;
     _command: string = YSpiPort.COMMAND_INVALID;
     _protocol: string = YSpiPort.PROTOCOL_INVALID;
-    _voltageLevel: Y_VoltageLevel = YSpiPort.VOLTAGELEVEL_INVALID;
+    _voltageLevel: YSpiPort_VoltageLevel = YSpiPort.VOLTAGELEVEL_INVALID;
     _spiMode: string = YSpiPort.SPIMODE_INVALID;
-    _ssPolarity: Y_SsPolarity = YSpiPort.SSPOLARITY_INVALID;
-    _shiftSampling: Y_ShiftSampling = YSpiPort.SHIFTSAMPLING_INVALID;
+    _ssPolarity: YSpiPort_SsPolarity = YSpiPort.SSPOLARITY_INVALID;
+    _shiftSampling: YSpiPort_ShiftSampling = YSpiPort.SHIFTSAMPLING_INVALID;
     _valueCallbackSpiPort: YSpiPortValueCallback | null = null;
     _rxptr: number = 0;
     _rxbuff: Uint8Array = new Uint8Array(0);
@@ -180,22 +180,22 @@ export class YSpiPort extends YFunction
     public readonly JOBMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public readonly PROTOCOL_INVALID: string = YAPI.INVALID_STRING;
-    public readonly VOLTAGELEVEL_OFF: Y_VoltageLevel = Y_VoltageLevel.OFF;
-    public readonly VOLTAGELEVEL_TTL3V: Y_VoltageLevel = Y_VoltageLevel.TTL3V;
-    public readonly VOLTAGELEVEL_TTL3VR: Y_VoltageLevel = Y_VoltageLevel.TTL3VR;
-    public readonly VOLTAGELEVEL_TTL5V: Y_VoltageLevel = Y_VoltageLevel.TTL5V;
-    public readonly VOLTAGELEVEL_TTL5VR: Y_VoltageLevel = Y_VoltageLevel.TTL5VR;
-    public readonly VOLTAGELEVEL_RS232: Y_VoltageLevel = Y_VoltageLevel.RS232;
-    public readonly VOLTAGELEVEL_RS485: Y_VoltageLevel = Y_VoltageLevel.RS485;
-    public readonly VOLTAGELEVEL_TTL1V8: Y_VoltageLevel = Y_VoltageLevel.TTL1V8;
-    public readonly VOLTAGELEVEL_INVALID: Y_VoltageLevel = Y_VoltageLevel.INVALID;
+    public readonly VOLTAGELEVEL_OFF: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.OFF;
+    public readonly VOLTAGELEVEL_TTL3V: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL3V;
+    public readonly VOLTAGELEVEL_TTL3VR: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL3VR;
+    public readonly VOLTAGELEVEL_TTL5V: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL5V;
+    public readonly VOLTAGELEVEL_TTL5VR: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL5VR;
+    public readonly VOLTAGELEVEL_RS232: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.RS232;
+    public readonly VOLTAGELEVEL_RS485: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.RS485;
+    public readonly VOLTAGELEVEL_TTL1V8: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL1V8;
+    public readonly VOLTAGELEVEL_INVALID: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.INVALID;
     public readonly SPIMODE_INVALID: string = YAPI.INVALID_STRING;
-    public readonly SSPOLARITY_ACTIVE_LOW: Y_SsPolarity = Y_SsPolarity.ACTIVE_LOW;
-    public readonly SSPOLARITY_ACTIVE_HIGH: Y_SsPolarity = Y_SsPolarity.ACTIVE_HIGH;
-    public readonly SSPOLARITY_INVALID: Y_SsPolarity = Y_SsPolarity.INVALID;
-    public readonly SHIFTSAMPLING_OFF: Y_ShiftSampling = Y_ShiftSampling.OFF;
-    public readonly SHIFTSAMPLING_ON: Y_ShiftSampling = Y_ShiftSampling.ON;
-    public readonly SHIFTSAMPLING_INVALID: Y_ShiftSampling = Y_ShiftSampling.INVALID;
+    public readonly SSPOLARITY_ACTIVE_LOW: YSpiPort_SsPolarity = YSpiPort_SsPolarity.ACTIVE_LOW;
+    public readonly SSPOLARITY_ACTIVE_HIGH: YSpiPort_SsPolarity = YSpiPort_SsPolarity.ACTIVE_HIGH;
+    public readonly SSPOLARITY_INVALID: YSpiPort_SsPolarity = YSpiPort_SsPolarity.INVALID;
+    public readonly SHIFTSAMPLING_OFF: YSpiPort_ShiftSampling = YSpiPort_ShiftSampling.OFF;
+    public readonly SHIFTSAMPLING_ON: YSpiPort_ShiftSampling = YSpiPort_ShiftSampling.ON;
+    public readonly SHIFTSAMPLING_INVALID: YSpiPort_ShiftSampling = YSpiPort_ShiftSampling.INVALID;
 
     // API symbols as static members
     public static readonly RXCOUNT_INVALID: number = YAPI.INVALID_UINT;
@@ -210,22 +210,22 @@ export class YSpiPort extends YFunction
     public static readonly JOBMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public static readonly PROTOCOL_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly VOLTAGELEVEL_OFF: Y_VoltageLevel = Y_VoltageLevel.OFF;
-    public static readonly VOLTAGELEVEL_TTL3V: Y_VoltageLevel = Y_VoltageLevel.TTL3V;
-    public static readonly VOLTAGELEVEL_TTL3VR: Y_VoltageLevel = Y_VoltageLevel.TTL3VR;
-    public static readonly VOLTAGELEVEL_TTL5V: Y_VoltageLevel = Y_VoltageLevel.TTL5V;
-    public static readonly VOLTAGELEVEL_TTL5VR: Y_VoltageLevel = Y_VoltageLevel.TTL5VR;
-    public static readonly VOLTAGELEVEL_RS232: Y_VoltageLevel = Y_VoltageLevel.RS232;
-    public static readonly VOLTAGELEVEL_RS485: Y_VoltageLevel = Y_VoltageLevel.RS485;
-    public static readonly VOLTAGELEVEL_TTL1V8: Y_VoltageLevel = Y_VoltageLevel.TTL1V8;
-    public static readonly VOLTAGELEVEL_INVALID: Y_VoltageLevel = Y_VoltageLevel.INVALID;
+    public static readonly VOLTAGELEVEL_OFF: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.OFF;
+    public static readonly VOLTAGELEVEL_TTL3V: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL3V;
+    public static readonly VOLTAGELEVEL_TTL3VR: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL3VR;
+    public static readonly VOLTAGELEVEL_TTL5V: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL5V;
+    public static readonly VOLTAGELEVEL_TTL5VR: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL5VR;
+    public static readonly VOLTAGELEVEL_RS232: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.RS232;
+    public static readonly VOLTAGELEVEL_RS485: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.RS485;
+    public static readonly VOLTAGELEVEL_TTL1V8: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.TTL1V8;
+    public static readonly VOLTAGELEVEL_INVALID: YSpiPort_VoltageLevel = YSpiPort_VoltageLevel.INVALID;
     public static readonly SPIMODE_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly SSPOLARITY_ACTIVE_LOW: Y_SsPolarity = Y_SsPolarity.ACTIVE_LOW;
-    public static readonly SSPOLARITY_ACTIVE_HIGH: Y_SsPolarity = Y_SsPolarity.ACTIVE_HIGH;
-    public static readonly SSPOLARITY_INVALID: Y_SsPolarity = Y_SsPolarity.INVALID;
-    public static readonly SHIFTSAMPLING_OFF: Y_ShiftSampling = Y_ShiftSampling.OFF;
-    public static readonly SHIFTSAMPLING_ON: Y_ShiftSampling = Y_ShiftSampling.ON;
-    public static readonly SHIFTSAMPLING_INVALID: Y_ShiftSampling = Y_ShiftSampling.INVALID;
+    public static readonly SSPOLARITY_ACTIVE_LOW: YSpiPort_SsPolarity = YSpiPort_SsPolarity.ACTIVE_LOW;
+    public static readonly SSPOLARITY_ACTIVE_HIGH: YSpiPort_SsPolarity = YSpiPort_SsPolarity.ACTIVE_HIGH;
+    public static readonly SSPOLARITY_INVALID: YSpiPort_SsPolarity = YSpiPort_SsPolarity.INVALID;
+    public static readonly SHIFTSAMPLING_OFF: YSpiPort_ShiftSampling = YSpiPort_ShiftSampling.OFF;
+    public static readonly SHIFTSAMPLING_ON: YSpiPort_ShiftSampling = YSpiPort_ShiftSampling.ON;
+    public static readonly SHIFTSAMPLING_INVALID: YSpiPort_ShiftSampling = YSpiPort_ShiftSampling.INVALID;
     //--- (end of generated code: YSpiPort attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -278,16 +278,16 @@ export class YSpiPort extends YFunction
             this._protocol = <string> <string> val;
             return 1;
         case 'voltageLevel':
-            this._voltageLevel = <Y_VoltageLevel> <number> val;
+            this._voltageLevel = <YSpiPort_VoltageLevel> <number> val;
             return 1;
         case 'spiMode':
             this._spiMode = <string> <string> val;
             return 1;
         case 'ssPolarity':
-            this._ssPolarity = <Y_SsPolarity> <number> val;
+            this._ssPolarity = <YSpiPort_SsPolarity> <number> val;
             return 1;
         case 'shiftSampling':
-            this._shiftSampling = <Y_ShiftSampling> <number> val;
+            this._shiftSampling = <YSpiPort_ShiftSampling> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -298,7 +298,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to the total number of bytes received since last reset
      *
-     * On failure, throws an exception or returns Y_RXCOUNT_INVALID.
+     * On failure, throws an exception or returns YSpiPort.RXCOUNT_INVALID.
      */
     async get_rxCount(): Promise<number>
     {
@@ -317,7 +317,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to the total number of bytes transmitted since last reset
      *
-     * On failure, throws an exception or returns Y_TXCOUNT_INVALID.
+     * On failure, throws an exception or returns YSpiPort.TXCOUNT_INVALID.
      */
     async get_txCount(): Promise<number>
     {
@@ -336,7 +336,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to the total number of communication errors detected since last reset
      *
-     * On failure, throws an exception or returns Y_ERRCOUNT_INVALID.
+     * On failure, throws an exception or returns YSpiPort.ERRCOUNT_INVALID.
      */
     async get_errCount(): Promise<number>
     {
@@ -355,7 +355,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to the total number of messages received since last reset
      *
-     * On failure, throws an exception or returns Y_RXMSGCOUNT_INVALID.
+     * On failure, throws an exception or returns YSpiPort.RXMSGCOUNT_INVALID.
      */
     async get_rxMsgCount(): Promise<number>
     {
@@ -374,7 +374,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to the total number of messages send since last reset
      *
-     * On failure, throws an exception or returns Y_TXMSGCOUNT_INVALID.
+     * On failure, throws an exception or returns YSpiPort.TXMSGCOUNT_INVALID.
      */
     async get_txMsgCount(): Promise<number>
     {
@@ -393,7 +393,7 @@ export class YSpiPort extends YFunction
      *
      * @return a string corresponding to the latest message fully received (for Line and Frame protocols)
      *
-     * On failure, throws an exception or returns Y_LASTMSG_INVALID.
+     * On failure, throws an exception or returns YSpiPort.LASTMSG_INVALID.
      */
     async get_lastMsg(): Promise<string>
     {
@@ -412,7 +412,7 @@ export class YSpiPort extends YFunction
      *
      * @return a string corresponding to the name of the job file currently in use
      *
-     * On failure, throws an exception or returns Y_CURRENTJOB_INVALID.
+     * On failure, throws an exception or returns YSpiPort.CURRENTJOB_INVALID.
      */
     async get_currentJob(): Promise<string>
     {
@@ -432,7 +432,7 @@ export class YSpiPort extends YFunction
      *
      * @param newval : a string
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -448,7 +448,7 @@ export class YSpiPort extends YFunction
      *
      * @return a string corresponding to the job file to use when the device is powered on
      *
-     * On failure, throws an exception or returns Y_STARTUPJOB_INVALID.
+     * On failure, throws an exception or returns YSpiPort.STARTUPJOB_INVALID.
      */
     async get_startupJob(): Promise<string>
     {
@@ -469,7 +469,7 @@ export class YSpiPort extends YFunction
      *
      * @param newval : a string corresponding to the job to use when the device is powered on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -485,7 +485,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to the maximum number of tasks in a job that the device can handle
      *
-     * On failure, throws an exception or returns Y_JOBMAXTASK_INVALID.
+     * On failure, throws an exception or returns YSpiPort.JOBMAXTASK_INVALID.
      */
     async get_jobMaxTask(): Promise<number>
     {
@@ -504,7 +504,7 @@ export class YSpiPort extends YFunction
      *
      * @return an integer corresponding to maximum size allowed for job files
      *
-     * On failure, throws an exception or returns Y_JOBMAXSIZE_INVALID.
+     * On failure, throws an exception or returns YSpiPort.JOBMAXSIZE_INVALID.
      */
     async get_jobMaxSize(): Promise<number>
     {
@@ -546,7 +546,7 @@ export class YSpiPort extends YFunction
      *
      * @return a string corresponding to the type of protocol used over the serial line, as a string
      *
-     * On failure, throws an exception or returns Y_PROTOCOL_INVALID.
+     * On failure, throws an exception or returns YSpiPort.PROTOCOL_INVALID.
      */
     async get_protocol(): Promise<string>
     {
@@ -573,7 +573,7 @@ export class YSpiPort extends YFunction
      *
      * @param newval : a string corresponding to the type of protocol used over the serial line
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -587,13 +587,14 @@ export class YSpiPort extends YFunction
     /**
      * Returns the voltage level used on the serial line.
      *
-     * @return a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V, Y_VOLTAGELEVEL_TTL3VR,
-     * Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232, Y_VOLTAGELEVEL_RS485 and
-     * Y_VOLTAGELEVEL_TTL1V8 corresponding to the voltage level used on the serial line
+     * @return a value among YSpiPort.VOLTAGELEVEL_OFF, YSpiPort.VOLTAGELEVEL_TTL3V,
+     * YSpiPort.VOLTAGELEVEL_TTL3VR, YSpiPort.VOLTAGELEVEL_TTL5V, YSpiPort.VOLTAGELEVEL_TTL5VR,
+     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485 and YSpiPort.VOLTAGELEVEL_TTL1V8
+     * corresponding to the voltage level used on the serial line
      *
-     * On failure, throws an exception or returns Y_VOLTAGELEVEL_INVALID.
+     * On failure, throws an exception or returns YSpiPort.VOLTAGELEVEL_INVALID.
      */
-    async get_voltageLevel(): Promise<Y_VoltageLevel>
+    async get_voltageLevel(): Promise<YSpiPort_VoltageLevel>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -614,15 +615,16 @@ export class YSpiPort extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_VOLTAGELEVEL_OFF, Y_VOLTAGELEVEL_TTL3V, Y_VOLTAGELEVEL_TTL3VR,
-     * Y_VOLTAGELEVEL_TTL5V, Y_VOLTAGELEVEL_TTL5VR, Y_VOLTAGELEVEL_RS232, Y_VOLTAGELEVEL_RS485 and
-     * Y_VOLTAGELEVEL_TTL1V8 corresponding to the voltage type used on the serial line
+     * @param newval : a value among YSpiPort.VOLTAGELEVEL_OFF, YSpiPort.VOLTAGELEVEL_TTL3V,
+     * YSpiPort.VOLTAGELEVEL_TTL3VR, YSpiPort.VOLTAGELEVEL_TTL5V, YSpiPort.VOLTAGELEVEL_TTL5VR,
+     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485 and YSpiPort.VOLTAGELEVEL_TTL1V8
+     * corresponding to the voltage type used on the serial line
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_voltageLevel(newval: Y_VoltageLevel): Promise<number>
+    async set_voltageLevel(newval: YSpiPort_VoltageLevel): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -637,7 +639,7 @@ export class YSpiPort extends YFunction
      * @return a string corresponding to the SPI port communication parameters, as a string such as
      *         "125000,0,msb"
      *
-     * On failure, throws an exception or returns Y_SPIMODE_INVALID.
+     * On failure, throws an exception or returns YSpiPort.SPIMODE_INVALID.
      */
     async get_spiMode(): Promise<string>
     {
@@ -661,7 +663,7 @@ export class YSpiPort extends YFunction
      * @param newval : a string corresponding to the SPI port communication parameters, with a string such as
      *         "125000,0,msb"
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -675,11 +677,12 @@ export class YSpiPort extends YFunction
     /**
      * Returns the SS line polarity.
      *
-     * @return either Y_SSPOLARITY_ACTIVE_LOW or Y_SSPOLARITY_ACTIVE_HIGH, according to the SS line polarity
+     * @return either YSpiPort.SSPOLARITY_ACTIVE_LOW or YSpiPort.SSPOLARITY_ACTIVE_HIGH, according to the
+     * SS line polarity
      *
-     * On failure, throws an exception or returns Y_SSPOLARITY_INVALID.
+     * On failure, throws an exception or returns YSpiPort.SSPOLARITY_INVALID.
      */
-    async get_ssPolarity(): Promise<Y_SsPolarity>
+    async get_ssPolarity(): Promise<YSpiPort_SsPolarity>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -696,13 +699,14 @@ export class YSpiPort extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : either Y_SSPOLARITY_ACTIVE_LOW or Y_SSPOLARITY_ACTIVE_HIGH, according to the SS line polarity
+     * @param newval : either YSpiPort.SSPOLARITY_ACTIVE_LOW or YSpiPort.SSPOLARITY_ACTIVE_HIGH, according
+     * to the SS line polarity
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_ssPolarity(newval: Y_SsPolarity): Promise<number>
+    async set_ssPolarity(newval: YSpiPort_SsPolarity): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -712,12 +716,12 @@ export class YSpiPort extends YFunction
     /**
      * Returns true when the SDI line phase is shifted with regards to the SDO line.
      *
-     * @return either Y_SHIFTSAMPLING_OFF or Y_SHIFTSAMPLING_ON, according to true when the SDI line phase
-     * is shifted with regards to the SDO line
+     * @return either YSpiPort.SHIFTSAMPLING_OFF or YSpiPort.SHIFTSAMPLING_ON, according to true when the
+     * SDI line phase is shifted with regards to the SDO line
      *
-     * On failure, throws an exception or returns Y_SHIFTSAMPLING_INVALID.
+     * On failure, throws an exception or returns YSpiPort.SHIFTSAMPLING_INVALID.
      */
-    async get_shiftSampling(): Promise<Y_ShiftSampling>
+    async get_shiftSampling(): Promise<YSpiPort_ShiftSampling>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -736,13 +740,14 @@ export class YSpiPort extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : either Y_SHIFTSAMPLING_OFF or Y_SHIFTSAMPLING_ON, according to the SDI line sampling shift
+     * @param newval : either YSpiPort.SHIFTSAMPLING_OFF or YSpiPort.SHIFTSAMPLING_ON, according to the
+     * SDI line sampling shift
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_shiftSampling(newval: Y_ShiftSampling): Promise<number>
+    async set_shiftSampling(newval: YSpiPort_ShiftSampling): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -750,7 +755,7 @@ export class YSpiPort extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a SPI port for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -760,11 +765,11 @@ export class YSpiPort extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the SPI port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSpiPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSpiPort.isOnline() to test if the SPI port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a SPI port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -772,10 +777,10 @@ export class YSpiPort extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the SPI port, for instance
+     *         YSPIMK01.spiPort.
      *
-     * @return a YSpiPort object allowing you to drive $THEFUNCTION$.
+     * @return a YSpiPort object allowing you to drive the SPI port.
      */
     static FindSpiPort(func: string): YSpiPort
     {
@@ -789,7 +794,7 @@ export class YSpiPort extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a SPI port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -799,19 +804,19 @@ export class YSpiPort extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the SPI port is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSpiPort.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSpiPort.isOnline() to test if the SPI port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a SPI port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the SPI port, for instance
+     *         YSPIMK01.spiPort.
      *
-     * @return a YSpiPort object allowing you to drive $THEFUNCTION$.
+     * @return a YSpiPort object allowing you to drive the SPI port.
      */
     static FindSpiPortInContext(yctx: YAPIContext, func: string): YSpiPort
     {
@@ -920,14 +925,14 @@ export class YSpiPort extends YFunction
      * If no matching message is found, the search waits for one up to the specified maximum timeout
      * (in milliseconds).
      *
-     * @param pattern {string} : a limited regular expression describing the expected message format,
+     * @param pattern : a limited regular expression describing the expected message format,
      *         or an empty string if all messages should be returned (no filtering).
      *         When using binary protocols, the format applies to the hexadecimal
      *         representation of the message.
-     * @param maxWait {number} : the maximum number of milliseconds to wait for a message if none is found
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
      *
-     * @return {string[]} an array of strings containing the messages found, if any.
+     * @return an array of strings containing the messages found, if any.
      *         Binary messages are converted to hexadecimal representation.
      *
      * On failure, throws an exception or returns an empty array.
@@ -1087,7 +1092,7 @@ export class YSpiPort extends YFunction
      * @param jobfile : name of the job file to save on the device filesystem
      * @param jsonDef : a string containing a JSON definition of the job
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1104,7 +1109,7 @@ export class YSpiPort extends YFunction
      *
      * @param jobfile : name of the job file (on the device filesystem)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1116,7 +1121,7 @@ export class YSpiPort extends YFunction
     /**
      * Clears the serial port buffer and resets counters to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1134,7 +1139,7 @@ export class YSpiPort extends YFunction
      *
      * @param code : the byte to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1148,7 +1153,7 @@ export class YSpiPort extends YFunction
      *
      * @param text : the text string to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1185,7 +1190,7 @@ export class YSpiPort extends YFunction
      *
      * @param buff : the binary buffer to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1199,7 +1204,7 @@ export class YSpiPort extends YFunction
      *
      * @param byteList : a list of byte codes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1228,7 +1233,7 @@ export class YSpiPort extends YFunction
      *
      * @param hexString : a string of hexadecimal byte codes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1261,7 +1266,7 @@ export class YSpiPort extends YFunction
      *
      * @param text : the text string to send
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1296,7 +1301,7 @@ export class YSpiPort extends YFunction
     /**
      * Reads one byte from the receive buffer, starting at current stream position.
      * If data at current stream position is not available anymore in the receive buffer,
-     * or if there is no data available yet, the function returns YAPI_NO_MORE_DATA.
+     * or if there is no data available yet, the function returns YAPI.NO_MORE_DATA.
      *
      * @return the next byte
      *
@@ -1445,9 +1450,9 @@ export class YSpiPort extends YFunction
      * If data at current stream position is not available anymore in the receive buffer, the
      * function performs a short read.
      *
-     * @param nChars {number} : the maximum number of bytes to read
+     * @param nChars : the maximum number of bytes to read
      *
-     * @return {Integer[]} a sequence of bytes with receive buffer contents
+     * @return a sequence of bytes with receive buffer contents
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1536,7 +1541,7 @@ export class YSpiPort extends YFunction
      *
      * @param val : 1 to turn SS active, 0 to release SS.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1551,10 +1556,10 @@ export class YSpiPort extends YFunction
      * If no message is found, the search waits for one up to the specified maximum timeout
      * (in milliseconds).
      *
-     * @param maxWait {number} : the maximum number of milliseconds to wait for a message if none is found
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
      *
-     * @return {YSpiSnoopingRecord[]} an array of YSpiSnoopingRecord objects containing the messages found, if any.
+     * @return an array of YSpiSnoopingRecord objects containing the messages found, if any.
      *
      * On failure, throws an exception or returns an empty array.
      */
@@ -1586,9 +1591,14 @@ export class YSpiPort extends YFunction
     }
 
     /**
-     * Returns the next SpiPort
+     * Continues the enumeration of SPI ports started using yFirstSpiPort().
+     * Caution: You can't make any assumption about the returned SPI ports order.
+     * If you want to find a specific a SPI port, use SpiPort.findSpiPort()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YSpiPort}
+     * @return a pointer to a YSpiPort object, corresponding to
+     *         a SPI port currently online, or a null pointer
+     *         if there are no more SPI ports to enumerate.
      */
     nextSpiPort(): YSpiPort | null
     {
@@ -1600,9 +1610,13 @@ export class YSpiPort extends YFunction
     }
 
     /**
-     * Retrieves the first SpiPort in a YAPI context
+     * Starts the enumeration of SPI ports currently accessible.
+     * Use the method YSpiPort.nextSpiPort() to iterate on
+     * next SPI ports.
      *
-     * @returns {YSpiPort}
+     * @return a pointer to a YSpiPort object, corresponding to
+     *         the first SPI port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSpiPort(): YSpiPort | null
     {
@@ -1612,11 +1626,15 @@ export class YSpiPort extends YFunction
     }
 
     /**
-     * Retrieves the first SpiPort in a given context
+     * Starts the enumeration of SPI ports currently accessible.
+     * Use the method YSpiPort.nextSpiPort() to iterate on
+     * next SPI ports.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YSpiPort}
+     * @return a pointer to a YSpiPort object, corresponding to
+     *         the first SPI port currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSpiPortInContext(yctx: YAPIContext): YSpiPort | null
     {

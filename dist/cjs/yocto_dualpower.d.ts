@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_dualpower.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -37,13 +37,13 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_PowerState {
+export declare const enum YDualPower_PowerState {
     OFF = 0,
     FROM_USB = 1,
     FROM_EXT = 2,
     INVALID = -1
 }
-export declare const enum Y_PowerControl {
+export declare const enum YDualPower_PowerControl {
     AUTO = 0,
     FROM_USB = 1,
     FROM_EXT = 2,
@@ -64,73 +64,75 @@ export interface YDualPowerValueCallback {
  */
 export declare class YDualPower extends YFunction {
     _className: string;
-    _powerState: Y_PowerState;
-    _powerControl: Y_PowerControl;
+    _powerState: YDualPower_PowerState;
+    _powerControl: YDualPower_PowerControl;
     _extVoltage: number;
     _valueCallbackDualPower: YDualPowerValueCallback | null;
-    readonly POWERSTATE_OFF: Y_PowerState;
-    readonly POWERSTATE_FROM_USB: Y_PowerState;
-    readonly POWERSTATE_FROM_EXT: Y_PowerState;
-    readonly POWERSTATE_INVALID: Y_PowerState;
-    readonly POWERCONTROL_AUTO: Y_PowerControl;
-    readonly POWERCONTROL_FROM_USB: Y_PowerControl;
-    readonly POWERCONTROL_FROM_EXT: Y_PowerControl;
-    readonly POWERCONTROL_OFF: Y_PowerControl;
-    readonly POWERCONTROL_INVALID: Y_PowerControl;
+    readonly POWERSTATE_OFF: YDualPower_PowerState;
+    readonly POWERSTATE_FROM_USB: YDualPower_PowerState;
+    readonly POWERSTATE_FROM_EXT: YDualPower_PowerState;
+    readonly POWERSTATE_INVALID: YDualPower_PowerState;
+    readonly POWERCONTROL_AUTO: YDualPower_PowerControl;
+    readonly POWERCONTROL_FROM_USB: YDualPower_PowerControl;
+    readonly POWERCONTROL_FROM_EXT: YDualPower_PowerControl;
+    readonly POWERCONTROL_OFF: YDualPower_PowerControl;
+    readonly POWERCONTROL_INVALID: YDualPower_PowerControl;
     readonly EXTVOLTAGE_INVALID: number;
-    static readonly POWERSTATE_OFF: Y_PowerState;
-    static readonly POWERSTATE_FROM_USB: Y_PowerState;
-    static readonly POWERSTATE_FROM_EXT: Y_PowerState;
-    static readonly POWERSTATE_INVALID: Y_PowerState;
-    static readonly POWERCONTROL_AUTO: Y_PowerControl;
-    static readonly POWERCONTROL_FROM_USB: Y_PowerControl;
-    static readonly POWERCONTROL_FROM_EXT: Y_PowerControl;
-    static readonly POWERCONTROL_OFF: Y_PowerControl;
-    static readonly POWERCONTROL_INVALID: Y_PowerControl;
+    static readonly POWERSTATE_OFF: YDualPower_PowerState;
+    static readonly POWERSTATE_FROM_USB: YDualPower_PowerState;
+    static readonly POWERSTATE_FROM_EXT: YDualPower_PowerState;
+    static readonly POWERSTATE_INVALID: YDualPower_PowerState;
+    static readonly POWERCONTROL_AUTO: YDualPower_PowerControl;
+    static readonly POWERCONTROL_FROM_USB: YDualPower_PowerControl;
+    static readonly POWERCONTROL_FROM_EXT: YDualPower_PowerControl;
+    static readonly POWERCONTROL_OFF: YDualPower_PowerControl;
+    static readonly POWERCONTROL_INVALID: YDualPower_PowerControl;
     static readonly EXTVOLTAGE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
      * Returns the current power source for module functions that require lots of current.
      *
-     * @return a value among Y_POWERSTATE_OFF, Y_POWERSTATE_FROM_USB and Y_POWERSTATE_FROM_EXT
-     * corresponding to the current power source for module functions that require lots of current
+     * @return a value among YDualPower.POWERSTATE_OFF, YDualPower.POWERSTATE_FROM_USB and
+     * YDualPower.POWERSTATE_FROM_EXT corresponding to the current power source for module functions that
+     * require lots of current
      *
-     * On failure, throws an exception or returns Y_POWERSTATE_INVALID.
+     * On failure, throws an exception or returns YDualPower.POWERSTATE_INVALID.
      */
-    get_powerState(): Promise<Y_PowerState>;
+    get_powerState(): Promise<YDualPower_PowerState>;
     /**
      * Returns the selected power source for module functions that require lots of current.
      *
-     * @return a value among Y_POWERCONTROL_AUTO, Y_POWERCONTROL_FROM_USB, Y_POWERCONTROL_FROM_EXT and
-     * Y_POWERCONTROL_OFF corresponding to the selected power source for module functions that require lots of current
+     * @return a value among YDualPower.POWERCONTROL_AUTO, YDualPower.POWERCONTROL_FROM_USB,
+     * YDualPower.POWERCONTROL_FROM_EXT and YDualPower.POWERCONTROL_OFF corresponding to the selected
+     * power source for module functions that require lots of current
      *
-     * On failure, throws an exception or returns Y_POWERCONTROL_INVALID.
+     * On failure, throws an exception or returns YDualPower.POWERCONTROL_INVALID.
      */
-    get_powerControl(): Promise<Y_PowerControl>;
+    get_powerControl(): Promise<YDualPower_PowerControl>;
     /**
      * Changes the selected power source for module functions that require lots of current.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_POWERCONTROL_AUTO, Y_POWERCONTROL_FROM_USB, Y_POWERCONTROL_FROM_EXT
-     * and Y_POWERCONTROL_OFF corresponding to the selected power source for module functions that require
-     * lots of current
+     * @param newval : a value among YDualPower.POWERCONTROL_AUTO, YDualPower.POWERCONTROL_FROM_USB,
+     * YDualPower.POWERCONTROL_FROM_EXT and YDualPower.POWERCONTROL_OFF corresponding to the selected
+     * power source for module functions that require lots of current
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_powerControl(newval: Y_PowerControl): Promise<number>;
+    set_powerControl(newval: YDualPower_PowerControl): Promise<number>;
     /**
      * Returns the measured voltage on the external power source, in millivolts.
      *
      * @return an integer corresponding to the measured voltage on the external power source, in millivolts
      *
-     * On failure, throws an exception or returns Y_EXTVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YDualPower.EXTVOLTAGE_INVALID.
      */
     get_extVoltage(): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a dual power switch for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -140,11 +142,11 @@ export declare class YDualPower extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the dual power switch is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDualPower.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDualPower.isOnline() to test if the dual power switch is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a dual power switch by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -152,14 +154,14 @@ export declare class YDualPower extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the dual power switch, for instance
+     *         SERVORC1.dualPower.
      *
-     * @return a YDualPower object allowing you to drive $THEFUNCTION$.
+     * @return a YDualPower object allowing you to drive the dual power switch.
      */
     static FindDualPower(func: string): YDualPower;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a dual power switch for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -169,19 +171,19 @@ export declare class YDualPower extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the dual power switch is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDualPower.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDualPower.isOnline() to test if the dual power switch is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a dual power switch by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the dual power switch, for instance
+     *         SERVORC1.dualPower.
      *
-     * @return a YDualPower object allowing you to drive $THEFUNCTION$.
+     * @return a YDualPower object allowing you to drive the dual power switch.
      */
     static FindDualPowerInContext(yctx: YAPIContext, func: string): YDualPower;
     /**
@@ -198,23 +200,36 @@ export declare class YDualPower extends YFunction {
     registerValueCallback(callback: YDualPowerValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
-     * Returns the next DualPower
+     * Continues the enumeration of dual power switches started using yFirstDualPower().
+     * Caution: You can't make any assumption about the returned dual power switches order.
+     * If you want to find a specific a dual power switch, use DualPower.findDualPower()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDualPower}
+     * @return a pointer to a YDualPower object, corresponding to
+     *         a dual power switch currently online, or a null pointer
+     *         if there are no more dual power switches to enumerate.
      */
     nextDualPower(): YDualPower | null;
     /**
-     * Retrieves the first DualPower in a YAPI context
+     * Starts the enumeration of dual power switches currently accessible.
+     * Use the method YDualPower.nextDualPower() to iterate on
+     * next dual power switches.
      *
-     * @returns {YDualPower}
+     * @return a pointer to a YDualPower object, corresponding to
+     *         the first dual power switch currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDualPower(): YDualPower | null;
     /**
-     * Retrieves the first DualPower in a given context
+     * Starts the enumeration of dual power switches currently accessible.
+     * Use the method YDualPower.nextDualPower() to iterate on
+     * next dual power switches.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDualPower}
+     * @return a pointer to a YDualPower object, corresponding to
+     *         the first dual power switch currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDualPowerInContext(yctx: YAPIContext): YDualPower | null;
 }

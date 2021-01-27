@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_messagebox.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -113,7 +113,7 @@ export declare class YSms {
      *
      * @param val : the text to be sent in the message
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      */
     addText(val: string): Promise<number>;
     /**
@@ -122,7 +122,7 @@ export declare class YSms {
      *
      * @param val : an array of special unicode characters
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      */
     addUnicodeData(val: number[]): Promise<number>;
     set_pdu(pdu: Uint8Array): Promise<number>;
@@ -141,7 +141,7 @@ export declare class YSms {
      * Sends the SMS to the recipient. Messages of more than 160 characters are supported
      * using SMS concatenation.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -194,7 +194,7 @@ export declare class YMessageBox extends YFunction {
      *
      * @return an integer corresponding to the number of message storage slots currently in use
      *
-     * On failure, throws an exception or returns Y_SLOTSINUSE_INVALID.
+     * On failure, throws an exception or returns YMessageBox.SLOTSINUSE_INVALID.
      */
     get_slotsInUse(): Promise<number>;
     /**
@@ -202,7 +202,7 @@ export declare class YMessageBox extends YFunction {
      *
      * @return an integer corresponding to the total number of message storage slots on the SIM card
      *
-     * On failure, throws an exception or returns Y_SLOTSCOUNT_INVALID.
+     * On failure, throws an exception or returns YMessageBox.SLOTSCOUNT_INVALID.
      */
     get_slotsCount(): Promise<number>;
     get_slotsBitmap(): Promise<string>;
@@ -211,7 +211,7 @@ export declare class YMessageBox extends YFunction {
      *
      * @return an integer corresponding to the number of SMS units sent so far
      *
-     * On failure, throws an exception or returns Y_PDUSENT_INVALID.
+     * On failure, throws an exception or returns YMessageBox.PDUSENT_INVALID.
      */
     get_pduSent(): Promise<number>;
     /**
@@ -219,7 +219,7 @@ export declare class YMessageBox extends YFunction {
      *
      * @param newval : an integer corresponding to the value of the outgoing SMS units counter
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -229,7 +229,7 @@ export declare class YMessageBox extends YFunction {
      *
      * @return an integer corresponding to the number of SMS units received so far
      *
-     * On failure, throws an exception or returns Y_PDURECEIVED_INVALID.
+     * On failure, throws an exception or returns YMessageBox.PDURECEIVED_INVALID.
      */
     get_pduReceived(): Promise<number>;
     /**
@@ -237,7 +237,7 @@ export declare class YMessageBox extends YFunction {
      *
      * @param newval : an integer corresponding to the value of the incoming SMS units counter
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -245,7 +245,7 @@ export declare class YMessageBox extends YFunction {
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a SMS message box interface for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -255,11 +255,11 @@ export declare class YMessageBox extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the SMS message box interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMessageBox.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMessageBox.isOnline() to test if the SMS message box interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a SMS message box interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -267,14 +267,14 @@ export declare class YMessageBox extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the SMS message box interface, for instance
+     *         YHUBGSM1.messageBox.
      *
-     * @return a YMessageBox object allowing you to drive $THEFUNCTION$.
+     * @return a YMessageBox object allowing you to drive the SMS message box interface.
      */
     static FindMessageBox(func: string): YMessageBox;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a SMS message box interface for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -284,19 +284,19 @@ export declare class YMessageBox extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the SMS message box interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMessageBox.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMessageBox.isOnline() to test if the SMS message box interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a SMS message box interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the SMS message box interface, for instance
+     *         YHUBGSM1.messageBox.
      *
-     * @return a YMessageBox object allowing you to drive $THEFUNCTION$.
+     * @return a YMessageBox object allowing you to drive the SMS message box interface.
      */
     static FindMessageBoxInContext(yctx: YAPIContext, func: string): YMessageBox;
     /**
@@ -324,7 +324,7 @@ export declare class YMessageBox extends YFunction {
     /**
      * Clear the SMS units counters.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -340,7 +340,7 @@ export declare class YMessageBox extends YFunction {
      *         national number, or in international format starting with a plus sign
      * @param message : the text to be sent in the message
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -357,7 +357,7 @@ export declare class YMessageBox extends YFunction {
      *         national number, or in international format starting with a plus sign
      * @param message : the text to be sent in the message
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -368,7 +368,7 @@ export declare class YMessageBox extends YFunction {
      * @param recipient : a text string with the recipient phone number, either as a
      *         national number, or in international format starting with a plus sign
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -377,29 +377,42 @@ export declare class YMessageBox extends YFunction {
      * Returns the list of messages received and not deleted. This function
      * will automatically decode concatenated SMS.
      *
-     * @return {YSms[]} an YSms object list.
+     * @return an YSms object list.
      *
      * On failure, throws an exception or returns an empty list.
      */
     get_messages(): Promise<YSms[]>;
     /**
-     * Returns the next MessageBox
+     * Continues the enumeration of SMS message box interfaces started using yFirstMessageBox().
+     * Caution: You can't make any assumption about the returned SMS message box interfaces order.
+     * If you want to find a specific a SMS message box interface, use MessageBox.findMessageBox()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMessageBox}
+     * @return a pointer to a YMessageBox object, corresponding to
+     *         a SMS message box interface currently online, or a null pointer
+     *         if there are no more SMS message box interfaces to enumerate.
      */
     nextMessageBox(): YMessageBox | null;
     /**
-     * Retrieves the first MessageBox in a YAPI context
+     * Starts the enumeration of SMS message box interfaces currently accessible.
+     * Use the method YMessageBox.nextMessageBox() to iterate on
+     * next SMS message box interfaces.
      *
-     * @returns {YMessageBox}
+     * @return a pointer to a YMessageBox object, corresponding to
+     *         the first SMS message box interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMessageBox(): YMessageBox | null;
     /**
-     * Retrieves the first MessageBox in a given context
+     * Starts the enumeration of SMS message box interfaces currently accessible.
+     * Use the method YMessageBox.nextMessageBox() to iterate on
+     * next SMS message box interfaces.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMessageBox}
+     * @return a pointer to a YMessageBox object, corresponding to
+     *         the first SMS message box interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMessageBoxInContext(yctx: YAPIContext): YMessageBox | null;
 }

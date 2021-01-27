@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_oscontrol.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -80,7 +80,7 @@ class YOsControl extends yocto_api_js_1.YFunction {
      * @return an integer corresponding to the remaining number of seconds before the OS shutdown, or zero when no
      *         shutdown has been scheduled
      *
-     * On failure, throws an exception or returns Y_SHUTDOWNCOUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YOsControl.SHUTDOWNCOUNTDOWN_INVALID.
      */
     async get_shutdownCountdown() {
         let res;
@@ -98,7 +98,7 @@ class YOsControl extends yocto_api_js_1.YFunction {
         return await this._setAttr('shutdownCountdown', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves OS control for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -108,11 +108,11 @@ class YOsControl extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the OS control is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YOsControl.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YOsControl.isOnline() to test if the OS control is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * OS control by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -120,10 +120,10 @@ class YOsControl extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the OS control, for instance
+     *         MyDevice.osControl.
      *
-     * @return a YOsControl object allowing you to drive $THEFUNCTION$.
+     * @return a YOsControl object allowing you to drive the OS control.
      */
     static FindOsControl(func) {
         let obj;
@@ -135,7 +135,7 @@ class YOsControl extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves OS control for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -145,19 +145,19 @@ class YOsControl extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the OS control is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YOsControl.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YOsControl.isOnline() to test if the OS control is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * OS control by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the OS control, for instance
+     *         MyDevice.osControl.
      *
-     * @return a YOsControl object allowing you to drive $THEFUNCTION$.
+     * @return a YOsControl object allowing you to drive the OS control.
      */
     static FindOsControlInContext(yctx, func) {
         let obj;
@@ -216,7 +216,7 @@ class YOsControl extends yocto_api_js_1.YFunction {
      *
      * @param secBeforeShutDown : number of seconds before shutdown
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -224,9 +224,14 @@ class YOsControl extends yocto_api_js_1.YFunction {
         return await this.set_shutdownCountdown(secBeforeShutDown);
     }
     /**
-     * Returns the next OsControl
+     * Continues the enumeration of OS control started using yFirstOsControl().
+     * Caution: You can't make any assumption about the returned OS control order.
+     * If you want to find a specific OS control, use OsControl.findOsControl()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YOsControl}
+     * @return a pointer to a YOsControl object, corresponding to
+     *         OS control currently online, or a null pointer
+     *         if there are no more OS control to enumerate.
      */
     nextOsControl() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -238,9 +243,13 @@ class YOsControl extends yocto_api_js_1.YFunction {
         return YOsControl.FindOsControlInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first OsControl in a YAPI context
+     * Starts the enumeration of OS control currently accessible.
+     * Use the method YOsControl.nextOsControl() to iterate on
+     * next OS control.
      *
-     * @returns {YOsControl}
+     * @return a pointer to a YOsControl object, corresponding to
+     *         the first OS control currently online, or a null pointer
+     *         if there are none.
      */
     static FirstOsControl() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('OsControl');
@@ -249,11 +258,15 @@ class YOsControl extends yocto_api_js_1.YFunction {
         return YOsControl.FindOsControl(next_hwid);
     }
     /**
-     * Retrieves the first OsControl in a given context
+     * Starts the enumeration of OS control currently accessible.
+     * Use the method YOsControl.nextOsControl() to iterate on
+     * next OS control.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YOsControl}
+     * @return a pointer to a YOsControl object, corresponding to
+     *         the first OS control currently online, or a null pointer
+     *         if there are none.
      */
     static FirstOsControlInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('OsControl');

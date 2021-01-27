@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_audioout.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YAudioOut definitions)
-export const enum Y_Mute {
+export const enum YAudioOut_Mute {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -61,7 +61,7 @@ export class YAudioOut extends YFunction
     //--- (YAudioOut attributes declaration)
     _className: string;
     _volume: number = YAudioOut.VOLUME_INVALID;
-    _mute: Y_Mute = YAudioOut.MUTE_INVALID;
+    _mute: YAudioOut_Mute = YAudioOut.MUTE_INVALID;
     _volumeRange: string = YAudioOut.VOLUMERANGE_INVALID;
     _signal: number = YAudioOut.SIGNAL_INVALID;
     _noSignalFor: number = YAudioOut.NOSIGNALFOR_INVALID;
@@ -69,18 +69,18 @@ export class YAudioOut extends YFunction
 
     // API symbols as object properties
     public readonly VOLUME_INVALID: number = YAPI.INVALID_UINT;
-    public readonly MUTE_FALSE: Y_Mute = Y_Mute.FALSE;
-    public readonly MUTE_TRUE: Y_Mute = Y_Mute.TRUE;
-    public readonly MUTE_INVALID: Y_Mute = Y_Mute.INVALID;
+    public readonly MUTE_FALSE: YAudioOut_Mute = YAudioOut_Mute.FALSE;
+    public readonly MUTE_TRUE: YAudioOut_Mute = YAudioOut_Mute.TRUE;
+    public readonly MUTE_INVALID: YAudioOut_Mute = YAudioOut_Mute.INVALID;
     public readonly VOLUMERANGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly SIGNAL_INVALID: number = YAPI.INVALID_INT;
     public readonly NOSIGNALFOR_INVALID: number = YAPI.INVALID_INT;
 
     // API symbols as static members
     public static readonly VOLUME_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly MUTE_FALSE: Y_Mute = Y_Mute.FALSE;
-    public static readonly MUTE_TRUE: Y_Mute = Y_Mute.TRUE;
-    public static readonly MUTE_INVALID: Y_Mute = Y_Mute.INVALID;
+    public static readonly MUTE_FALSE: YAudioOut_Mute = YAudioOut_Mute.FALSE;
+    public static readonly MUTE_TRUE: YAudioOut_Mute = YAudioOut_Mute.TRUE;
+    public static readonly MUTE_INVALID: YAudioOut_Mute = YAudioOut_Mute.INVALID;
     public static readonly VOLUMERANGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SIGNAL_INVALID: number = YAPI.INVALID_INT;
     public static readonly NOSIGNALFOR_INVALID: number = YAPI.INVALID_INT;
@@ -106,7 +106,7 @@ export class YAudioOut extends YFunction
             this._volume = <number> <number> val;
             return 1;
         case 'mute':
-            this._mute = <Y_Mute> <number> val;
+            this._mute = <YAudioOut_Mute> <number> val;
             return 1;
         case 'volumeRange':
             this._volumeRange = <string> <string> val;
@@ -126,7 +126,7 @@ export class YAudioOut extends YFunction
      *
      * @return an integer corresponding to audio output volume, in per cents
      *
-     * On failure, throws an exception or returns Y_VOLUME_INVALID.
+     * On failure, throws an exception or returns YAudioOut.VOLUME_INVALID.
      */
     async get_volume(): Promise<number>
     {
@@ -147,7 +147,7 @@ export class YAudioOut extends YFunction
      *
      * @param newval : an integer corresponding to audio output volume, in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -161,11 +161,11 @@ export class YAudioOut extends YFunction
     /**
      * Returns the state of the mute function.
      *
-     * @return either Y_MUTE_FALSE or Y_MUTE_TRUE, according to the state of the mute function
+     * @return either YAudioOut.MUTE_FALSE or YAudioOut.MUTE_TRUE, according to the state of the mute function
      *
-     * On failure, throws an exception or returns Y_MUTE_INVALID.
+     * On failure, throws an exception or returns YAudioOut.MUTE_INVALID.
      */
-    async get_mute(): Promise<Y_Mute>
+    async get_mute(): Promise<YAudioOut_Mute>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -181,13 +181,13 @@ export class YAudioOut extends YFunction
      * Changes the state of the mute function. Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
      *
-     * @param newval : either Y_MUTE_FALSE or Y_MUTE_TRUE, according to the state of the mute function
+     * @param newval : either YAudioOut.MUTE_FALSE or YAudioOut.MUTE_TRUE, according to the state of the mute function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_mute(newval: Y_Mute): Promise<number>
+    async set_mute(newval: YAudioOut_Mute): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -202,7 +202,7 @@ export class YAudioOut extends YFunction
      *
      * @return a string corresponding to the supported volume range
      *
-     * On failure, throws an exception or returns Y_VOLUMERANGE_INVALID.
+     * On failure, throws an exception or returns YAudioOut.VOLUMERANGE_INVALID.
      */
     async get_volumeRange(): Promise<string>
     {
@@ -221,7 +221,7 @@ export class YAudioOut extends YFunction
      *
      * @return an integer corresponding to the detected output current level
      *
-     * On failure, throws an exception or returns Y_SIGNAL_INVALID.
+     * On failure, throws an exception or returns YAudioOut.SIGNAL_INVALID.
      */
     async get_signal(): Promise<number>
     {
@@ -240,7 +240,7 @@ export class YAudioOut extends YFunction
      *
      * @return an integer corresponding to the number of seconds elapsed without detecting a signal
      *
-     * On failure, throws an exception or returns Y_NOSIGNALFOR_INVALID.
+     * On failure, throws an exception or returns YAudioOut.NOSIGNALFOR_INVALID.
      */
     async get_noSignalFor(): Promise<number>
     {
@@ -255,7 +255,7 @@ export class YAudioOut extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an audio output for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -265,11 +265,11 @@ export class YAudioOut extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the audio output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAudioOut.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAudioOut.isOnline() to test if the audio output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an audio output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -277,10 +277,10 @@ export class YAudioOut extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the audio output, for instance
+     *         MyDevice.audioOut1.
      *
-     * @return a YAudioOut object allowing you to drive $THEFUNCTION$.
+     * @return a YAudioOut object allowing you to drive the audio output.
      */
     static FindAudioOut(func: string): YAudioOut
     {
@@ -294,7 +294,7 @@ export class YAudioOut extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an audio output for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -304,19 +304,19 @@ export class YAudioOut extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the audio output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAudioOut.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAudioOut.isOnline() to test if the audio output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an audio output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the audio output, for instance
+     *         MyDevice.audioOut1.
      *
-     * @return a YAudioOut object allowing you to drive $THEFUNCTION$.
+     * @return a YAudioOut object allowing you to drive the audio output.
      */
     static FindAudioOutInContext(yctx: YAPIContext, func: string): YAudioOut
     {
@@ -374,9 +374,14 @@ export class YAudioOut extends YFunction
     }
 
     /**
-     * Returns the next AudioOut
+     * Continues the enumeration of audio outputs started using yFirstAudioOut().
+     * Caution: You can't make any assumption about the returned audio outputs order.
+     * If you want to find a specific an audio output, use AudioOut.findAudioOut()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YAudioOut}
+     * @return a pointer to a YAudioOut object, corresponding to
+     *         an audio output currently online, or a null pointer
+     *         if there are no more audio outputs to enumerate.
      */
     nextAudioOut(): YAudioOut | null
     {
@@ -388,9 +393,13 @@ export class YAudioOut extends YFunction
     }
 
     /**
-     * Retrieves the first AudioOut in a YAPI context
+     * Starts the enumeration of audio outputs currently accessible.
+     * Use the method YAudioOut.nextAudioOut() to iterate on
+     * next audio outputs.
      *
-     * @returns {YAudioOut}
+     * @return a pointer to a YAudioOut object, corresponding to
+     *         the first audio output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAudioOut(): YAudioOut | null
     {
@@ -400,11 +409,15 @@ export class YAudioOut extends YFunction
     }
 
     /**
-     * Retrieves the first AudioOut in a given context
+     * Starts the enumeration of audio outputs currently accessible.
+     * Use the method YAudioOut.nextAudioOut() to iterate on
+     * next audio outputs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YAudioOut}
+     * @return a pointer to a YAudioOut object, corresponding to
+     *         the first audio output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAudioOutInContext(yctx: YAPIContext): YAudioOut | null
     {

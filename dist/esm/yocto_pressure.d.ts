@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_pressure.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -57,7 +57,7 @@ export declare class YPressure extends YSensor {
     _timedReportCallbackPressure: YPressureTimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a pressure sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -67,11 +67,11 @@ export declare class YPressure extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the pressure sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPressure.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPressure.isOnline() to test if the pressure sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a pressure sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -79,14 +79,14 @@ export declare class YPressure extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the pressure sensor, for instance
+     *         YALTIMK2.pressure.
      *
-     * @return a YPressure object allowing you to drive $THEFUNCTION$.
+     * @return a YPressure object allowing you to drive the pressure sensor.
      */
     static FindPressure(func: string): YPressure;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a pressure sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -96,19 +96,19 @@ export declare class YPressure extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the pressure sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPressure.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPressure.isOnline() to test if the pressure sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a pressure sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the pressure sensor, for instance
+     *         YALTIMK2.pressure.
      *
-     * @return a YPressure object allowing you to drive $THEFUNCTION$.
+     * @return a YPressure object allowing you to drive the pressure sensor.
      */
     static FindPressureInContext(yctx: YAPIContext, func: string): YPressure;
     /**
@@ -138,23 +138,36 @@ export declare class YPressure extends YSensor {
     registerTimedReportCallback(callback: YPressureTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next Pressure
+     * Continues the enumeration of pressure sensors started using yFirstPressure().
+     * Caution: You can't make any assumption about the returned pressure sensors order.
+     * If you want to find a specific a pressure sensor, use Pressure.findPressure()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPressure}
+     * @return a pointer to a YPressure object, corresponding to
+     *         a pressure sensor currently online, or a null pointer
+     *         if there are no more pressure sensors to enumerate.
      */
     nextPressure(): YPressure | null;
     /**
-     * Retrieves the first Pressure in a YAPI context
+     * Starts the enumeration of pressure sensors currently accessible.
+     * Use the method YPressure.nextPressure() to iterate on
+     * next pressure sensors.
      *
-     * @returns {YPressure}
+     * @return a pointer to a YPressure object, corresponding to
+     *         the first pressure sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPressure(): YPressure | null;
     /**
-     * Retrieves the first Pressure in a given context
+     * Starts the enumeration of pressure sensors currently accessible.
+     * Use the method YPressure.nextPressure() to iterate on
+     * next pressure sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPressure}
+     * @return a pointer to a YPressure object, corresponding to
+     *         the first pressure sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPressureInContext(yctx: YAPIContext): YPressure | null;
 }

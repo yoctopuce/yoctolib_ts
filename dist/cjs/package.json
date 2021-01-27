@@ -1,0 +1,29 @@
+{
+  "name": "yoctolib-cjs",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce library for TypeScript/JavaScript, as a CommonJS module",
+  "version": "1.10.43337-dev.6",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yoctopuce/yoctolib_ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yoctopuce/yoctolib_ts/issues"
+  },
+  "keywords": [
+    "Yoctopuce",
+    "yoctoapi",
+    "TypeScript",
+    "CommonJS"
+  ],
+  "type": "commonjs",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "dependencies": {
+    "ws": "^6.2.1"
+  },
+  "devDependencies": {
+    "@types/ws": "^7.2.6"
+  }
+}

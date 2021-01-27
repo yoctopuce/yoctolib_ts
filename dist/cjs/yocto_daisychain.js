@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_daisychain.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -91,11 +91,11 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
     /**
      * Returns the state of the daisy-link between modules.
      *
-     * @return a value among Y_DAISYSTATE_READY, Y_DAISYSTATE_IS_CHILD, Y_DAISYSTATE_FIRMWARE_MISMATCH,
-     * Y_DAISYSTATE_CHILD_MISSING and Y_DAISYSTATE_CHILD_LOST corresponding to the state of the daisy-link
-     * between modules
+     * @return a value among YDaisyChain.DAISYSTATE_READY, YDaisyChain.DAISYSTATE_IS_CHILD,
+     * YDaisyChain.DAISYSTATE_FIRMWARE_MISMATCH, YDaisyChain.DAISYSTATE_CHILD_MISSING and
+     * YDaisyChain.DAISYSTATE_CHILD_LOST corresponding to the state of the daisy-link between modules
      *
-     * On failure, throws an exception or returns Y_DAISYSTATE_INVALID.
+     * On failure, throws an exception or returns YDaisyChain.DAISYSTATE_INVALID.
      */
     async get_daisyState() {
         let res;
@@ -112,7 +112,7 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the number of child nodes currently detected
      *
-     * On failure, throws an exception or returns Y_CHILDCOUNT_INVALID.
+     * On failure, throws an exception or returns YDaisyChain.CHILDCOUNT_INVALID.
      */
     async get_childCount() {
         let res;
@@ -129,7 +129,7 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the number of child nodes expected in normal conditions
      *
-     * On failure, throws an exception or returns Y_REQUIREDCHILDCOUNT_INVALID.
+     * On failure, throws an exception or returns YDaisyChain.REQUIREDCHILDCOUNT_INVALID.
      */
     async get_requiredChildCount() {
         let res;
@@ -150,7 +150,7 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the number of child nodes expected in normal conditions
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -160,7 +160,7 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
         return await this._setAttr('requiredChildCount', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a module chain for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -170,11 +170,11 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module chain is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDaisyChain.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDaisyChain.isOnline() to test if the module chain is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module chain by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -182,10 +182,10 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the module chain, for instance
+     *         MyDevice.daisyChain.
      *
-     * @return a YDaisyChain object allowing you to drive $THEFUNCTION$.
+     * @return a YDaisyChain object allowing you to drive the module chain.
      */
     static FindDaisyChain(func) {
         let obj;
@@ -197,7 +197,7 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a module chain for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -207,19 +207,19 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module chain is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDaisyChain.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDaisyChain.isOnline() to test if the module chain is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module chain by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the module chain, for instance
+     *         MyDevice.daisyChain.
      *
-     * @return a YDaisyChain object allowing you to drive $THEFUNCTION$.
+     * @return a YDaisyChain object allowing you to drive the module chain.
      */
     static FindDaisyChainInContext(yctx, func) {
         let obj;
@@ -274,9 +274,14 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
         return 0;
     }
     /**
-     * Returns the next DaisyChain
+     * Continues the enumeration of module chains started using yFirstDaisyChain().
+     * Caution: You can't make any assumption about the returned module chains order.
+     * If you want to find a specific a module chain, use DaisyChain.findDaisyChain()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDaisyChain}
+     * @return a pointer to a YDaisyChain object, corresponding to
+     *         a module chain currently online, or a null pointer
+     *         if there are no more module chains to enumerate.
      */
     nextDaisyChain() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -288,9 +293,13 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
         return YDaisyChain.FindDaisyChainInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first DaisyChain in a YAPI context
+     * Starts the enumeration of module chains currently accessible.
+     * Use the method YDaisyChain.nextDaisyChain() to iterate on
+     * next module chains.
      *
-     * @returns {YDaisyChain}
+     * @return a pointer to a YDaisyChain object, corresponding to
+     *         the first module chain currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDaisyChain() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('DaisyChain');
@@ -299,11 +308,15 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
         return YDaisyChain.FindDaisyChain(next_hwid);
     }
     /**
-     * Retrieves the first DaisyChain in a given context
+     * Starts the enumeration of module chains currently accessible.
+     * Use the method YDaisyChain.nextDaisyChain() to iterate on
+     * next module chains.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDaisyChain}
+     * @return a pointer to a YDaisyChain object, corresponding to
+     *         the first module chain currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDaisyChainInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('DaisyChain');

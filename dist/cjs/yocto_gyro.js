@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_gyro.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -67,7 +67,7 @@ class YQt extends yocto_api_js_1.YSensor {
     }
     //--- (generated code: YQt implementation)
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a quaternion component for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -77,11 +77,11 @@ class YQt extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the quaternion component is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YQt.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YQt.isOnline() to test if the quaternion component is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a quaternion component by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -89,10 +89,10 @@ class YQt extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the quaternion component, for instance
+     *         Y3DMK002.qt1.
      *
-     * @return a YQt object allowing you to drive $THEFUNCTION$.
+     * @return a YQt object allowing you to drive the quaternion component.
      */
     static FindQt(func) {
         let obj;
@@ -104,7 +104,7 @@ class YQt extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a quaternion component for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -114,19 +114,19 @@ class YQt extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the quaternion component is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YQt.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YQt.isOnline() to test if the quaternion component is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a quaternion component by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the quaternion component, for instance
+     *         Y3DMK002.qt1.
      *
-     * @return a YQt object allowing you to drive $THEFUNCTION$.
+     * @return a YQt object allowing you to drive the quaternion component.
      */
     static FindQtInContext(yctx, func) {
         let obj;
@@ -218,9 +218,14 @@ class YQt extends yocto_api_js_1.YSensor {
         return 0;
     }
     /**
-     * Returns the next Qt
+     * Continues the enumeration of quaternion components started using yFirstQt().
+     * Caution: You can't make any assumption about the returned quaternion components order.
+     * If you want to find a specific a quaternion component, use Qt.findQt()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YQt}
+     * @return a pointer to a YQt object, corresponding to
+     *         a quaternion component currently online, or a null pointer
+     *         if there are no more quaternion components to enumerate.
      */
     nextQt() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -232,9 +237,13 @@ class YQt extends yocto_api_js_1.YSensor {
         return YQt.FindQtInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Qt in a YAPI context
+     * Starts the enumeration of quaternion components currently accessible.
+     * Use the method YQt.nextQt() to iterate on
+     * next quaternion components.
      *
-     * @returns {YQt}
+     * @return a pointer to a YQt object, corresponding to
+     *         the first quaternion component currently online, or a null pointer
+     *         if there are none.
      */
     static FirstQt() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Qt');
@@ -243,11 +252,15 @@ class YQt extends yocto_api_js_1.YSensor {
         return YQt.FindQt(next_hwid);
     }
     /**
-     * Retrieves the first Qt in a given context
+     * Starts the enumeration of quaternion components currently accessible.
+     * Use the method YQt.nextQt() to iterate on
+     * next quaternion components.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YQt}
+     * @return a pointer to a YQt object, corresponding to
+     *         the first quaternion component currently online, or a null pointer
+     *         if there are none.
      */
     static FirstQtInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Qt');
@@ -335,7 +348,7 @@ class YGyro extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the measure update frequency, measured in Hz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YGyro.BANDWIDTH_INVALID.
      */
     async get_bandwidth() {
         let res;
@@ -355,7 +368,7 @@ class YGyro extends yocto_api_js_1.YSensor {
      *
      * @param newval : an integer corresponding to the measure update frequency, measured in Hz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -370,7 +383,7 @@ class YGyro extends yocto_api_js_1.YSensor {
      * @return a floating point number corresponding to the angular velocity around the X axis of the
      * device, as a floating point number
      *
-     * On failure, throws an exception or returns Y_XVALUE_INVALID.
+     * On failure, throws an exception or returns YGyro.XVALUE_INVALID.
      */
     async get_xValue() {
         let res;
@@ -388,7 +401,7 @@ class YGyro extends yocto_api_js_1.YSensor {
      * @return a floating point number corresponding to the angular velocity around the Y axis of the
      * device, as a floating point number
      *
-     * On failure, throws an exception or returns Y_YVALUE_INVALID.
+     * On failure, throws an exception or returns YGyro.YVALUE_INVALID.
      */
     async get_yValue() {
         let res;
@@ -406,7 +419,7 @@ class YGyro extends yocto_api_js_1.YSensor {
      * @return a floating point number corresponding to the angular velocity around the Z axis of the
      * device, as a floating point number
      *
-     * On failure, throws an exception or returns Y_ZVALUE_INVALID.
+     * On failure, throws an exception or returns YGyro.ZVALUE_INVALID.
      */
     async get_zValue() {
         let res;
@@ -419,7 +432,7 @@ class YGyro extends yocto_api_js_1.YSensor {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a gyroscope for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -429,11 +442,11 @@ class YGyro extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the gyroscope is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGyro.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGyro.isOnline() to test if the gyroscope is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a gyroscope by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -441,10 +454,10 @@ class YGyro extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the gyroscope, for instance
+     *         Y3DMK002.gyro.
      *
-     * @return a YGyro object allowing you to drive $THEFUNCTION$.
+     * @return a YGyro object allowing you to drive the gyroscope.
      */
     static FindGyro(func) {
         let obj;
@@ -456,7 +469,7 @@ class YGyro extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a gyroscope for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -466,19 +479,19 @@ class YGyro extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the gyroscope is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGyro.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGyro.isOnline() to test if the gyroscope is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a gyroscope by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the gyroscope, for instance
+     *         Y3DMK002.gyro.
      *
-     * @return a YGyro object allowing you to drive $THEFUNCTION$.
+     * @return a YGyro object allowing you to drive the gyroscope.
      */
     static FindGyroInContext(yctx, func) {
         let obj;
@@ -861,9 +874,14 @@ class YGyro extends yocto_api_js_1.YSensor {
         return 0;
     }
     /**
-     * Returns the next Gyro
+     * Continues the enumeration of gyroscopes started using yFirstGyro().
+     * Caution: You can't make any assumption about the returned gyroscopes order.
+     * If you want to find a specific a gyroscope, use Gyro.findGyro()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YGyro}
+     * @return a pointer to a YGyro object, corresponding to
+     *         a gyroscope currently online, or a null pointer
+     *         if there are no more gyroscopes to enumerate.
      */
     nextGyro() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -875,9 +893,13 @@ class YGyro extends yocto_api_js_1.YSensor {
         return YGyro.FindGyroInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Gyro in a YAPI context
+     * Starts the enumeration of gyroscopes currently accessible.
+     * Use the method YGyro.nextGyro() to iterate on
+     * next gyroscopes.
      *
-     * @returns {YGyro}
+     * @return a pointer to a YGyro object, corresponding to
+     *         the first gyro currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGyro() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Gyro');
@@ -886,11 +908,15 @@ class YGyro extends yocto_api_js_1.YSensor {
         return YGyro.FindGyro(next_hwid);
     }
     /**
-     * Retrieves the first Gyro in a given context
+     * Starts the enumeration of gyroscopes currently accessible.
+     * Use the method YGyro.nextGyro() to iterate on
+     * next gyroscopes.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YGyro}
+     * @return a pointer to a YGyro object, corresponding to
+     *         the first gyro currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGyroInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Gyro');

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_proximity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -37,12 +37,12 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum Y_IsPresent {
+export declare const enum YProximity_IsPresent {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
 }
-export declare const enum Y_ProximityReportMode {
+export declare const enum YProximity_ProximityReportMode {
     NUMERIC = 0,
     PRESENCE = 1,
     PULSECOUNT = 2,
@@ -70,12 +70,12 @@ export declare class YProximity extends YSensor {
     _detectionHysteresis: number;
     _presenceMinTime: number;
     _removalMinTime: number;
-    _isPresent: Y_IsPresent;
+    _isPresent: YProximity_IsPresent;
     _lastTimeApproached: number;
     _lastTimeRemoved: number;
     _pulseCounter: number;
     _pulseTimer: number;
-    _proximityReportMode: Y_ProximityReportMode;
+    _proximityReportMode: YProximity_ProximityReportMode;
     _valueCallbackProximity: YProximityValueCallback | null;
     _timedReportCallbackProximity: YProximityTimedReportCallback | null;
     readonly SIGNALVALUE_INVALID: number;
@@ -83,33 +83,33 @@ export declare class YProximity extends YSensor {
     readonly DETECTIONHYSTERESIS_INVALID: number;
     readonly PRESENCEMINTIME_INVALID: number;
     readonly REMOVALMINTIME_INVALID: number;
-    readonly ISPRESENT_FALSE: Y_IsPresent;
-    readonly ISPRESENT_TRUE: Y_IsPresent;
-    readonly ISPRESENT_INVALID: Y_IsPresent;
+    readonly ISPRESENT_FALSE: YProximity_IsPresent;
+    readonly ISPRESENT_TRUE: YProximity_IsPresent;
+    readonly ISPRESENT_INVALID: YProximity_IsPresent;
     readonly LASTTIMEAPPROACHED_INVALID: number;
     readonly LASTTIMEREMOVED_INVALID: number;
     readonly PULSECOUNTER_INVALID: number;
     readonly PULSETIMER_INVALID: number;
-    readonly PROXIMITYREPORTMODE_NUMERIC: Y_ProximityReportMode;
-    readonly PROXIMITYREPORTMODE_PRESENCE: Y_ProximityReportMode;
-    readonly PROXIMITYREPORTMODE_PULSECOUNT: Y_ProximityReportMode;
-    readonly PROXIMITYREPORTMODE_INVALID: Y_ProximityReportMode;
+    readonly PROXIMITYREPORTMODE_NUMERIC: YProximity_ProximityReportMode;
+    readonly PROXIMITYREPORTMODE_PRESENCE: YProximity_ProximityReportMode;
+    readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity_ProximityReportMode;
+    readonly PROXIMITYREPORTMODE_INVALID: YProximity_ProximityReportMode;
     static readonly SIGNALVALUE_INVALID: number;
     static readonly DETECTIONTHRESHOLD_INVALID: number;
     static readonly DETECTIONHYSTERESIS_INVALID: number;
     static readonly PRESENCEMINTIME_INVALID: number;
     static readonly REMOVALMINTIME_INVALID: number;
-    static readonly ISPRESENT_FALSE: Y_IsPresent;
-    static readonly ISPRESENT_TRUE: Y_IsPresent;
-    static readonly ISPRESENT_INVALID: Y_IsPresent;
+    static readonly ISPRESENT_FALSE: YProximity_IsPresent;
+    static readonly ISPRESENT_TRUE: YProximity_IsPresent;
+    static readonly ISPRESENT_INVALID: YProximity_IsPresent;
     static readonly LASTTIMEAPPROACHED_INVALID: number;
     static readonly LASTTIMEREMOVED_INVALID: number;
     static readonly PULSECOUNTER_INVALID: number;
     static readonly PULSETIMER_INVALID: number;
-    static readonly PROXIMITYREPORTMODE_NUMERIC: Y_ProximityReportMode;
-    static readonly PROXIMITYREPORTMODE_PRESENCE: Y_ProximityReportMode;
-    static readonly PROXIMITYREPORTMODE_PULSECOUNT: Y_ProximityReportMode;
-    static readonly PROXIMITYREPORTMODE_INVALID: Y_ProximityReportMode;
+    static readonly PROXIMITYREPORTMODE_NUMERIC: YProximity_ProximityReportMode;
+    static readonly PROXIMITYREPORTMODE_PRESENCE: YProximity_ProximityReportMode;
+    static readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity_ProximityReportMode;
+    static readonly PROXIMITYREPORTMODE_INVALID: YProximity_ProximityReportMode;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -117,7 +117,7 @@ export declare class YProximity extends YSensor {
      *
      * @return a floating point number corresponding to the current value of signal measured by the proximity sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALVALUE_INVALID.
+     * On failure, throws an exception or returns YProximity.SIGNALVALUE_INVALID.
      */
     get_signalValue(): Promise<number>;
     /**
@@ -128,7 +128,7 @@ export declare class YProximity extends YSensor {
      * proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * On failure, throws an exception or returns Y_DETECTIONTHRESHOLD_INVALID.
+     * On failure, throws an exception or returns YProximity.DETECTIONTHRESHOLD_INVALID.
      */
     get_detectionThreshold(): Promise<number>;
     /**
@@ -140,7 +140,7 @@ export declare class YProximity extends YSensor {
      * the proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -153,7 +153,7 @@ export declare class YProximity extends YSensor {
      * proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * On failure, throws an exception or returns Y_DETECTIONHYSTERESIS_INVALID.
+     * On failure, throws an exception or returns YProximity.DETECTIONHYSTERESIS_INVALID.
      */
     get_detectionHysteresis(): Promise<number>;
     /**
@@ -165,7 +165,7 @@ export declare class YProximity extends YSensor {
      * the proximity sensor, when considered
      *         as a binary input (on/off)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -176,7 +176,7 @@ export declare class YProximity extends YSensor {
      *
      * @return an integer corresponding to the minimal detection duration before signalling a presence event
      *
-     * On failure, throws an exception or returns Y_PRESENCEMINTIME_INVALID.
+     * On failure, throws an exception or returns YProximity.PRESENCEMINTIME_INVALID.
      */
     get_presenceMinTime(): Promise<number>;
     /**
@@ -186,7 +186,7 @@ export declare class YProximity extends YSensor {
      *
      * @param newval : an integer corresponding to the minimal detection duration before signalling a presence event
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -197,7 +197,7 @@ export declare class YProximity extends YSensor {
      *
      * @return an integer corresponding to the minimal detection duration before signalling a removal event
      *
-     * On failure, throws an exception or returns Y_REMOVALMINTIME_INVALID.
+     * On failure, throws an exception or returns YProximity.REMOVALMINTIME_INVALID.
      */
     get_removalMinTime(): Promise<number>;
     /**
@@ -207,7 +207,7 @@ export declare class YProximity extends YSensor {
      *
      * @param newval : an integer corresponding to the minimal detection duration before signalling a removal event
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -216,12 +216,13 @@ export declare class YProximity extends YSensor {
      * Returns true if the input (considered as binary) is active (detection value is smaller than the
      * specified threshold), and false otherwise.
      *
-     * @return either Y_ISPRESENT_FALSE or Y_ISPRESENT_TRUE, according to true if the input (considered as
-     * binary) is active (detection value is smaller than the specified threshold), and false otherwise
+     * @return either YProximity.ISPRESENT_FALSE or YProximity.ISPRESENT_TRUE, according to true if the
+     * input (considered as binary) is active (detection value is smaller than the specified threshold),
+     * and false otherwise
      *
-     * On failure, throws an exception or returns Y_ISPRESENT_INVALID.
+     * On failure, throws an exception or returns YProximity.ISPRESENT_INVALID.
      */
-    get_isPresent(): Promise<Y_IsPresent>;
+    get_isPresent(): Promise<YProximity_IsPresent>;
     /**
      * Returns the number of elapsed milliseconds between the module power on and the last observed
      * detection (the input contact transitioned from absent to present).
@@ -230,7 +231,7 @@ export declare class YProximity extends YSensor {
      * and the last observed
      *         detection (the input contact transitioned from absent to present)
      *
-     * On failure, throws an exception or returns Y_LASTTIMEAPPROACHED_INVALID.
+     * On failure, throws an exception or returns YProximity.LASTTIMEAPPROACHED_INVALID.
      */
     get_lastTimeApproached(): Promise<number>;
     /**
@@ -241,7 +242,7 @@ export declare class YProximity extends YSensor {
      * and the last observed
      *         detection (the input contact transitioned from present to absent)
      *
-     * On failure, throws an exception or returns Y_LASTTIMEREMOVED_INVALID.
+     * On failure, throws an exception or returns YProximity.LASTTIMEREMOVED_INVALID.
      */
     get_lastTimeRemoved(): Promise<number>;
     /**
@@ -251,7 +252,7 @@ export declare class YProximity extends YSensor {
      *
      * @return an integer corresponding to the pulse counter value
      *
-     * On failure, throws an exception or returns Y_PULSECOUNTER_INVALID.
+     * On failure, throws an exception or returns YProximity.PULSECOUNTER_INVALID.
      */
     get_pulseCounter(): Promise<number>;
     set_pulseCounter(newval: number): Promise<number>;
@@ -260,20 +261,20 @@ export declare class YProximity extends YSensor {
      *
      * @return an integer corresponding to the timer of the pulse counter (ms)
      *
-     * On failure, throws an exception or returns Y_PULSETIMER_INVALID.
+     * On failure, throws an exception or returns YProximity.PULSETIMER_INVALID.
      */
     get_pulseTimer(): Promise<number>;
     /**
      * Returns the parameter (sensor value, presence or pulse count) returned by the get_currentValue
      * function and callbacks.
      *
-     * @return a value among Y_PROXIMITYREPORTMODE_NUMERIC, Y_PROXIMITYREPORTMODE_PRESENCE and
-     * Y_PROXIMITYREPORTMODE_PULSECOUNT corresponding to the parameter (sensor value, presence or pulse
-     * count) returned by the get_currentValue function and callbacks
+     * @return a value among YProximity.PROXIMITYREPORTMODE_NUMERIC,
+     * YProximity.PROXIMITYREPORTMODE_PRESENCE and YProximity.PROXIMITYREPORTMODE_PULSECOUNT corresponding
+     * to the parameter (sensor value, presence or pulse count) returned by the get_currentValue function and callbacks
      *
-     * On failure, throws an exception or returns Y_PROXIMITYREPORTMODE_INVALID.
+     * On failure, throws an exception or returns YProximity.PROXIMITYREPORTMODE_INVALID.
      */
-    get_proximityReportMode(): Promise<Y_ProximityReportMode>;
+    get_proximityReportMode(): Promise<YProximity_ProximityReportMode>;
     /**
      * Changes the  parameter  type (sensor value, presence or pulse count) returned by the
      * get_currentValue function and callbacks.
@@ -281,17 +282,18 @@ export declare class YProximity extends YSensor {
      * get_pulseCounter().
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_PROXIMITYREPORTMODE_NUMERIC, Y_PROXIMITYREPORTMODE_PRESENCE and
-     * Y_PROXIMITYREPORTMODE_PULSECOUNT corresponding to the  parameter  type (sensor value, presence or
-     * pulse count) returned by the get_currentValue function and callbacks
+     * @param newval : a value among YProximity.PROXIMITYREPORTMODE_NUMERIC,
+     * YProximity.PROXIMITYREPORTMODE_PRESENCE and YProximity.PROXIMITYREPORTMODE_PULSECOUNT corresponding
+     * to the  parameter  type (sensor value, presence or pulse count) returned by the get_currentValue
+     * function and callbacks
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_proximityReportMode(newval: Y_ProximityReportMode): Promise<number>;
+    set_proximityReportMode(newval: YProximity_ProximityReportMode): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a proximity sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -301,11 +303,11 @@ export declare class YProximity extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the proximity sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YProximity.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YProximity.isOnline() to test if the proximity sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a proximity sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -313,14 +315,14 @@ export declare class YProximity extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the proximity sensor, for instance
+     *         YPROXIM1.proximity1.
      *
-     * @return a YProximity object allowing you to drive $THEFUNCTION$.
+     * @return a YProximity object allowing you to drive the proximity sensor.
      */
     static FindProximity(func: string): YProximity;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a proximity sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -330,19 +332,19 @@ export declare class YProximity extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the proximity sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YProximity.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YProximity.isOnline() to test if the proximity sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a proximity sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the proximity sensor, for instance
+     *         YPROXIM1.proximity1.
      *
-     * @return a YProximity object allowing you to drive $THEFUNCTION$.
+     * @return a YProximity object allowing you to drive the proximity sensor.
      */
     static FindProximityInContext(yctx: YAPIContext, func: string): YProximity;
     /**
@@ -374,29 +376,42 @@ export declare class YProximity extends YSensor {
     /**
      * Resets the pulse counter value as well as its timer.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     resetCounter(): Promise<number>;
     /**
-     * Returns the next Proximity
+     * Continues the enumeration of proximity sensors started using yFirstProximity().
+     * Caution: You can't make any assumption about the returned proximity sensors order.
+     * If you want to find a specific a proximity sensor, use Proximity.findProximity()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YProximity}
+     * @return a pointer to a YProximity object, corresponding to
+     *         a proximity sensor currently online, or a null pointer
+     *         if there are no more proximity sensors to enumerate.
      */
     nextProximity(): YProximity | null;
     /**
-     * Retrieves the first Proximity in a YAPI context
+     * Starts the enumeration of proximity sensors currently accessible.
+     * Use the method YProximity.nextProximity() to iterate on
+     * next proximity sensors.
      *
-     * @returns {YProximity}
+     * @return a pointer to a YProximity object, corresponding to
+     *         the first proximity sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstProximity(): YProximity | null;
     /**
-     * Retrieves the first Proximity in a given context
+     * Starts the enumeration of proximity sensors currently accessible.
+     * Use the method YProximity.nextProximity() to iterate on
+     * next proximity sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YProximity}
+     * @return a pointer to a YProximity object, corresponding to
+     *         the first proximity sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstProximityInContext(yctx: YAPIContext): YProximity | null;
 }

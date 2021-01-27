@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_network.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YNetwork definitions)
-export const enum Y_Readiness {
+export const enum YNetwork_Readiness {
     DOWN = 0,
     EXISTS = 1,
     LINKED = 2,
@@ -48,18 +48,18 @@ export const enum Y_Readiness {
     WWW_OK = 4,
     INVALID = -1
 }
-export const enum Y_Discoverable {
+export const enum YNetwork_Discoverable {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
 }
-export const enum Y_CallbackMethod {
+export const enum YNetwork_CallbackMethod {
     POST = 0,
     GET = 1,
     PUT = 2,
     INVALID = -1
 }
-export const enum Y_CallbackEncoding {
+export const enum YNetwork_CallbackEncoding {
     FORM = 0,
     JSON = 1,
     JSON_ARRAY = 2,
@@ -81,7 +81,7 @@ export interface YNetworkValueCallback { (func: YNetwork, value: string): void }
 //--- (YNetwork class start)
 /**
  * YNetwork Class: network interface control interface, available for instance in the
- * YoctoHub-Ethernet, the YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA or the YoctoHub-Wireless-n
+ * YoctoHub-Ethernet, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * YNetwork objects provide access to TCP/IP parameters of Yoctopuce
  * devices that include a built-in network interface.
@@ -92,7 +92,7 @@ export class YNetwork extends YFunction
 {
     //--- (YNetwork attributes declaration)
     _className: string;
-    _readiness: Y_Readiness = YNetwork.READINESS_INVALID;
+    _readiness: YNetwork_Readiness = YNetwork.READINESS_INVALID;
     _macAddress: string = YNetwork.MACADDRESS_INVALID;
     _ipAddress: string = YNetwork.IPADDRESS_INVALID;
     _subnetMask: string = YNetwork.SUBNETMASK_INVALID;
@@ -105,11 +105,11 @@ export class YNetwork extends YFunction
     _adminPassword: string = YNetwork.ADMINPASSWORD_INVALID;
     _httpPort: number = YNetwork.HTTPPORT_INVALID;
     _defaultPage: string = YNetwork.DEFAULTPAGE_INVALID;
-    _discoverable: Y_Discoverable = YNetwork.DISCOVERABLE_INVALID;
+    _discoverable: YNetwork_Discoverable = YNetwork.DISCOVERABLE_INVALID;
     _wwwWatchdogDelay: number = YNetwork.WWWWATCHDOGDELAY_INVALID;
     _callbackUrl: string = YNetwork.CALLBACKURL_INVALID;
-    _callbackMethod: Y_CallbackMethod = YNetwork.CALLBACKMETHOD_INVALID;
-    _callbackEncoding: Y_CallbackEncoding = YNetwork.CALLBACKENCODING_INVALID;
+    _callbackMethod: YNetwork_CallbackMethod = YNetwork.CALLBACKMETHOD_INVALID;
+    _callbackEncoding: YNetwork_CallbackEncoding = YNetwork.CALLBACKENCODING_INVALID;
     _callbackCredentials: string = YNetwork.CALLBACKCREDENTIALS_INVALID;
     _callbackInitialDelay: number = YNetwork.CALLBACKINITIALDELAY_INVALID;
     _callbackSchedule: string = YNetwork.CALLBACKSCHEDULE_INVALID;
@@ -119,12 +119,12 @@ export class YNetwork extends YFunction
     _valueCallbackNetwork: YNetworkValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly READINESS_DOWN: Y_Readiness = Y_Readiness.DOWN;
-    public readonly READINESS_EXISTS: Y_Readiness = Y_Readiness.EXISTS;
-    public readonly READINESS_LINKED: Y_Readiness = Y_Readiness.LINKED;
-    public readonly READINESS_LAN_OK: Y_Readiness = Y_Readiness.LAN_OK;
-    public readonly READINESS_WWW_OK: Y_Readiness = Y_Readiness.WWW_OK;
-    public readonly READINESS_INVALID: Y_Readiness = Y_Readiness.INVALID;
+    public readonly READINESS_DOWN: YNetwork_Readiness = YNetwork_Readiness.DOWN;
+    public readonly READINESS_EXISTS: YNetwork_Readiness = YNetwork_Readiness.EXISTS;
+    public readonly READINESS_LINKED: YNetwork_Readiness = YNetwork_Readiness.LINKED;
+    public readonly READINESS_LAN_OK: YNetwork_Readiness = YNetwork_Readiness.LAN_OK;
+    public readonly READINESS_WWW_OK: YNetwork_Readiness = YNetwork_Readiness.WWW_OK;
+    public readonly READINESS_INVALID: YNetwork_Readiness = YNetwork_Readiness.INVALID;
     public readonly MACADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public readonly IPADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public readonly SUBNETMASK_INVALID: string = YAPI.INVALID_STRING;
@@ -137,29 +137,29 @@ export class YNetwork extends YFunction
     public readonly ADMINPASSWORD_INVALID: string = YAPI.INVALID_STRING;
     public readonly HTTPPORT_INVALID: number = YAPI.INVALID_UINT;
     public readonly DEFAULTPAGE_INVALID: string = YAPI.INVALID_STRING;
-    public readonly DISCOVERABLE_FALSE: Y_Discoverable = Y_Discoverable.FALSE;
-    public readonly DISCOVERABLE_TRUE: Y_Discoverable = Y_Discoverable.TRUE;
-    public readonly DISCOVERABLE_INVALID: Y_Discoverable = Y_Discoverable.INVALID;
+    public readonly DISCOVERABLE_FALSE: YNetwork_Discoverable = YNetwork_Discoverable.FALSE;
+    public readonly DISCOVERABLE_TRUE: YNetwork_Discoverable = YNetwork_Discoverable.TRUE;
+    public readonly DISCOVERABLE_INVALID: YNetwork_Discoverable = YNetwork_Discoverable.INVALID;
     public readonly WWWWATCHDOGDELAY_INVALID: number = YAPI.INVALID_UINT;
     public readonly CALLBACKURL_INVALID: string = YAPI.INVALID_STRING;
-    public readonly CALLBACKMETHOD_POST: Y_CallbackMethod = Y_CallbackMethod.POST;
-    public readonly CALLBACKMETHOD_GET: Y_CallbackMethod = Y_CallbackMethod.GET;
-    public readonly CALLBACKMETHOD_PUT: Y_CallbackMethod = Y_CallbackMethod.PUT;
-    public readonly CALLBACKMETHOD_INVALID: Y_CallbackMethod = Y_CallbackMethod.INVALID;
-    public readonly CALLBACKENCODING_FORM: Y_CallbackEncoding = Y_CallbackEncoding.FORM;
-    public readonly CALLBACKENCODING_JSON: Y_CallbackEncoding = Y_CallbackEncoding.JSON;
-    public readonly CALLBACKENCODING_JSON_ARRAY: Y_CallbackEncoding = Y_CallbackEncoding.JSON_ARRAY;
-    public readonly CALLBACKENCODING_CSV: Y_CallbackEncoding = Y_CallbackEncoding.CSV;
-    public readonly CALLBACKENCODING_YOCTO_API: Y_CallbackEncoding = Y_CallbackEncoding.YOCTO_API;
-    public readonly CALLBACKENCODING_JSON_NUM: Y_CallbackEncoding = Y_CallbackEncoding.JSON_NUM;
-    public readonly CALLBACKENCODING_EMONCMS: Y_CallbackEncoding = Y_CallbackEncoding.EMONCMS;
-    public readonly CALLBACKENCODING_AZURE: Y_CallbackEncoding = Y_CallbackEncoding.AZURE;
-    public readonly CALLBACKENCODING_INFLUXDB: Y_CallbackEncoding = Y_CallbackEncoding.INFLUXDB;
-    public readonly CALLBACKENCODING_MQTT: Y_CallbackEncoding = Y_CallbackEncoding.MQTT;
-    public readonly CALLBACKENCODING_YOCTO_API_JZON: Y_CallbackEncoding = Y_CallbackEncoding.YOCTO_API_JZON;
-    public readonly CALLBACKENCODING_PRTG: Y_CallbackEncoding = Y_CallbackEncoding.PRTG;
-    public readonly CALLBACKENCODING_INFLUXDB_V2: Y_CallbackEncoding = Y_CallbackEncoding.INFLUXDB_V2;
-    public readonly CALLBACKENCODING_INVALID: Y_CallbackEncoding = Y_CallbackEncoding.INVALID;
+    public readonly CALLBACKMETHOD_POST: YNetwork_CallbackMethod = YNetwork_CallbackMethod.POST;
+    public readonly CALLBACKMETHOD_GET: YNetwork_CallbackMethod = YNetwork_CallbackMethod.GET;
+    public readonly CALLBACKMETHOD_PUT: YNetwork_CallbackMethod = YNetwork_CallbackMethod.PUT;
+    public readonly CALLBACKMETHOD_INVALID: YNetwork_CallbackMethod = YNetwork_CallbackMethod.INVALID;
+    public readonly CALLBACKENCODING_FORM: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.FORM;
+    public readonly CALLBACKENCODING_JSON: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.JSON;
+    public readonly CALLBACKENCODING_JSON_ARRAY: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.JSON_ARRAY;
+    public readonly CALLBACKENCODING_CSV: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.CSV;
+    public readonly CALLBACKENCODING_YOCTO_API: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.YOCTO_API;
+    public readonly CALLBACKENCODING_JSON_NUM: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.JSON_NUM;
+    public readonly CALLBACKENCODING_EMONCMS: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.EMONCMS;
+    public readonly CALLBACKENCODING_AZURE: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.AZURE;
+    public readonly CALLBACKENCODING_INFLUXDB: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.INFLUXDB;
+    public readonly CALLBACKENCODING_MQTT: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.MQTT;
+    public readonly CALLBACKENCODING_YOCTO_API_JZON: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.YOCTO_API_JZON;
+    public readonly CALLBACKENCODING_PRTG: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.PRTG;
+    public readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.INFLUXDB_V2;
+    public readonly CALLBACKENCODING_INVALID: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.INVALID;
     public readonly CALLBACKCREDENTIALS_INVALID: string = YAPI.INVALID_STRING;
     public readonly CALLBACKINITIALDELAY_INVALID: number = YAPI.INVALID_UINT;
     public readonly CALLBACKSCHEDULE_INVALID: string = YAPI.INVALID_STRING;
@@ -168,12 +168,12 @@ export class YNetwork extends YFunction
     public readonly POECURRENT_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
-    public static readonly READINESS_DOWN: Y_Readiness = Y_Readiness.DOWN;
-    public static readonly READINESS_EXISTS: Y_Readiness = Y_Readiness.EXISTS;
-    public static readonly READINESS_LINKED: Y_Readiness = Y_Readiness.LINKED;
-    public static readonly READINESS_LAN_OK: Y_Readiness = Y_Readiness.LAN_OK;
-    public static readonly READINESS_WWW_OK: Y_Readiness = Y_Readiness.WWW_OK;
-    public static readonly READINESS_INVALID: Y_Readiness = Y_Readiness.INVALID;
+    public static readonly READINESS_DOWN: YNetwork_Readiness = YNetwork_Readiness.DOWN;
+    public static readonly READINESS_EXISTS: YNetwork_Readiness = YNetwork_Readiness.EXISTS;
+    public static readonly READINESS_LINKED: YNetwork_Readiness = YNetwork_Readiness.LINKED;
+    public static readonly READINESS_LAN_OK: YNetwork_Readiness = YNetwork_Readiness.LAN_OK;
+    public static readonly READINESS_WWW_OK: YNetwork_Readiness = YNetwork_Readiness.WWW_OK;
+    public static readonly READINESS_INVALID: YNetwork_Readiness = YNetwork_Readiness.INVALID;
     public static readonly MACADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly IPADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SUBNETMASK_INVALID: string = YAPI.INVALID_STRING;
@@ -186,29 +186,29 @@ export class YNetwork extends YFunction
     public static readonly ADMINPASSWORD_INVALID: string = YAPI.INVALID_STRING;
     public static readonly HTTPPORT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly DEFAULTPAGE_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly DISCOVERABLE_FALSE: Y_Discoverable = Y_Discoverable.FALSE;
-    public static readonly DISCOVERABLE_TRUE: Y_Discoverable = Y_Discoverable.TRUE;
-    public static readonly DISCOVERABLE_INVALID: Y_Discoverable = Y_Discoverable.INVALID;
+    public static readonly DISCOVERABLE_FALSE: YNetwork_Discoverable = YNetwork_Discoverable.FALSE;
+    public static readonly DISCOVERABLE_TRUE: YNetwork_Discoverable = YNetwork_Discoverable.TRUE;
+    public static readonly DISCOVERABLE_INVALID: YNetwork_Discoverable = YNetwork_Discoverable.INVALID;
     public static readonly WWWWATCHDOGDELAY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly CALLBACKURL_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly CALLBACKMETHOD_POST: Y_CallbackMethod = Y_CallbackMethod.POST;
-    public static readonly CALLBACKMETHOD_GET: Y_CallbackMethod = Y_CallbackMethod.GET;
-    public static readonly CALLBACKMETHOD_PUT: Y_CallbackMethod = Y_CallbackMethod.PUT;
-    public static readonly CALLBACKMETHOD_INVALID: Y_CallbackMethod = Y_CallbackMethod.INVALID;
-    public static readonly CALLBACKENCODING_FORM: Y_CallbackEncoding = Y_CallbackEncoding.FORM;
-    public static readonly CALLBACKENCODING_JSON: Y_CallbackEncoding = Y_CallbackEncoding.JSON;
-    public static readonly CALLBACKENCODING_JSON_ARRAY: Y_CallbackEncoding = Y_CallbackEncoding.JSON_ARRAY;
-    public static readonly CALLBACKENCODING_CSV: Y_CallbackEncoding = Y_CallbackEncoding.CSV;
-    public static readonly CALLBACKENCODING_YOCTO_API: Y_CallbackEncoding = Y_CallbackEncoding.YOCTO_API;
-    public static readonly CALLBACKENCODING_JSON_NUM: Y_CallbackEncoding = Y_CallbackEncoding.JSON_NUM;
-    public static readonly CALLBACKENCODING_EMONCMS: Y_CallbackEncoding = Y_CallbackEncoding.EMONCMS;
-    public static readonly CALLBACKENCODING_AZURE: Y_CallbackEncoding = Y_CallbackEncoding.AZURE;
-    public static readonly CALLBACKENCODING_INFLUXDB: Y_CallbackEncoding = Y_CallbackEncoding.INFLUXDB;
-    public static readonly CALLBACKENCODING_MQTT: Y_CallbackEncoding = Y_CallbackEncoding.MQTT;
-    public static readonly CALLBACKENCODING_YOCTO_API_JZON: Y_CallbackEncoding = Y_CallbackEncoding.YOCTO_API_JZON;
-    public static readonly CALLBACKENCODING_PRTG: Y_CallbackEncoding = Y_CallbackEncoding.PRTG;
-    public static readonly CALLBACKENCODING_INFLUXDB_V2: Y_CallbackEncoding = Y_CallbackEncoding.INFLUXDB_V2;
-    public static readonly CALLBACKENCODING_INVALID: Y_CallbackEncoding = Y_CallbackEncoding.INVALID;
+    public static readonly CALLBACKMETHOD_POST: YNetwork_CallbackMethod = YNetwork_CallbackMethod.POST;
+    public static readonly CALLBACKMETHOD_GET: YNetwork_CallbackMethod = YNetwork_CallbackMethod.GET;
+    public static readonly CALLBACKMETHOD_PUT: YNetwork_CallbackMethod = YNetwork_CallbackMethod.PUT;
+    public static readonly CALLBACKMETHOD_INVALID: YNetwork_CallbackMethod = YNetwork_CallbackMethod.INVALID;
+    public static readonly CALLBACKENCODING_FORM: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.FORM;
+    public static readonly CALLBACKENCODING_JSON: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.JSON;
+    public static readonly CALLBACKENCODING_JSON_ARRAY: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.JSON_ARRAY;
+    public static readonly CALLBACKENCODING_CSV: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.CSV;
+    public static readonly CALLBACKENCODING_YOCTO_API: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.YOCTO_API;
+    public static readonly CALLBACKENCODING_JSON_NUM: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.JSON_NUM;
+    public static readonly CALLBACKENCODING_EMONCMS: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.EMONCMS;
+    public static readonly CALLBACKENCODING_AZURE: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.AZURE;
+    public static readonly CALLBACKENCODING_INFLUXDB: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.INFLUXDB;
+    public static readonly CALLBACKENCODING_MQTT: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.MQTT;
+    public static readonly CALLBACKENCODING_YOCTO_API_JZON: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.YOCTO_API_JZON;
+    public static readonly CALLBACKENCODING_PRTG: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.PRTG;
+    public static readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.INFLUXDB_V2;
+    public static readonly CALLBACKENCODING_INVALID: YNetwork_CallbackEncoding = YNetwork_CallbackEncoding.INVALID;
     public static readonly CALLBACKCREDENTIALS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly CALLBACKINITIALDELAY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly CALLBACKSCHEDULE_INVALID: string = YAPI.INVALID_STRING;
@@ -234,7 +234,7 @@ export class YNetwork extends YFunction
     {
         switch(name) {
         case 'readiness':
-            this._readiness = <Y_Readiness> <number> val;
+            this._readiness = <YNetwork_Readiness> <number> val;
             return 1;
         case 'macAddress':
             this._macAddress = <string> <string> val;
@@ -273,7 +273,7 @@ export class YNetwork extends YFunction
             this._defaultPage = <string> <string> val;
             return 1;
         case 'discoverable':
-            this._discoverable = <Y_Discoverable> <number> val;
+            this._discoverable = <YNetwork_Discoverable> <number> val;
             return 1;
         case 'wwwWatchdogDelay':
             this._wwwWatchdogDelay = <number> <number> val;
@@ -282,10 +282,10 @@ export class YNetwork extends YFunction
             this._callbackUrl = <string> <string> val;
             return 1;
         case 'callbackMethod':
-            this._callbackMethod = <Y_CallbackMethod> <number> val;
+            this._callbackMethod = <YNetwork_CallbackMethod> <number> val;
             return 1;
         case 'callbackEncoding':
-            this._callbackEncoding = <Y_CallbackEncoding> <number> val;
+            this._callbackEncoding = <YNetwork_CallbackEncoding> <number> val;
             return 1;
         case 'callbackCredentials':
             this._callbackCredentials = <string> <string> val;
@@ -325,12 +325,13 @@ export class YNetwork extends YFunction
      * Level 5 (WWW_5) is reached when global connectivity is demonstrated by properly loading the
      * current time from an NTP server.
      *
-     * @return a value among Y_READINESS_DOWN, Y_READINESS_EXISTS, Y_READINESS_LINKED, Y_READINESS_LAN_OK
-     * and Y_READINESS_WWW_OK corresponding to the current established working mode of the network interface
+     * @return a value among YNetwork.READINESS_DOWN, YNetwork.READINESS_EXISTS,
+     * YNetwork.READINESS_LINKED, YNetwork.READINESS_LAN_OK and YNetwork.READINESS_WWW_OK corresponding to
+     * the current established working mode of the network interface
      *
-     * On failure, throws an exception or returns Y_READINESS_INVALID.
+     * On failure, throws an exception or returns YNetwork.READINESS_INVALID.
      */
-    async get_readiness(): Promise<Y_Readiness>
+    async get_readiness(): Promise<YNetwork_Readiness>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -348,7 +349,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the MAC address of the network interface
      *
-     * On failure, throws an exception or returns Y_MACADDRESS_INVALID.
+     * On failure, throws an exception or returns YNetwork.MACADDRESS_INVALID.
      */
     async get_macAddress(): Promise<string>
     {
@@ -368,7 +369,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the IP address currently in use by the device
      *
-     * On failure, throws an exception or returns Y_IPADDRESS_INVALID.
+     * On failure, throws an exception or returns YNetwork.IPADDRESS_INVALID.
      */
     async get_ipAddress(): Promise<string>
     {
@@ -387,7 +388,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the subnet mask currently used by the device
      *
-     * On failure, throws an exception or returns Y_SUBNETMASK_INVALID.
+     * On failure, throws an exception or returns YNetwork.SUBNETMASK_INVALID.
      */
     async get_subnetMask(): Promise<string>
     {
@@ -406,7 +407,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the IP address of the router on the device subnet (default gateway)
      *
-     * On failure, throws an exception or returns Y_ROUTER_INVALID.
+     * On failure, throws an exception or returns YNetwork.ROUTER_INVALID.
      */
     async get_router(): Promise<string>
     {
@@ -437,7 +438,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the IP configuration of the network interface
      *
-     * On failure, throws an exception or returns Y_IPCONFIG_INVALID.
+     * On failure, throws an exception or returns YNetwork.IPCONFIG_INVALID.
      */
     async get_ipConfig(): Promise<string>
     {
@@ -463,7 +464,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the IP address of the primary name server to be used by the module
      *
-     * On failure, throws an exception or returns Y_PRIMARYDNS_INVALID.
+     * On failure, throws an exception or returns YNetwork.PRIMARYDNS_INVALID.
      */
     async get_primaryDNS(): Promise<string>
     {
@@ -484,7 +485,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the IP address of the primary name server to be used by the module
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -500,7 +501,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the IP address of the secondary name server to be used by the module
      *
-     * On failure, throws an exception or returns Y_SECONDARYDNS_INVALID.
+     * On failure, throws an exception or returns YNetwork.SECONDARYDNS_INVALID.
      */
     async get_secondaryDNS(): Promise<string>
     {
@@ -521,7 +522,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the IP address of the secondary name server to be used by the module
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -537,7 +538,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the IP address of the NTP server to be used by the device
      *
-     * On failure, throws an exception or returns Y_NTPSERVER_INVALID.
+     * On failure, throws an exception or returns YNetwork.NTPSERVER_INVALID.
      */
     async get_ntpServer(): Promise<string>
     {
@@ -558,7 +559,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the IP address of the NTP server to be used by the module
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -576,7 +577,7 @@ export class YNetwork extends YFunction
      * @return a string corresponding to a hash string if a password has been set for "user" user,
      *         or an empty string otherwise
      *
-     * On failure, throws an exception or returns Y_USERPASSWORD_INVALID.
+     * On failure, throws an exception or returns YNetwork.USERPASSWORD_INVALID.
      */
     async get_userPassword(): Promise<string>
     {
@@ -599,7 +600,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the password for the "user" user
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -620,7 +621,7 @@ export class YNetwork extends YFunction
      * @return a string corresponding to a hash string if a password has been set for user "admin",
      *         or an empty string otherwise
      *
-     * On failure, throws an exception or returns Y_ADMINPASSWORD_INVALID.
+     * On failure, throws an exception or returns YNetwork.ADMINPASSWORD_INVALID.
      */
     async get_adminPassword(): Promise<string>
     {
@@ -643,7 +644,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the password for the "admin" user
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -662,7 +663,7 @@ export class YNetwork extends YFunction
      *
      * @return an integer corresponding to the TCP port used to serve the hub web UI
      *
-     * On failure, throws an exception or returns Y_HTTPPORT_INVALID.
+     * On failure, throws an exception or returns YNetwork.HTTPPORT_INVALID.
      */
     async get_httpPort(): Promise<number>
     {
@@ -685,7 +686,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : an integer corresponding to the the TCP port used to serve the hub web UI
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -701,7 +702,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the HTML page to serve for the URL "/"" of the hub
      *
-     * On failure, throws an exception or returns Y_DEFAULTPAGE_INVALID.
+     * On failure, throws an exception or returns YNetwork.DEFAULTPAGE_INVALID.
      */
     async get_defaultPage(): Promise<string>
     {
@@ -724,7 +725,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the default HTML page returned by the hub
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -739,13 +740,13 @@ export class YNetwork extends YFunction
      * Returns the activation state of the multicast announce protocols to allow easy
      * discovery of the module in the network neighborhood (uPnP/Bonjour protocol).
      *
-     * @return either Y_DISCOVERABLE_FALSE or Y_DISCOVERABLE_TRUE, according to the activation state of
-     * the multicast announce protocols to allow easy
+     * @return either YNetwork.DISCOVERABLE_FALSE or YNetwork.DISCOVERABLE_TRUE, according to the
+     * activation state of the multicast announce protocols to allow easy
      *         discovery of the module in the network neighborhood (uPnP/Bonjour protocol)
      *
-     * On failure, throws an exception or returns Y_DISCOVERABLE_INVALID.
+     * On failure, throws an exception or returns YNetwork.DISCOVERABLE_INVALID.
      */
-    async get_discoverable(): Promise<Y_Discoverable>
+    async get_discoverable(): Promise<YNetwork_Discoverable>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -763,15 +764,15 @@ export class YNetwork extends YFunction
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either Y_DISCOVERABLE_FALSE or Y_DISCOVERABLE_TRUE, according to the activation
-     * state of the multicast announce protocols to allow easy
+     * @param newval : either YNetwork.DISCOVERABLE_FALSE or YNetwork.DISCOVERABLE_TRUE, according to the
+     * activation state of the multicast announce protocols to allow easy
      *         discovery of the module in the network neighborhood (uPnP/Bonjour protocol)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_discoverable(newval: Y_Discoverable): Promise<number>
+    async set_discoverable(newval: YNetwork_Discoverable): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -787,7 +788,7 @@ export class YNetwork extends YFunction
      * triggering an automated
      *         reboot to try to recover Internet connectivity
      *
-     * On failure, throws an exception or returns Y_WWWWATCHDOGDELAY_INVALID.
+     * On failure, throws an exception or returns YNetwork.WWWWATCHDOGDELAY_INVALID.
      */
     async get_wwwWatchdogDelay(): Promise<number>
     {
@@ -812,7 +813,7 @@ export class YNetwork extends YFunction
      * before triggering an automated
      *         reboot to try to recover Internet connectivity
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -828,7 +829,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the callback URL to notify of significant state changes
      *
-     * On failure, throws an exception or returns Y_CALLBACKURL_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKURL_INVALID.
      */
     async get_callbackUrl(): Promise<string>
     {
@@ -848,7 +849,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the callback URL to notify significant state changes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -862,12 +863,13 @@ export class YNetwork extends YFunction
     /**
      * Returns the HTTP method used to notify callbacks for significant state changes.
      *
-     * @return a value among Y_CALLBACKMETHOD_POST, Y_CALLBACKMETHOD_GET and Y_CALLBACKMETHOD_PUT
-     * corresponding to the HTTP method used to notify callbacks for significant state changes
+     * @return a value among YNetwork.CALLBACKMETHOD_POST, YNetwork.CALLBACKMETHOD_GET and
+     * YNetwork.CALLBACKMETHOD_PUT corresponding to the HTTP method used to notify callbacks for
+     * significant state changes
      *
-     * On failure, throws an exception or returns Y_CALLBACKMETHOD_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKMETHOD_INVALID.
      */
-    async get_callbackMethod(): Promise<Y_CallbackMethod>
+    async get_callbackMethod(): Promise<YNetwork_CallbackMethod>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -884,14 +886,15 @@ export class YNetwork extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_CALLBACKMETHOD_POST, Y_CALLBACKMETHOD_GET and Y_CALLBACKMETHOD_PUT
-     * corresponding to the HTTP method used to notify callbacks for significant state changes
+     * @param newval : a value among YNetwork.CALLBACKMETHOD_POST, YNetwork.CALLBACKMETHOD_GET and
+     * YNetwork.CALLBACKMETHOD_PUT corresponding to the HTTP method used to notify callbacks for
+     * significant state changes
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_callbackMethod(newval: Y_CallbackMethod): Promise<number>
+    async set_callbackMethod(newval: YNetwork_CallbackMethod): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -901,16 +904,18 @@ export class YNetwork extends YFunction
     /**
      * Returns the encoding standard to use for representing notification values.
      *
-     * @return a value among Y_CALLBACKENCODING_FORM, Y_CALLBACKENCODING_JSON,
-     * Y_CALLBACKENCODING_JSON_ARRAY, Y_CALLBACKENCODING_CSV, Y_CALLBACKENCODING_YOCTO_API,
-     * Y_CALLBACKENCODING_JSON_NUM, Y_CALLBACKENCODING_EMONCMS, Y_CALLBACKENCODING_AZURE,
-     * Y_CALLBACKENCODING_INFLUXDB, Y_CALLBACKENCODING_MQTT, Y_CALLBACKENCODING_YOCTO_API_JZON,
-     * Y_CALLBACKENCODING_PRTG and Y_CALLBACKENCODING_INFLUXDB_V2 corresponding to the encoding standard
-     * to use for representing notification values
+     * @return a value among YNetwork.CALLBACKENCODING_FORM, YNetwork.CALLBACKENCODING_JSON,
+     * YNetwork.CALLBACKENCODING_JSON_ARRAY, YNetwork.CALLBACKENCODING_CSV,
+     * YNetwork.CALLBACKENCODING_YOCTO_API, YNetwork.CALLBACKENCODING_JSON_NUM,
+     * YNetwork.CALLBACKENCODING_EMONCMS, YNetwork.CALLBACKENCODING_AZURE,
+     * YNetwork.CALLBACKENCODING_INFLUXDB, YNetwork.CALLBACKENCODING_MQTT,
+     * YNetwork.CALLBACKENCODING_YOCTO_API_JZON, YNetwork.CALLBACKENCODING_PRTG and
+     * YNetwork.CALLBACKENCODING_INFLUXDB_V2 corresponding to the encoding standard to use for
+     * representing notification values
      *
-     * On failure, throws an exception or returns Y_CALLBACKENCODING_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKENCODING_INVALID.
      */
-    async get_callbackEncoding(): Promise<Y_CallbackEncoding>
+    async get_callbackEncoding(): Promise<YNetwork_CallbackEncoding>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -927,18 +932,20 @@ export class YNetwork extends YFunction
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_CALLBACKENCODING_FORM, Y_CALLBACKENCODING_JSON,
-     * Y_CALLBACKENCODING_JSON_ARRAY, Y_CALLBACKENCODING_CSV, Y_CALLBACKENCODING_YOCTO_API,
-     * Y_CALLBACKENCODING_JSON_NUM, Y_CALLBACKENCODING_EMONCMS, Y_CALLBACKENCODING_AZURE,
-     * Y_CALLBACKENCODING_INFLUXDB, Y_CALLBACKENCODING_MQTT, Y_CALLBACKENCODING_YOCTO_API_JZON,
-     * Y_CALLBACKENCODING_PRTG and Y_CALLBACKENCODING_INFLUXDB_V2 corresponding to the encoding standard
-     * to use for representing notification values
+     * @param newval : a value among YNetwork.CALLBACKENCODING_FORM, YNetwork.CALLBACKENCODING_JSON,
+     * YNetwork.CALLBACKENCODING_JSON_ARRAY, YNetwork.CALLBACKENCODING_CSV,
+     * YNetwork.CALLBACKENCODING_YOCTO_API, YNetwork.CALLBACKENCODING_JSON_NUM,
+     * YNetwork.CALLBACKENCODING_EMONCMS, YNetwork.CALLBACKENCODING_AZURE,
+     * YNetwork.CALLBACKENCODING_INFLUXDB, YNetwork.CALLBACKENCODING_MQTT,
+     * YNetwork.CALLBACKENCODING_YOCTO_API_JZON, YNetwork.CALLBACKENCODING_PRTG and
+     * YNetwork.CALLBACKENCODING_INFLUXDB_V2 corresponding to the encoding standard to use for
+     * representing notification values
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_callbackEncoding(newval: Y_CallbackEncoding): Promise<number>
+    async set_callbackEncoding(newval: YNetwork_CallbackEncoding): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -952,7 +959,7 @@ export class YNetwork extends YFunction
      * @return a string corresponding to a hashed version of the notification callback credentials if set,
      *         or an empty string otherwise
      *
-     * On failure, throws an exception or returns Y_CALLBACKCREDENTIALS_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKCREDENTIALS_INVALID.
      */
     async get_callbackCredentials(): Promise<string>
     {
@@ -979,7 +986,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the credentials required to connect to the callback address
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -999,7 +1006,7 @@ export class YNetwork extends YFunction
      * @param username : username required to log to the callback
      * @param password : password required to log to the callback
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1015,7 +1022,7 @@ export class YNetwork extends YFunction
      *
      * @return an integer corresponding to the initial waiting time before first callback notifications, in seconds
      *
-     * On failure, throws an exception or returns Y_CALLBACKINITIALDELAY_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKINITIALDELAY_INVALID.
      */
     async get_callbackInitialDelay(): Promise<number>
     {
@@ -1036,7 +1043,7 @@ export class YNetwork extends YFunction
      * @param newval : an integer corresponding to the initial waiting time before first callback
      * notifications, in seconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1052,7 +1059,7 @@ export class YNetwork extends YFunction
      *
      * @return a string corresponding to the HTTP callback schedule strategy, as a text string
      *
-     * On failure, throws an exception or returns Y_CALLBACKSCHEDULE_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKSCHEDULE_INVALID.
      */
     async get_callbackSchedule(): Promise<string>
     {
@@ -1073,7 +1080,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : a string corresponding to the HTTP callback schedule strategy, as a text string
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1089,7 +1096,7 @@ export class YNetwork extends YFunction
      *
      * @return an integer corresponding to the minimum waiting time between two HTTP callbacks, in seconds
      *
-     * On failure, throws an exception or returns Y_CALLBACKMINDELAY_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKMINDELAY_INVALID.
      */
     async get_callbackMinDelay(): Promise<number>
     {
@@ -1109,7 +1116,7 @@ export class YNetwork extends YFunction
      *
      * @param newval : an integer corresponding to the minimum waiting time between two HTTP callbacks, in seconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1125,7 +1132,7 @@ export class YNetwork extends YFunction
      *
      * @return an integer corresponding to the waiting time between two HTTP callbacks when there is nothing new
      *
-     * On failure, throws an exception or returns Y_CALLBACKMAXDELAY_INVALID.
+     * On failure, throws an exception or returns YNetwork.CALLBACKMAXDELAY_INVALID.
      */
     async get_callbackMaxDelay(): Promise<number>
     {
@@ -1146,7 +1153,7 @@ export class YNetwork extends YFunction
      * @param newval : an integer corresponding to the waiting time between two HTTP callbacks when there
      * is nothing new
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1165,7 +1172,7 @@ export class YNetwork extends YFunction
      * @return an integer corresponding to the current consumed by the module from Power-over-Ethernet
      * (PoE), in milliamps
      *
-     * On failure, throws an exception or returns Y_POECURRENT_INVALID.
+     * On failure, throws an exception or returns YNetwork.POECURRENT_INVALID.
      */
     async get_poeCurrent(): Promise<number>
     {
@@ -1180,7 +1187,7 @@ export class YNetwork extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a network interface for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -1190,11 +1197,11 @@ export class YNetwork extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the network interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YNetwork.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YNetwork.isOnline() to test if the network interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a network interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -1202,10 +1209,10 @@ export class YNetwork extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the network interface, for instance
+     *         YHUBETH1.network.
      *
-     * @return a YNetwork object allowing you to drive $THEFUNCTION$.
+     * @return a YNetwork object allowing you to drive the network interface.
      */
     static FindNetwork(func: string): YNetwork
     {
@@ -1219,7 +1226,7 @@ export class YNetwork extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a network interface for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -1229,19 +1236,19 @@ export class YNetwork extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the network interface is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YNetwork.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YNetwork.isOnline() to test if the network interface is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a network interface by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the network interface, for instance
+     *         YHUBETH1.network.
      *
-     * @return a YNetwork object allowing you to drive $THEFUNCTION$.
+     * @return a YNetwork object allowing you to drive the network interface.
      */
     static FindNetworkInContext(yctx: YAPIContext, func: string): YNetwork
     {
@@ -1309,7 +1316,7 @@ export class YNetwork extends YFunction
      *         integer (e.g. 24 means 255.255.255.0)
      * @param fallbackRouter : fallback router IP address, to be used when no DHCP reply is received
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1324,7 +1331,7 @@ export class YNetwork extends YFunction
      * server, the module uses an IP of the network 169.254.0.0/16 (APIPA).
      * Remember to call the saveToFlash() method and then to reboot the module to apply this setting.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1341,7 +1348,7 @@ export class YNetwork extends YFunction
      * @param subnetMaskLen : subnet mask length, as an integer (e.g. 24 means 255.255.255.0)
      * @param router : router IP address (default gateway)
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1373,7 +1380,7 @@ export class YNetwork extends YFunction
      * after the end of the current callback, regardless if the minimum time between
      * callbacks configured in the device.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1391,7 +1398,7 @@ export class YNetwork extends YFunction
      *         when the callback should occur. For instance, if the periodicity is
      *         24h, an offset of 7 will make the callback occur each day at 7AM.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1401,9 +1408,14 @@ export class YNetwork extends YFunction
     }
 
     /**
-     * Returns the next Network
+     * Continues the enumeration of network interfaces started using yFirstNetwork().
+     * Caution: You can't make any assumption about the returned network interfaces order.
+     * If you want to find a specific a network interface, use Network.findNetwork()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YNetwork}
+     * @return a pointer to a YNetwork object, corresponding to
+     *         a network interface currently online, or a null pointer
+     *         if there are no more network interfaces to enumerate.
      */
     nextNetwork(): YNetwork | null
     {
@@ -1415,9 +1427,13 @@ export class YNetwork extends YFunction
     }
 
     /**
-     * Retrieves the first Network in a YAPI context
+     * Starts the enumeration of network interfaces currently accessible.
+     * Use the method YNetwork.nextNetwork() to iterate on
+     * next network interfaces.
      *
-     * @returns {YNetwork}
+     * @return a pointer to a YNetwork object, corresponding to
+     *         the first network interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstNetwork(): YNetwork | null
     {
@@ -1427,11 +1443,15 @@ export class YNetwork extends YFunction
     }
 
     /**
-     * Retrieves the first Network in a given context
+     * Starts the enumeration of network interfaces currently accessible.
+     * Use the method YNetwork.nextNetwork() to iterate on
+     * next network interfaces.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YNetwork}
+     * @return a pointer to a YNetwork object, corresponding to
+     *         the first network interface currently online, or a null pointer
+     *         if there are none.
      */
     static FirstNetworkInContext(yctx: YAPIContext): YNetwork | null
     {

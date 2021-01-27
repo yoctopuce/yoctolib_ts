@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_groundspeed.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for GroundSpeed functions
  *
@@ -65,7 +65,7 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
     }
     //--- (YGroundSpeed implementation)
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a ground speed sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -75,11 +75,11 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the ground speed sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGroundSpeed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGroundSpeed.isOnline() to test if the ground speed sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a ground speed sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -87,10 +87,10 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the ground speed sensor, for instance
+     *         YGNSSMK2.groundSpeed.
      *
-     * @return a YGroundSpeed object allowing you to drive $THEFUNCTION$.
+     * @return a YGroundSpeed object allowing you to drive the ground speed sensor.
      */
     static FindGroundSpeed(func) {
         let obj;
@@ -102,7 +102,7 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a ground speed sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -112,19 +112,19 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the ground speed sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YGroundSpeed.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YGroundSpeed.isOnline() to test if the ground speed sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a ground speed sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the ground speed sensor, for instance
+     *         YGNSSMK2.groundSpeed.
      *
-     * @return a YGroundSpeed object allowing you to drive $THEFUNCTION$.
+     * @return a YGroundSpeed object allowing you to drive the ground speed sensor.
      */
     static FindGroundSpeedInContext(yctx, func) {
         let obj;
@@ -216,9 +216,14 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
         return 0;
     }
     /**
-     * Returns the next GroundSpeed
+     * Continues the enumeration of ground speed sensors started using yFirstGroundSpeed().
+     * Caution: You can't make any assumption about the returned ground speed sensors order.
+     * If you want to find a specific a ground speed sensor, use GroundSpeed.findGroundSpeed()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YGroundSpeed}
+     * @return a pointer to a YGroundSpeed object, corresponding to
+     *         a ground speed sensor currently online, or a null pointer
+     *         if there are no more ground speed sensors to enumerate.
      */
     nextGroundSpeed() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -230,9 +235,13 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
         return YGroundSpeed.FindGroundSpeedInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first GroundSpeed in a YAPI context
+     * Starts the enumeration of ground speed sensors currently accessible.
+     * Use the method YGroundSpeed.nextGroundSpeed() to iterate on
+     * next ground speed sensors.
      *
-     * @returns {YGroundSpeed}
+     * @return a pointer to a YGroundSpeed object, corresponding to
+     *         the first ground speed sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGroundSpeed() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('GroundSpeed');
@@ -241,11 +250,15 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
         return YGroundSpeed.FindGroundSpeed(next_hwid);
     }
     /**
-     * Retrieves the first GroundSpeed in a given context
+     * Starts the enumeration of ground speed sensors currently accessible.
+     * Use the method YGroundSpeed.nextGroundSpeed() to iterate on
+     * next ground speed sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YGroundSpeed}
+     * @return a pointer to a YGroundSpeed object, corresponding to
+     *         the first ground speed sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstGroundSpeedInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('GroundSpeed');

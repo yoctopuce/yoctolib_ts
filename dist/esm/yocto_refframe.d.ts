@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_refframe.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_FusionMode {
+export declare const enum YRefFrame_FusionMode {
     NDOF = 0,
     NDOF_FMC_OFF = 1,
     M4G = 2,
@@ -48,7 +48,7 @@ export declare const enum Y_FusionMode {
     INCLIN_10DEG = 7,
     INVALID = -1
 }
-export declare const enum Y_MountPosition {
+export declare const enum YRefFrame_MountPosition {
     BOTTOM = 0,
     TOP = 1,
     FRONT = 2,
@@ -57,7 +57,7 @@ export declare const enum Y_MountPosition {
     LEFT = 5,
     INVALID = 6
 }
-export declare const enum Y_MountOrientation {
+export declare const enum YRefFrame_MountOrientation {
     TWELVE = 0,
     THREE = 1,
     SIX = 2,
@@ -68,7 +68,8 @@ export interface YRefFrameValueCallback {
     (func: YRefFrame, value: string): void;
 }
 /**
- * YRefFrame Class: 3D reference frame configuration interface, available for instance in the Yocto-3D-V2
+ * YRefFrame Class: 3D reference frame configuration interface, available for instance in the
+ * Yocto-3D-V2 or the Yocto-Inclinometer
  *
  * The YRefFrame class is used to setup the base orientation of the Yoctopuce inertial
  * sensors. Thanks to this, orientation functions relative to the earth surface plane
@@ -81,7 +82,7 @@ export declare class YRefFrame extends YFunction {
     _mountPos: number;
     _bearing: number;
     _calibrationParam: string;
-    _fusionMode: Y_FusionMode;
+    _fusionMode: YRefFrame_FusionMode;
     _valueCallbackRefFrame: YRefFrameValueCallback | null;
     _calibV2: boolean;
     _calibStage: number;
@@ -107,27 +108,27 @@ export declare class YRefFrame extends YFunction {
     readonly MOUNTPOS_INVALID: number;
     readonly BEARING_INVALID: number;
     readonly CALIBRATIONPARAM_INVALID: string;
-    readonly FUSIONMODE_NDOF: Y_FusionMode;
-    readonly FUSIONMODE_NDOF_FMC_OFF: Y_FusionMode;
-    readonly FUSIONMODE_M4G: Y_FusionMode;
-    readonly FUSIONMODE_COMPASS: Y_FusionMode;
-    readonly FUSIONMODE_IMU: Y_FusionMode;
-    readonly FUSIONMODE_INCLIN_90DEG_1G8: Y_FusionMode;
-    readonly FUSIONMODE_INCLIN_90DEG_3G6: Y_FusionMode;
-    readonly FUSIONMODE_INCLIN_10DEG: Y_FusionMode;
-    readonly FUSIONMODE_INVALID: Y_FusionMode;
+    readonly FUSIONMODE_NDOF: YRefFrame_FusionMode;
+    readonly FUSIONMODE_NDOF_FMC_OFF: YRefFrame_FusionMode;
+    readonly FUSIONMODE_M4G: YRefFrame_FusionMode;
+    readonly FUSIONMODE_COMPASS: YRefFrame_FusionMode;
+    readonly FUSIONMODE_IMU: YRefFrame_FusionMode;
+    readonly FUSIONMODE_INCLIN_90DEG_1G8: YRefFrame_FusionMode;
+    readonly FUSIONMODE_INCLIN_90DEG_3G6: YRefFrame_FusionMode;
+    readonly FUSIONMODE_INCLIN_10DEG: YRefFrame_FusionMode;
+    readonly FUSIONMODE_INVALID: YRefFrame_FusionMode;
     static readonly MOUNTPOS_INVALID: number;
     static readonly BEARING_INVALID: number;
     static readonly CALIBRATIONPARAM_INVALID: string;
-    static readonly FUSIONMODE_NDOF: Y_FusionMode;
-    static readonly FUSIONMODE_NDOF_FMC_OFF: Y_FusionMode;
-    static readonly FUSIONMODE_M4G: Y_FusionMode;
-    static readonly FUSIONMODE_COMPASS: Y_FusionMode;
-    static readonly FUSIONMODE_IMU: Y_FusionMode;
-    static readonly FUSIONMODE_INCLIN_90DEG_1G8: Y_FusionMode;
-    static readonly FUSIONMODE_INCLIN_90DEG_3G6: Y_FusionMode;
-    static readonly FUSIONMODE_INCLIN_10DEG: Y_FusionMode;
-    static readonly FUSIONMODE_INVALID: Y_FusionMode;
+    static readonly FUSIONMODE_NDOF: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_NDOF_FMC_OFF: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_M4G: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_COMPASS: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_IMU: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_INCLIN_90DEG_1G8: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_INCLIN_90DEG_3G6: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_INCLIN_10DEG: YRefFrame_FusionMode;
+    static readonly FUSIONMODE_INVALID: YRefFrame_FusionMode;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     get_mountPos(): Promise<number>;
@@ -150,7 +151,7 @@ export declare class YRefFrame extends YFunction {
      *
      * @param newval : a floating point number corresponding to the reference bearing used by the compass
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -162,7 +163,7 @@ export declare class YRefFrame extends YFunction {
      *
      * @return a floating point number corresponding to the reference bearing used by the compass
      *
-     * On failure, throws an exception or returns Y_BEARING_INVALID.
+     * On failure, throws an exception or returns YRefFrame.BEARING_INVALID.
      */
     get_bearing(): Promise<number>;
     get_calibrationParam(): Promise<string>;
@@ -170,28 +171,30 @@ export declare class YRefFrame extends YFunction {
     /**
      * Returns the sensor fusion mode. Note that available sensor fusion modes depend on the sensor type.
      *
-     * @return a value among Y_FUSIONMODE_NDOF, Y_FUSIONMODE_NDOF_FMC_OFF, Y_FUSIONMODE_M4G,
-     * Y_FUSIONMODE_COMPASS, Y_FUSIONMODE_IMU, Y_FUSIONMODE_INCLIN_90DEG_1G8,
-     * Y_FUSIONMODE_INCLIN_90DEG_3G6 and Y_FUSIONMODE_INCLIN_10DEG corresponding to the sensor fusion mode
+     * @return a value among YRefFrame.FUSIONMODE_NDOF, YRefFrame.FUSIONMODE_NDOF_FMC_OFF,
+     * YRefFrame.FUSIONMODE_M4G, YRefFrame.FUSIONMODE_COMPASS, YRefFrame.FUSIONMODE_IMU,
+     * YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8, YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6 and
+     * YRefFrame.FUSIONMODE_INCLIN_10DEG corresponding to the sensor fusion mode
      *
-     * On failure, throws an exception or returns Y_FUSIONMODE_INVALID.
+     * On failure, throws an exception or returns YRefFrame.FUSIONMODE_INVALID.
      */
-    get_fusionMode(): Promise<Y_FusionMode>;
+    get_fusionMode(): Promise<YRefFrame_FusionMode>;
     /**
      * Change the sensor fusion mode. Note that available sensor fusion modes depend on the sensor type.
      * Remember to call the matching module saveToFlash() method to save the setting permanently.
      *
-     * @param newval : a value among Y_FUSIONMODE_NDOF, Y_FUSIONMODE_NDOF_FMC_OFF, Y_FUSIONMODE_M4G,
-     * Y_FUSIONMODE_COMPASS, Y_FUSIONMODE_IMU, Y_FUSIONMODE_INCLIN_90DEG_1G8,
-     * Y_FUSIONMODE_INCLIN_90DEG_3G6 and Y_FUSIONMODE_INCLIN_10DEG
+     * @param newval : a value among YRefFrame.FUSIONMODE_NDOF, YRefFrame.FUSIONMODE_NDOF_FMC_OFF,
+     * YRefFrame.FUSIONMODE_M4G, YRefFrame.FUSIONMODE_COMPASS, YRefFrame.FUSIONMODE_IMU,
+     * YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8, YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6 and
+     * YRefFrame.FUSIONMODE_INCLIN_10DEG
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_fusionMode(newval: Y_FusionMode): Promise<number>;
+    set_fusionMode(newval: YRefFrame_FusionMode): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a reference frame for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -201,11 +204,11 @@ export declare class YRefFrame extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the reference frame is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRefFrame.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRefFrame.isOnline() to test if the reference frame is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a reference frame by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -213,14 +216,14 @@ export declare class YRefFrame extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the reference frame, for instance
+     *         Y3DMK002.refFrame.
      *
-     * @return a YRefFrame object allowing you to drive $THEFUNCTION$.
+     * @return a YRefFrame object allowing you to drive the reference frame.
      */
     static FindRefFrame(func: string): YRefFrame;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a reference frame for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -230,19 +233,19 @@ export declare class YRefFrame extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the reference frame is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRefFrame.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRefFrame.isOnline() to test if the reference frame is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a reference frame by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the reference frame, for instance
+     *         Y3DMK002.refFrame.
      *
-     * @return a YRefFrame object allowing you to drive $THEFUNCTION$.
+     * @return a YRefFrame object allowing you to drive the reference frame.
      */
     static FindRefFrameInContext(yctx: YAPIContext, func: string): YRefFrame;
     /**
@@ -263,31 +266,31 @@ export declare class YRefFrame extends YFunction {
      * in order to define the reference frame for the compass and the
      * pitch/roll tilt sensors.
      *
-     * @return a value among the Y_MOUNTPOSITION enumeration
-     *         (Y_MOUNTPOSITION_BOTTOM,   Y_MOUNTPOSITION_TOP,
-     *         Y_MOUNTPOSITION_FRONT,    Y_MOUNTPOSITION_RIGHT,
-     *         Y_MOUNTPOSITION_REAR,     Y_MOUNTPOSITION_LEFT),
+     * @return a value among the YRefFrame.MOUNTPOSITION enumeration
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
+     *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
      *
-     * On failure, throws an exception or returns Y_MOUNTPOSITION_INVALID.
+     * On failure, throws an exception or returns YRefFrame.MOUNTPOSITION_INVALID.
      */
-    get_mountPosition(): Promise<Y_MountPosition>;
+    get_mountPosition(): Promise<YRefFrame_MountPosition>;
     /**
      * Returns the installation orientation of the device, as configured
      * in order to define the reference frame for the compass and the
      * pitch/roll tilt sensors.
      *
-     * @return a value among the enumeration Y_MOUNTORIENTATION
-     *         (Y_MOUNTORIENTATION_TWELVE, Y_MOUNTORIENTATION_THREE,
-     *         Y_MOUNTORIENTATION_SIX,     Y_MOUNTORIENTATION_NINE)
+     * @return a value among the enumeration YRefFrame.MOUNTORIENTATION
+     *         (YRefFrame.MOUNTORIENTATION_TWELVE, YRefFrame.MOUNTORIENTATION_THREE,
+     *         YRefFrame.MOUNTORIENTATION_SIX,     YRefFrame.MOUNTORIENTATION_NINE)
      *         corresponding to the orientation of the "X" arrow on the device,
      *         as on a clock dial seen from an observer in the center of the box.
      *         On the bottom face, the 12H orientation points to the front, while
      *         on the top face, the 12H orientation points to the rear.
      *
-     * On failure, throws an exception or returns Y_MOUNTORIENTATION_INVALID.
+     * On failure, throws an exception or returns YRefFrame.MOUNTORIENTATION_INVALID.
      */
-    get_mountOrientation(): Promise<Y_MountOrientation>;
+    get_mountOrientation(): Promise<YRefFrame_MountOrientation>;
     /**
      * Changes the compass and tilt sensor frame of reference. The magnetic compass
      * and the tilt sensors (pitch and roll) naturally work in the plane
@@ -295,14 +298,14 @@ export declare class YRefFrame extends YFunction {
      * and horizontally, you must select its reference orientation (parallel to
      * the earth surface) so that the measures are made relative to this position.
      *
-     * @param position : a value among the Y_MOUNTPOSITION enumeration
-     *         (Y_MOUNTPOSITION_BOTTOM,   Y_MOUNTPOSITION_TOP,
-     *         Y_MOUNTPOSITION_FRONT,    Y_MOUNTPOSITION_RIGHT,
-     *         Y_MOUNTPOSITION_REAR,     Y_MOUNTPOSITION_LEFT),
+     * @param position : a value among the YRefFrame.MOUNTPOSITION enumeration
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
+     *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
-     * @param orientation : a value among the enumeration Y_MOUNTORIENTATION
-     *         (Y_MOUNTORIENTATION_TWELVE, Y_MOUNTORIENTATION_THREE,
-     *         Y_MOUNTORIENTATION_SIX,     Y_MOUNTORIENTATION_NINE)
+     * @param orientation : a value among the enumeration YRefFrame.MOUNTORIENTATION
+     *         (YRefFrame.MOUNTORIENTATION_TWELVE, YRefFrame.MOUNTORIENTATION_THREE,
+     *         YRefFrame.MOUNTORIENTATION_SIX,     YRefFrame.MOUNTORIENTATION_NINE)
      *         corresponding to the orientation of the "X" arrow on the device,
      *         as on a clock dial seen from an observer in the center of the box.
      *         On the bottom face, the 12H orientation points to the front, while
@@ -313,7 +316,7 @@ export declare class YRefFrame extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_mountPosition(position: Y_MountPosition, orientation: Y_MountOrientation): Promise<number>;
+    set_mountPosition(position: YRefFrame_MountPosition, orientation: YRefFrame_MountOrientation): Promise<number>;
     /**
      * Returns the 3D sensor calibration state (Yocto-3D-V2 only). This function returns
      * an integer representing the calibration state of the 3 inertial sensors of
@@ -426,23 +429,36 @@ export declare class YRefFrame extends YFunction {
      */
     cancel3DCalibration(): Promise<number>;
     /**
-     * Returns the next RefFrame
+     * Continues the enumeration of reference frames started using yFirstRefFrame().
+     * Caution: You can't make any assumption about the returned reference frames order.
+     * If you want to find a specific a reference frame, use RefFrame.findRefFrame()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YRefFrame}
+     * @return a pointer to a YRefFrame object, corresponding to
+     *         a reference frame currently online, or a null pointer
+     *         if there are no more reference frames to enumerate.
      */
     nextRefFrame(): YRefFrame | null;
     /**
-     * Retrieves the first RefFrame in a YAPI context
+     * Starts the enumeration of reference frames currently accessible.
+     * Use the method YRefFrame.nextRefFrame() to iterate on
+     * next reference frames.
      *
-     * @returns {YRefFrame}
+     * @return a pointer to a YRefFrame object, corresponding to
+     *         the first reference frame currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRefFrame(): YRefFrame | null;
     /**
-     * Retrieves the first RefFrame in a given context
+     * Starts the enumeration of reference frames currently accessible.
+     * Use the method YRefFrame.nextRefFrame() to iterate on
+     * next reference frames.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YRefFrame}
+     * @return a pointer to a YRefFrame object, corresponding to
+     *         the first reference frame currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRefFrameInContext(yctx: YAPIContext): YRefFrame | null;
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_currentloopoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YCurrentLoopOutput definitions)
-export const enum Y_LoopPower {
+export const enum YCurrentLoopOutput_LoopPower {
     NOPWR = 0,
     LOWPWR = 1,
     POWEROK = 2,
@@ -66,26 +66,26 @@ export class YCurrentLoopOutput extends YFunction
     _current: number = YCurrentLoopOutput.CURRENT_INVALID;
     _currentTransition: string = YCurrentLoopOutput.CURRENTTRANSITION_INVALID;
     _currentAtStartUp: number = YCurrentLoopOutput.CURRENTATSTARTUP_INVALID;
-    _loopPower: Y_LoopPower = YCurrentLoopOutput.LOOPPOWER_INVALID;
+    _loopPower: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput.LOOPPOWER_INVALID;
     _valueCallbackCurrentLoopOutput: YCurrentLoopOutputValueCallback | null = null;
 
     // API symbols as object properties
     public readonly CURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CURRENTTRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly LOOPPOWER_NOPWR: Y_LoopPower = Y_LoopPower.NOPWR;
-    public readonly LOOPPOWER_LOWPWR: Y_LoopPower = Y_LoopPower.LOWPWR;
-    public readonly LOOPPOWER_POWEROK: Y_LoopPower = Y_LoopPower.POWEROK;
-    public readonly LOOPPOWER_INVALID: Y_LoopPower = Y_LoopPower.INVALID;
+    public readonly LOOPPOWER_NOPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.NOPWR;
+    public readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.LOWPWR;
+    public readonly LOOPPOWER_POWEROK: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.POWEROK;
+    public readonly LOOPPOWER_INVALID: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.INVALID;
 
     // API symbols as static members
     public static readonly CURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CURRENTTRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public static readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly LOOPPOWER_NOPWR: Y_LoopPower = Y_LoopPower.NOPWR;
-    public static readonly LOOPPOWER_LOWPWR: Y_LoopPower = Y_LoopPower.LOWPWR;
-    public static readonly LOOPPOWER_POWEROK: Y_LoopPower = Y_LoopPower.POWEROK;
-    public static readonly LOOPPOWER_INVALID: Y_LoopPower = Y_LoopPower.INVALID;
+    public static readonly LOOPPOWER_NOPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.NOPWR;
+    public static readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.LOWPWR;
+    public static readonly LOOPPOWER_POWEROK: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.POWEROK;
+    public static readonly LOOPPOWER_INVALID: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.INVALID;
     //--- (end of YCurrentLoopOutput attributes declaration)
 
 //--- (YCurrentLoopOutput return codes)
@@ -114,7 +114,7 @@ export class YCurrentLoopOutput extends YFunction
             this._currentAtStartUp = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'loopPower':
-            this._loopPower = <Y_LoopPower> <number> val;
+            this._loopPower = <YCurrentLoopOutput_LoopPower> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -127,7 +127,7 @@ export class YCurrentLoopOutput extends YFunction
      *
      * @param newval : a floating point number corresponding to the current loop, the valid range is from 3 to 21mA
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -143,7 +143,7 @@ export class YCurrentLoopOutput extends YFunction
      *
      * @return a floating point number corresponding to the loop current set point in mA
      *
-     * On failure, throws an exception or returns Y_CURRENT_INVALID.
+     * On failure, throws an exception or returns YCurrentLoopOutput.CURRENT_INVALID.
      */
     async get_current(): Promise<number>
     {
@@ -182,7 +182,7 @@ export class YCurrentLoopOutput extends YFunction
      *
      * @param newval : a floating point number corresponding to the loop current at device start up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -198,7 +198,7 @@ export class YCurrentLoopOutput extends YFunction
      *
      * @return a floating point number corresponding to the current in the loop at device startup, in mA
      *
-     * On failure, throws an exception or returns Y_CURRENTATSTARTUP_INVALID.
+     * On failure, throws an exception or returns YCurrentLoopOutput.CURRENTATSTARTUP_INVALID.
      */
     async get_currentAtStartUp(): Promise<number>
     {
@@ -217,12 +217,12 @@ export class YCurrentLoopOutput extends YFunction
      * is powered. NOPWR: the loop in not powered. LOWPWR: the loop is not
      * powered enough to maintain the current required (insufficient voltage).
      *
-     * @return a value among Y_LOOPPOWER_NOPWR, Y_LOOPPOWER_LOWPWR and Y_LOOPPOWER_POWEROK corresponding
-     * to the loop powerstate
+     * @return a value among YCurrentLoopOutput.LOOPPOWER_NOPWR, YCurrentLoopOutput.LOOPPOWER_LOWPWR and
+     * YCurrentLoopOutput.LOOPPOWER_POWEROK corresponding to the loop powerstate
      *
-     * On failure, throws an exception or returns Y_LOOPPOWER_INVALID.
+     * On failure, throws an exception or returns YCurrentLoopOutput.LOOPPOWER_INVALID.
      */
-    async get_loopPower(): Promise<Y_LoopPower>
+    async get_loopPower(): Promise<YCurrentLoopOutput_LoopPower>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -235,7 +235,7 @@ export class YCurrentLoopOutput extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a 4-20mA output for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -245,11 +245,11 @@ export class YCurrentLoopOutput extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the 4-20mA output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCurrentLoopOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCurrentLoopOutput.isOnline() to test if the 4-20mA output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a 4-20mA output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -257,10 +257,10 @@ export class YCurrentLoopOutput extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the 4-20mA output, for instance
+     *         TX420MA1.currentLoopOutput.
      *
-     * @return a YCurrentLoopOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YCurrentLoopOutput object allowing you to drive the 4-20mA output.
      */
     static FindCurrentLoopOutput(func: string): YCurrentLoopOutput
     {
@@ -274,7 +274,7 @@ export class YCurrentLoopOutput extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a 4-20mA output for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -284,19 +284,19 @@ export class YCurrentLoopOutput extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the 4-20mA output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCurrentLoopOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCurrentLoopOutput.isOnline() to test if the 4-20mA output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a 4-20mA output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the 4-20mA output, for instance
+     *         TX420MA1.currentLoopOutput.
      *
-     * @return a YCurrentLoopOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YCurrentLoopOutput object allowing you to drive the 4-20mA output.
      */
     static FindCurrentLoopOutputInContext(yctx: YAPIContext, func: string): YCurrentLoopOutput
     {
@@ -361,7 +361,7 @@ export class YCurrentLoopOutput extends YFunction
      *         (floating-point number, representing the end current in mA)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      */
     async currentMove(mA_target: number, ms_duration: number): Promise<number>
     {
@@ -378,9 +378,14 @@ export class YCurrentLoopOutput extends YFunction
     }
 
     /**
-     * Returns the next CurrentLoopOutput
+     * Continues the enumeration of 4-20mA outputs started using yFirstCurrentLoopOutput().
+     * Caution: You can't make any assumption about the returned 4-20mA outputs order.
+     * If you want to find a specific a 4-20mA output, use CurrentLoopOutput.findCurrentLoopOutput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YCurrentLoopOutput}
+     * @return a pointer to a YCurrentLoopOutput object, corresponding to
+     *         a 4-20mA output currently online, or a null pointer
+     *         if there are no more 4-20mA outputs to enumerate.
      */
     nextCurrentLoopOutput(): YCurrentLoopOutput | null
     {
@@ -392,9 +397,13 @@ export class YCurrentLoopOutput extends YFunction
     }
 
     /**
-     * Retrieves the first CurrentLoopOutput in a YAPI context
+     * Starts the enumeration of 4-20mA outputs currently accessible.
+     * Use the method YCurrentLoopOutput.nextCurrentLoopOutput() to iterate on
+     * next 4-20mA outputs.
      *
-     * @returns {YCurrentLoopOutput}
+     * @return a pointer to a YCurrentLoopOutput object, corresponding to
+     *         the first 4-20mA output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCurrentLoopOutput(): YCurrentLoopOutput | null
     {
@@ -404,11 +413,15 @@ export class YCurrentLoopOutput extends YFunction
     }
 
     /**
-     * Retrieves the first CurrentLoopOutput in a given context
+     * Starts the enumeration of 4-20mA outputs currently accessible.
+     * Use the method YCurrentLoopOutput.nextCurrentLoopOutput() to iterate on
+     * next 4-20mA outputs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YCurrentLoopOutput}
+     * @return a pointer to a YCurrentLoopOutput object, corresponding to
+     *         the first 4-20mA output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCurrentLoopOutputInContext(yctx: YAPIContext): YCurrentLoopOutput | null
     {

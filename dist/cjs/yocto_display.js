@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_display.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -52,12 +52,29 @@ const yocto_api_js_1 = require("./yocto_api.js");
  */
 //--- (end of generated code: YDisplayLayer class start)
 class YDisplayLayer {
-    //--- (generated code: YDisplayLayer attributes declaration)
-    // API symbols as static members
-    //--- (end of generated code: YDisplayLayer attributes declaration)
     constructor(obj_parent, int_id) {
         this._cmdbuff = '';
         this._hidden = false;
+        //--- (generated code: YDisplayLayer attributes declaration)
+        // API symbols as static members
+        //--- (end of generated code: YDisplayLayer attributes declaration)
+        // API symbols as readonly attributes
+        this.ALIGN_TOP_LEFT = 0 /* TOP_LEFT */;
+        this.ALIGN_CENTER_LEFT = 1 /* CENTER_LEFT */;
+        this.ALIGN_BASELINE_LEFT = 2 /* BASELINE_LEFT */;
+        this.ALIGN_BOTTOM_LEFT = 3 /* BOTTOM_LEFT */;
+        this.ALIGN_TOP_CENTER = 4 /* TOP_CENTER */;
+        this.ALIGN_CENTER = 5 /* CENTER */;
+        this.ALIGN_BASELINE_CENTER = 6 /* BASELINE_CENTER */;
+        this.ALIGN_BOTTOM_CENTER = 7 /* BOTTOM_CENTER */;
+        this.ALIGN_TOP_DECIMAL = 8 /* TOP_DECIMAL */;
+        this.ALIGN_CENTER_DECIMAL = 9 /* CENTER_DECIMAL */;
+        this.ALIGN_BASELINE_DECIMAL = 10 /* BASELINE_DECIMAL */;
+        this.ALIGN_BOTTOM_DECIMAL = 11 /* BOTTOM_DECIMAL */;
+        this.ALIGN_TOP_RIGHT = 12 /* TOP_RIGHT */;
+        this.ALIGN_CENTER_RIGHT = 13 /* CENTER_RIGHT */;
+        this.ALIGN_BASELINE_RIGHT = 14 /* BASELINE_RIGHT */;
+        this.ALIGN_BOTTOM_RIGHT = 15 /* BOTTOM_RIGHT */;
         this._yapi = obj_parent._yapi;
         this._display = obj_parent;
         this._id = int_id >> 0;
@@ -110,7 +127,7 @@ class YDisplayLayer {
      * and selects the most visible pen color. If you only want to erase the layer
      * content, use the method clear() instead.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -124,7 +141,7 @@ class YDisplayLayer {
      * To reinitialize the layer attributes to defaults settings, use the method
      * reset() instead.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -139,7 +156,7 @@ class YDisplayLayer {
      *
      * @param color : the desired pen color, as a 24-bit RGB value
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -156,7 +173,7 @@ class YDisplayLayer {
      *
      * @param graylevel : the desired gray level, from 0 to 255
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -169,7 +186,7 @@ class YDisplayLayer {
      * becomes transparent (as when the layer is empty), showing the other
      * layers beneath it.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -188,7 +205,7 @@ class YDisplayLayer {
      * @param mode : true to enable anti-aliasing, false to
      *         disable it.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -201,7 +218,7 @@ class YDisplayLayer {
      * @param x : the distance from left of layer, in pixels
      * @param y : the distance from top of layer, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -216,7 +233,7 @@ class YDisplayLayer {
      * @param x2 : the distance from left of layer to the right border of the rectangle, in pixels
      * @param y2 : the distance from top of layer to the bottom border of the rectangle, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -231,7 +248,7 @@ class YDisplayLayer {
      * @param x2 : the distance from left of layer to the right border of the rectangle, in pixels
      * @param y2 : the distance from top of layer to the bottom border of the rectangle, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -245,7 +262,7 @@ class YDisplayLayer {
      * @param y : the distance from top of layer to the center of the circle, in pixels
      * @param r : the radius of the circle, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -259,7 +276,7 @@ class YDisplayLayer {
      * @param y : the distance from top of layer to the center of the disc, in pixels
      * @param r : the radius of the disc, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -276,7 +293,7 @@ class YDisplayLayer {
      * @param fontname : the font file name, embedded fonts are 8x8.yfm, Small.yfm, Medium.yfm, Large.yfm
      * (not available on Yocto-MiniDisplay).
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -290,14 +307,18 @@ class YDisplayLayer {
      *
      * @param x : the distance from left of layer to the text anchor point, in pixels
      * @param y : the distance from top of layer to the text anchor point, in pixels
-     * @param anchor : the text anchor point, chosen among the Y_ALIGN enumeration:
-     *         Y_ALIGN_TOP_LEFT,    Y_ALIGN_CENTER_LEFT,    Y_ALIGN_BASELINE_LEFT,    Y_ALIGN_BOTTOM_LEFT,
-     *         Y_ALIGN_TOP_CENTER,  Y_ALIGN_CENTER,         Y_ALIGN_BASELINE_CENTER,  Y_ALIGN_BOTTOM_CENTER,
-     *         Y_ALIGN_TOP_DECIMAL, Y_ALIGN_CENTER_DECIMAL, Y_ALIGN_BASELINE_DECIMAL, Y_ALIGN_BOTTOM_DECIMAL,
-     *         Y_ALIGN_TOP_RIGHT,   Y_ALIGN_CENTER_RIGHT,   Y_ALIGN_BASELINE_RIGHT,   Y_ALIGN_BOTTOM_RIGHT.
+     * @param anchor : the text anchor point, chosen among the YDisplayLayer.ALIGN enumeration:
+     *         YDisplayLayer.ALIGN_TOP_LEFT,    YDisplayLayer.ALIGN_CENTER_LEFT,
+     *         YDisplayLayer.ALIGN_BASELINE_LEFT,    YDisplayLayer.ALIGN_BOTTOM_LEFT,
+     *         YDisplayLayer.ALIGN_TOP_CENTER,  YDisplayLayer.ALIGN_CENTER,
+     *         YDisplayLayer.ALIGN_BASELINE_CENTER,  YDisplayLayer.ALIGN_BOTTOM_CENTER,
+     *         YDisplayLayer.ALIGN_TOP_DECIMAL, YDisplayLayer.ALIGN_CENTER_DECIMAL,
+     *         YDisplayLayer.ALIGN_BASELINE_DECIMAL, YDisplayLayer.ALIGN_BOTTOM_DECIMAL,
+     *         YDisplayLayer.ALIGN_TOP_RIGHT,   YDisplayLayer.ALIGN_CENTER_RIGHT,
+     *         YDisplayLayer.ALIGN_BASELINE_RIGHT,   YDisplayLayer.ALIGN_BOTTOM_RIGHT.
      * @param text : the text string to draw
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -314,7 +335,7 @@ class YDisplayLayer {
      * @param y : the distance from top of layer to the top of the image, in pixels
      * @param imagename : the GIF file name
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -337,7 +358,7 @@ class YDisplayLayer {
      * @param bgcol : the background gray level to use for zero bits (0 = black,
      *         255 = white), or -1 to leave the pixels unchanged
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -352,7 +373,7 @@ class YDisplayLayer {
      * @param x : the distance from left of layer, in pixels
      * @param y : the distance from top of layer, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -367,7 +388,7 @@ class YDisplayLayer {
      * @param x : the distance from left of layer to the end point of the line, in pixels
      * @param y : the distance from top of layer to the end point of the line, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -383,7 +404,7 @@ class YDisplayLayer {
      *
      * @param text : the message to display
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -398,7 +419,7 @@ class YDisplayLayer {
      * @param x2 : the distance from left of layer to the right margin, in pixels
      * @param y2 : the distance from top of layer to the bottom margin, in pixels
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -412,7 +433,7 @@ class YDisplayLayer {
      * @param bgcol : the background gray level to use when scrolling (0 = black,
      *         255 = white), or -1 for transparent
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -425,7 +446,7 @@ class YDisplayLayer {
      * @param wordwrap : true to wrap only between words,
      *         false to wrap on the last column anyway.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -436,7 +457,7 @@ class YDisplayLayer {
      * Blanks the console area within console margins, and resets the console pointer
      * to the upper left corner of the console.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -453,7 +474,7 @@ class YDisplayLayer {
      * @param scrollTime : number of milliseconds to use for smooth scrolling, or
      *         0 if the scrolling should be immediate.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -466,7 +487,7 @@ class YDisplayLayer {
      * affect the drawing speed, since it postpones the rendering until all operations are
      * completed (double-buffering).
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -478,7 +499,7 @@ class YDisplayLayer {
     /**
      * Shows the layer. Shows the layer again after a hide command.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -499,7 +520,7 @@ class YDisplayLayer {
      *
      * @return an integer corresponding to the display width, in pixels
      *
-     * On failure, throws an exception or returns Y_DISPLAYWIDTH_INVALID.
+     * On failure, throws an exception or returns YDisplayLayer.DISPLAYWIDTH_INVALID.
      */
     async get_displayWidth() {
         return await this._display.get_displayWidth();
@@ -509,7 +530,7 @@ class YDisplayLayer {
      *
      * @return an integer corresponding to the display height, in pixels
      *
-     * On failure, throws an exception or returns Y_DISPLAYHEIGHT_INVALID.
+     * On failure, throws an exception or returns YDisplayLayer.DISPLAYHEIGHT_INVALID.
      */
     async get_displayHeight() {
         return await this._display.get_displayHeight();
@@ -519,7 +540,7 @@ class YDisplayLayer {
      *
      * @return an integer corresponding to the width of the layers to draw on, in pixels
      *
-     * On failure, throws an exception or returns Y_LAYERWIDTH_INVALID.
+     * On failure, throws an exception or returns YDisplayLayer.LAYERWIDTH_INVALID.
      */
     async get_layerWidth() {
         return await this._display.get_layerWidth();
@@ -529,7 +550,7 @@ class YDisplayLayer {
      *
      * @return an integer corresponding to the height of the layers to draw on, in pixels
      *
-     * On failure, throws an exception or returns Y_LAYERHEIGHT_INVALID.
+     * On failure, throws an exception or returns YDisplayLayer.LAYERHEIGHT_INVALID.
      */
     async get_layerHeight() {
         return await this._display.get_layerHeight();
@@ -540,6 +561,23 @@ class YDisplayLayer {
     }
 }
 exports.YDisplayLayer = YDisplayLayer;
+// API symbols as static members
+YDisplayLayer.ALIGN_TOP_LEFT = 0 /* TOP_LEFT */;
+YDisplayLayer.ALIGN_CENTER_LEFT = 1 /* CENTER_LEFT */;
+YDisplayLayer.ALIGN_BASELINE_LEFT = 2 /* BASELINE_LEFT */;
+YDisplayLayer.ALIGN_BOTTOM_LEFT = 3 /* BOTTOM_LEFT */;
+YDisplayLayer.ALIGN_TOP_CENTER = 4 /* TOP_CENTER */;
+YDisplayLayer.ALIGN_CENTER = 5 /* CENTER */;
+YDisplayLayer.ALIGN_BASELINE_CENTER = 6 /* BASELINE_CENTER */;
+YDisplayLayer.ALIGN_BOTTOM_CENTER = 7 /* BOTTOM_CENTER */;
+YDisplayLayer.ALIGN_TOP_DECIMAL = 8 /* TOP_DECIMAL */;
+YDisplayLayer.ALIGN_CENTER_DECIMAL = 9 /* CENTER_DECIMAL */;
+YDisplayLayer.ALIGN_BASELINE_DECIMAL = 10 /* BASELINE_DECIMAL */;
+YDisplayLayer.ALIGN_BOTTOM_DECIMAL = 11 /* BOTTOM_DECIMAL */;
+YDisplayLayer.ALIGN_TOP_RIGHT = 12 /* TOP_RIGHT */;
+YDisplayLayer.ALIGN_CENTER_RIGHT = 13 /* CENTER_RIGHT */;
+YDisplayLayer.ALIGN_BASELINE_RIGHT = 14 /* BASELINE_RIGHT */;
+YDisplayLayer.ALIGN_BOTTOM_RIGHT = 15 /* BOTTOM_RIGHT */;
 //--- (end of generated code: YDisplay definitions)
 //--- (generated code: YDisplay class start)
 /**
@@ -646,9 +684,10 @@ class YDisplay extends yocto_api_js_1.YFunction {
     /**
      * Returns true if the screen is powered, false otherwise.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to true if the screen is powered, false otherwise
+     * @return either YDisplay.ENABLED_FALSE or YDisplay.ENABLED_TRUE, according to true if the screen is
+     * powered, false otherwise
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YDisplay.ENABLED_INVALID.
      */
     async get_enabled() {
         let res;
@@ -663,9 +702,10 @@ class YDisplay extends yocto_api_js_1.YFunction {
     /**
      * Changes the power state of the display.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the power state of the display
+     * @param newval : either YDisplay.ENABLED_FALSE or YDisplay.ENABLED_TRUE, according to the power
+     * state of the display
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -679,7 +719,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return a string corresponding to the name of the sequence to play when the displayed is powered on
      *
-     * On failure, throws an exception or returns Y_STARTUPSEQ_INVALID.
+     * On failure, throws an exception or returns YDisplay.STARTUPSEQ_INVALID.
      */
     async get_startupSeq() {
         let res;
@@ -698,7 +738,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @param newval : a string corresponding to the name of the sequence to play when the displayed is powered on
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -712,7 +752,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the luminosity of the  module informative LEDs (from 0 to 100)
      *
-     * On failure, throws an exception or returns Y_BRIGHTNESS_INVALID.
+     * On failure, throws an exception or returns YDisplay.BRIGHTNESS_INVALID.
      */
     async get_brightness() {
         let res;
@@ -731,7 +771,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the brightness of the display
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -743,10 +783,11 @@ class YDisplay extends yocto_api_js_1.YFunction {
     /**
      * Returns the currently selected display orientation.
      *
-     * @return a value among Y_ORIENTATION_LEFT, Y_ORIENTATION_UP, Y_ORIENTATION_RIGHT and
-     * Y_ORIENTATION_DOWN corresponding to the currently selected display orientation
+     * @return a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
+     * YDisplay.ORIENTATION_RIGHT and YDisplay.ORIENTATION_DOWN corresponding to the currently selected
+     * display orientation
      *
-     * On failure, throws an exception or returns Y_ORIENTATION_INVALID.
+     * On failure, throws an exception or returns YDisplay.ORIENTATION_INVALID.
      */
     async get_orientation() {
         let res;
@@ -762,10 +803,10 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * Changes the display orientation. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_ORIENTATION_LEFT, Y_ORIENTATION_UP, Y_ORIENTATION_RIGHT and
-     * Y_ORIENTATION_DOWN corresponding to the display orientation
+     * @param newval : a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
+     * YDisplay.ORIENTATION_RIGHT and YDisplay.ORIENTATION_DOWN corresponding to the display orientation
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -779,7 +820,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the display width, in pixels
      *
-     * On failure, throws an exception or returns Y_DISPLAYWIDTH_INVALID.
+     * On failure, throws an exception or returns YDisplay.DISPLAYWIDTH_INVALID.
      */
     async get_displayWidth() {
         let res;
@@ -796,7 +837,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the display height, in pixels
      *
-     * On failure, throws an exception or returns Y_DISPLAYHEIGHT_INVALID.
+     * On failure, throws an exception or returns YDisplay.DISPLAYHEIGHT_INVALID.
      */
     async get_displayHeight() {
         let res;
@@ -811,10 +852,10 @@ class YDisplay extends yocto_api_js_1.YFunction {
     /**
      * Returns the display type: monochrome, gray levels or full color.
      *
-     * @return a value among Y_DISPLAYTYPE_MONO, Y_DISPLAYTYPE_GRAY and Y_DISPLAYTYPE_RGB corresponding to
-     * the display type: monochrome, gray levels or full color
+     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_GRAY and
+     * YDisplay.DISPLAYTYPE_RGB corresponding to the display type: monochrome, gray levels or full color
      *
-     * On failure, throws an exception or returns Y_DISPLAYTYPE_INVALID.
+     * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
     async get_displayType() {
         let res;
@@ -831,7 +872,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the width of the layers to draw on, in pixels
      *
-     * On failure, throws an exception or returns Y_LAYERWIDTH_INVALID.
+     * On failure, throws an exception or returns YDisplay.LAYERWIDTH_INVALID.
      */
     async get_layerWidth() {
         let res;
@@ -848,7 +889,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the height of the layers to draw on, in pixels
      *
-     * On failure, throws an exception or returns Y_LAYERHEIGHT_INVALID.
+     * On failure, throws an exception or returns YDisplay.LAYERHEIGHT_INVALID.
      */
     async get_layerHeight() {
         let res;
@@ -865,7 +906,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the number of available layers to draw on
      *
-     * On failure, throws an exception or returns Y_LAYERCOUNT_INVALID.
+     * On failure, throws an exception or returns YDisplay.LAYERCOUNT_INVALID.
      */
     async get_layerCount() {
         let res;
@@ -893,7 +934,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a display for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -903,11 +944,11 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the display is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDisplay.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDisplay.isOnline() to test if the display is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a display by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -915,10 +956,10 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the display, for instance
+     *         YD128X32.display.
      *
-     * @return a YDisplay object allowing you to drive $THEFUNCTION$.
+     * @return a YDisplay object allowing you to drive the display.
      */
     static FindDisplay(func) {
         let obj;
@@ -930,7 +971,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a display for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -940,19 +981,19 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the display is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDisplay.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDisplay.isOnline() to test if the display is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a display by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the display, for instance
+     *         YD128X32.display.
      *
-     * @return a YDisplay object allowing you to drive $THEFUNCTION$.
+     * @return a YDisplay object allowing you to drive the display.
      */
     static FindDisplayInContext(yctx, func) {
         let obj;
@@ -1011,7 +1052,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * Using this function in a sequence will kill the sequence play-back. Don't use that
      * function to reset the display at sequence start-up.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1027,7 +1068,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * @param brightness : the new screen brightness
      * @param duration : duration of the brightness transition, in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1040,7 +1081,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * The name used to store the sequence is specified when calling
      * saveSequence(), once the recording is complete.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1057,7 +1098,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @param sequenceName : the name of the newly created sequence
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1075,7 +1116,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @param sequenceName : the name of the newly created sequence
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1093,7 +1134,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      *
      * @param delay_ms : the duration to wait, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1105,7 +1146,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * Stops immediately any ongoing sequence replay.
      * The display is left as is.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1121,7 +1162,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * @param pathname : path and name of the new file to create
      * @param content : binary buffer with the content to set
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1138,7 +1179,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * @param srcLayerId : the identifier of the source layer (a number in range 0..layerCount-1)
      * @param dstLayerId : the identifier of the destination layer (a number in range 0..layerCount-1)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1157,7 +1198,7 @@ class YDisplay extends yocto_api_js_1.YFunction {
      * @param layerIdA : the first layer (a number in range 0..layerCount-1)
      * @param layerIdB : the second layer (a number in range 0..layerCount-1)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1193,9 +1234,14 @@ class YDisplay extends yocto_api_js_1.YFunction {
         return this._allDisplayLayers[layerId];
     }
     /**
-     * Returns the next Display
+     * Continues the enumeration of displays started using yFirstDisplay().
+     * Caution: You can't make any assumption about the returned displays order.
+     * If you want to find a specific a display, use Display.findDisplay()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDisplay}
+     * @return a pointer to a YDisplay object, corresponding to
+     *         a display currently online, or a null pointer
+     *         if there are no more displays to enumerate.
      */
     nextDisplay() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -1207,9 +1253,13 @@ class YDisplay extends yocto_api_js_1.YFunction {
         return YDisplay.FindDisplayInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Display in a YAPI context
+     * Starts the enumeration of displays currently accessible.
+     * Use the method YDisplay.nextDisplay() to iterate on
+     * next displays.
      *
-     * @returns {YDisplay}
+     * @return a pointer to a YDisplay object, corresponding to
+     *         the first display currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDisplay() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Display');
@@ -1218,11 +1268,15 @@ class YDisplay extends yocto_api_js_1.YFunction {
         return YDisplay.FindDisplay(next_hwid);
     }
     /**
-     * Retrieves the first Display in a given context
+     * Starts the enumeration of displays currently accessible.
+     * Use the method YDisplay.nextDisplay() to iterate on
+     * next displays.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDisplay}
+     * @return a pointer to a YDisplay object, corresponding to
+     *         the first display currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDisplayInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Display');

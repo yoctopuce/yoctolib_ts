@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_pwminput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -138,7 +138,7 @@ export class YPwmInput extends YSensor {
      *
      * @param newval : a string corresponding to the measuring unit for the measured quantity
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -152,7 +152,7 @@ export class YPwmInput extends YSensor {
      *
      * @return a floating point number corresponding to the PWM duty cycle, in per cents
      *
-     * On failure, throws an exception or returns Y_DUTYCYCLE_INVALID.
+     * On failure, throws an exception or returns YPwmInput.DUTYCYCLE_INVALID.
      */
     async get_dutyCycle() {
         let res;
@@ -170,7 +170,7 @@ export class YPwmInput extends YSensor {
      * @return a floating point number corresponding to the PWM pulse length in milliseconds, as a
      * floating point number
      *
-     * On failure, throws an exception or returns Y_PULSEDURATION_INVALID.
+     * On failure, throws an exception or returns YPwmInput.PULSEDURATION_INVALID.
      */
     async get_pulseDuration() {
         let res;
@@ -187,7 +187,7 @@ export class YPwmInput extends YSensor {
      *
      * @return a floating point number corresponding to the PWM frequency in Hz
      *
-     * On failure, throws an exception or returns Y_FREQUENCY_INVALID.
+     * On failure, throws an exception or returns YPwmInput.FREQUENCY_INVALID.
      */
     async get_frequency() {
         let res;
@@ -204,7 +204,7 @@ export class YPwmInput extends YSensor {
      *
      * @return a floating point number corresponding to the PWM period in milliseconds
      *
-     * On failure, throws an exception or returns Y_PERIOD_INVALID.
+     * On failure, throws an exception or returns YPwmInput.PERIOD_INVALID.
      */
     async get_period() {
         let res;
@@ -223,7 +223,7 @@ export class YPwmInput extends YSensor {
      *
      * @return an integer corresponding to the pulse counter value
      *
-     * On failure, throws an exception or returns Y_PULSECOUNTER_INVALID.
+     * On failure, throws an exception or returns YPwmInput.PULSECOUNTER_INVALID.
      */
     async get_pulseCounter() {
         let res;
@@ -245,7 +245,7 @@ export class YPwmInput extends YSensor {
      *
      * @return an integer corresponding to the timer of the pulses counter (ms)
      *
-     * On failure, throws an exception or returns Y_PULSETIMER_INVALID.
+     * On failure, throws an exception or returns YPwmInput.PULSETIMER_INVALID.
      */
     async get_pulseTimer() {
         let res;
@@ -261,14 +261,15 @@ export class YPwmInput extends YSensor {
      * Returns the parameter (frequency/duty cycle, pulse width, edges count) returned by the
      * get_currentValue function and callbacks. Attention
      *
-     * @return a value among Y_PWMREPORTMODE_PWM_DUTYCYCLE, Y_PWMREPORTMODE_PWM_FREQUENCY,
-     * Y_PWMREPORTMODE_PWM_PULSEDURATION, Y_PWMREPORTMODE_PWM_EDGECOUNT, Y_PWMREPORTMODE_PWM_PULSECOUNT,
-     * Y_PWMREPORTMODE_PWM_CPS, Y_PWMREPORTMODE_PWM_CPM, Y_PWMREPORTMODE_PWM_STATE,
-     * Y_PWMREPORTMODE_PWM_FREQ_CPS, Y_PWMREPORTMODE_PWM_FREQ_CPM and Y_PWMREPORTMODE_PWM_PERIODCOUNT
-     * corresponding to the parameter (frequency/duty cycle, pulse width, edges count) returned by the
-     * get_currentValue function and callbacks
+     * @return a value among YPwmInput.PWMREPORTMODE_PWM_DUTYCYCLE, YPwmInput.PWMREPORTMODE_PWM_FREQUENCY,
+     * YPwmInput.PWMREPORTMODE_PWM_PULSEDURATION, YPwmInput.PWMREPORTMODE_PWM_EDGECOUNT,
+     * YPwmInput.PWMREPORTMODE_PWM_PULSECOUNT, YPwmInput.PWMREPORTMODE_PWM_CPS,
+     * YPwmInput.PWMREPORTMODE_PWM_CPM, YPwmInput.PWMREPORTMODE_PWM_STATE,
+     * YPwmInput.PWMREPORTMODE_PWM_FREQ_CPS, YPwmInput.PWMREPORTMODE_PWM_FREQ_CPM and
+     * YPwmInput.PWMREPORTMODE_PWM_PERIODCOUNT corresponding to the parameter (frequency/duty cycle, pulse
+     * width, edges count) returned by the get_currentValue function and callbacks
      *
-     * On failure, throws an exception or returns Y_PWMREPORTMODE_INVALID.
+     * On failure, throws an exception or returns YPwmInput.PWMREPORTMODE_INVALID.
      */
     async get_pwmReportMode() {
         let res;
@@ -287,14 +288,16 @@ export class YPwmInput extends YSensor {
      * get_pulseCounter().
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_PWMREPORTMODE_PWM_DUTYCYCLE, Y_PWMREPORTMODE_PWM_FREQUENCY,
-     * Y_PWMREPORTMODE_PWM_PULSEDURATION, Y_PWMREPORTMODE_PWM_EDGECOUNT, Y_PWMREPORTMODE_PWM_PULSECOUNT,
-     * Y_PWMREPORTMODE_PWM_CPS, Y_PWMREPORTMODE_PWM_CPM, Y_PWMREPORTMODE_PWM_STATE,
-     * Y_PWMREPORTMODE_PWM_FREQ_CPS, Y_PWMREPORTMODE_PWM_FREQ_CPM and Y_PWMREPORTMODE_PWM_PERIODCOUNT
-     * corresponding to the  parameter  type (frequency/duty cycle, pulse width, or edge count) returned
-     * by the get_currentValue function and callbacks
+     * @param newval : a value among YPwmInput.PWMREPORTMODE_PWM_DUTYCYCLE,
+     * YPwmInput.PWMREPORTMODE_PWM_FREQUENCY, YPwmInput.PWMREPORTMODE_PWM_PULSEDURATION,
+     * YPwmInput.PWMREPORTMODE_PWM_EDGECOUNT, YPwmInput.PWMREPORTMODE_PWM_PULSECOUNT,
+     * YPwmInput.PWMREPORTMODE_PWM_CPS, YPwmInput.PWMREPORTMODE_PWM_CPM,
+     * YPwmInput.PWMREPORTMODE_PWM_STATE, YPwmInput.PWMREPORTMODE_PWM_FREQ_CPS,
+     * YPwmInput.PWMREPORTMODE_PWM_FREQ_CPM and YPwmInput.PWMREPORTMODE_PWM_PERIODCOUNT corresponding to
+     * the  parameter  type (frequency/duty cycle, pulse width, or edge count) returned by the
+     * get_currentValue function and callbacks
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -308,7 +311,7 @@ export class YPwmInput extends YSensor {
      *
      * @return an integer corresponding to the shortest expected pulse duration, in ms
      *
-     * On failure, throws an exception or returns Y_DEBOUNCEPERIOD_INVALID.
+     * On failure, throws an exception or returns YPwmInput.DEBOUNCEPERIOD_INVALID.
      */
     async get_debouncePeriod() {
         let res;
@@ -326,7 +329,7 @@ export class YPwmInput extends YSensor {
      *
      * @param newval : an integer corresponding to the shortest expected pulse duration, in ms
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -340,7 +343,7 @@ export class YPwmInput extends YSensor {
      *
      * @return an integer corresponding to the input signal sampling rate, in kHz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YPwmInput.BANDWIDTH_INVALID.
      */
     async get_bandwidth() {
         let res;
@@ -361,7 +364,7 @@ export class YPwmInput extends YSensor {
      *
      * @param newval : an integer corresponding to the input signal sampling rate, measured in kHz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -376,7 +379,7 @@ export class YPwmInput extends YSensor {
      *
      * @return an integer corresponding to the number of edges detected per preiod
      *
-     * On failure, throws an exception or returns Y_EDGESPERPERIOD_INVALID.
+     * On failure, throws an exception or returns YPwmInput.EDGESPERPERIOD_INVALID.
      */
     async get_edgesPerPeriod() {
         let res;
@@ -389,7 +392,7 @@ export class YPwmInput extends YSensor {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a PWM input for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -399,11 +402,11 @@ export class YPwmInput extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM input is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmInput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmInput.isOnline() to test if the PWM input is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM input by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -411,10 +414,10 @@ export class YPwmInput extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM input, for instance
+     *         YPWMRX01.pwmInput1.
      *
-     * @return a YPwmInput object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmInput object allowing you to drive the PWM input.
      */
     static FindPwmInput(func) {
         let obj;
@@ -426,7 +429,7 @@ export class YPwmInput extends YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a PWM input for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -436,19 +439,19 @@ export class YPwmInput extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the PWM input is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YPwmInput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YPwmInput.isOnline() to test if the PWM input is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a PWM input by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the PWM input, for instance
+     *         YPWMRX01.pwmInput1.
      *
-     * @return a YPwmInput object allowing you to drive $THEFUNCTION$.
+     * @return a YPwmInput object allowing you to drive the PWM input.
      */
     static FindPwmInputInContext(yctx, func) {
         let obj;
@@ -542,7 +545,7 @@ export class YPwmInput extends YSensor {
     /**
      * Returns the pulse counter value as well as its timer.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -550,9 +553,14 @@ export class YPwmInput extends YSensor {
         return await this.set_pulseCounter(0);
     }
     /**
-     * Returns the next PwmInput
+     * Continues the enumeration of PWM inputs started using yFirstPwmInput().
+     * Caution: You can't make any assumption about the returned PWM inputs order.
+     * If you want to find a specific a PWM input, use PwmInput.findPwmInput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YPwmInput}
+     * @return a pointer to a YPwmInput object, corresponding to
+     *         a PWM input currently online, or a null pointer
+     *         if there are no more PWM inputs to enumerate.
      */
     nextPwmInput() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -564,9 +572,13 @@ export class YPwmInput extends YSensor {
         return YPwmInput.FindPwmInputInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first PwmInput in a YAPI context
+     * Starts the enumeration of PWM inputs currently accessible.
+     * Use the method YPwmInput.nextPwmInput() to iterate on
+     * next PWM inputs.
      *
-     * @returns {YPwmInput}
+     * @return a pointer to a YPwmInput object, corresponding to
+     *         the first PWM input currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmInput() {
         let next_hwid = YAPI.imm_getFirstHardwareId('PwmInput');
@@ -575,11 +587,15 @@ export class YPwmInput extends YSensor {
         return YPwmInput.FindPwmInput(next_hwid);
     }
     /**
-     * Retrieves the first PwmInput in a given context
+     * Starts the enumeration of PWM inputs currently accessible.
+     * Use the method YPwmInput.nextPwmInput() to iterate on
+     * next PWM inputs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YPwmInput}
+     * @return a pointer to a YPwmInput object, corresponding to
+     *         the first PWM input currently online, or a null pointer
+     *         if there are none.
      */
     static FirstPwmInputInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('PwmInput');

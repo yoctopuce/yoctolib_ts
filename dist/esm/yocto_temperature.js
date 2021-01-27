@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_temperature.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -120,7 +120,7 @@ export class YTemperature extends YSensor {
      *
      * @param newval : a string corresponding to the measuring unit for the measured temperature
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -132,14 +132,17 @@ export class YTemperature extends YSensor {
     /**
      * Returns the temperature sensor type.
      *
-     * @return a value among Y_SENSORTYPE_DIGITAL, Y_SENSORTYPE_TYPE_K, Y_SENSORTYPE_TYPE_E,
-     * Y_SENSORTYPE_TYPE_J, Y_SENSORTYPE_TYPE_N, Y_SENSORTYPE_TYPE_R, Y_SENSORTYPE_TYPE_S,
-     * Y_SENSORTYPE_TYPE_T, Y_SENSORTYPE_PT100_4WIRES, Y_SENSORTYPE_PT100_3WIRES,
-     * Y_SENSORTYPE_PT100_2WIRES, Y_SENSORTYPE_RES_OHM, Y_SENSORTYPE_RES_NTC, Y_SENSORTYPE_RES_LINEAR,
-     * Y_SENSORTYPE_RES_INTERNAL, Y_SENSORTYPE_IR, Y_SENSORTYPE_RES_PT1000 and Y_SENSORTYPE_CHANNEL_OFF
-     * corresponding to the temperature sensor type
+     * @return a value among YTemperature.SENSORTYPE_DIGITAL, YTemperature.SENSORTYPE_TYPE_K,
+     * YTemperature.SENSORTYPE_TYPE_E, YTemperature.SENSORTYPE_TYPE_J, YTemperature.SENSORTYPE_TYPE_N,
+     * YTemperature.SENSORTYPE_TYPE_R, YTemperature.SENSORTYPE_TYPE_S, YTemperature.SENSORTYPE_TYPE_T,
+     * YTemperature.SENSORTYPE_PT100_4WIRES, YTemperature.SENSORTYPE_PT100_3WIRES,
+     * YTemperature.SENSORTYPE_PT100_2WIRES, YTemperature.SENSORTYPE_RES_OHM,
+     * YTemperature.SENSORTYPE_RES_NTC, YTemperature.SENSORTYPE_RES_LINEAR,
+     * YTemperature.SENSORTYPE_RES_INTERNAL, YTemperature.SENSORTYPE_IR,
+     * YTemperature.SENSORTYPE_RES_PT1000 and YTemperature.SENSORTYPE_CHANNEL_OFF corresponding to the
+     * temperature sensor type
      *
-     * On failure, throws an exception or returns Y_SENSORTYPE_INVALID.
+     * On failure, throws an exception or returns YTemperature.SENSORTYPE_INVALID.
      */
     async get_sensorType() {
         let res;
@@ -158,14 +161,17 @@ export class YTemperature extends YSensor {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_SENSORTYPE_DIGITAL, Y_SENSORTYPE_TYPE_K, Y_SENSORTYPE_TYPE_E,
-     * Y_SENSORTYPE_TYPE_J, Y_SENSORTYPE_TYPE_N, Y_SENSORTYPE_TYPE_R, Y_SENSORTYPE_TYPE_S,
-     * Y_SENSORTYPE_TYPE_T, Y_SENSORTYPE_PT100_4WIRES, Y_SENSORTYPE_PT100_3WIRES,
-     * Y_SENSORTYPE_PT100_2WIRES, Y_SENSORTYPE_RES_OHM, Y_SENSORTYPE_RES_NTC, Y_SENSORTYPE_RES_LINEAR,
-     * Y_SENSORTYPE_RES_INTERNAL, Y_SENSORTYPE_IR, Y_SENSORTYPE_RES_PT1000 and Y_SENSORTYPE_CHANNEL_OFF
-     * corresponding to the temperature sensor type
+     * @param newval : a value among YTemperature.SENSORTYPE_DIGITAL, YTemperature.SENSORTYPE_TYPE_K,
+     * YTemperature.SENSORTYPE_TYPE_E, YTemperature.SENSORTYPE_TYPE_J, YTemperature.SENSORTYPE_TYPE_N,
+     * YTemperature.SENSORTYPE_TYPE_R, YTemperature.SENSORTYPE_TYPE_S, YTemperature.SENSORTYPE_TYPE_T,
+     * YTemperature.SENSORTYPE_PT100_4WIRES, YTemperature.SENSORTYPE_PT100_3WIRES,
+     * YTemperature.SENSORTYPE_PT100_2WIRES, YTemperature.SENSORTYPE_RES_OHM,
+     * YTemperature.SENSORTYPE_RES_NTC, YTemperature.SENSORTYPE_RES_LINEAR,
+     * YTemperature.SENSORTYPE_RES_INTERNAL, YTemperature.SENSORTYPE_IR,
+     * YTemperature.SENSORTYPE_RES_PT1000 and YTemperature.SENSORTYPE_CHANNEL_OFF corresponding to the
+     * temperature sensor type
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -180,7 +186,7 @@ export class YTemperature extends YSensor {
      * @return a floating point number corresponding to the current value of the electrical signal
      * measured by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALVALUE_INVALID.
+     * On failure, throws an exception or returns YTemperature.SIGNALVALUE_INVALID.
      */
     async get_signalValue() {
         let res;
@@ -197,7 +203,7 @@ export class YTemperature extends YSensor {
      *
      * @return a string corresponding to the measuring unit of the electrical signal used by the sensor
      *
-     * On failure, throws an exception or returns Y_SIGNALUNIT_INVALID.
+     * On failure, throws an exception or returns YTemperature.SIGNALUNIT_INVALID.
      */
     async get_signalUnit() {
         let res;
@@ -225,7 +231,7 @@ export class YTemperature extends YSensor {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a temperature sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -235,11 +241,11 @@ export class YTemperature extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the temperature sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTemperature.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTemperature.isOnline() to test if the temperature sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a temperature sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -247,10 +253,10 @@ export class YTemperature extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the temperature sensor, for instance
+     *         METEOMK2.temperature.
      *
-     * @return a YTemperature object allowing you to drive $THEFUNCTION$.
+     * @return a YTemperature object allowing you to drive the temperature sensor.
      */
     static FindTemperature(func) {
         let obj;
@@ -262,7 +268,7 @@ export class YTemperature extends YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a temperature sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -272,19 +278,19 @@ export class YTemperature extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the temperature sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YTemperature.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YTemperature.isOnline() to test if the temperature sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a temperature sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the temperature sensor, for instance
+     *         METEOMK2.temperature.
      *
-     * @return a YTemperature object allowing you to drive $THEFUNCTION$.
+     * @return a YTemperature object allowing you to drive the temperature sensor.
      */
     static FindTemperatureInContext(yctx, func) {
         let obj;
@@ -384,7 +390,7 @@ export class YTemperature extends YSensor {
      * @param res25 : thermistor resistance at 25 degrees Celsius
      * @param beta : Beta value
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -417,7 +423,7 @@ export class YTemperature extends YSensor {
      *         values (in Ohms) for each of the temperature included in the first
      *         argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -480,7 +486,7 @@ export class YTemperature extends YSensor {
      *         with the value (in Ohms) for each of the temperature included in the
      *         first argument, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -542,9 +548,14 @@ export class YTemperature extends YSensor {
         return this._yapi.SUCCESS;
     }
     /**
-     * Returns the next Temperature
+     * Continues the enumeration of temperature sensors started using yFirstTemperature().
+     * Caution: You can't make any assumption about the returned temperature sensors order.
+     * If you want to find a specific a temperature sensor, use Temperature.findTemperature()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YTemperature}
+     * @return a pointer to a YTemperature object, corresponding to
+     *         a temperature sensor currently online, or a null pointer
+     *         if there are no more temperature sensors to enumerate.
      */
     nextTemperature() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -556,9 +567,13 @@ export class YTemperature extends YSensor {
         return YTemperature.FindTemperatureInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Temperature in a YAPI context
+     * Starts the enumeration of temperature sensors currently accessible.
+     * Use the method YTemperature.nextTemperature() to iterate on
+     * next temperature sensors.
      *
-     * @returns {YTemperature}
+     * @return a pointer to a YTemperature object, corresponding to
+     *         the first temperature sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTemperature() {
         let next_hwid = YAPI.imm_getFirstHardwareId('Temperature');
@@ -567,11 +582,15 @@ export class YTemperature extends YSensor {
         return YTemperature.FindTemperature(next_hwid);
     }
     /**
-     * Retrieves the first Temperature in a given context
+     * Starts the enumeration of temperature sensors currently accessible.
+     * Use the method YTemperature.nextTemperature() to iterate on
+     * next temperature sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YTemperature}
+     * @return a pointer to a YTemperature object, corresponding to
+     *         the first temperature sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstTemperatureInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Temperature');

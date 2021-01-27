@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_multiaxiscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for MultiAxisController functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YMultiAxisController definitions)
-export const enum Y_GlobalState {
+export const enum YMultiAxisController_GlobalState {
     ABSENT = 0,
     ALERT = 1,
     HI_Z = 2,
@@ -66,30 +66,30 @@ export class YMultiAxisController extends YFunction
     //--- (YMultiAxisController attributes declaration)
     _className: string;
     _nAxis: number = YMultiAxisController.NAXIS_INVALID;
-    _globalState: Y_GlobalState = YMultiAxisController.GLOBALSTATE_INVALID;
+    _globalState: YMultiAxisController_GlobalState = YMultiAxisController.GLOBALSTATE_INVALID;
     _command: string = YMultiAxisController.COMMAND_INVALID;
     _valueCallbackMultiAxisController: YMultiAxisControllerValueCallback | null = null;
 
     // API symbols as object properties
     public readonly NAXIS_INVALID: number = YAPI.INVALID_UINT;
-    public readonly GLOBALSTATE_ABSENT: Y_GlobalState = Y_GlobalState.ABSENT;
-    public readonly GLOBALSTATE_ALERT: Y_GlobalState = Y_GlobalState.ALERT;
-    public readonly GLOBALSTATE_HI_Z: Y_GlobalState = Y_GlobalState.HI_Z;
-    public readonly GLOBALSTATE_STOP: Y_GlobalState = Y_GlobalState.STOP;
-    public readonly GLOBALSTATE_RUN: Y_GlobalState = Y_GlobalState.RUN;
-    public readonly GLOBALSTATE_BATCH: Y_GlobalState = Y_GlobalState.BATCH;
-    public readonly GLOBALSTATE_INVALID: Y_GlobalState = Y_GlobalState.INVALID;
+    public readonly GLOBALSTATE_ABSENT: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.ABSENT;
+    public readonly GLOBALSTATE_ALERT: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.ALERT;
+    public readonly GLOBALSTATE_HI_Z: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.HI_Z;
+    public readonly GLOBALSTATE_STOP: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.STOP;
+    public readonly GLOBALSTATE_RUN: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.RUN;
+    public readonly GLOBALSTATE_BATCH: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.BATCH;
+    public readonly GLOBALSTATE_INVALID: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.INVALID;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
     public static readonly NAXIS_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly GLOBALSTATE_ABSENT: Y_GlobalState = Y_GlobalState.ABSENT;
-    public static readonly GLOBALSTATE_ALERT: Y_GlobalState = Y_GlobalState.ALERT;
-    public static readonly GLOBALSTATE_HI_Z: Y_GlobalState = Y_GlobalState.HI_Z;
-    public static readonly GLOBALSTATE_STOP: Y_GlobalState = Y_GlobalState.STOP;
-    public static readonly GLOBALSTATE_RUN: Y_GlobalState = Y_GlobalState.RUN;
-    public static readonly GLOBALSTATE_BATCH: Y_GlobalState = Y_GlobalState.BATCH;
-    public static readonly GLOBALSTATE_INVALID: Y_GlobalState = Y_GlobalState.INVALID;
+    public static readonly GLOBALSTATE_ABSENT: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.ABSENT;
+    public static readonly GLOBALSTATE_ALERT: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.ALERT;
+    public static readonly GLOBALSTATE_HI_Z: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.HI_Z;
+    public static readonly GLOBALSTATE_STOP: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.STOP;
+    public static readonly GLOBALSTATE_RUN: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.RUN;
+    public static readonly GLOBALSTATE_BATCH: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.BATCH;
+    public static readonly GLOBALSTATE_INVALID: YMultiAxisController_GlobalState = YMultiAxisController_GlobalState.INVALID;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YMultiAxisController attributes declaration)
 
@@ -113,7 +113,7 @@ export class YMultiAxisController extends YFunction
             this._nAxis = <number> <number> val;
             return 1;
         case 'globalState':
-            this._globalState = <Y_GlobalState> <number> val;
+            this._globalState = <YMultiAxisController_GlobalState> <number> val;
             return 1;
         case 'command':
             this._command = <string> <string> val;
@@ -127,7 +127,7 @@ export class YMultiAxisController extends YFunction
      *
      * @return an integer corresponding to the number of synchronized controllers
      *
-     * On failure, throws an exception or returns Y_NAXIS_INVALID.
+     * On failure, throws an exception or returns YMultiAxisController.NAXIS_INVALID.
      */
     async get_nAxis(): Promise<number>
     {
@@ -146,7 +146,7 @@ export class YMultiAxisController extends YFunction
      *
      * @param newval : an integer corresponding to the number of synchronized controllers
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -160,13 +160,14 @@ export class YMultiAxisController extends YFunction
     /**
      * Returns the stepper motor set overall state.
      *
-     * @return a value among Y_GLOBALSTATE_ABSENT, Y_GLOBALSTATE_ALERT, Y_GLOBALSTATE_HI_Z,
-     * Y_GLOBALSTATE_STOP, Y_GLOBALSTATE_RUN and Y_GLOBALSTATE_BATCH corresponding to the stepper motor
-     * set overall state
+     * @return a value among YMultiAxisController.GLOBALSTATE_ABSENT,
+     * YMultiAxisController.GLOBALSTATE_ALERT, YMultiAxisController.GLOBALSTATE_HI_Z,
+     * YMultiAxisController.GLOBALSTATE_STOP, YMultiAxisController.GLOBALSTATE_RUN and
+     * YMultiAxisController.GLOBALSTATE_BATCH corresponding to the stepper motor set overall state
      *
-     * On failure, throws an exception or returns Y_GLOBALSTATE_INVALID.
+     * On failure, throws an exception or returns YMultiAxisController.GLOBALSTATE_INVALID.
      */
-    async get_globalState(): Promise<Y_GlobalState>
+    async get_globalState(): Promise<YMultiAxisController_GlobalState>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -198,7 +199,7 @@ export class YMultiAxisController extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a multi-axis controller for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -208,11 +209,11 @@ export class YMultiAxisController extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the multi-axis controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMultiAxisController.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMultiAxisController.isOnline() to test if the multi-axis controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a multi-axis controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -220,10 +221,10 @@ export class YMultiAxisController extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the multi-axis controller, for instance
+     *         MyDevice.multiAxisController.
      *
-     * @return a YMultiAxisController object allowing you to drive $THEFUNCTION$.
+     * @return a YMultiAxisController object allowing you to drive the multi-axis controller.
      */
     static FindMultiAxisController(func: string): YMultiAxisController
     {
@@ -237,7 +238,7 @@ export class YMultiAxisController extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a multi-axis controller for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -247,19 +248,19 @@ export class YMultiAxisController extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the multi-axis controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMultiAxisController.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMultiAxisController.isOnline() to test if the multi-axis controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a multi-axis controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the multi-axis controller, for instance
+     *         MyDevice.multiAxisController.
      *
-     * @return a YMultiAxisController object allowing you to drive $THEFUNCTION$.
+     * @return a YMultiAxisController object allowing you to drive the multi-axis controller.
      */
     static FindMultiAxisControllerInContext(yctx: YAPIContext, func: string): YMultiAxisController
     {
@@ -340,7 +341,7 @@ export class YMultiAxisController extends YFunction
     /**
      * Reinitialize all controllers and clear all alert flags.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async reset(): Promise<number>
@@ -353,7 +354,7 @@ export class YMultiAxisController extends YFunction
      *
      * @param speed : desired speed for all axis, in steps per second.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async findHomePosition(speed: number[]): Promise<number>
@@ -379,7 +380,7 @@ export class YMultiAxisController extends YFunction
      *
      * @param absPos : absolute position, measured in steps from each origin.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async moveTo(absPos: number[]): Promise<number>
@@ -405,7 +406,7 @@ export class YMultiAxisController extends YFunction
      *
      * @param relPos : relative position, measured in steps from the current position.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async moveRel(relPos: number[]): Promise<number>
@@ -428,7 +429,7 @@ export class YMultiAxisController extends YFunction
      *
      * @param waitMs : wait time, specified in milliseconds.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async pause(waitMs: number): Promise<number>
@@ -439,7 +440,7 @@ export class YMultiAxisController extends YFunction
     /**
      * Stops the motor with an emergency alert, without taking any additional precaution.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async emergencyStop(): Promise<number>
@@ -450,7 +451,7 @@ export class YMultiAxisController extends YFunction
     /**
      * Stops the motor smoothly as soon as possible, without waiting for ongoing move completion.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async abortAndBrake(): Promise<number>
@@ -461,7 +462,7 @@ export class YMultiAxisController extends YFunction
     /**
      * Turn the controller into Hi-Z mode immediately, without waiting for ongoing move completion.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async abortAndHiZ(): Promise<number>
@@ -470,9 +471,14 @@ export class YMultiAxisController extends YFunction
     }
 
     /**
-     * Returns the next MultiAxisController
+     * Continues the enumeration of multi-axis controllers started using yFirstMultiAxisController().
+     * Caution: You can't make any assumption about the returned multi-axis controllers order.
+     * If you want to find a specific a multi-axis controller, use MultiAxisController.findMultiAxisController()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMultiAxisController}
+     * @return a pointer to a YMultiAxisController object, corresponding to
+     *         a multi-axis controller currently online, or a null pointer
+     *         if there are no more multi-axis controllers to enumerate.
      */
     nextMultiAxisController(): YMultiAxisController | null
     {
@@ -484,9 +490,13 @@ export class YMultiAxisController extends YFunction
     }
 
     /**
-     * Retrieves the first MultiAxisController in a YAPI context
+     * Starts the enumeration of multi-axis controllers currently accessible.
+     * Use the method YMultiAxisController.nextMultiAxisController() to iterate on
+     * next multi-axis controllers.
      *
-     * @returns {YMultiAxisController}
+     * @return a pointer to a YMultiAxisController object, corresponding to
+     *         the first multi-axis controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMultiAxisController(): YMultiAxisController | null
     {
@@ -496,11 +506,15 @@ export class YMultiAxisController extends YFunction
     }
 
     /**
-     * Retrieves the first MultiAxisController in a given context
+     * Starts the enumeration of multi-axis controllers currently accessible.
+     * Use the method YMultiAxisController.nextMultiAxisController() to iterate on
+     * next multi-axis controllers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMultiAxisController}
+     * @return a pointer to a YMultiAxisController object, corresponding to
+     *         the first multi-axis controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMultiAxisControllerInContext(yctx: YAPIContext): YMultiAxisController | null
     {

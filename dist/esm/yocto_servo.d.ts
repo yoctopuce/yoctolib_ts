@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_servo.ts 43533 2021-01-25 16:33:41Z mvuilleu $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -37,12 +37,12 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_Enabled {
+export declare const enum YServo_Enabled {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
 }
-export declare const enum Y_EnabledAtPowerOn {
+export declare const enum YServo_EnabledAtPowerOn {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -67,34 +67,34 @@ export interface YServoValueCallback {
 export declare class YServo extends YFunction {
     _className: string;
     _position: number;
-    _enabled: Y_Enabled;
+    _enabled: YServo_Enabled;
     _range: number;
     _neutral: number;
     _move: YServoMove;
     _positionAtPowerOn: number;
-    _enabledAtPowerOn: Y_EnabledAtPowerOn;
+    _enabledAtPowerOn: YServo_EnabledAtPowerOn;
     _valueCallbackServo: YServoValueCallback | null;
     readonly POSITION_INVALID: number;
-    readonly ENABLED_FALSE: Y_Enabled;
-    readonly ENABLED_TRUE: Y_Enabled;
-    readonly ENABLED_INVALID: Y_Enabled;
+    readonly ENABLED_FALSE: YServo_Enabled;
+    readonly ENABLED_TRUE: YServo_Enabled;
+    readonly ENABLED_INVALID: YServo_Enabled;
     readonly RANGE_INVALID: number;
     readonly NEUTRAL_INVALID: number;
     readonly POSITIONATPOWERON_INVALID: number;
-    readonly ENABLEDATPOWERON_FALSE: Y_EnabledAtPowerOn;
-    readonly ENABLEDATPOWERON_TRUE: Y_EnabledAtPowerOn;
-    readonly ENABLEDATPOWERON_INVALID: Y_EnabledAtPowerOn;
+    readonly ENABLEDATPOWERON_FALSE: YServo_EnabledAtPowerOn;
+    readonly ENABLEDATPOWERON_TRUE: YServo_EnabledAtPowerOn;
+    readonly ENABLEDATPOWERON_INVALID: YServo_EnabledAtPowerOn;
     static readonly MOVE_INVALID: YServoMove;
     static readonly POSITION_INVALID: number;
-    static readonly ENABLED_FALSE: Y_Enabled;
-    static readonly ENABLED_TRUE: Y_Enabled;
-    static readonly ENABLED_INVALID: Y_Enabled;
+    static readonly ENABLED_FALSE: YServo_Enabled;
+    static readonly ENABLED_TRUE: YServo_Enabled;
+    static readonly ENABLED_INVALID: YServo_Enabled;
     static readonly RANGE_INVALID: number;
     static readonly NEUTRAL_INVALID: number;
     static readonly POSITIONATPOWERON_INVALID: number;
-    static readonly ENABLEDATPOWERON_FALSE: Y_EnabledAtPowerOn;
-    static readonly ENABLEDATPOWERON_TRUE: Y_EnabledAtPowerOn;
-    static readonly ENABLEDATPOWERON_INVALID: Y_EnabledAtPowerOn;
+    static readonly ENABLEDATPOWERON_FALSE: YServo_EnabledAtPowerOn;
+    static readonly ENABLEDATPOWERON_TRUE: YServo_EnabledAtPowerOn;
+    static readonly ENABLEDATPOWERON_INVALID: YServo_EnabledAtPowerOn;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -102,7 +102,7 @@ export declare class YServo extends YFunction {
      *
      * @return an integer corresponding to the current servo position
      *
-     * On failure, throws an exception or returns Y_POSITION_INVALID.
+     * On failure, throws an exception or returns YServo.POSITION_INVALID.
      */
     get_position(): Promise<number>;
     /**
@@ -110,7 +110,7 @@ export declare class YServo extends YFunction {
      *
      * @param newval : an integer corresponding to immediately the servo driving position
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -118,27 +118,27 @@ export declare class YServo extends YFunction {
     /**
      * Returns the state of the RC servo motors.
      *
-     * @return either Y_ENABLED_FALSE or Y_ENABLED_TRUE, according to the state of the RC servo motors
+     * @return either YServo.ENABLED_FALSE or YServo.ENABLED_TRUE, according to the state of the RC servo motors
      *
-     * On failure, throws an exception or returns Y_ENABLED_INVALID.
+     * On failure, throws an exception or returns YServo.ENABLED_INVALID.
      */
-    get_enabled(): Promise<Y_Enabled>;
+    get_enabled(): Promise<YServo_Enabled>;
     /**
      * Stops or starts the RC servo motor.
      *
-     * @param newval : either Y_ENABLED_FALSE or Y_ENABLED_TRUE
+     * @param newval : either YServo.ENABLED_FALSE or YServo.ENABLED_TRUE
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: Y_Enabled): Promise<number>;
+    set_enabled(newval: YServo_Enabled): Promise<number>;
     /**
      * Returns the current range of use of the servo.
      *
      * @return an integer corresponding to the current range of use of the servo
      *
-     * On failure, throws an exception or returns Y_RANGE_INVALID.
+     * On failure, throws an exception or returns YServo.RANGE_INVALID.
      */
     get_range(): Promise<number>;
     /**
@@ -152,7 +152,7 @@ export declare class YServo extends YFunction {
      *
      * @param newval : an integer corresponding to the range of use of the servo, specified in per cents
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -162,7 +162,7 @@ export declare class YServo extends YFunction {
      *
      * @return an integer corresponding to the duration in microseconds of a neutral pulse for the servo
      *
-     * On failure, throws an exception or returns Y_NEUTRAL_INVALID.
+     * On failure, throws an exception or returns YServo.NEUTRAL_INVALID.
      */
     get_neutral(): Promise<number>;
     /**
@@ -176,7 +176,7 @@ export declare class YServo extends YFunction {
      * @param newval : an integer corresponding to the duration of the pulse corresponding to the neutral
      * position of the servo
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -189,7 +189,7 @@ export declare class YServo extends YFunction {
      * @param target      : new position at the end of the move
      * @param ms_duration : total duration of the move, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -199,7 +199,7 @@ export declare class YServo extends YFunction {
      *
      * @return an integer corresponding to the servo position at device power up
      *
-     * On failure, throws an exception or returns Y_POSITIONATPOWERON_INVALID.
+     * On failure, throws an exception or returns YServo.POSITIONATPOWERON_INVALID.
      */
     get_positionAtPowerOn(): Promise<number>;
     /**
@@ -208,7 +208,7 @@ export declare class YServo extends YFunction {
      *
      * @param newval : an integer
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -216,25 +216,25 @@ export declare class YServo extends YFunction {
     /**
      * Returns the servo signal generator state at power up.
      *
-     * @return either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE, according to the servo signal
-     * generator state at power up
+     * @return either YServo.ENABLEDATPOWERON_FALSE or YServo.ENABLEDATPOWERON_TRUE, according to the
+     * servo signal generator state at power up
      *
-     * On failure, throws an exception or returns Y_ENABLEDATPOWERON_INVALID.
+     * On failure, throws an exception or returns YServo.ENABLEDATPOWERON_INVALID.
      */
-    get_enabledAtPowerOn(): Promise<Y_EnabledAtPowerOn>;
+    get_enabledAtPowerOn(): Promise<YServo_EnabledAtPowerOn>;
     /**
      * Configure the servo signal generator state at power up. Remember to call the matching module saveToFlash()
      * method, otherwise this call will have no effect.
      *
-     * @param newval : either Y_ENABLEDATPOWERON_FALSE or Y_ENABLEDATPOWERON_TRUE
+     * @param newval : either YServo.ENABLEDATPOWERON_FALSE or YServo.ENABLEDATPOWERON_TRUE
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabledAtPowerOn(newval: Y_EnabledAtPowerOn): Promise<number>;
+    set_enabledAtPowerOn(newval: YServo_EnabledAtPowerOn): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a RC servo motor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -244,11 +244,11 @@ export declare class YServo extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RC servo motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YServo.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YServo.isOnline() to test if the RC servo motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a RC servo motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -256,14 +256,14 @@ export declare class YServo extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RC servo motor, for instance
+     *         SERVORC1.servo1.
      *
-     * @return a YServo object allowing you to drive $THEFUNCTION$.
+     * @return a YServo object allowing you to drive the RC servo motor.
      */
     static FindServo(func: string): YServo;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a RC servo motor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -273,19 +273,19 @@ export declare class YServo extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the RC servo motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YServo.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YServo.isOnline() to test if the RC servo motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a RC servo motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the RC servo motor, for instance
+     *         SERVORC1.servo1.
      *
-     * @return a YServo object allowing you to drive $THEFUNCTION$.
+     * @return a YServo object allowing you to drive the RC servo motor.
      */
     static FindServoInContext(yctx: YAPIContext, func: string): YServo;
     /**
@@ -302,23 +302,36 @@ export declare class YServo extends YFunction {
     registerValueCallback(callback: YServoValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
-     * Returns the next Servo
+     * Continues the enumeration of RC servo motors started using yFirstServo().
+     * Caution: You can't make any assumption about the returned RC servo motors order.
+     * If you want to find a specific a RC servo motor, use Servo.findServo()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YServo}
+     * @return a pointer to a YServo object, corresponding to
+     *         a RC servo motor currently online, or a null pointer
+     *         if there are no more RC servo motors to enumerate.
      */
     nextServo(): YServo | null;
     /**
-     * Retrieves the first Servo in a YAPI context
+     * Starts the enumeration of RC servo motors currently accessible.
+     * Use the method YServo.nextServo() to iterate on
+     * next RC servo motors.
      *
-     * @returns {YServo}
+     * @return a pointer to a YServo object, corresponding to
+     *         the first RC servo motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstServo(): YServo | null;
     /**
-     * Retrieves the first Servo in a given context
+     * Starts the enumeration of RC servo motors currently accessible.
+     * Use the method YServo.nextServo() to iterate on
+     * next RC servo motors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YServo}
+     * @return a pointer to a YServo object, corresponding to
+     *         the first RC servo motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstServoInContext(yctx: YAPIContext): YServo | null;
 }

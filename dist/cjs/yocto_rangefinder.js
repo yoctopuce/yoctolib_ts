@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_rangefinder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -114,7 +114,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      *
      * @param newval : a string corresponding to the measuring unit for the measured range
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -127,10 +127,11 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * Returns the range finder running mode. The rangefinder running mode
      * allows you to put priority on precision, speed or maximum range.
      *
-     * @return a value among Y_RANGEFINDERMODE_DEFAULT, Y_RANGEFINDERMODE_LONG_RANGE,
-     * Y_RANGEFINDERMODE_HIGH_ACCURACY and Y_RANGEFINDERMODE_HIGH_SPEED corresponding to the range finder running mode
+     * @return a value among YRangeFinder.RANGEFINDERMODE_DEFAULT,
+     * YRangeFinder.RANGEFINDERMODE_LONG_RANGE, YRangeFinder.RANGEFINDERMODE_HIGH_ACCURACY and
+     * YRangeFinder.RANGEFINDERMODE_HIGH_SPEED corresponding to the range finder running mode
      *
-     * On failure, throws an exception or returns Y_RANGEFINDERMODE_INVALID.
+     * On failure, throws an exception or returns YRangeFinder.RANGEFINDERMODE_INVALID.
      */
     async get_rangeFinderMode() {
         let res;
@@ -147,12 +148,13 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * precision, speed or maximum range.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_RANGEFINDERMODE_DEFAULT, Y_RANGEFINDERMODE_LONG_RANGE,
-     * Y_RANGEFINDERMODE_HIGH_ACCURACY and Y_RANGEFINDERMODE_HIGH_SPEED corresponding to the rangefinder
-     * running mode, allowing you to put priority on
+     * @param newval : a value among YRangeFinder.RANGEFINDERMODE_DEFAULT,
+     * YRangeFinder.RANGEFINDERMODE_LONG_RANGE, YRangeFinder.RANGEFINDERMODE_HIGH_ACCURACY and
+     * YRangeFinder.RANGEFINDERMODE_HIGH_SPEED corresponding to the rangefinder running mode, allowing you
+     * to put priority on
      *         precision, speed or maximum range
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -168,7 +170,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * @return an integer corresponding to the time frame used to measure the distance and estimate the measure
      *         reliability
      *
-     * On failure, throws an exception or returns Y_TIMEFRAME_INVALID.
+     * On failure, throws an exception or returns YRangeFinder.TIMEFRAME_INVALID.
      */
     async get_timeFrame() {
         let res;
@@ -190,7 +192,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * @param newval : an integer corresponding to the time frame used to measure the distance and estimate the measure
      *         reliability
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -204,7 +206,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to a measure quality estimate, based on measured dispersion
      *
-     * On failure, throws an exception or returns Y_QUALITY_INVALID.
+     * On failure, throws an exception or returns YRangeFinder.QUALITY_INVALID.
      */
     async get_quality() {
         let res;
@@ -236,7 +238,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      *
      * @return a floating point number corresponding to the current sensor temperature, as a floating point number
      *
-     * On failure, throws an exception or returns Y_CURRENTTEMPERATURE_INVALID.
+     * On failure, throws an exception or returns YRangeFinder.CURRENTTEMPERATURE_INVALID.
      */
     async get_currentTemperature() {
         let res;
@@ -264,7 +266,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a range finder for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -274,11 +276,11 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the range finder is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRangeFinder.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRangeFinder.isOnline() to test if the range finder is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a range finder by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -286,10 +288,10 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the range finder, for instance
+     *         YRNGFND1.rangeFinder1.
      *
-     * @return a YRangeFinder object allowing you to drive $THEFUNCTION$.
+     * @return a YRangeFinder object allowing you to drive the range finder.
      */
     static FindRangeFinder(func) {
         let obj;
@@ -301,7 +303,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a range finder for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -311,19 +313,19 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the range finder is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRangeFinder.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRangeFinder.isOnline() to test if the range finder is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a range finder by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the range finder, for instance
+     *         YRNGFND1.rangeFinder1.
      *
-     * @return a YRangeFinder object allowing you to drive $THEFUNCTION$.
+     * @return a YRangeFinder object allowing you to drive the range finder.
      */
     static FindRangeFinderInContext(yctx, func) {
         let obj;
@@ -420,7 +422,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * is required.
      *
      * @return a temperature, as a floating point number.
-     *         On failure, throws an exception or return YAPI_INVALID_DOUBLE.
+     *         On failure, throws an exception or return YAPI.INVALID_DOUBLE.
      */
     async get_hardwareCalibrationTemperature() {
         let hwcal;
@@ -436,7 +438,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * automatically at device startup, but it is recommended to start it again when the
      * temperature delta since the latest calibration exceeds 8°C.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async triggerTemperatureCalibration() {
@@ -448,7 +450,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * of a cover glass. Make sure to read the chapter about hardware calibration for details
      * on the calibration procedure for proper results.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async triggerSpadCalibration() {
@@ -463,7 +465,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * @param targetDist : true distance of the calibration target, in mm or inches, depending
      *         on the unit selected in the device
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async triggerOffsetCalibration(targetDist) {
@@ -485,7 +487,7 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * @param targetDist : true distance of the calibration target, in mm or inches, depending
      *         on the unit selected in the device
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async triggerXTalkCalibration(targetDist) {
@@ -503,16 +505,21 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
      * for cover glass, and restores factory settings.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async cancelCoverGlassCalibrations() {
         return await this.set_hardwareCalibration('');
     }
     /**
-     * Returns the next RangeFinder
+     * Continues the enumeration of range finders started using yFirstRangeFinder().
+     * Caution: You can't make any assumption about the returned range finders order.
+     * If you want to find a specific a range finder, use RangeFinder.findRangeFinder()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YRangeFinder}
+     * @return a pointer to a YRangeFinder object, corresponding to
+     *         a range finder currently online, or a null pointer
+     *         if there are no more range finders to enumerate.
      */
     nextRangeFinder() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -524,9 +531,13 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
         return YRangeFinder.FindRangeFinderInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first RangeFinder in a YAPI context
+     * Starts the enumeration of range finders currently accessible.
+     * Use the method YRangeFinder.nextRangeFinder() to iterate on
+     * next range finders.
      *
-     * @returns {YRangeFinder}
+     * @return a pointer to a YRangeFinder object, corresponding to
+     *         the first range finder currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRangeFinder() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('RangeFinder');
@@ -535,11 +546,15 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
         return YRangeFinder.FindRangeFinder(next_hwid);
     }
     /**
-     * Retrieves the first RangeFinder in a given context
+     * Starts the enumeration of range finders currently accessible.
+     * Use the method YRangeFinder.nextRangeFinder() to iterate on
+     * next range finders.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YRangeFinder}
+     * @return a pointer to a YRangeFinder object, corresponding to
+     *         the first range finder currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRangeFinderInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('RangeFinder');

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_relay.ts 43533 2021-01-25 16:33:41Z mvuilleu $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -129,10 +129,10 @@ class YRelay extends yocto_api_js_1.YFunction {
     /**
      * Returns the state of the relays (A for the idle position, B for the active position).
      *
-     * @return either Y_STATE_A or Y_STATE_B, according to the state of the relays (A for the idle
-     * position, B for the active position)
+     * @return either YRelay.STATE_A or YRelay.STATE_B, according to the state of the relays (A for the
+     * idle position, B for the active position)
      *
-     * On failure, throws an exception or returns Y_STATE_INVALID.
+     * On failure, throws an exception or returns YRelay.STATE_INVALID.
      */
     async get_state() {
         let res;
@@ -147,10 +147,10 @@ class YRelay extends yocto_api_js_1.YFunction {
     /**
      * Changes the state of the relays (A for the idle position, B for the active position).
      *
-     * @param newval : either Y_STATE_A or Y_STATE_B, according to the state of the relays (A for the idle
-     * position, B for the active position)
+     * @param newval : either YRelay.STATE_A or YRelay.STATE_B, according to the state of the relays (A
+     * for the idle position, B for the active position)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -163,11 +163,11 @@ class YRelay extends yocto_api_js_1.YFunction {
      * Returns the state of the relays at device startup (A for the idle position,
      * B for the active position, UNCHANGED to leave the relay state as is).
      *
-     * @return a value among Y_STATEATPOWERON_UNCHANGED, Y_STATEATPOWERON_A and Y_STATEATPOWERON_B
-     * corresponding to the state of the relays at device startup (A for the idle position,
+     * @return a value among YRelay.STATEATPOWERON_UNCHANGED, YRelay.STATEATPOWERON_A and
+     * YRelay.STATEATPOWERON_B corresponding to the state of the relays at device startup (A for the idle position,
      *         B for the active position, UNCHANGED to leave the relay state as is)
      *
-     * On failure, throws an exception or returns Y_STATEATPOWERON_INVALID.
+     * On failure, throws an exception or returns YRelay.STATEATPOWERON_INVALID.
      */
     async get_stateAtPowerOn() {
         let res;
@@ -185,11 +185,11 @@ class YRelay extends yocto_api_js_1.YFunction {
      * Remember to call the matching module saveToFlash()
      * method, otherwise this call will have no effect.
      *
-     * @param newval : a value among Y_STATEATPOWERON_UNCHANGED, Y_STATEATPOWERON_A and Y_STATEATPOWERON_B
-     * corresponding to the state of the relays at device startup (A for the idle position,
+     * @param newval : a value among YRelay.STATEATPOWERON_UNCHANGED, YRelay.STATEATPOWERON_A and
+     * YRelay.STATEATPOWERON_B corresponding to the state of the relays at device startup (A for the idle position,
      *         B for the active position, UNCHANGED to leave the relay state as is)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -205,7 +205,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      * @return an integer corresponding to the maximum time (ms) allowed for the relay to stay in state
      *         A before automatically switching back in to B state
      *
-     * On failure, throws an exception or returns Y_MAXTIMEONSTATEA_INVALID.
+     * On failure, throws an exception or returns YRelay.MAXTIMEONSTATEA_INVALID.
      */
     async get_maxTimeOnStateA() {
         let res;
@@ -226,7 +226,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      * @param newval : an integer corresponding to the maximum time (ms) allowed for the relay to stay in state A
      *         before automatically switching back in to B state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -241,7 +241,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      *
      * @return an integer
      *
-     * On failure, throws an exception or returns Y_MAXTIMEONSTATEB_INVALID.
+     * On failure, throws an exception or returns YRelay.MAXTIMEONSTATEB_INVALID.
      */
     async get_maxTimeOnStateB() {
         let res;
@@ -263,7 +263,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      * state B before
      *         automatically switching back in to A state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -275,10 +275,10 @@ class YRelay extends yocto_api_js_1.YFunction {
     /**
      * Returns the output state of the relays, when used as a simple switch (single throw).
      *
-     * @return either Y_OUTPUT_OFF or Y_OUTPUT_ON, according to the output state of the relays, when used
-     * as a simple switch (single throw)
+     * @return either YRelay.OUTPUT_OFF or YRelay.OUTPUT_ON, according to the output state of the relays,
+     * when used as a simple switch (single throw)
      *
-     * On failure, throws an exception or returns Y_OUTPUT_INVALID.
+     * On failure, throws an exception or returns YRelay.OUTPUT_INVALID.
      */
     async get_output() {
         let res;
@@ -293,10 +293,10 @@ class YRelay extends yocto_api_js_1.YFunction {
     /**
      * Changes the output state of the relays, when used as a simple switch (single throw).
      *
-     * @param newval : either Y_OUTPUT_OFF or Y_OUTPUT_ON, according to the output state of the relays,
-     * when used as a simple switch (single throw)
+     * @param newval : either YRelay.OUTPUT_OFF or YRelay.OUTPUT_ON, according to the output state of the
+     * relays, when used as a simple switch (single throw)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -313,7 +313,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      * returned to idle position
      *         (state A), during a measured pulse generation
      *
-     * On failure, throws an exception or returns Y_PULSETIMER_INVALID.
+     * On failure, throws an exception or returns YRelay.PULSETIMER_INVALID.
      */
     async get_pulseTimer() {
         let res;
@@ -336,7 +336,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      *
      * @param ms_duration : pulse duration, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -366,7 +366,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      * @param ms_delay : waiting time before the pulse, in milliseconds
      * @param ms_duration : pulse duration, in milliseconds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -382,7 +382,7 @@ class YRelay extends yocto_api_js_1.YFunction {
      * @return an integer corresponding to the number of milliseconds remaining before a pulse (delayedPulse() call)
      *         When there is no scheduled pulse, returns zero
      *
-     * On failure, throws an exception or returns Y_COUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YRelay.COUNTDOWN_INVALID.
      */
     async get_countdown() {
         let res;
@@ -395,7 +395,7 @@ class YRelay extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a relay for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -405,11 +405,11 @@ class YRelay extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the relay is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRelay.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRelay.isOnline() to test if the relay is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a relay by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -417,10 +417,10 @@ class YRelay extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the relay, for instance
+     *         YLTCHRL1.relay1.
      *
-     * @return a YRelay object allowing you to drive $THEFUNCTION$.
+     * @return a YRelay object allowing you to drive the relay.
      */
     static FindRelay(func) {
         let obj;
@@ -432,7 +432,7 @@ class YRelay extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a relay for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -442,19 +442,19 @@ class YRelay extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the relay is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YRelay.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YRelay.isOnline() to test if the relay is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a relay by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the relay, for instance
+     *         YLTCHRL1.relay1.
      *
-     * @return a YRelay object allowing you to drive $THEFUNCTION$.
+     * @return a YRelay object allowing you to drive the relay.
      */
     static FindRelayInContext(yctx, func) {
         let obj;
@@ -511,7 +511,7 @@ class YRelay extends yocto_api_js_1.YFunction {
     /**
      * Switch the relay to the opposite state.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -545,9 +545,14 @@ class YRelay extends yocto_api_js_1.YFunction {
         }
     }
     /**
-     * Returns the next Relay
+     * Continues the enumeration of relays started using yFirstRelay().
+     * Caution: You can't make any assumption about the returned relays order.
+     * If you want to find a specific a relay, use Relay.findRelay()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YRelay}
+     * @return a pointer to a YRelay object, corresponding to
+     *         a relay currently online, or a null pointer
+     *         if there are no more relays to enumerate.
      */
     nextRelay() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -559,9 +564,13 @@ class YRelay extends yocto_api_js_1.YFunction {
         return YRelay.FindRelayInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Relay in a YAPI context
+     * Starts the enumeration of relays currently accessible.
+     * Use the method YRelay.nextRelay() to iterate on
+     * next relays.
      *
-     * @returns {YRelay}
+     * @return a pointer to a YRelay object, corresponding to
+     *         the first relay currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRelay() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Relay');
@@ -570,11 +579,15 @@ class YRelay extends yocto_api_js_1.YFunction {
         return YRelay.FindRelay(next_hwid);
     }
     /**
-     * Retrieves the first Relay in a given context
+     * Starts the enumeration of relays currently accessible.
+     * Use the method YRelay.nextRelay() to iterate on
+     * next relays.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YRelay}
+     * @return a pointer to a YRelay object, corresponding to
+     *         the first relay currently online, or a null pointer
+     *         if there are none.
      */
     static FirstRelayInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Relay');

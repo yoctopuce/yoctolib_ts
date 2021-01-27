@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_arithmeticsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -107,7 +107,7 @@ export class YArithmeticSensor extends YSensor
      *
      * @param newval : a string corresponding to the measuring unit for the arithmetic sensor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -123,7 +123,7 @@ export class YArithmeticSensor extends YSensor
      *
      * @return a string corresponding to a short informative description of the formula
      *
-     * On failure, throws an exception or returns Y_DESCRIPTION_INVALID.
+     * On failure, throws an exception or returns YArithmeticSensor.DESCRIPTION_INVALID.
      */
     async get_description(): Promise<string>
     {
@@ -157,7 +157,7 @@ export class YArithmeticSensor extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an arithmetic sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -167,11 +167,11 @@ export class YArithmeticSensor extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the arithmetic sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YArithmeticSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YArithmeticSensor.isOnline() to test if the arithmetic sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an arithmetic sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -179,10 +179,10 @@ export class YArithmeticSensor extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the arithmetic sensor, for instance
+     *         RXUVOLT1.arithmeticSensor1.
      *
-     * @return a YArithmeticSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YArithmeticSensor object allowing you to drive the arithmetic sensor.
      */
     static FindArithmeticSensor(func: string): YArithmeticSensor
     {
@@ -196,7 +196,7 @@ export class YArithmeticSensor extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an arithmetic sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -206,19 +206,19 @@ export class YArithmeticSensor extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the arithmetic sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YArithmeticSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YArithmeticSensor.isOnline() to test if the arithmetic sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an arithmetic sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the arithmetic sensor, for instance
+     *         RXUVOLT1.arithmeticSensor1.
      *
-     * @return a YArithmeticSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YArithmeticSensor object allowing you to drive the arithmetic sensor.
      */
     static FindArithmeticSensorInContext(yctx: YAPIContext, func: string): YArithmeticSensor
     {
@@ -323,7 +323,7 @@ export class YArithmeticSensor extends YSensor
      *
      * @return the current expression value if the call succeeds.
      *
-     * On failure, throws an exception or returns YAPI_INVALID_DOUBLE.
+     * On failure, throws an exception or returns YAPI.INVALID_DOUBLE.
      */
     async defineExpression(expr: string, descr: string): Promise<number>
     {
@@ -386,7 +386,7 @@ export class YArithmeticSensor extends YSensor
      * @param outputValues : array of floating point numbers, corresponding to the output value
      *         desired for each of the input value, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -428,7 +428,7 @@ export class YArithmeticSensor extends YSensor
      * @param outputValues : array of floating point numbers, that is filled by the function
      *         output value for each of the input value, index by index.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -451,9 +451,14 @@ export class YArithmeticSensor extends YSensor
     }
 
     /**
-     * Returns the next ArithmeticSensor
+     * Continues the enumeration of arithmetic sensors started using yFirstArithmeticSensor().
+     * Caution: You can't make any assumption about the returned arithmetic sensors order.
+     * If you want to find a specific an arithmetic sensor, use ArithmeticSensor.findArithmeticSensor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YArithmeticSensor}
+     * @return a pointer to a YArithmeticSensor object, corresponding to
+     *         an arithmetic sensor currently online, or a null pointer
+     *         if there are no more arithmetic sensors to enumerate.
      */
     nextArithmeticSensor(): YArithmeticSensor | null
     {
@@ -465,9 +470,13 @@ export class YArithmeticSensor extends YSensor
     }
 
     /**
-     * Retrieves the first ArithmeticSensor in a YAPI context
+     * Starts the enumeration of arithmetic sensors currently accessible.
+     * Use the method YArithmeticSensor.nextArithmeticSensor() to iterate on
+     * next arithmetic sensors.
      *
-     * @returns {YArithmeticSensor}
+     * @return a pointer to a YArithmeticSensor object, corresponding to
+     *         the first arithmetic sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstArithmeticSensor(): YArithmeticSensor | null
     {
@@ -477,11 +486,15 @@ export class YArithmeticSensor extends YSensor
     }
 
     /**
-     * Retrieves the first ArithmeticSensor in a given context
+     * Starts the enumeration of arithmetic sensors currently accessible.
+     * Use the method YArithmeticSensor.nextArithmeticSensor() to iterate on
+     * next arithmetic sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YArithmeticSensor}
+     * @return a pointer to a YArithmeticSensor object, corresponding to
+     *         the first arithmetic sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstArithmeticSensorInContext(yctx: YAPIContext): YArithmeticSensor | null
     {

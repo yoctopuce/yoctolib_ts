@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_latitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Latitude functions
  *
@@ -56,7 +56,7 @@ export declare class YLatitude extends YSensor {
     _timedReportCallbackLatitude: YLatitudeTimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a latitude sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -66,11 +66,11 @@ export declare class YLatitude extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the latitude sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLatitude.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLatitude.isOnline() to test if the latitude sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a latitude sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -78,14 +78,14 @@ export declare class YLatitude extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the latitude sensor, for instance
+     *         YGNSSMK2.latitude.
      *
-     * @return a YLatitude object allowing you to drive $THEFUNCTION$.
+     * @return a YLatitude object allowing you to drive the latitude sensor.
      */
     static FindLatitude(func: string): YLatitude;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a latitude sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -95,19 +95,19 @@ export declare class YLatitude extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the latitude sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLatitude.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLatitude.isOnline() to test if the latitude sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a latitude sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the latitude sensor, for instance
+     *         YGNSSMK2.latitude.
      *
-     * @return a YLatitude object allowing you to drive $THEFUNCTION$.
+     * @return a YLatitude object allowing you to drive the latitude sensor.
      */
     static FindLatitudeInContext(yctx: YAPIContext, func: string): YLatitude;
     /**
@@ -137,23 +137,36 @@ export declare class YLatitude extends YSensor {
     registerTimedReportCallback(callback: YLatitudeTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next Latitude
+     * Continues the enumeration of latitude sensors started using yFirstLatitude().
+     * Caution: You can't make any assumption about the returned latitude sensors order.
+     * If you want to find a specific a latitude sensor, use Latitude.findLatitude()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YLatitude}
+     * @return a pointer to a YLatitude object, corresponding to
+     *         a latitude sensor currently online, or a null pointer
+     *         if there are no more latitude sensors to enumerate.
      */
     nextLatitude(): YLatitude | null;
     /**
-     * Retrieves the first Latitude in a YAPI context
+     * Starts the enumeration of latitude sensors currently accessible.
+     * Use the method YLatitude.nextLatitude() to iterate on
+     * next latitude sensors.
      *
-     * @returns {YLatitude}
+     * @return a pointer to a YLatitude object, corresponding to
+     *         the first latitude sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLatitude(): YLatitude | null;
     /**
-     * Retrieves the first Latitude in a given context
+     * Starts the enumeration of latitude sensors currently accessible.
+     * Use the method YLatitude.nextLatitude() to iterate on
+     * next latitude sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YLatitude}
+     * @return a pointer to a YLatitude object, corresponding to
+     *         the first latitude sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLatitudeInContext(yctx: YAPIContext): YLatitude | null;
 }

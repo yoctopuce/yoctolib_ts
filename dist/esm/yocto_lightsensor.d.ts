@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_lightsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum Y_MeasureType {
+export declare const enum YLightSensor_MeasureType {
     HUMAN_EYE = 0,
     WIDE_SPECTRUM = 1,
     INFRARED = 2,
@@ -66,23 +66,23 @@ export interface YLightSensorTimedReportCallback {
  */
 export declare class YLightSensor extends YSensor {
     _className: string;
-    _measureType: Y_MeasureType;
+    _measureType: YLightSensor_MeasureType;
     _valueCallbackLightSensor: YLightSensorValueCallback | null;
     _timedReportCallbackLightSensor: YLightSensorTimedReportCallback | null;
-    readonly MEASURETYPE_HUMAN_EYE: Y_MeasureType;
-    readonly MEASURETYPE_WIDE_SPECTRUM: Y_MeasureType;
-    readonly MEASURETYPE_INFRARED: Y_MeasureType;
-    readonly MEASURETYPE_HIGH_RATE: Y_MeasureType;
-    readonly MEASURETYPE_HIGH_ENERGY: Y_MeasureType;
-    readonly MEASURETYPE_HIGH_RESOLUTION: Y_MeasureType;
-    readonly MEASURETYPE_INVALID: Y_MeasureType;
-    static readonly MEASURETYPE_HUMAN_EYE: Y_MeasureType;
-    static readonly MEASURETYPE_WIDE_SPECTRUM: Y_MeasureType;
-    static readonly MEASURETYPE_INFRARED: Y_MeasureType;
-    static readonly MEASURETYPE_HIGH_RATE: Y_MeasureType;
-    static readonly MEASURETYPE_HIGH_ENERGY: Y_MeasureType;
-    static readonly MEASURETYPE_HIGH_RESOLUTION: Y_MeasureType;
-    static readonly MEASURETYPE_INVALID: Y_MeasureType;
+    readonly MEASURETYPE_HUMAN_EYE: YLightSensor_MeasureType;
+    readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor_MeasureType;
+    readonly MEASURETYPE_INFRARED: YLightSensor_MeasureType;
+    readonly MEASURETYPE_HIGH_RATE: YLightSensor_MeasureType;
+    readonly MEASURETYPE_HIGH_ENERGY: YLightSensor_MeasureType;
+    readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor_MeasureType;
+    readonly MEASURETYPE_INVALID: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_HUMAN_EYE: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_INFRARED: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_HIGH_RATE: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_HIGH_ENERGY: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor_MeasureType;
+    static readonly MEASURETYPE_INVALID: YLightSensor_MeasureType;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     set_currentValue(newval: number): Promise<number>;
@@ -95,7 +95,7 @@ export declare class YLightSensor extends YSensor {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -103,13 +103,14 @@ export declare class YLightSensor extends YSensor {
     /**
      * Returns the type of light measure.
      *
-     * @return a value among Y_MEASURETYPE_HUMAN_EYE, Y_MEASURETYPE_WIDE_SPECTRUM, Y_MEASURETYPE_INFRARED,
-     * Y_MEASURETYPE_HIGH_RATE, Y_MEASURETYPE_HIGH_ENERGY and Y_MEASURETYPE_HIGH_RESOLUTION corresponding
-     * to the type of light measure
+     * @return a value among YLightSensor.MEASURETYPE_HUMAN_EYE, YLightSensor.MEASURETYPE_WIDE_SPECTRUM,
+     * YLightSensor.MEASURETYPE_INFRARED, YLightSensor.MEASURETYPE_HIGH_RATE,
+     * YLightSensor.MEASURETYPE_HIGH_ENERGY and YLightSensor.MEASURETYPE_HIGH_RESOLUTION corresponding to
+     * the type of light measure
      *
-     * On failure, throws an exception or returns Y_MEASURETYPE_INVALID.
+     * On failure, throws an exception or returns YLightSensor.MEASURETYPE_INVALID.
      */
-    get_measureType(): Promise<Y_MeasureType>;
+    get_measureType(): Promise<YLightSensor_MeasureType>;
     /**
      * Changes the light sensor type used in the device. The measure can either
      * approximate the response of the human eye, focus on a specific light
@@ -117,17 +118,18 @@ export declare class YLightSensor extends YSensor {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_MEASURETYPE_HUMAN_EYE, Y_MEASURETYPE_WIDE_SPECTRUM,
-     * Y_MEASURETYPE_INFRARED, Y_MEASURETYPE_HIGH_RATE, Y_MEASURETYPE_HIGH_ENERGY and
-     * Y_MEASURETYPE_HIGH_RESOLUTION corresponding to the light sensor type used in the device
+     * @param newval : a value among YLightSensor.MEASURETYPE_HUMAN_EYE,
+     * YLightSensor.MEASURETYPE_WIDE_SPECTRUM, YLightSensor.MEASURETYPE_INFRARED,
+     * YLightSensor.MEASURETYPE_HIGH_RATE, YLightSensor.MEASURETYPE_HIGH_ENERGY and
+     * YLightSensor.MEASURETYPE_HIGH_RESOLUTION corresponding to the light sensor type used in the device
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_measureType(newval: Y_MeasureType): Promise<number>;
+    set_measureType(newval: YLightSensor_MeasureType): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a light sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -137,11 +139,11 @@ export declare class YLightSensor extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the light sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLightSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLightSensor.isOnline() to test if the light sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a light sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -149,14 +151,14 @@ export declare class YLightSensor extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the light sensor, for instance
+     *         LIGHTMK3.lightSensor.
      *
-     * @return a YLightSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YLightSensor object allowing you to drive the light sensor.
      */
     static FindLightSensor(func: string): YLightSensor;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a light sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -166,19 +168,19 @@ export declare class YLightSensor extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the light sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLightSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLightSensor.isOnline() to test if the light sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a light sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the light sensor, for instance
+     *         LIGHTMK3.lightSensor.
      *
-     * @return a YLightSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YLightSensor object allowing you to drive the light sensor.
      */
     static FindLightSensorInContext(yctx: YAPIContext, func: string): YLightSensor;
     /**
@@ -208,23 +210,36 @@ export declare class YLightSensor extends YSensor {
     registerTimedReportCallback(callback: YLightSensorTimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the next LightSensor
+     * Continues the enumeration of light sensors started using yFirstLightSensor().
+     * Caution: You can't make any assumption about the returned light sensors order.
+     * If you want to find a specific a light sensor, use LightSensor.findLightSensor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YLightSensor}
+     * @return a pointer to a YLightSensor object, corresponding to
+     *         a light sensor currently online, or a null pointer
+     *         if there are no more light sensors to enumerate.
      */
     nextLightSensor(): YLightSensor | null;
     /**
-     * Retrieves the first LightSensor in a YAPI context
+     * Starts the enumeration of light sensors currently accessible.
+     * Use the method YLightSensor.nextLightSensor() to iterate on
+     * next light sensors.
      *
-     * @returns {YLightSensor}
+     * @return a pointer to a YLightSensor object, corresponding to
+     *         the first light sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLightSensor(): YLightSensor | null;
     /**
-     * Retrieves the first LightSensor in a given context
+     * Starts the enumeration of light sensors currently accessible.
+     * Use the method YLightSensor.nextLightSensor() to iterate on
+     * next light sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YLightSensor}
+     * @return a pointer to a YLightSensor object, corresponding to
+     *         the first light sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLightSensorInContext(yctx: YAPIContext): YLightSensor | null;
 }

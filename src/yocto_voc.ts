@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_voc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Voc functions
  *
@@ -78,7 +78,7 @@ export class YVoc extends YSensor
     //--- (YVoc implementation)
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a Volatile Organic Compound sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -88,11 +88,11 @@ export class YVoc extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the Volatile Organic Compound sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YVoc.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YVoc.isOnline() to test if the Volatile Organic Compound sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a Volatile Organic Compound sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -100,10 +100,10 @@ export class YVoc extends YSensor
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the Volatile Organic Compound sensor, for instance
+     *         YVOCMK03.voc.
      *
-     * @return a YVoc object allowing you to drive $THEFUNCTION$.
+     * @return a YVoc object allowing you to drive the Volatile Organic Compound sensor.
      */
     static FindVoc(func: string): YVoc
     {
@@ -117,7 +117,7 @@ export class YVoc extends YSensor
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a Volatile Organic Compound sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -127,19 +127,19 @@ export class YVoc extends YSensor
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the Volatile Organic Compound sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YVoc.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YVoc.isOnline() to test if the Volatile Organic Compound sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a Volatile Organic Compound sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the Volatile Organic Compound sensor, for instance
+     *         YVOCMK03.voc.
      *
-     * @return a YVoc object allowing you to drive $THEFUNCTION$.
+     * @return a YVoc object allowing you to drive the Volatile Organic Compound sensor.
      */
     static FindVocInContext(yctx: YAPIContext, func: string): YVoc
     {
@@ -235,9 +235,14 @@ export class YVoc extends YSensor
     }
 
     /**
-     * Returns the next Voc
+     * Continues the enumeration of Volatile Organic Compound sensors started using yFirstVoc().
+     * Caution: You can't make any assumption about the returned Volatile Organic Compound sensors order.
+     * If you want to find a specific a Volatile Organic Compound sensor, use Voc.findVoc()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YVoc}
+     * @return a pointer to a YVoc object, corresponding to
+     *         a Volatile Organic Compound sensor currently online, or a null pointer
+     *         if there are no more Volatile Organic Compound sensors to enumerate.
      */
     nextVoc(): YVoc | null
     {
@@ -249,9 +254,13 @@ export class YVoc extends YSensor
     }
 
     /**
-     * Retrieves the first Voc in a YAPI context
+     * Starts the enumeration of Volatile Organic Compound sensors currently accessible.
+     * Use the method YVoc.nextVoc() to iterate on
+     * next Volatile Organic Compound sensors.
      *
-     * @returns {YVoc}
+     * @return a pointer to a YVoc object, corresponding to
+     *         the first Volatile Organic Compound sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstVoc(): YVoc | null
     {
@@ -261,11 +270,15 @@ export class YVoc extends YSensor
     }
 
     /**
-     * Retrieves the first Voc in a given context
+     * Starts the enumeration of Volatile Organic Compound sensors currently accessible.
+     * Use the method YVoc.nextVoc() to iterate on
+     * next Volatile Organic Compound sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YVoc}
+     * @return a pointer to a YVoc object, corresponding to
+     *         the first Volatile Organic Compound sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstVocInContext(yctx: YAPIContext): YVoc | null
     {

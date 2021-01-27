@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_segmenteddisplay.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for SegmentedDisplay functions
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum Y_DisplayMode {
+export declare const enum YSegmentedDisplay_DisplayMode {
     DISCONNECTED = 0,
     MANUAL = 1,
     AUTO1 = 2,
@@ -55,20 +55,20 @@ export interface YSegmentedDisplayValueCallback {
 export declare class YSegmentedDisplay extends YFunction {
     _className: string;
     _displayedText: string;
-    _displayMode: Y_DisplayMode;
+    _displayMode: YSegmentedDisplay_DisplayMode;
     _valueCallbackSegmentedDisplay: YSegmentedDisplayValueCallback | null;
     readonly DISPLAYEDTEXT_INVALID: string;
-    readonly DISPLAYMODE_DISCONNECTED: Y_DisplayMode;
-    readonly DISPLAYMODE_MANUAL: Y_DisplayMode;
-    readonly DISPLAYMODE_AUTO1: Y_DisplayMode;
-    readonly DISPLAYMODE_AUTO60: Y_DisplayMode;
-    readonly DISPLAYMODE_INVALID: Y_DisplayMode;
+    readonly DISPLAYMODE_DISCONNECTED: YSegmentedDisplay_DisplayMode;
+    readonly DISPLAYMODE_MANUAL: YSegmentedDisplay_DisplayMode;
+    readonly DISPLAYMODE_AUTO1: YSegmentedDisplay_DisplayMode;
+    readonly DISPLAYMODE_AUTO60: YSegmentedDisplay_DisplayMode;
+    readonly DISPLAYMODE_INVALID: YSegmentedDisplay_DisplayMode;
     static readonly DISPLAYEDTEXT_INVALID: string;
-    static readonly DISPLAYMODE_DISCONNECTED: Y_DisplayMode;
-    static readonly DISPLAYMODE_MANUAL: Y_DisplayMode;
-    static readonly DISPLAYMODE_AUTO1: Y_DisplayMode;
-    static readonly DISPLAYMODE_AUTO60: Y_DisplayMode;
-    static readonly DISPLAYMODE_INVALID: Y_DisplayMode;
+    static readonly DISPLAYMODE_DISCONNECTED: YSegmentedDisplay_DisplayMode;
+    static readonly DISPLAYMODE_MANUAL: YSegmentedDisplay_DisplayMode;
+    static readonly DISPLAYMODE_AUTO1: YSegmentedDisplay_DisplayMode;
+    static readonly DISPLAYMODE_AUTO60: YSegmentedDisplay_DisplayMode;
+    static readonly DISPLAYMODE_INVALID: YSegmentedDisplay_DisplayMode;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -76,7 +76,7 @@ export declare class YSegmentedDisplay extends YFunction {
      *
      * @return a string corresponding to the text currently displayed on the screen
      *
-     * On failure, throws an exception or returns Y_DISPLAYEDTEXT_INVALID.
+     * On failure, throws an exception or returns YSegmentedDisplay.DISPLAYEDTEXT_INVALID.
      */
     get_displayedText(): Promise<string>;
     /**
@@ -84,15 +84,15 @@ export declare class YSegmentedDisplay extends YFunction {
      *
      * @param newval : a string corresponding to the text currently displayed on the screen
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     set_displayedText(newval: string): Promise<number>;
-    get_displayMode(): Promise<Y_DisplayMode>;
-    set_displayMode(newval: Y_DisplayMode): Promise<number>;
+    get_displayMode(): Promise<YSegmentedDisplay_DisplayMode>;
+    set_displayMode(newval: YSegmentedDisplay_DisplayMode): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a segmented display for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -102,11 +102,11 @@ export declare class YSegmentedDisplay extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the segmented display is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSegmentedDisplay.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSegmentedDisplay.isOnline() to test if the segmented display is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a segmented display by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -114,14 +114,14 @@ export declare class YSegmentedDisplay extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the segmented display, for instance
+     *         MyDevice.segmentedDisplay.
      *
-     * @return a YSegmentedDisplay object allowing you to drive $THEFUNCTION$.
+     * @return a YSegmentedDisplay object allowing you to drive the segmented display.
      */
     static FindSegmentedDisplay(func: string): YSegmentedDisplay;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a segmented display for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -131,19 +131,19 @@ export declare class YSegmentedDisplay extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the segmented display is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSegmentedDisplay.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSegmentedDisplay.isOnline() to test if the segmented display is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a segmented display by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the segmented display, for instance
+     *         MyDevice.segmentedDisplay.
      *
-     * @return a YSegmentedDisplay object allowing you to drive $THEFUNCTION$.
+     * @return a YSegmentedDisplay object allowing you to drive the segmented display.
      */
     static FindSegmentedDisplayInContext(yctx: YAPIContext, func: string): YSegmentedDisplay;
     /**
@@ -160,23 +160,36 @@ export declare class YSegmentedDisplay extends YFunction {
     registerValueCallback(callback: YSegmentedDisplayValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
-     * Returns the next SegmentedDisplay
+     * Continues the enumeration of segmented displays started using yFirstSegmentedDisplay().
+     * Caution: You can't make any assumption about the returned segmented displays order.
+     * If you want to find a specific a segmented display, use SegmentedDisplay.findSegmentedDisplay()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YSegmentedDisplay}
+     * @return a pointer to a YSegmentedDisplay object, corresponding to
+     *         a segmented display currently online, or a null pointer
+     *         if there are no more segmented displays to enumerate.
      */
     nextSegmentedDisplay(): YSegmentedDisplay | null;
     /**
-     * Retrieves the first SegmentedDisplay in a YAPI context
+     * Starts the enumeration of segmented displays currently accessible.
+     * Use the method YSegmentedDisplay.nextSegmentedDisplay() to iterate on
+     * next segmented displays.
      *
-     * @returns {YSegmentedDisplay}
+     * @return a pointer to a YSegmentedDisplay object, corresponding to
+     *         the first segmented display currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSegmentedDisplay(): YSegmentedDisplay | null;
     /**
-     * Retrieves the first SegmentedDisplay in a given context
+     * Starts the enumeration of segmented displays currently accessible.
+     * Use the method YSegmentedDisplay.nextSegmentedDisplay() to iterate on
+     * next segmented displays.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YSegmentedDisplay}
+     * @return a pointer to a YSegmentedDisplay object, corresponding to
+     *         the first segmented display currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSegmentedDisplayInContext(yctx: YAPIContext): YSegmentedDisplay | null;
 }

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_multisenscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -95,7 +95,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the number of sensors to poll
      *
-     * On failure, throws an exception or returns Y_NSENSORS_INVALID.
+     * On failure, throws an exception or returns YMultiSensController.NSENSORS_INVALID.
      */
     async get_nSensors() {
         let res;
@@ -116,7 +116,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      *
      * @param newval : an integer corresponding to the number of sensors to poll
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -130,7 +130,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      *
      * @return an integer corresponding to the maximum configurable sensor count allowed on this device
      *
-     * On failure, throws an exception or returns Y_MAXSENSORS_INVALID.
+     * On failure, throws an exception or returns YMultiSensController.MAXSENSORS_INVALID.
      */
     async get_maxSensors() {
         let res;
@@ -145,10 +145,10 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
     /**
      * Returns true when the device is in maintenance mode.
      *
-     * @return either Y_MAINTENANCEMODE_FALSE or Y_MAINTENANCEMODE_TRUE, according to true when the device
-     * is in maintenance mode
+     * @return either YMultiSensController.MAINTENANCEMODE_FALSE or
+     * YMultiSensController.MAINTENANCEMODE_TRUE, according to true when the device is in maintenance mode
      *
-     * On failure, throws an exception or returns Y_MAINTENANCEMODE_INVALID.
+     * On failure, throws an exception or returns YMultiSensController.MAINTENANCEMODE_INVALID.
      */
     async get_maintenanceMode() {
         let res;
@@ -165,10 +165,11 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      * This way, the device does not automatically restart when it cannot
      * communicate with one of the sensors.
      *
-     * @param newval : either Y_MAINTENANCEMODE_FALSE or Y_MAINTENANCEMODE_TRUE, according to the device
-     * mode to enable maintenance and to stop sensor polling
+     * @param newval : either YMultiSensController.MAINTENANCEMODE_FALSE or
+     * YMultiSensController.MAINTENANCEMODE_TRUE, according to the device mode to enable maintenance and
+     * to stop sensor polling
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -193,7 +194,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         return await this._setAttr('command', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a multi-sensor controller for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -203,11 +204,11 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the multi-sensor controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMultiSensController.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMultiSensController.isOnline() to test if the multi-sensor controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a multi-sensor controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -215,10 +216,10 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the multi-sensor controller, for instance
+     *         YTEMPIR1.multiSensController.
      *
-     * @return a YMultiSensController object allowing you to drive $THEFUNCTION$.
+     * @return a YMultiSensController object allowing you to drive the multi-sensor controller.
      */
     static FindMultiSensController(func) {
         let obj;
@@ -230,7 +231,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a multi-sensor controller for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -240,19 +241,19 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the multi-sensor controller is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMultiSensController.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMultiSensController.isOnline() to test if the multi-sensor controller is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a multi-sensor controller by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the multi-sensor controller, for instance
+     *         YTEMPIR1.multiSensController.
      *
-     * @return a YMultiSensController object allowing you to drive $THEFUNCTION$.
+     * @return a YMultiSensController object allowing you to drive the multi-sensor controller.
      */
     static FindMultiSensControllerInContext(yctx, func) {
         let obj;
@@ -317,7 +318,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      *
      * @param addr : new address of the connected sensor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     async setupAddress(addr) {
@@ -326,9 +327,14 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         return await this.set_command(cmd);
     }
     /**
-     * Returns the next MultiSensController
+     * Continues the enumeration of multi-sensor controllers started using yFirstMultiSensController().
+     * Caution: You can't make any assumption about the returned multi-sensor controllers order.
+     * If you want to find a specific a multi-sensor controller, use MultiSensController.findMultiSensController()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMultiSensController}
+     * @return a pointer to a YMultiSensController object, corresponding to
+     *         a multi-sensor controller currently online, or a null pointer
+     *         if there are no more multi-sensor controllers to enumerate.
      */
     nextMultiSensController() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -340,9 +346,13 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         return YMultiSensController.FindMultiSensControllerInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first MultiSensController in a YAPI context
+     * Starts the enumeration of multi-sensor controllers currently accessible.
+     * Use the method YMultiSensController.nextMultiSensController() to iterate on
+     * next multi-sensor controllers.
      *
-     * @returns {YMultiSensController}
+     * @return a pointer to a YMultiSensController object, corresponding to
+     *         the first multi-sensor controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMultiSensController() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('MultiSensController');
@@ -351,11 +361,15 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         return YMultiSensController.FindMultiSensController(next_hwid);
     }
     /**
-     * Retrieves the first MultiSensController in a given context
+     * Starts the enumeration of multi-sensor controllers currently accessible.
+     * Use the method YMultiSensController.nextMultiSensController() to iterate on
+     * next multi-sensor controllers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMultiSensController}
+     * @return a pointer to a YMultiSensController object, corresponding to
+     *         the first multi-sensor controller currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMultiSensControllerInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('MultiSensController');

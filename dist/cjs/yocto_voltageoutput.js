@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_voltageoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -86,7 +86,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the output voltage, in V
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -100,7 +100,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the output voltage set point, in V
      *
-     * On failure, throws an exception or returns Y_CURRENTVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YVoltageOutput.CURRENTVOLTAGE_INVALID.
      */
     async get_currentVoltage() {
         let res;
@@ -133,7 +133,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      *
      * @param newval : a floating point number corresponding to the output voltage at device start up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -147,7 +147,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      *
      * @return a floating point number corresponding to the selected voltage output at device startup, in V
      *
-     * On failure, throws an exception or returns Y_VOLTAGEATSTARTUP_INVALID.
+     * On failure, throws an exception or returns YVoltageOutput.VOLTAGEATSTARTUP_INVALID.
      */
     async get_voltageAtStartUp() {
         let res;
@@ -160,7 +160,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a voltage output for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -170,11 +170,11 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the voltage output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YVoltageOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YVoltageOutput.isOnline() to test if the voltage output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a voltage output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -182,10 +182,10 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the voltage output, for instance
+     *         TX010V01.voltageOutput1.
      *
-     * @return a YVoltageOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YVoltageOutput object allowing you to drive the voltage output.
      */
     static FindVoltageOutput(func) {
         let obj;
@@ -197,7 +197,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a voltage output for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -207,19 +207,19 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the voltage output is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YVoltageOutput.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YVoltageOutput.isOnline() to test if the voltage output is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a voltage output by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the voltage output, for instance
+     *         TX010V01.voltageOutput1.
      *
-     * @return a YVoltageOutput object allowing you to drive $THEFUNCTION$.
+     * @return a YVoltageOutput object allowing you to drive the voltage output.
      */
     static FindVoltageOutputInContext(yctx, func) {
         let obj;
@@ -281,7 +281,7 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
      *         (floating-point number, representing the end voltage in V)
      * @param ms_duration : total duration of the transition, in milliseconds
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      */
     async voltageMove(V_target, ms_duration) {
         let newval;
@@ -295,9 +295,14 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
         return await this.set_voltageTransition(newval);
     }
     /**
-     * Returns the next VoltageOutput
+     * Continues the enumeration of voltage outputs started using yFirstVoltageOutput().
+     * Caution: You can't make any assumption about the returned voltage outputs order.
+     * If you want to find a specific a voltage output, use VoltageOutput.findVoltageOutput()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YVoltageOutput}
+     * @return a pointer to a YVoltageOutput object, corresponding to
+     *         a voltage output currently online, or a null pointer
+     *         if there are no more voltage outputs to enumerate.
      */
     nextVoltageOutput() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -309,9 +314,13 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
         return YVoltageOutput.FindVoltageOutputInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first VoltageOutput in a YAPI context
+     * Starts the enumeration of voltage outputs currently accessible.
+     * Use the method YVoltageOutput.nextVoltageOutput() to iterate on
+     * next voltage outputs.
      *
-     * @returns {YVoltageOutput}
+     * @return a pointer to a YVoltageOutput object, corresponding to
+     *         the first voltage output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstVoltageOutput() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('VoltageOutput');
@@ -320,11 +329,15 @@ class YVoltageOutput extends yocto_api_js_1.YFunction {
         return YVoltageOutput.FindVoltageOutput(next_hwid);
     }
     /**
-     * Retrieves the first VoltageOutput in a given context
+     * Starts the enumeration of voltage outputs currently accessible.
+     * Use the method YVoltageOutput.nextVoltageOutput() to iterate on
+     * next voltage outputs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YVoltageOutput}
+     * @return a pointer to a YVoltageOutput object, corresponding to
+     *         the first voltage output currently online, or a null pointer
+     *         if there are none.
      */
     static FirstVoltageOutputInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('VoltageOutput');

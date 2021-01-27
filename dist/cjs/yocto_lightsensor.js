@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_lightsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -99,7 +99,7 @@ class YLightSensor extends yocto_api_js_1.YSensor {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -111,11 +111,12 @@ class YLightSensor extends yocto_api_js_1.YSensor {
     /**
      * Returns the type of light measure.
      *
-     * @return a value among Y_MEASURETYPE_HUMAN_EYE, Y_MEASURETYPE_WIDE_SPECTRUM, Y_MEASURETYPE_INFRARED,
-     * Y_MEASURETYPE_HIGH_RATE, Y_MEASURETYPE_HIGH_ENERGY and Y_MEASURETYPE_HIGH_RESOLUTION corresponding
-     * to the type of light measure
+     * @return a value among YLightSensor.MEASURETYPE_HUMAN_EYE, YLightSensor.MEASURETYPE_WIDE_SPECTRUM,
+     * YLightSensor.MEASURETYPE_INFRARED, YLightSensor.MEASURETYPE_HIGH_RATE,
+     * YLightSensor.MEASURETYPE_HIGH_ENERGY and YLightSensor.MEASURETYPE_HIGH_RESOLUTION corresponding to
+     * the type of light measure
      *
-     * On failure, throws an exception or returns Y_MEASURETYPE_INVALID.
+     * On failure, throws an exception or returns YLightSensor.MEASURETYPE_INVALID.
      */
     async get_measureType() {
         let res;
@@ -134,11 +135,12 @@ class YLightSensor extends yocto_api_js_1.YSensor {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a value among Y_MEASURETYPE_HUMAN_EYE, Y_MEASURETYPE_WIDE_SPECTRUM,
-     * Y_MEASURETYPE_INFRARED, Y_MEASURETYPE_HIGH_RATE, Y_MEASURETYPE_HIGH_ENERGY and
-     * Y_MEASURETYPE_HIGH_RESOLUTION corresponding to the light sensor type used in the device
+     * @param newval : a value among YLightSensor.MEASURETYPE_HUMAN_EYE,
+     * YLightSensor.MEASURETYPE_WIDE_SPECTRUM, YLightSensor.MEASURETYPE_INFRARED,
+     * YLightSensor.MEASURETYPE_HIGH_RATE, YLightSensor.MEASURETYPE_HIGH_ENERGY and
+     * YLightSensor.MEASURETYPE_HIGH_RESOLUTION corresponding to the light sensor type used in the device
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -148,7 +150,7 @@ class YLightSensor extends yocto_api_js_1.YSensor {
         return await this._setAttr('measureType', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a light sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -158,11 +160,11 @@ class YLightSensor extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the light sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLightSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLightSensor.isOnline() to test if the light sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a light sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -170,10 +172,10 @@ class YLightSensor extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the light sensor, for instance
+     *         LIGHTMK3.lightSensor.
      *
-     * @return a YLightSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YLightSensor object allowing you to drive the light sensor.
      */
     static FindLightSensor(func) {
         let obj;
@@ -185,7 +187,7 @@ class YLightSensor extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a light sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -195,19 +197,19 @@ class YLightSensor extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the light sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLightSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLightSensor.isOnline() to test if the light sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a light sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the light sensor, for instance
+     *         LIGHTMK3.lightSensor.
      *
-     * @return a YLightSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YLightSensor object allowing you to drive the light sensor.
      */
     static FindLightSensorInContext(yctx, func) {
         let obj;
@@ -299,9 +301,14 @@ class YLightSensor extends yocto_api_js_1.YSensor {
         return 0;
     }
     /**
-     * Returns the next LightSensor
+     * Continues the enumeration of light sensors started using yFirstLightSensor().
+     * Caution: You can't make any assumption about the returned light sensors order.
+     * If you want to find a specific a light sensor, use LightSensor.findLightSensor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YLightSensor}
+     * @return a pointer to a YLightSensor object, corresponding to
+     *         a light sensor currently online, or a null pointer
+     *         if there are no more light sensors to enumerate.
      */
     nextLightSensor() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -313,9 +320,13 @@ class YLightSensor extends yocto_api_js_1.YSensor {
         return YLightSensor.FindLightSensorInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first LightSensor in a YAPI context
+     * Starts the enumeration of light sensors currently accessible.
+     * Use the method YLightSensor.nextLightSensor() to iterate on
+     * next light sensors.
      *
-     * @returns {YLightSensor}
+     * @return a pointer to a YLightSensor object, corresponding to
+     *         the first light sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLightSensor() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('LightSensor');
@@ -324,11 +335,15 @@ class YLightSensor extends yocto_api_js_1.YSensor {
         return YLightSensor.FindLightSensor(next_hwid);
     }
     /**
-     * Retrieves the first LightSensor in a given context
+     * Starts the enumeration of light sensors currently accessible.
+     * Use the method YLightSensor.nextLightSensor() to iterate on
+     * next light sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YLightSensor}
+     * @return a pointer to a YLightSensor object, corresponding to
+     *         the first light sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLightSensorInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('LightSensor');

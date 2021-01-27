@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_anbutton.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -142,7 +142,7 @@ export class YAnButton extends YFunction {
      *
      * @return an integer corresponding to the current calibrated input value (between 0 and 1000, included)
      *
-     * On failure, throws an exception or returns Y_CALIBRATEDVALUE_INVALID.
+     * On failure, throws an exception or returns YAnButton.CALIBRATEDVALUE_INVALID.
      */
     async get_calibratedValue() {
         let res;
@@ -159,7 +159,7 @@ export class YAnButton extends YFunction {
      *
      * @return an integer corresponding to the current measured input value as-is (between 0 and 4095, included)
      *
-     * On failure, throws an exception or returns Y_RAWVALUE_INVALID.
+     * On failure, throws an exception or returns YAnButton.RAWVALUE_INVALID.
      */
     async get_rawValue() {
         let res;
@@ -174,9 +174,9 @@ export class YAnButton extends YFunction {
     /**
      * Tells if a calibration process is currently ongoing.
      *
-     * @return either Y_ANALOGCALIBRATION_OFF or Y_ANALOGCALIBRATION_ON
+     * @return either YAnButton.ANALOGCALIBRATION_OFF or YAnButton.ANALOGCALIBRATION_ON
      *
-     * On failure, throws an exception or returns Y_ANALOGCALIBRATION_INVALID.
+     * On failure, throws an exception or returns YAnButton.ANALOGCALIBRATION_INVALID.
      */
     async get_analogCalibration() {
         let res;
@@ -192,9 +192,9 @@ export class YAnButton extends YFunction {
      * Starts or stops the calibration process. Remember to call the saveToFlash()
      * method of the module at the end of the calibration if the modification must be kept.
      *
-     * @param newval : either Y_ANALOGCALIBRATION_OFF or Y_ANALOGCALIBRATION_ON
+     * @param newval : either YAnButton.ANALOGCALIBRATION_OFF or YAnButton.ANALOGCALIBRATION_ON
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -209,7 +209,7 @@ export class YAnButton extends YFunction {
      * @return an integer corresponding to the maximal value measured during the calibration (between 0
      * and 4095, included)
      *
-     * On failure, throws an exception or returns Y_CALIBRATIONMAX_INVALID.
+     * On failure, throws an exception or returns YAnButton.CALIBRATIONMAX_INVALID.
      */
     async get_calibrationMax() {
         let res;
@@ -230,7 +230,7 @@ export class YAnButton extends YFunction {
      * and 4095, included), without actually
      *         starting the automated calibration
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -245,7 +245,7 @@ export class YAnButton extends YFunction {
      * @return an integer corresponding to the minimal value measured during the calibration (between 0
      * and 4095, included)
      *
-     * On failure, throws an exception or returns Y_CALIBRATIONMIN_INVALID.
+     * On failure, throws an exception or returns YAnButton.CALIBRATIONMIN_INVALID.
      */
     async get_calibrationMin() {
         let res;
@@ -266,7 +266,7 @@ export class YAnButton extends YFunction {
      * and 4095, included), without actually
      *         starting the automated calibration
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -281,7 +281,7 @@ export class YAnButton extends YFunction {
      * @return an integer corresponding to the sensibility for the input (between 1 and 1000) for
      * triggering user callbacks
      *
-     * On failure, throws an exception or returns Y_SENSITIVITY_INVALID.
+     * On failure, throws an exception or returns YAnButton.SENSITIVITY_INVALID.
      */
     async get_sensitivity() {
         let res;
@@ -304,7 +304,7 @@ export class YAnButton extends YFunction {
      * @param newval : an integer corresponding to the sensibility for the input (between 1 and 1000) for
      * triggering user callbacks
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -316,10 +316,10 @@ export class YAnButton extends YFunction {
     /**
      * Returns true if the input (considered as binary) is active (closed contact), and false otherwise.
      *
-     * @return either Y_ISPRESSED_FALSE or Y_ISPRESSED_TRUE, according to true if the input (considered as
-     * binary) is active (closed contact), and false otherwise
+     * @return either YAnButton.ISPRESSED_FALSE or YAnButton.ISPRESSED_TRUE, according to true if the
+     * input (considered as binary) is active (closed contact), and false otherwise
      *
-     * On failure, throws an exception or returns Y_ISPRESSED_INVALID.
+     * On failure, throws an exception or returns YAnButton.ISPRESSED_INVALID.
      */
     async get_isPressed() {
         let res;
@@ -339,7 +339,7 @@ export class YAnButton extends YFunction {
      * and the last time
      *         the input button was pressed (the input contact transitioned from open to closed)
      *
-     * On failure, throws an exception or returns Y_LASTTIMEPRESSED_INVALID.
+     * On failure, throws an exception or returns YAnButton.LASTTIMEPRESSED_INVALID.
      */
     async get_lastTimePressed() {
         let res;
@@ -359,7 +359,7 @@ export class YAnButton extends YFunction {
      * and the last time
      *         the input button was released (the input contact transitioned from closed to open)
      *
-     * On failure, throws an exception or returns Y_LASTTIMERELEASED_INVALID.
+     * On failure, throws an exception or returns YAnButton.LASTTIMERELEASED_INVALID.
      */
     async get_lastTimeReleased() {
         let res;
@@ -378,7 +378,7 @@ export class YAnButton extends YFunction {
      *
      * @return an integer corresponding to the pulse counter value
      *
-     * On failure, throws an exception or returns Y_PULSECOUNTER_INVALID.
+     * On failure, throws an exception or returns YAnButton.PULSECOUNTER_INVALID.
      */
     async get_pulseCounter() {
         let res;
@@ -400,7 +400,7 @@ export class YAnButton extends YFunction {
      *
      * @return an integer corresponding to the timer of the pulses counter (ms)
      *
-     * On failure, throws an exception or returns Y_PULSETIMER_INVALID.
+     * On failure, throws an exception or returns YAnButton.PULSETIMER_INVALID.
      */
     async get_pulseTimer() {
         let res;
@@ -415,10 +415,11 @@ export class YAnButton extends YFunction {
     /**
      * Returns the decoding method applied to the input (analog or multiplexed binary switches).
      *
-     * @return a value among Y_INPUTTYPE_ANALOG_FAST, Y_INPUTTYPE_DIGITAL4 and Y_INPUTTYPE_ANALOG_SMOOTH
-     * corresponding to the decoding method applied to the input (analog or multiplexed binary switches)
+     * @return a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4 and
+     * YAnButton.INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog
+     * or multiplexed binary switches)
      *
-     * On failure, throws an exception or returns Y_INPUTTYPE_INVALID.
+     * On failure, throws an exception or returns YAnButton.INPUTTYPE_INVALID.
      */
     async get_inputType() {
         let res;
@@ -434,11 +435,11 @@ export class YAnButton extends YFunction {
      * Changes the decoding method applied to the input (analog or multiplexed binary switches).
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_INPUTTYPE_ANALOG_FAST, Y_INPUTTYPE_DIGITAL4 and
-     * Y_INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog or
-     * multiplexed binary switches)
+     * @param newval : a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4 and
+     * YAnButton.INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog
+     * or multiplexed binary switches)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -448,7 +449,7 @@ export class YAnButton extends YFunction {
         return await this._setAttr('inputType', rest_val);
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves an analog input for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -458,11 +459,11 @@ export class YAnButton extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the analog input is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAnButton.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAnButton.isOnline() to test if the analog input is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an analog input by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -470,10 +471,10 @@ export class YAnButton extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the analog input, for instance
+     *         YBUZZER2.anButton1.
      *
-     * @return a YAnButton object allowing you to drive $THEFUNCTION$.
+     * @return a YAnButton object allowing you to drive the analog input.
      */
     static FindAnButton(func) {
         let obj;
@@ -485,7 +486,7 @@ export class YAnButton extends YFunction {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves an analog input for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -495,19 +496,19 @@ export class YAnButton extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the analog input is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YAnButton.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YAnButton.isOnline() to test if the analog input is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * an analog input by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the analog input, for instance
+     *         YBUZZER2.anButton1.
      *
-     * @return a YAnButton object allowing you to drive $THEFUNCTION$.
+     * @return a YAnButton object allowing you to drive the analog input.
      */
     static FindAnButtonInContext(yctx, func) {
         let obj;
@@ -564,7 +565,7 @@ export class YAnButton extends YFunction {
     /**
      * Returns the pulse counter value as well as its timer.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -572,9 +573,14 @@ export class YAnButton extends YFunction {
         return await this.set_pulseCounter(0);
     }
     /**
-     * Returns the next AnButton
+     * Continues the enumeration of analog inputs started using yFirstAnButton().
+     * Caution: You can't make any assumption about the returned analog inputs order.
+     * If you want to find a specific an analog input, use AnButton.findAnButton()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YAnButton}
+     * @return a pointer to a YAnButton object, corresponding to
+     *         an analog input currently online, or a null pointer
+     *         if there are no more analog inputs to enumerate.
      */
     nextAnButton() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -586,9 +592,13 @@ export class YAnButton extends YFunction {
         return YAnButton.FindAnButtonInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first AnButton in a YAPI context
+     * Starts the enumeration of analog inputs currently accessible.
+     * Use the method YAnButton.nextAnButton() to iterate on
+     * next analog inputs.
      *
-     * @returns {YAnButton}
+     * @return a pointer to a YAnButton object, corresponding to
+     *         the first analog input currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAnButton() {
         let next_hwid = YAPI.imm_getFirstHardwareId('AnButton');
@@ -597,11 +607,15 @@ export class YAnButton extends YFunction {
         return YAnButton.FindAnButton(next_hwid);
     }
     /**
-     * Retrieves the first AnButton in a given context
+     * Starts the enumeration of analog inputs currently accessible.
+     * Use the method YAnButton.nextAnButton() to iterate on
+     * next analog inputs.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YAnButton}
+     * @return a pointer to a YAnButton object, corresponding to
+     *         the first analog input currently online, or a null pointer
+     *         if there are none.
      */
     static FirstAnButtonInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('AnButton');

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_magnetometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -100,7 +100,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      *
      * @return an integer corresponding to the measure update frequency, measured in Hz
      *
-     * On failure, throws an exception or returns Y_BANDWIDTH_INVALID.
+     * On failure, throws an exception or returns YMagnetometer.BANDWIDTH_INVALID.
      */
     async get_bandwidth() {
         let res;
@@ -120,7 +120,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      *
      * @param newval : an integer corresponding to the measure update frequency, measured in Hz
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -135,7 +135,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      * @return a floating point number corresponding to the X component of the magnetic field, as a
      * floating point number
      *
-     * On failure, throws an exception or returns Y_XVALUE_INVALID.
+     * On failure, throws an exception or returns YMagnetometer.XVALUE_INVALID.
      */
     async get_xValue() {
         let res;
@@ -153,7 +153,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      * @return a floating point number corresponding to the Y component of the magnetic field, as a
      * floating point number
      *
-     * On failure, throws an exception or returns Y_YVALUE_INVALID.
+     * On failure, throws an exception or returns YMagnetometer.YVALUE_INVALID.
      */
     async get_yValue() {
         let res;
@@ -171,7 +171,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      * @return a floating point number corresponding to the Z component of the magnetic field, as a
      * floating point number
      *
-     * On failure, throws an exception or returns Y_ZVALUE_INVALID.
+     * On failure, throws an exception or returns YMagnetometer.ZVALUE_INVALID.
      */
     async get_zValue() {
         let res;
@@ -184,7 +184,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
         return res;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a magnetometer for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -194,11 +194,11 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the magnetometer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMagnetometer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMagnetometer.isOnline() to test if the magnetometer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a magnetometer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -206,10 +206,10 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the magnetometer, for instance
+     *         Y3DMK002.magnetometer.
      *
-     * @return a YMagnetometer object allowing you to drive $THEFUNCTION$.
+     * @return a YMagnetometer object allowing you to drive the magnetometer.
      */
     static FindMagnetometer(func) {
         let obj;
@@ -221,7 +221,7 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a magnetometer for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -231,19 +231,19 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the magnetometer is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMagnetometer.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMagnetometer.isOnline() to test if the magnetometer is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a magnetometer by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the magnetometer, for instance
+     *         Y3DMK002.magnetometer.
      *
-     * @return a YMagnetometer object allowing you to drive $THEFUNCTION$.
+     * @return a YMagnetometer object allowing you to drive the magnetometer.
      */
     static FindMagnetometerInContext(yctx, func) {
         let obj;
@@ -335,9 +335,14 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
         return 0;
     }
     /**
-     * Returns the next Magnetometer
+     * Continues the enumeration of magnetometers started using yFirstMagnetometer().
+     * Caution: You can't make any assumption about the returned magnetometers order.
+     * If you want to find a specific a magnetometer, use Magnetometer.findMagnetometer()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMagnetometer}
+     * @return a pointer to a YMagnetometer object, corresponding to
+     *         a magnetometer currently online, or a null pointer
+     *         if there are no more magnetometers to enumerate.
      */
     nextMagnetometer() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -349,9 +354,13 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
         return YMagnetometer.FindMagnetometerInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Magnetometer in a YAPI context
+     * Starts the enumeration of magnetometers currently accessible.
+     * Use the method YMagnetometer.nextMagnetometer() to iterate on
+     * next magnetometers.
      *
-     * @returns {YMagnetometer}
+     * @return a pointer to a YMagnetometer object, corresponding to
+     *         the first magnetometer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMagnetometer() {
         let next_hwid = yocto_api_js_1.YAPI.imm_getFirstHardwareId('Magnetometer');
@@ -360,11 +369,15 @@ class YMagnetometer extends yocto_api_js_1.YSensor {
         return YMagnetometer.FindMagnetometer(next_hwid);
     }
     /**
-     * Retrieves the first Magnetometer in a given context
+     * Starts the enumeration of magnetometers currently accessible.
+     * Use the method YMagnetometer.nextMagnetometer() to iterate on
+     * next magnetometers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMagnetometer}
+     * @return a pointer to a YMagnetometer object, corresponding to
+     *         the first magnetometer currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMagnetometerInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Magnetometer');

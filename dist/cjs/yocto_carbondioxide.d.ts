@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_carbondioxide.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -69,7 +69,7 @@ export declare class YCarbonDioxide extends YSensor {
      *
      * @return an integer corresponding to the Automatic Baseline Calibration period, in hours
      *
-     * On failure, throws an exception or returns Y_ABCPERIOD_INVALID.
+     * On failure, throws an exception or returns YCarbonDioxide.ABCPERIOD_INVALID.
      */
     get_abcPeriod(): Promise<number>;
     /**
@@ -81,7 +81,7 @@ export declare class YCarbonDioxide extends YSensor {
      *
      * @param newval : an integer corresponding to Automatic Baseline Calibration period, in hours
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -89,7 +89,7 @@ export declare class YCarbonDioxide extends YSensor {
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a CO2 sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -99,11 +99,11 @@ export declare class YCarbonDioxide extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the CO2 sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCarbonDioxide.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCarbonDioxide.isOnline() to test if the CO2 sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a CO2 sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -111,14 +111,14 @@ export declare class YCarbonDioxide extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the CO2 sensor, for instance
+     *         YCO2MK02.carbonDioxide.
      *
-     * @return a YCarbonDioxide object allowing you to drive $THEFUNCTION$.
+     * @return a YCarbonDioxide object allowing you to drive the CO2 sensor.
      */
     static FindCarbonDioxide(func: string): YCarbonDioxide;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a CO2 sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -128,19 +128,19 @@ export declare class YCarbonDioxide extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the CO2 sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YCarbonDioxide.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YCarbonDioxide.isOnline() to test if the CO2 sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a CO2 sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the CO2 sensor, for instance
+     *         YCO2MK02.carbonDioxide.
      *
-     * @return a YCarbonDioxide object allowing you to drive $THEFUNCTION$.
+     * @return a YCarbonDioxide object allowing you to drive the CO2 sensor.
      */
     static FindCarbonDioxideInContext(yctx: YAPIContext, func: string): YCarbonDioxide;
     /**
@@ -179,7 +179,7 @@ export declare class YCarbonDioxide extends YSensor {
      * time. Before starting a baseline calibration, make sure to put the sensor
      * in a standard environment (e.g. outside in fresh air) at around 400 ppm.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -197,30 +197,43 @@ export declare class YCarbonDioxide extends YSensor {
      * connected to the sensor. Please contact support@yoctopuce.com for more details
      * on the zero calibration procedure.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     triggerZeroCalibration(): Promise<number>;
     triggetZeroCalibration(): Promise<number>;
     /**
-     * Returns the next CarbonDioxide
+     * Continues the enumeration of CO2 sensors started using yFirstCarbonDioxide().
+     * Caution: You can't make any assumption about the returned CO2 sensors order.
+     * If you want to find a specific a CO2 sensor, use CarbonDioxide.findCarbonDioxide()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YCarbonDioxide}
+     * @return a pointer to a YCarbonDioxide object, corresponding to
+     *         a CO2 sensor currently online, or a null pointer
+     *         if there are no more CO2 sensors to enumerate.
      */
     nextCarbonDioxide(): YCarbonDioxide | null;
     /**
-     * Retrieves the first CarbonDioxide in a YAPI context
+     * Starts the enumeration of CO2 sensors currently accessible.
+     * Use the method YCarbonDioxide.nextCarbonDioxide() to iterate on
+     * next CO2 sensors.
      *
-     * @returns {YCarbonDioxide}
+     * @return a pointer to a YCarbonDioxide object, corresponding to
+     *         the first CO2 sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCarbonDioxide(): YCarbonDioxide | null;
     /**
-     * Retrieves the first CarbonDioxide in a given context
+     * Starts the enumeration of CO2 sensors currently accessible.
+     * Use the method YCarbonDioxide.nextCarbonDioxide() to iterate on
+     * next CO2 sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YCarbonDioxide}
+     * @return a pointer to a YCarbonDioxide object, corresponding to
+     *         the first CO2 sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstCarbonDioxideInContext(yctx: YAPIContext): YCarbonDioxide | null;
 }

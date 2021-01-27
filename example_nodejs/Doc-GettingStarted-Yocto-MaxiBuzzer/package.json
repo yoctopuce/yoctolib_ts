@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-yocto-maxibuzzer",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-GettingStarted-Yocto-MaxiBuzzer example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

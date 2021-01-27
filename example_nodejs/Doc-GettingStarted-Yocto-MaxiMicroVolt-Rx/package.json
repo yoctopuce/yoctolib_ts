@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-yocto-maximicrovolt-rx",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Doc-GettingStarted-Yocto-MaxiMicroVolt-Rx example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

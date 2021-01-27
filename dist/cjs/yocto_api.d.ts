@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 41769 2020-09-03 17:34:23Z mvuilleu $
+ * $Id: yocto_api.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -99,13 +99,13 @@ export interface YHubDiscoveryCallback {
 export interface YDeviceUpdateCallback {
     (module: YModule): void;
 }
-export declare const enum Y_PersistentSettings {
+export declare const enum YModule_PersistentSettings {
     LOADED = 0,
     SAVED = 1,
     MODIFIED = 2,
     INVALID = -1
 }
-export declare const enum Y_Beacon {
+export declare const enum YModule_Beacon {
     OFF = 0,
     ON = 1,
     INVALID = -1
@@ -113,23 +113,23 @@ export declare const enum Y_Beacon {
 export interface YModuleValueCallback {
     (func: YModule, value: string): void;
 }
-export declare const enum Y_Recording {
+export declare const enum YDataLogger_Recording {
     OFF = 0,
     ON = 1,
     PENDING = 2,
     INVALID = -1
 }
-export declare const enum Y_AutoStart {
+export declare const enum YDataLogger_AutoStart {
     OFF = 0,
     ON = 1,
     INVALID = -1
 }
-export declare const enum Y_BeaconDriven {
+export declare const enum YDataLogger_BeaconDriven {
     OFF = 0,
     ON = 1,
     INVALID = -1
 }
-export declare const enum Y_ClearHistory {
+export declare const enum YDataLogger_ClearHistory {
     FALSE = 0,
     TRUE = 1,
     INVALID = -1
@@ -137,7 +137,7 @@ export declare const enum Y_ClearHistory {
 export interface YDataLoggerValueCallback {
     (func: YDataLogger, value: string): void;
 }
-export declare const enum Y_AdvMode {
+export declare const enum YSensor_AdvMode {
     IMMEDIATE = 0,
     PERIOD_AVG = 1,
     PERIOD_MIN = 2,
@@ -179,6 +179,9 @@ interface YFunctionTypeDict {
 }
 interface YDataStreamDict {
     [ident: string]: YDataStream;
+}
+interface YGenericHubDict {
+    [ident: string]: YGenericHub;
 }
 declare class YFunctionType {
     private _yapi;
@@ -518,34 +521,34 @@ export declare class YDataStream {
     /**
      * Returns the smallest measure observed within this stream.
      * If the device uses a firmware older than version 13000,
-     * this method will always return Y_DATA_INVALID.
+     * this method will always return YDataStream.DATA_INVALID.
      *
      * @return a floating-point number corresponding to the smallest value,
-     *         or Y_DATA_INVALID if the stream is not yet complete (still recording).
+     *         or YDataStream.DATA_INVALID if the stream is not yet complete (still recording).
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     get_minValue(): Promise<number>;
     /**
      * Returns the average of all measures observed within this stream.
      * If the device uses a firmware older than version 13000,
-     * this method will always return Y_DATA_INVALID.
+     * this method will always return YDataStream.DATA_INVALID.
      *
      * @return a floating-point number corresponding to the average value,
-     *         or Y_DATA_INVALID if the stream is not yet complete (still recording).
+     *         or YDataStream.DATA_INVALID if the stream is not yet complete (still recording).
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     get_averageValue(): Promise<number>;
     /**
      * Returns the largest measure observed within this stream.
      * If the device uses a firmware older than version 13000,
-     * this method will always return Y_DATA_INVALID.
+     * this method will always return YDataStream.DATA_INVALID.
      *
      * @return a floating-point number corresponding to the largest value,
-     *         or Y_DATA_INVALID if the stream is not yet complete (still recording).
+     *         or YDataStream.DATA_INVALID if the stream is not yet complete (still recording).
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     get_maxValue(): Promise<number>;
     get_realDuration(): Promise<number>;
@@ -579,7 +582,7 @@ export declare class YDataStream {
      *
      * @return a floating-point number
      *
-     * On failure, throws an exception or returns Y_DATA_INVALID.
+     * On failure, throws an exception or returns YDataStream.DATA_INVALID.
      */
     get_data(row: number, col: number): Promise<number>;
 }
@@ -644,7 +647,7 @@ export declare class YDataSet {
      *
      * @return a string that uniquely identifies the function (ex: THRMCPL1-123456.temperature1)
      *
-     * On failure, throws an exception or returns  Y_HARDWAREID_INVALID.
+     * On failure, throws an exception or returns  YDataSet.HARDWAREID_INVALID.
      */
     get_hardwareId(): Promise<string>;
     /**
@@ -659,7 +662,7 @@ export declare class YDataSet {
      *
      * @return a string that represents a physical unit.
      *
-     * On failure, throws an exception or returns  Y_UNIT_INVALID.
+     * On failure, throws an exception or returns  YDataSet.UNIT_INVALID.
      */
     get_unit(): Promise<string>;
     /**
@@ -1189,7 +1192,7 @@ export declare class YFunction {
      *
      * @return a string corresponding to the logical name of the function
      *
-     * On failure, throws an exception or returns Y_LOGICALNAME_INVALID.
+     * On failure, throws an exception or returns YFunction.LOGICALNAME_INVALID.
      */
     get_logicalName(): Promise<string>;
     /**
@@ -1200,7 +1203,7 @@ export declare class YFunction {
      *
      * @param newval : a string corresponding to the logical name of the function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1210,12 +1213,12 @@ export declare class YFunction {
      *
      * @return a string corresponding to a short string representing the current state of the function
      *
-     * On failure, throws an exception or returns Y_ADVERTISEDVALUE_INVALID.
+     * On failure, throws an exception or returns YFunction.ADVERTISEDVALUE_INVALID.
      */
     get_advertisedValue(): Promise<string>;
     set_advertisedValue(newval: string): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a function for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -1225,11 +1228,11 @@ export declare class YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the function is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YFunction.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YFunction.isOnline() to test if the function is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a function by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -1237,14 +1240,14 @@ export declare class YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the function, for instance
+     *         MyDevice..
      *
-     * @return a YFunction object allowing you to drive $THEFUNCTION$.
+     * @return a YFunction object allowing you to drive the function.
      */
     static FindFunction(func: string): YFunction;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a function for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -1254,19 +1257,19 @@ export declare class YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the function is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YFunction.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YFunction.isOnline() to test if the function is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a function by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the function, for instance
+     *         MyDevice..
      *
-     * @return a YFunction object allowing you to drive $THEFUNCTION$.
+     * @return a YFunction object allowing you to drive the function.
      */
     static FindFunctionInContext(yctx: YAPIContext, func: string): YFunction;
     /**
@@ -1289,7 +1292,7 @@ export declare class YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1300,7 +1303,7 @@ export declare class YFunction {
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1404,7 +1407,7 @@ export declare class YFunction {
      * not yet been connected. This method does not trigger any USB or TCP transaction and can therefore be used in
      * a debugger.
      *
-     * @return {string} a string that describes the function
+     * @return a string that describes the function
      *         (ex: Relay(MyCustomName.relay1)=RELAYLO1-123456.relay1)
      */
     describe(): Promise<string>;
@@ -1413,7 +1416,7 @@ export declare class YFunction {
      * The unique hardware identifier is composed of the device serial
      * number and of the hardware identifier of the function (for example RELAYLO1-123456.relay1).
      *
-     * @return {string} a string that uniquely identifies the function (ex: RELAYLO1-123456.relay1)
+     * @return a string that uniquely identifies the function (ex: RELAYLO1-123456.relay1)
      *
      * On failure, throws an exception or returns  YFunction.HARDWAREID_INVALID.
      */
@@ -1422,7 +1425,7 @@ export declare class YFunction {
      * Returns the hardware identifier of the function, without reference to the module. For example
      * relay1
      *
-     * @return {string} a string that identifies the function (ex: relay1)
+     * @return a string that identifies the function (ex: relay1)
      *
      * On failure, throws an exception or returns  YFunction.FUNCTIONID_INVALID.
      */
@@ -1434,7 +1437,7 @@ export declare class YFunction {
      * otherwise the serial number of the module and the hardware identifier of the function
      * (for example: MyCustomName.relay1)
      *
-     * @return {string} a string that uniquely identifies the function using logical names
+     * @return a string that uniquely identifies the function using logical names
      *         (ex: MyCustomName.relay1)
      *
      * On failure, throws an exception or returns  YFunction.FRIENDLYNAME_INVALID.
@@ -1647,7 +1650,7 @@ export declare class YFunction {
      * No exception is raised if there is an error while trying to contact the
      * device hosting the function.
      *
-     * @return {boolean} true if the function can be reached, and false otherwise
+     * @return true if the function can be reached, and false otherwise
      */
     isOnline(): Promise<boolean>;
     /**
@@ -1655,7 +1658,7 @@ export declare class YFunction {
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
-     * @return {number} a number corresponding to the code of the latest error that occurred while
+     * @return a number corresponding to the code of the latest error that occurred while
      *         using the function object
      */
     get_errorType(): number;
@@ -1664,7 +1667,7 @@ export declare class YFunction {
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
-     * @return {string} a string corresponding to the latest error message that occured while
+     * @return a string corresponding to the latest error message that occured while
      *         using the function object
      */
     get_errorMessage(): string;
@@ -1675,10 +1678,10 @@ export declare class YFunction {
      * used to temporarily mark the cache as valid for a longer period, in order
      * to reduce network traffic for instance.
      *
-     * @param msValidity {number} : an integer corresponding to the validity attributed to the
+     * @param msValidity : an integer corresponding to the validity attributed to the
      *         loaded function parameters, in milliseconds
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1703,7 +1706,7 @@ export declare class YFunction {
      * If the function cannot be located on any module, the returned instance of
      * YModule is not shown as on-line.
      *
-     * @return {YModule} an instance of YModule
+     * @return an instance of YModule
      */
     get_module(): Promise<YModule>;
     /**
@@ -1711,7 +1714,7 @@ export declare class YFunction {
      * This identifier can be used to test if two instances of YFunction reference the same
      * physical function on the same physical device.
      *
-     * @return {string} an identifier of type YFUN_DESCR.
+     * @return an identifier of type YFUN_DESCR.
      *
      * If the function has never been contacted, the returned value is YFunction.FUNCTIONDESCRIPTOR_INVALID.
      */
@@ -1722,14 +1725,14 @@ export declare class YFunction {
      * This attribute is never touched directly by the API, and is at disposal of the caller to
      * store a context.
      *
-     * @return {object} the object stored previously by the caller.
+     * @return the object stored previously by the caller.
      */
     get_userData(): Promise<object | null>;
     /**
      * Stores a user context provided as argument in the userData attribute of the function.
      * This attribute is never touched by the API, and is at disposal of the caller to store a context.
      *
-     * @param data {object} : any kind of object to be stored
+     * @param data : any kind of object to be stored
      * @noreturn
      */
     set_userData(data: object | null): Promise<void>;
@@ -1749,9 +1752,9 @@ export declare class YModule extends YFunction {
     _productId: number;
     _productRelease: number;
     _firmwareRelease: string;
-    _persistentSettings: Y_PersistentSettings;
+    _persistentSettings: YModule_PersistentSettings;
     _luminosity: number;
-    _beacon: Y_Beacon;
+    _beacon: YModule_Beacon;
     _upTime: number;
     _usbCurrent: number;
     _rebootCountdown: number;
@@ -1765,14 +1768,14 @@ export declare class YModule extends YFunction {
     readonly PRODUCTID_INVALID: number;
     readonly PRODUCTRELEASE_INVALID: number;
     readonly FIRMWARERELEASE_INVALID: string;
-    readonly PERSISTENTSETTINGS_LOADED: Y_PersistentSettings;
-    readonly PERSISTENTSETTINGS_SAVED: Y_PersistentSettings;
-    readonly PERSISTENTSETTINGS_MODIFIED: Y_PersistentSettings;
-    readonly PERSISTENTSETTINGS_INVALID: Y_PersistentSettings;
+    readonly PERSISTENTSETTINGS_LOADED: YModule_PersistentSettings;
+    readonly PERSISTENTSETTINGS_SAVED: YModule_PersistentSettings;
+    readonly PERSISTENTSETTINGS_MODIFIED: YModule_PersistentSettings;
+    readonly PERSISTENTSETTINGS_INVALID: YModule_PersistentSettings;
     readonly LUMINOSITY_INVALID: number;
-    readonly BEACON_OFF: Y_Beacon;
-    readonly BEACON_ON: Y_Beacon;
-    readonly BEACON_INVALID: Y_Beacon;
+    readonly BEACON_OFF: YModule_Beacon;
+    readonly BEACON_ON: YModule_Beacon;
+    readonly BEACON_INVALID: YModule_Beacon;
     readonly UPTIME_INVALID: number;
     readonly USBCURRENT_INVALID: number;
     readonly REBOOTCOUNTDOWN_INVALID: number;
@@ -1782,14 +1785,14 @@ export declare class YModule extends YFunction {
     static readonly PRODUCTID_INVALID: number;
     static readonly PRODUCTRELEASE_INVALID: number;
     static readonly FIRMWARERELEASE_INVALID: string;
-    static readonly PERSISTENTSETTINGS_LOADED: Y_PersistentSettings;
-    static readonly PERSISTENTSETTINGS_SAVED: Y_PersistentSettings;
-    static readonly PERSISTENTSETTINGS_MODIFIED: Y_PersistentSettings;
-    static readonly PERSISTENTSETTINGS_INVALID: Y_PersistentSettings;
+    static readonly PERSISTENTSETTINGS_LOADED: YModule_PersistentSettings;
+    static readonly PERSISTENTSETTINGS_SAVED: YModule_PersistentSettings;
+    static readonly PERSISTENTSETTINGS_MODIFIED: YModule_PersistentSettings;
+    static readonly PERSISTENTSETTINGS_INVALID: YModule_PersistentSettings;
     static readonly LUMINOSITY_INVALID: number;
-    static readonly BEACON_OFF: Y_Beacon;
-    static readonly BEACON_ON: Y_Beacon;
-    static readonly BEACON_INVALID: Y_Beacon;
+    static readonly BEACON_OFF: YModule_Beacon;
+    static readonly BEACON_ON: YModule_Beacon;
+    static readonly BEACON_INVALID: YModule_Beacon;
     static readonly UPTIME_INVALID: number;
     static readonly USBCURRENT_INVALID: number;
     static readonly REBOOTCOUNTDOWN_INVALID: number;
@@ -1813,7 +1816,7 @@ export declare class YModule extends YFunction {
     /**
      * Returns the number of functions (beside the "module" interface) available on the module.
      *
-     * @return {number} the number of functions on the module
+     * @return the number of functions on the module
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1821,10 +1824,10 @@ export declare class YModule extends YFunction {
     /**
      * Retrieves the hardware identifier of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the unambiguous hardware identifier of the requested module function
+     * @return a string corresponding to the unambiguous hardware identifier of the requested module function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1832,10 +1835,10 @@ export declare class YModule extends YFunction {
     /**
      * Retrieves the type of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the type of the function
+     * @return a string corresponding to the type of the function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1844,10 +1847,10 @@ export declare class YModule extends YFunction {
      * Retrieves the base type of the <i>n</i>th function on the module.
      * For instance, the base type of all measuring functions is "Sensor".
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the base type of the function
+     * @return a string corresponding to the base type of the function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1855,10 +1858,10 @@ export declare class YModule extends YFunction {
     /**
      * Retrieves the logical name of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a string corresponding to the logical name of the requested module function
+     * @return a string corresponding to the logical name of the requested module function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1866,11 +1869,11 @@ export declare class YModule extends YFunction {
     /**
      * Retrieves the advertised value of the <i>n</i>th function on the module.
      *
-     * @param functionIndex {number} : the index of the function for which the information is desired,
-     * starting at 0 for the first function.
+     * @param functionIndex : the index of the function for which the information is desired, starting at
+     * 0 for the first function.
      *
-     * @return {string} a short string (up to 6 characters) corresponding to the advertised value of the
-     * requested module function
+     * @return a short string (up to 6 characters) corresponding to the advertised value of the requested
+     * module function
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1878,7 +1881,7 @@ export declare class YModule extends YFunction {
     /**
      * Returns the logical name of the module.
      *
-     * @return {string} a string corresponding to the logical name of the module
+     * @return a string corresponding to the logical name of the module
      *
      * On failure, throws an exception or returns YModule.LOGICALNAME_INVALID.
      */
@@ -1895,7 +1898,7 @@ export declare class YModule extends YFunction {
      *
      * @return a string corresponding to the commercial name of the module, as set by the factory
      *
-     * On failure, throws an exception or returns Y_PRODUCTNAME_INVALID.
+     * On failure, throws an exception or returns YModule.PRODUCTNAME_INVALID.
      */
     get_productName(): Promise<string>;
     /**
@@ -1903,7 +1906,7 @@ export declare class YModule extends YFunction {
      *
      * @return a string corresponding to the serial number of the module, as set by the factory
      *
-     * On failure, throws an exception or returns Y_SERIALNUMBER_INVALID.
+     * On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
      */
     get_serialNumber(): Promise<string>;
     /**
@@ -1911,7 +1914,7 @@ export declare class YModule extends YFunction {
      *
      * @return an integer corresponding to the USB device identifier of the module
      *
-     * On failure, throws an exception or returns Y_PRODUCTID_INVALID.
+     * On failure, throws an exception or returns YModule.PRODUCTID_INVALID.
      */
     get_productId(): Promise<number>;
     /**
@@ -1920,7 +1923,7 @@ export declare class YModule extends YFunction {
      *
      * @return an integer corresponding to the release number of the module hardware, preprogrammed at the factory
      *
-     * On failure, throws an exception or returns Y_PRODUCTRELEASE_INVALID.
+     * On failure, throws an exception or returns YModule.PRODUCTRELEASE_INVALID.
      */
     get_productRelease(): Promise<number>;
     /**
@@ -1928,25 +1931,25 @@ export declare class YModule extends YFunction {
      *
      * @return a string corresponding to the version of the firmware embedded in the module
      *
-     * On failure, throws an exception or returns Y_FIRMWARERELEASE_INVALID.
+     * On failure, throws an exception or returns YModule.FIRMWARERELEASE_INVALID.
      */
     get_firmwareRelease(): Promise<string>;
     /**
      * Returns the current state of persistent module settings.
      *
-     * @return a value among Y_PERSISTENTSETTINGS_LOADED, Y_PERSISTENTSETTINGS_SAVED and
-     * Y_PERSISTENTSETTINGS_MODIFIED corresponding to the current state of persistent module settings
+     * @return a value among YModule.PERSISTENTSETTINGS_LOADED, YModule.PERSISTENTSETTINGS_SAVED and
+     * YModule.PERSISTENTSETTINGS_MODIFIED corresponding to the current state of persistent module settings
      *
-     * On failure, throws an exception or returns Y_PERSISTENTSETTINGS_INVALID.
+     * On failure, throws an exception or returns YModule.PERSISTENTSETTINGS_INVALID.
      */
-    get_persistentSettings(): Promise<Y_PersistentSettings>;
-    set_persistentSettings(newval: Y_PersistentSettings): Promise<number>;
+    get_persistentSettings(): Promise<YModule_PersistentSettings>;
+    set_persistentSettings(newval: YModule_PersistentSettings): Promise<number>;
     /**
      * Returns the luminosity of the  module informative LEDs (from 0 to 100).
      *
      * @return an integer corresponding to the luminosity of the  module informative LEDs (from 0 to 100)
      *
-     * On failure, throws an exception or returns Y_LUMINOSITY_INVALID.
+     * On failure, throws an exception or returns YModule.LUMINOSITY_INVALID.
      */
     get_luminosity(): Promise<number>;
     /**
@@ -1957,7 +1960,7 @@ export declare class YModule extends YFunction {
      *
      * @param newval : an integer corresponding to the luminosity of the module informative leds
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -1965,27 +1968,27 @@ export declare class YModule extends YFunction {
     /**
      * Returns the state of the localization beacon.
      *
-     * @return either Y_BEACON_OFF or Y_BEACON_ON, according to the state of the localization beacon
+     * @return either YModule.BEACON_OFF or YModule.BEACON_ON, according to the state of the localization beacon
      *
-     * On failure, throws an exception or returns Y_BEACON_INVALID.
+     * On failure, throws an exception or returns YModule.BEACON_INVALID.
      */
-    get_beacon(): Promise<Y_Beacon>;
+    get_beacon(): Promise<YModule_Beacon>;
     /**
      * Turns on or off the module localization beacon.
      *
-     * @param newval : either Y_BEACON_OFF or Y_BEACON_ON
+     * @param newval : either YModule.BEACON_OFF or YModule.BEACON_ON
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_beacon(newval: Y_Beacon): Promise<number>;
+    set_beacon(newval: YModule_Beacon): Promise<number>;
     /**
      * Returns the number of milliseconds spent since the module was powered on.
      *
      * @return an integer corresponding to the number of milliseconds spent since the module was powered on
      *
-     * On failure, throws an exception or returns Y_UPTIME_INVALID.
+     * On failure, throws an exception or returns YModule.UPTIME_INVALID.
      */
     get_upTime(): Promise<number>;
     /**
@@ -1993,7 +1996,7 @@ export declare class YModule extends YFunction {
      *
      * @return an integer corresponding to the current consumed by the module on the USB bus, in milli-amps
      *
-     * On failure, throws an exception or returns Y_USBCURRENT_INVALID.
+     * On failure, throws an exception or returns YModule.USBCURRENT_INVALID.
      */
     get_usbCurrent(): Promise<number>;
     /**
@@ -2003,7 +2006,7 @@ export declare class YModule extends YFunction {
      * @return an integer corresponding to the remaining number of seconds before the module restarts, or zero when no
      *         reboot has been scheduled
      *
-     * On failure, throws an exception or returns Y_REBOOTCOUNTDOWN_INVALID.
+     * On failure, throws an exception or returns YModule.REBOOTCOUNTDOWN_INVALID.
      */
     get_rebootCountdown(): Promise<number>;
     set_rebootCountdown(newval: number): Promise<number>;
@@ -2013,7 +2016,7 @@ export declare class YModule extends YFunction {
      *
      * @return an integer corresponding to the value previously stored in this attribute
      *
-     * On failure, throws an exception or returns Y_USERVAR_INVALID.
+     * On failure, throws an exception or returns YModule.USERVAR_INVALID.
      */
     get_userVar(): Promise<number>;
     /**
@@ -2023,42 +2026,36 @@ export declare class YModule extends YFunction {
      *
      * @param newval : an integer
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     set_userVar(newval: number): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
-     * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     * Allows you to find a module from its serial number or from its logical name.
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YModule.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YModule.isOnline() to test if the module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
+     *
      * If a call to this object's is_online() method returns FALSE although
-     * you are certain that the matching device is plugged, make sure that you did
+     * you are certain that the device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string containing either the serial number or
+     *         the logical name of the desired module
      *
-     * @return a YModule object allowing you to drive $THEFUNCTION$.
+     * @return a YModule object allowing you to drive the module
+     *         or get additional information on the module.
      */
     static FindModule(func: string): YModule;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a module for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -2068,19 +2065,19 @@ export declare class YModule extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the module is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YModule.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YModule.isOnline() to test if the module is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a module by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the module, for instance
+     *         MyDevice.module.
      *
-     * @return a YModule object allowing you to drive $THEFUNCTION$.
+     * @return a YModule object allowing you to drive the module.
      */
     static FindModuleInContext(yctx: YAPIContext, func: string): YModule;
     /**
@@ -2102,7 +2099,7 @@ export declare class YModule extends YFunction {
      * Warning: the number of allowed save operations during a module life is
      * limited (about 100000 cycles). Do not call this function within a loop.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2111,7 +2108,7 @@ export declare class YModule extends YFunction {
      * Reloads the settings stored in the nonvolatile memory, as
      * when the module is powered on.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2121,7 +2118,7 @@ export declare class YModule extends YFunction {
      *
      * @param secBeforeReboot : number of seconds before rebooting
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2131,7 +2128,7 @@ export declare class YModule extends YFunction {
      *
      * @param secBeforeReboot : number of seconds before rebooting
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2225,7 +2222,7 @@ export declare class YModule extends YFunction {
      *
      * @param settings : a binary buffer with all the settings.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2260,7 +2257,7 @@ export declare class YModule extends YFunction {
      *
      * @param settings : a binary buffer with all the settings.
      *
-     * @return YAPI_SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2280,7 +2277,7 @@ export declare class YModule extends YFunction {
      *
      * @return a binary buffer with the file content
      *
-     * On failure, throws an exception or returns  YAPI_INVALID_STRING.
+     * On failure, throws an exception or returns  YAPI.INVALID_STRING.
      */
     download(pathname: string): Promise<Uint8Array>;
     /**
@@ -2288,7 +2285,7 @@ export declare class YModule extends YFunction {
      * exceeds 1536 bytes.
      *
      * @return a binary buffer with module icon, in png format.
-     *         On failure, throws an exception or returns  YAPI_INVALID_STRING.
+     *         On failure, throws an exception or returns  YAPI.INVALID_STRING.
      */
     get_icon2d(): Promise<Uint8Array>;
     /**
@@ -2296,7 +2293,7 @@ export declare class YModule extends YFunction {
      * logs that are still in the module.
      *
      * @return a string with last logs of the module.
-     *         On failure, throws an exception or returns  YAPI_INVALID_STRING.
+     *         On failure, throws an exception or returns  YAPI.INVALID_STRING.
      */
     get_lastLogs(): Promise<string>;
     /**
@@ -2306,7 +2303,7 @@ export declare class YModule extends YFunction {
      *
      * @param text : the string to append to the logs.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2335,15 +2332,24 @@ export declare class YModule extends YFunction {
      */
     get_url(): Promise<string>;
     /**
-     * Returns the next Module
+     * Continues the module enumeration started using yFirstModule().
+     * Caution: You can't make any assumption about the returned modules order.
+     * If you want to find a specific module, use Module.findModule()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YModule}
+     * @return a pointer to a YModule object, corresponding to
+     *         the next module found, or a null pointer
+     *         if there are no more modules to enumerate.
      */
     nextModule(): YModule | null;
     /**
-     * Retrieves the first Module in a YAPI context
+     * Starts the enumeration of modules currently accessible.
+     * Use the method YModule.nextModule() to iterate on the
+     * next modules.
      *
-     * @returns {YModule}
+     * @return a pointer to a YModule object, corresponding to
+     *         the first module currently online, or a null pointer
+     *         if there are none.
      */
     static FirstModule(): YModule | null;
     /**
@@ -2378,7 +2384,7 @@ export declare class YSensor extends YFunction {
     _currentRawValue: number;
     _logFrequency: string;
     _reportFrequency: string;
-    _advMode: Y_AdvMode;
+    _advMode: YSensor_AdvMode;
     _calibrationParam: string;
     _resolution: number;
     _sensorState: number;
@@ -2401,11 +2407,11 @@ export declare class YSensor extends YFunction {
     readonly CURRENTRAWVALUE_INVALID: number;
     readonly LOGFREQUENCY_INVALID: string;
     readonly REPORTFREQUENCY_INVALID: string;
-    readonly ADVMODE_IMMEDIATE: Y_AdvMode;
-    readonly ADVMODE_PERIOD_AVG: Y_AdvMode;
-    readonly ADVMODE_PERIOD_MIN: Y_AdvMode;
-    readonly ADVMODE_PERIOD_MAX: Y_AdvMode;
-    readonly ADVMODE_INVALID: Y_AdvMode;
+    readonly ADVMODE_IMMEDIATE: YSensor_AdvMode;
+    readonly ADVMODE_PERIOD_AVG: YSensor_AdvMode;
+    readonly ADVMODE_PERIOD_MIN: YSensor_AdvMode;
+    readonly ADVMODE_PERIOD_MAX: YSensor_AdvMode;
+    readonly ADVMODE_INVALID: YSensor_AdvMode;
     readonly CALIBRATIONPARAM_INVALID: string;
     readonly RESOLUTION_INVALID: number;
     readonly SENSORSTATE_INVALID: number;
@@ -2416,11 +2422,11 @@ export declare class YSensor extends YFunction {
     static readonly CURRENTRAWVALUE_INVALID: number;
     static readonly LOGFREQUENCY_INVALID: string;
     static readonly REPORTFREQUENCY_INVALID: string;
-    static readonly ADVMODE_IMMEDIATE: Y_AdvMode;
-    static readonly ADVMODE_PERIOD_AVG: Y_AdvMode;
-    static readonly ADVMODE_PERIOD_MIN: Y_AdvMode;
-    static readonly ADVMODE_PERIOD_MAX: Y_AdvMode;
-    static readonly ADVMODE_INVALID: Y_AdvMode;
+    static readonly ADVMODE_IMMEDIATE: YSensor_AdvMode;
+    static readonly ADVMODE_PERIOD_AVG: YSensor_AdvMode;
+    static readonly ADVMODE_PERIOD_MIN: YSensor_AdvMode;
+    static readonly ADVMODE_PERIOD_MAX: YSensor_AdvMode;
+    static readonly ADVMODE_INVALID: YSensor_AdvMode;
     static readonly CALIBRATIONPARAM_INVALID: string;
     static readonly RESOLUTION_INVALID: number;
     static readonly SENSORSTATE_INVALID: number;
@@ -2431,7 +2437,7 @@ export declare class YSensor extends YFunction {
      *
      * @return a string corresponding to the measuring unit for the measure
      *
-     * On failure, throws an exception or returns Y_UNIT_INVALID.
+     * On failure, throws an exception or returns YSensor.UNIT_INVALID.
      */
     get_unit(): Promise<string>;
     /**
@@ -2447,7 +2453,7 @@ export declare class YSensor extends YFunction {
      * @return a floating point number corresponding to the current value of the measure, in the specified
      * unit, as a floating point number
      *
-     * On failure, throws an exception or returns Y_CURRENTVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.CURRENTVALUE_INVALID.
      */
     get_currentValue(): Promise<number>;
     /**
@@ -2456,7 +2462,7 @@ export declare class YSensor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the recorded minimal value observed
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2468,7 +2474,7 @@ export declare class YSensor extends YFunction {
      * @return a floating point number corresponding to the minimal value observed for the measure since
      * the device was started
      *
-     * On failure, throws an exception or returns Y_LOWESTVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.LOWESTVALUE_INVALID.
      */
     get_lowestValue(): Promise<number>;
     /**
@@ -2477,7 +2483,7 @@ export declare class YSensor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the recorded maximal value observed
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2489,7 +2495,7 @@ export declare class YSensor extends YFunction {
      * @return a floating point number corresponding to the maximal value observed for the measure since
      * the device was started
      *
-     * On failure, throws an exception or returns Y_HIGHESTVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.HIGHESTVALUE_INVALID.
      */
     get_highestValue(): Promise<number>;
     /**
@@ -2499,7 +2505,7 @@ export declare class YSensor extends YFunction {
      * @return a floating point number corresponding to the uncalibrated, unrounded raw value returned by the
      *         sensor, in the specified unit, as a floating point number
      *
-     * On failure, throws an exception or returns Y_CURRENTRAWVALUE_INVALID.
+     * On failure, throws an exception or returns YSensor.CURRENTRAWVALUE_INVALID.
      */
     get_currentRawValue(): Promise<number>;
     /**
@@ -2509,7 +2515,7 @@ export declare class YSensor extends YFunction {
      * @return a string corresponding to the datalogger recording frequency for this function, or "OFF"
      *         when measures are not stored in the data logger flash memory
      *
-     * On failure, throws an exception or returns Y_LOGFREQUENCY_INVALID.
+     * On failure, throws an exception or returns YSensor.LOGFREQUENCY_INVALID.
      */
     get_logFrequency(): Promise<string>;
     /**
@@ -2524,7 +2530,7 @@ export declare class YSensor extends YFunction {
      *
      * @param newval : a string corresponding to the datalogger recording frequency for this function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2536,7 +2542,7 @@ export declare class YSensor extends YFunction {
      * @return a string corresponding to the timed value notification frequency, or "OFF" if timed
      *         value notifications are disabled for this function
      *
-     * On failure, throws an exception or returns Y_REPORTFREQUENCY_INVALID.
+     * On failure, throws an exception or returns YSensor.REPORTFREQUENCY_INVALID.
      */
     get_reportFrequency(): Promise<string>;
     /**
@@ -2552,7 +2558,7 @@ export declare class YSensor extends YFunction {
      *
      * @param newval : a string corresponding to the timed value notification frequency for this function
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2560,24 +2566,26 @@ export declare class YSensor extends YFunction {
     /**
      * Returns the measuring mode used for the advertised value pushed to the parent hub.
      *
-     * @return a value among Y_ADVMODE_IMMEDIATE, Y_ADVMODE_PERIOD_AVG, Y_ADVMODE_PERIOD_MIN and
-     * Y_ADVMODE_PERIOD_MAX corresponding to the measuring mode used for the advertised value pushed to the parent hub
+     * @return a value among YSensor.ADVMODE_IMMEDIATE, YSensor.ADVMODE_PERIOD_AVG,
+     * YSensor.ADVMODE_PERIOD_MIN and YSensor.ADVMODE_PERIOD_MAX corresponding to the measuring mode used
+     * for the advertised value pushed to the parent hub
      *
-     * On failure, throws an exception or returns Y_ADVMODE_INVALID.
+     * On failure, throws an exception or returns YSensor.ADVMODE_INVALID.
      */
-    get_advMode(): Promise<Y_AdvMode>;
+    get_advMode(): Promise<YSensor_AdvMode>;
     /**
      * Changes the measuring mode used for the advertised value pushed to the parent hub.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among Y_ADVMODE_IMMEDIATE, Y_ADVMODE_PERIOD_AVG, Y_ADVMODE_PERIOD_MIN and
-     * Y_ADVMODE_PERIOD_MAX corresponding to the measuring mode used for the advertised value pushed to the parent hub
+     * @param newval : a value among YSensor.ADVMODE_IMMEDIATE, YSensor.ADVMODE_PERIOD_AVG,
+     * YSensor.ADVMODE_PERIOD_MIN and YSensor.ADVMODE_PERIOD_MAX corresponding to the measuring mode used
+     * for the advertised value pushed to the parent hub
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_advMode(newval: Y_AdvMode): Promise<number>;
+    set_advMode(newval: YSensor_AdvMode): Promise<number>;
     get_calibrationParam(): Promise<string>;
     set_calibrationParam(newval: string): Promise<number>;
     /**
@@ -2587,7 +2595,7 @@ export declare class YSensor extends YFunction {
      *
      * @param newval : a floating point number corresponding to the resolution of the measured physical values
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2599,7 +2607,7 @@ export declare class YSensor extends YFunction {
      *
      * @return a floating point number corresponding to the resolution of the measured values
      *
-     * On failure, throws an exception or returns Y_RESOLUTION_INVALID.
+     * On failure, throws an exception or returns YSensor.RESOLUTION_INVALID.
      */
     get_resolution(): Promise<number>;
     /**
@@ -2610,11 +2618,11 @@ export declare class YSensor extends YFunction {
      * up-to-date measure
      *         available or a positive code if the sensor is not able to provide a measure right now
      *
-     * On failure, throws an exception or returns Y_SENSORSTATE_INVALID.
+     * On failure, throws an exception or returns YSensor.SENSORSTATE_INVALID.
      */
     get_sensorState(): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -2624,11 +2632,11 @@ export declare class YSensor extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSensor.isOnline() to test if the sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -2636,14 +2644,14 @@ export declare class YSensor extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the sensor, for instance
+     *         MyDevice..
      *
-     * @return a YSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YSensor object allowing you to drive the sensor.
      */
     static FindSensor(func: string): YSensor;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -2653,19 +2661,19 @@ export declare class YSensor extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YSensor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YSensor.isOnline() to test if the sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the sensor, for instance
+     *         MyDevice..
      *
-     * @return a YSensor object allowing you to drive $THEFUNCTION$.
+     * @return a YSensor object allowing you to drive the sensor.
      */
     static FindSensorInContext(yctx: YAPIContext, func: string): YSensor;
     /**
@@ -2704,13 +2712,13 @@ export declare class YSensor extends YFunction {
      * will only save the measures on this sensor if the logFrequency
      * is not set to "OFF".
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      */
     startDataLogger(): Promise<number>;
     /**
      * Stops the datalogger on the device.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      */
     stopDataLogger(): Promise<number>;
     /**
@@ -2770,7 +2778,7 @@ export declare class YSensor extends YFunction {
      * @param refValues : array of floating point numbers, corresponding to the corrected
      *         values for the correction points.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2784,7 +2792,7 @@ export declare class YSensor extends YFunction {
      * @param refValues : array of floating point numbers, that will be filled by the
      *         function with the desired values for the correction points.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2795,23 +2803,36 @@ export declare class YSensor extends YFunction {
     imm_decodeVal(w: number): number;
     imm_decodeAvg(dw: number): number;
     /**
-     * Returns the next Sensor
+     * Continues the enumeration of sensors started using yFirstSensor().
+     * Caution: You can't make any assumption about the returned sensors order.
+     * If you want to find a specific a sensor, use Sensor.findSensor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YSensor}
+     * @return a pointer to a YSensor object, corresponding to
+     *         a sensor currently online, or a null pointer
+     *         if there are no more sensors to enumerate.
      */
     nextSensor(): YSensor | null;
     /**
-     * Retrieves the first Sensor in a YAPI context
+     * Starts the enumeration of sensors currently accessible.
+     * Use the method YSensor.nextSensor() to iterate on
+     * next sensors.
      *
-     * @returns {YSensor}
+     * @return a pointer to a YSensor object, corresponding to
+     *         the first sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSensor(): YSensor | null;
     /**
-     * Retrieves the first Sensor in a given context
+     * Starts the enumeration of sensors currently accessible.
+     * Use the method YSensor.nextSensor() to iterate on
+     * next sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YSensor}
+     * @return a pointer to a YSensor object, corresponding to
+     *         the first sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstSensorInContext(yctx: YAPIContext): YSensor | null;
 }
@@ -2897,44 +2918,44 @@ export declare class YDataLogger extends YFunction {
     _className: string;
     _currentRunIndex: number;
     _timeUTC: number;
-    _recording: Y_Recording;
-    _autoStart: Y_AutoStart;
-    _beaconDriven: Y_BeaconDriven;
+    _recording: YDataLogger_Recording;
+    _autoStart: YDataLogger_AutoStart;
+    _beaconDriven: YDataLogger_BeaconDriven;
     _usage: number;
-    _clearHistory: Y_ClearHistory;
+    _clearHistory: YDataLogger_ClearHistory;
     _valueCallbackDataLogger: YDataLoggerValueCallback | null;
     readonly CURRENTRUNINDEX_INVALID: number;
     readonly TIMEUTC_INVALID: number;
-    readonly RECORDING_OFF: Y_Recording;
-    readonly RECORDING_ON: Y_Recording;
-    readonly RECORDING_PENDING: Y_Recording;
-    readonly RECORDING_INVALID: Y_Recording;
-    readonly AUTOSTART_OFF: Y_AutoStart;
-    readonly AUTOSTART_ON: Y_AutoStart;
-    readonly AUTOSTART_INVALID: Y_AutoStart;
-    readonly BEACONDRIVEN_OFF: Y_BeaconDriven;
-    readonly BEACONDRIVEN_ON: Y_BeaconDriven;
-    readonly BEACONDRIVEN_INVALID: Y_BeaconDriven;
+    readonly RECORDING_OFF: YDataLogger_Recording;
+    readonly RECORDING_ON: YDataLogger_Recording;
+    readonly RECORDING_PENDING: YDataLogger_Recording;
+    readonly RECORDING_INVALID: YDataLogger_Recording;
+    readonly AUTOSTART_OFF: YDataLogger_AutoStart;
+    readonly AUTOSTART_ON: YDataLogger_AutoStart;
+    readonly AUTOSTART_INVALID: YDataLogger_AutoStart;
+    readonly BEACONDRIVEN_OFF: YDataLogger_BeaconDriven;
+    readonly BEACONDRIVEN_ON: YDataLogger_BeaconDriven;
+    readonly BEACONDRIVEN_INVALID: YDataLogger_BeaconDriven;
     readonly USAGE_INVALID: number;
-    readonly CLEARHISTORY_FALSE: Y_ClearHistory;
-    readonly CLEARHISTORY_TRUE: Y_ClearHistory;
-    readonly CLEARHISTORY_INVALID: Y_ClearHistory;
+    readonly CLEARHISTORY_FALSE: YDataLogger_ClearHistory;
+    readonly CLEARHISTORY_TRUE: YDataLogger_ClearHistory;
+    readonly CLEARHISTORY_INVALID: YDataLogger_ClearHistory;
     static readonly CURRENTRUNINDEX_INVALID: number;
     static readonly TIMEUTC_INVALID: number;
-    static readonly RECORDING_OFF: Y_Recording;
-    static readonly RECORDING_ON: Y_Recording;
-    static readonly RECORDING_PENDING: Y_Recording;
-    static readonly RECORDING_INVALID: Y_Recording;
-    static readonly AUTOSTART_OFF: Y_AutoStart;
-    static readonly AUTOSTART_ON: Y_AutoStart;
-    static readonly AUTOSTART_INVALID: Y_AutoStart;
-    static readonly BEACONDRIVEN_OFF: Y_BeaconDriven;
-    static readonly BEACONDRIVEN_ON: Y_BeaconDriven;
-    static readonly BEACONDRIVEN_INVALID: Y_BeaconDriven;
+    static readonly RECORDING_OFF: YDataLogger_Recording;
+    static readonly RECORDING_ON: YDataLogger_Recording;
+    static readonly RECORDING_PENDING: YDataLogger_Recording;
+    static readonly RECORDING_INVALID: YDataLogger_Recording;
+    static readonly AUTOSTART_OFF: YDataLogger_AutoStart;
+    static readonly AUTOSTART_ON: YDataLogger_AutoStart;
+    static readonly AUTOSTART_INVALID: YDataLogger_AutoStart;
+    static readonly BEACONDRIVEN_OFF: YDataLogger_BeaconDriven;
+    static readonly BEACONDRIVEN_ON: YDataLogger_BeaconDriven;
+    static readonly BEACONDRIVEN_INVALID: YDataLogger_BeaconDriven;
     static readonly USAGE_INVALID: number;
-    static readonly CLEARHISTORY_FALSE: Y_ClearHistory;
-    static readonly CLEARHISTORY_TRUE: Y_ClearHistory;
-    static readonly CLEARHISTORY_INVALID: Y_ClearHistory;
+    static readonly CLEARHISTORY_FALSE: YDataLogger_ClearHistory;
+    static readonly CLEARHISTORY_TRUE: YDataLogger_ClearHistory;
+    static readonly CLEARHISTORY_INVALID: YDataLogger_ClearHistory;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -2944,7 +2965,7 @@ export declare class YDataLogger extends YFunction {
      * @return an integer corresponding to the current run number, corresponding to the number of times the module was
      *         powered on with the dataLogger enabled at some point
      *
-     * On failure, throws an exception or returns Y_CURRENTRUNINDEX_INVALID.
+     * On failure, throws an exception or returns YDataLogger.CURRENTRUNINDEX_INVALID.
      */
     get_currentRunIndex(): Promise<number>;
     /**
@@ -2952,7 +2973,7 @@ export declare class YDataLogger extends YFunction {
      *
      * @return an integer corresponding to the Unix timestamp for current UTC time, if known
      *
-     * On failure, throws an exception or returns Y_TIMEUTC_INVALID.
+     * On failure, throws an exception or returns YDataLogger.TIMEUTC_INVALID.
      */
     get_timeUTC(): Promise<number>;
     /**
@@ -2960,7 +2981,7 @@ export declare class YDataLogger extends YFunction {
      *
      * @param newval : an integer corresponding to the current UTC time reference used for recorded data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -2968,32 +2989,33 @@ export declare class YDataLogger extends YFunction {
     /**
      * Returns the current activation state of the data logger.
      *
-     * @return a value among Y_RECORDING_OFF, Y_RECORDING_ON and Y_RECORDING_PENDING corresponding to the
-     * current activation state of the data logger
+     * @return a value among YDataLogger.RECORDING_OFF, YDataLogger.RECORDING_ON and
+     * YDataLogger.RECORDING_PENDING corresponding to the current activation state of the data logger
      *
-     * On failure, throws an exception or returns Y_RECORDING_INVALID.
+     * On failure, throws an exception or returns YDataLogger.RECORDING_INVALID.
      */
-    get_recording(): Promise<Y_Recording>;
+    get_recording(): Promise<YDataLogger_Recording>;
     /**
      * Changes the activation state of the data logger to start/stop recording data.
      *
-     * @param newval : a value among Y_RECORDING_OFF, Y_RECORDING_ON and Y_RECORDING_PENDING corresponding
-     * to the activation state of the data logger to start/stop recording data
+     * @param newval : a value among YDataLogger.RECORDING_OFF, YDataLogger.RECORDING_ON and
+     * YDataLogger.RECORDING_PENDING corresponding to the activation state of the data logger to
+     * start/stop recording data
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_recording(newval: Y_Recording): Promise<number>;
+    set_recording(newval: YDataLogger_Recording): Promise<number>;
     /**
      * Returns the default activation state of the data logger on power up.
      *
-     * @return either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the default activation state of the
-     * data logger on power up
+     * @return either YDataLogger.AUTOSTART_OFF or YDataLogger.AUTOSTART_ON, according to the default
+     * activation state of the data logger on power up
      *
-     * On failure, throws an exception or returns Y_AUTOSTART_INVALID.
+     * On failure, throws an exception or returns YDataLogger.AUTOSTART_INVALID.
      */
-    get_autoStart(): Promise<Y_AutoStart>;
+    get_autoStart(): Promise<YDataLogger_AutoStart>;
     /**
      * Changes the default activation state of the data logger on power up.
      * Do not forget to call the saveToFlash() method of the module to save the
@@ -3001,48 +3023,48 @@ export declare class YDataLogger extends YFunction {
      * starting up, it will wait for ~8 seconds before automatically starting to record  with
      * an arbitrary timestamp
      *
-     * @param newval : either Y_AUTOSTART_OFF or Y_AUTOSTART_ON, according to the default activation state
-     * of the data logger on power up
+     * @param newval : either YDataLogger.AUTOSTART_OFF or YDataLogger.AUTOSTART_ON, according to the
+     * default activation state of the data logger on power up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_autoStart(newval: Y_AutoStart): Promise<number>;
+    set_autoStart(newval: YDataLogger_AutoStart): Promise<number>;
     /**
      * Returns true if the data logger is synchronised with the localization beacon.
      *
-     * @return either Y_BEACONDRIVEN_OFF or Y_BEACONDRIVEN_ON, according to true if the data logger is
-     * synchronised with the localization beacon
+     * @return either YDataLogger.BEACONDRIVEN_OFF or YDataLogger.BEACONDRIVEN_ON, according to true if
+     * the data logger is synchronised with the localization beacon
      *
-     * On failure, throws an exception or returns Y_BEACONDRIVEN_INVALID.
+     * On failure, throws an exception or returns YDataLogger.BEACONDRIVEN_INVALID.
      */
-    get_beaconDriven(): Promise<Y_BeaconDriven>;
+    get_beaconDriven(): Promise<YDataLogger_BeaconDriven>;
     /**
      * Changes the type of synchronisation of the data logger.
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : either Y_BEACONDRIVEN_OFF or Y_BEACONDRIVEN_ON, according to the type of
-     * synchronisation of the data logger
+     * @param newval : either YDataLogger.BEACONDRIVEN_OFF or YDataLogger.BEACONDRIVEN_ON, according to
+     * the type of synchronisation of the data logger
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_beaconDriven(newval: Y_BeaconDriven): Promise<number>;
+    set_beaconDriven(newval: YDataLogger_BeaconDriven): Promise<number>;
     /**
      * Returns the percentage of datalogger memory in use.
      *
      * @return an integer corresponding to the percentage of datalogger memory in use
      *
-     * On failure, throws an exception or returns Y_USAGE_INVALID.
+     * On failure, throws an exception or returns YDataLogger.USAGE_INVALID.
      */
     get_usage(): Promise<number>;
-    get_clearHistory(): Promise<Y_ClearHistory>;
-    set_clearHistory(newval: Y_ClearHistory): Promise<number>;
+    get_clearHistory(): Promise<YDataLogger_ClearHistory>;
+    set_clearHistory(newval: YDataLogger_ClearHistory): Promise<number>;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a data logger for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -3052,11 +3074,11 @@ export declare class YDataLogger extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the data logger is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDataLogger.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDataLogger.isOnline() to test if the data logger is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a data logger by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -3064,14 +3086,14 @@ export declare class YDataLogger extends YFunction {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the data logger, for instance
+     *         RX420MA1.dataLogger.
      *
-     * @return a YDataLogger object allowing you to drive $THEFUNCTION$.
+     * @return a YDataLogger object allowing you to drive the data logger.
      */
     static FindDataLogger(func: string): YDataLogger;
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a data logger for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -3081,19 +3103,19 @@ export declare class YDataLogger extends YFunction {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the data logger is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YDataLogger.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YDataLogger.isOnline() to test if the data logger is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a data logger by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the data logger, for instance
+     *         RX420MA1.dataLogger.
      *
-     * @return a YDataLogger object allowing you to drive $THEFUNCTION$.
+     * @return a YDataLogger object allowing you to drive the data logger.
      */
     static FindDataLoggerInContext(yctx: YAPIContext, func: string): YDataLogger;
     /**
@@ -3113,7 +3135,7 @@ export declare class YDataLogger extends YFunction {
      * Clears the data logger memory and discards all recorded data streams.
      * This method also resets the current run index to zero.
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3133,23 +3155,36 @@ export declare class YDataLogger extends YFunction {
     get_dataSets(): Promise<YDataSet[]>;
     parse_dataSets(json: Uint8Array): Promise<YDataSet[]>;
     /**
-     * Returns the next DataLogger
+     * Continues the enumeration of data loggers started using yFirstDataLogger().
+     * Caution: You can't make any assumption about the returned data loggers order.
+     * If you want to find a specific a data logger, use DataLogger.findDataLogger()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YDataLogger}
+     * @return a pointer to a YDataLogger object, corresponding to
+     *         a data logger currently online, or a null pointer
+     *         if there are no more data loggers to enumerate.
      */
     nextDataLogger(): YDataLogger | null;
     /**
-     * Retrieves the first DataLogger in a YAPI context
+     * Starts the enumeration of data loggers currently accessible.
+     * Use the method YDataLogger.nextDataLogger() to iterate on
+     * next data loggers.
      *
-     * @returns {YDataLogger}
+     * @return a pointer to a YDataLogger object, corresponding to
+     *         the first data logger currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDataLogger(): YDataLogger | null;
     /**
-     * Retrieves the first DataLogger in a given context
+     * Starts the enumeration of data loggers currently accessible.
+     * Use the method YDataLogger.nextDataLogger() to iterate on
+     * next data loggers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YDataLogger}
+     * @return a pointer to a YDataLogger object, corresponding to
+     *         the first data logger currently online, or a null pointer
+     *         if there are none.
      */
     static FirstDataLoggerInContext(yctx: YAPIContext): YDataLogger | null;
 }
@@ -3165,6 +3200,11 @@ export declare class YSystemEnv {
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;
     loadfile(file: string | Blob): Promise<Uint8Array>;
     downloadfile(url: string): Promise<Uint8Array>;
+}
+export declare const enum Y_YHubType {
+    HUB_REGISTERED = 0,
+    HUB_PREREGISTERED = 1,
+    HUB_TESTONLY = 2
 }
 export declare abstract class YGenericHub {
     /** @member {YAPIContext} **/
@@ -3185,18 +3225,17 @@ export declare abstract class YGenericHub {
     missing: object;
     disconnecting: boolean;
     notbynOpenTimeout: number | null;
-    notbynTryOpen: Function | null;
+    notbynTryOpen: {
+        (): void;
+    } | null;
     _reconnectionTimer: any;
     _firstArrivalCallback: boolean;
     _missing: YBoolDict;
     _hubAdded: boolean;
-    _connectionType: number;
-    _HUB_REGISTRED: number;
-    _HUB_PREREGISTRED: number;
-    _HUB_TESTONLY: number;
+    _connectionType: Y_YHubType;
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
-    imm_setConnectionType(int_hubtype: number): void;
+    imm_setConnectionType(hubtype: Y_YHubType): void;
     imm_forceUpdate(): void;
     imm_logrequest(method: string, devUrl: string, obj_body: YHTTPBody | null): void;
     /** Make sure the hub can work properly
@@ -3206,6 +3245,9 @@ export declare abstract class YGenericHub {
      * @returns {number}
      */
     testHub(mstimeout: number, errmsg: YErrorMsg): Promise<number>;
+    /** Handle successful hub connection (including preregisterhub handling)
+     */
+    signalHubConnected(): Promise<void>;
     imm_testHubAgainLater(): boolean;
     hubUpdateDeviceList(): Promise<number>;
     imm_hasRwAccess(): boolean;
@@ -3472,7 +3514,7 @@ export declare class YAPIContext {
     _detectType: number;
     _hubs: YGenericHub[];
     _ssdpManager: YGenericSSDPManager | null;
-    _pendingHubs: YBoolDict;
+    _pendingHubs: YGenericHubDict;
     _devs: YDeviceDict;
     _snByUrl: YStringDict;
     _snByName: YStringDict;
@@ -3534,7 +3576,7 @@ export declare class YAPIContext {
      * Registers a log callback function. This callback will be called each time
      * the API have something to say. Quite useful to debug the API.
      *
-     * @param logfun {LogCallback | null} : a procedure taking a string parameter, or null
+     * @param logfun : a procedure taking a string parameter, or null
      *         to unregister a previously registered  callback.
      */
     RegisterLogFunction(logfun: YLogCallback): Promise<number>;
@@ -3763,7 +3805,7 @@ export declare class YAPIContext {
      * number is greater or equal. The build number is not relevant
      * with respect to the library compatibility.
      *
-     * @return {string} a character string describing the library version.
+     * @return a character string describing the library version.
      */
     GetAPIVersion(): Promise<string>;
     imm_GetAPIVersion(): string;
@@ -3777,13 +3819,13 @@ export declare class YAPIContext {
      * you must explicitly use yRegisterHub() to point the API to the
      * VirtualHub on which your devices are connected before trying to access them.
      *
-     * @param mode {number} : an integer corresponding to the type of automatic
+     * @param mode : an integer corresponding to the type of automatic
      *         device detection to use. Possible values are
      *         YAPI.DETECT_NONE, YAPI.DETECT_USB, YAPI.DETECT_NET,
      *         and YAPI.DETECT_ALL.
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3841,6 +3883,7 @@ export declare class YAPIContext {
     LogUnhandledPromiseRejections(): Promise<void>;
     imm_parseRegisteredUrl(str_url: string): _YY_UrlInfo;
     imm_registerHub_internal(urlInfo: _YY_UrlInfo): YGenericHub | null;
+    imm_forgetHub(hub: YGenericHub): void;
     /**
      * Setup the Yoctopuce library to use modules connected on a given machine. The
      * parameter will determine how the API will work. Use the following values:
@@ -3877,11 +3920,11 @@ export declare class YAPIContext {
      *
      * You can call <i>RegisterHub</i> several times to connect to several machines.
      *
-     * @param url {string} : a string containing either "usb","callback" or the
+     * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3893,11 +3936,11 @@ export declare class YAPIContext {
      * This makes it possible to register a network hub independently of the current
      * connectivity, and to try to contact it only when a device is actively needed.
      *
-     * @param url {string} : a string containing either "usb","callback" or the
+     * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3933,7 +3976,7 @@ export declare class YAPIContext {
      * Setup the Yoctopuce library to no more use modules connected on a previously
      * registered machine with RegisterHub.
      *
-     * @param url {string} : a string containing either "usb" or the
+     * @param url : a string containing either "usb" or the
      *         root URL of the hub to monitor
      */
     UnregisterHub(url: string): Promise<void>;
@@ -3943,12 +3986,12 @@ export declare class YAPIContext {
      * method. This method is useful to verify the authentication parameters for a hub. It
      * is possible to force this method to return after mstimeout milliseconds.
      *
-     * @param url {string} : a string containing either "usb","callback" or the
+     * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor
-     * @param mstimeout {number} : the number of millisecond available to test the connection.
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param mstimeout : the number of millisecond available to test the connection.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure returns a negative error code.
      */
@@ -3964,9 +4007,9 @@ export declare class YAPIContext {
      * detection is quite a heavy process, UpdateDeviceList shouldn't be called more
      * than once every two seconds.
      *
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -3976,9 +4019,9 @@ export declare class YAPIContext {
      * Force a hub discovery, if a callback as been registered with yRegisterHubDiscoveryCallback it
      * will be called for each net work hub that will respond to the discovery.
      *
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *         On failure, throws an exception or returns a negative error code.
      */
     TriggerHubDiscovery(errmsg?: YErrorMsg | null): Promise<number>;
@@ -3993,9 +4036,9 @@ export declare class YAPIContext {
      * This function may signal an error in case there is a communication problem
      * while contacting a module.
      *
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4011,11 +4054,11 @@ export declare class YAPIContext {
      * This function may signal an error in case there is a communication problem
      * while contacting a module.
      *
-     * @param ms_duration {number} : an integer corresponding to the duration of the pause,
+     * @param ms_duration : an integer corresponding to the duration of the pause,
      *         in milliseconds.
-     * @param errmsg {YErrorMsg} : a string passed by reference to receive any error message.
+     * @param errmsg : a string passed by reference to receive any error message.
      *
-     * @return {number} YAPI.SUCCESS when the call succeeds.
+     * @return YAPI.SUCCESS when the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -4048,7 +4091,7 @@ export declare class YAPIContext {
      * This counter can be used to compute delays in relation with
      * Yoctopuce devices, which also uses the millisecond as timebase.
      *
-     * @return {number} a long integer corresponding to the millisecond counter.
+     * @return a long integer corresponding to the millisecond counter.
      */
     GetTickCount(): number;
     imm_CheckLogicalName(name: string): boolean;
@@ -4059,9 +4102,9 @@ export declare class YAPIContext {
      * If you try to configure a logical name with an incorrect string,
      * the invalid characters are ignored.
      *
-     * @param name {string} : a string containing the name to check.
+     * @param name : a string containing the name to check.
      *
-     * @return {boolean} true if the name is valid, false otherwise.
+     * @return true if the name is valid, false otherwise.
      */
     CheckLogicalName(name: string): Promise<boolean>;
     /**
@@ -4069,7 +4112,7 @@ export declare class YAPIContext {
      * a device is plugged. This callback will be invoked while yUpdateDeviceList
      * is running. You will have to call this function on a regular basis.
      *
-     * @param arrivalCallback {DeviceArrivalCallback | null} : a procedure taking a YModule parameter, or null
+     * @param arrivalCallback : a procedure taking a YModule parameter, or null
      *         to unregister a previously registered  callback.
      */
     RegisterDeviceArrivalCallback(arrivalCallback: YDeviceUpdateCallback | null): Promise<void>;
@@ -4079,7 +4122,7 @@ export declare class YAPIContext {
      * a device is unplugged. This callback will be invoked while yUpdateDeviceList
      * is running. You will have to call this function on a regular basis.
      *
-     * @param removalCallback {DeviceRemovalCallback | null} : a procedure taking a YModule parameter, or null
+     * @param removalCallback : a procedure taking a YModule parameter, or null
      *         to unregister a previously registered  callback.
      */
     RegisterDeviceRemovalCallback(removalCallback: YDeviceUpdateCallback | null): Promise<void>;
@@ -4090,7 +4133,7 @@ export declare class YAPIContext {
      * network hub (this URL can be passed to RegisterHub). This callback will be invoked
      * while yUpdateDeviceList is running. You will have to call this function on a regular basis.
      *
-     * @param hubDiscoveryCallback {HubDiscoveryCallback | null} : a procedure taking two string parameter, the serial
+     * @param hubDiscoveryCallback : a procedure taking two string parameter, the serial
      *         number and the hub URL. Use null to unregister a previously registered  callback.
      */
     RegisterHubDiscoveryCallback(hubDiscoveryCallback: YHubDiscoveryCallback): Promise<number>;

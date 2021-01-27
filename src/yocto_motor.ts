@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_motor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -40,7 +40,7 @@
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
 //--- (YMotor definitions)
-export const enum Y_MotorStatus {
+export const enum YMotor_MotorStatus {
     IDLE = 0,
     BRAKE = 1,
     FORWD = 2,
@@ -70,7 +70,7 @@ export class YMotor extends YFunction
 {
     //--- (YMotor attributes declaration)
     _className: string;
-    _motorStatus: Y_MotorStatus = YMotor.MOTORSTATUS_INVALID;
+    _motorStatus: YMotor_MotorStatus = YMotor.MOTORSTATUS_INVALID;
     _drivingForce: number = YMotor.DRIVINGFORCE_INVALID;
     _brakingForce: number = YMotor.BRAKINGFORCE_INVALID;
     _cutOffVoltage: number = YMotor.CUTOFFVOLTAGE_INVALID;
@@ -82,15 +82,15 @@ export class YMotor extends YFunction
     _valueCallbackMotor: YMotorValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly MOTORSTATUS_IDLE: Y_MotorStatus = Y_MotorStatus.IDLE;
-    public readonly MOTORSTATUS_BRAKE: Y_MotorStatus = Y_MotorStatus.BRAKE;
-    public readonly MOTORSTATUS_FORWD: Y_MotorStatus = Y_MotorStatus.FORWD;
-    public readonly MOTORSTATUS_BACKWD: Y_MotorStatus = Y_MotorStatus.BACKWD;
-    public readonly MOTORSTATUS_LOVOLT: Y_MotorStatus = Y_MotorStatus.LOVOLT;
-    public readonly MOTORSTATUS_HICURR: Y_MotorStatus = Y_MotorStatus.HICURR;
-    public readonly MOTORSTATUS_HIHEAT: Y_MotorStatus = Y_MotorStatus.HIHEAT;
-    public readonly MOTORSTATUS_FAILSF: Y_MotorStatus = Y_MotorStatus.FAILSF;
-    public readonly MOTORSTATUS_INVALID: Y_MotorStatus = Y_MotorStatus.INVALID;
+    public readonly MOTORSTATUS_IDLE: YMotor_MotorStatus = YMotor_MotorStatus.IDLE;
+    public readonly MOTORSTATUS_BRAKE: YMotor_MotorStatus = YMotor_MotorStatus.BRAKE;
+    public readonly MOTORSTATUS_FORWD: YMotor_MotorStatus = YMotor_MotorStatus.FORWD;
+    public readonly MOTORSTATUS_BACKWD: YMotor_MotorStatus = YMotor_MotorStatus.BACKWD;
+    public readonly MOTORSTATUS_LOVOLT: YMotor_MotorStatus = YMotor_MotorStatus.LOVOLT;
+    public readonly MOTORSTATUS_HICURR: YMotor_MotorStatus = YMotor_MotorStatus.HICURR;
+    public readonly MOTORSTATUS_HIHEAT: YMotor_MotorStatus = YMotor_MotorStatus.HIHEAT;
+    public readonly MOTORSTATUS_FAILSF: YMotor_MotorStatus = YMotor_MotorStatus.FAILSF;
+    public readonly MOTORSTATUS_INVALID: YMotor_MotorStatus = YMotor_MotorStatus.INVALID;
     public readonly DRIVINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly BRAKINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CUTOFFVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -101,15 +101,15 @@ export class YMotor extends YFunction
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly MOTORSTATUS_IDLE: Y_MotorStatus = Y_MotorStatus.IDLE;
-    public static readonly MOTORSTATUS_BRAKE: Y_MotorStatus = Y_MotorStatus.BRAKE;
-    public static readonly MOTORSTATUS_FORWD: Y_MotorStatus = Y_MotorStatus.FORWD;
-    public static readonly MOTORSTATUS_BACKWD: Y_MotorStatus = Y_MotorStatus.BACKWD;
-    public static readonly MOTORSTATUS_LOVOLT: Y_MotorStatus = Y_MotorStatus.LOVOLT;
-    public static readonly MOTORSTATUS_HICURR: Y_MotorStatus = Y_MotorStatus.HICURR;
-    public static readonly MOTORSTATUS_HIHEAT: Y_MotorStatus = Y_MotorStatus.HIHEAT;
-    public static readonly MOTORSTATUS_FAILSF: Y_MotorStatus = Y_MotorStatus.FAILSF;
-    public static readonly MOTORSTATUS_INVALID: Y_MotorStatus = Y_MotorStatus.INVALID;
+    public static readonly MOTORSTATUS_IDLE: YMotor_MotorStatus = YMotor_MotorStatus.IDLE;
+    public static readonly MOTORSTATUS_BRAKE: YMotor_MotorStatus = YMotor_MotorStatus.BRAKE;
+    public static readonly MOTORSTATUS_FORWD: YMotor_MotorStatus = YMotor_MotorStatus.FORWD;
+    public static readonly MOTORSTATUS_BACKWD: YMotor_MotorStatus = YMotor_MotorStatus.BACKWD;
+    public static readonly MOTORSTATUS_LOVOLT: YMotor_MotorStatus = YMotor_MotorStatus.LOVOLT;
+    public static readonly MOTORSTATUS_HICURR: YMotor_MotorStatus = YMotor_MotorStatus.HICURR;
+    public static readonly MOTORSTATUS_HIHEAT: YMotor_MotorStatus = YMotor_MotorStatus.HIHEAT;
+    public static readonly MOTORSTATUS_FAILSF: YMotor_MotorStatus = YMotor_MotorStatus.FAILSF;
+    public static readonly MOTORSTATUS_INVALID: YMotor_MotorStatus = YMotor_MotorStatus.INVALID;
     public static readonly DRIVINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly BRAKINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CUTOFFVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -137,7 +137,7 @@ export class YMotor extends YFunction
     {
         switch(name) {
         case 'motorStatus':
-            this._motorStatus = <Y_MotorStatus> <number> val;
+            this._motorStatus = <YMotor_MotorStatus> <number> val;
             return 1;
         case 'drivingForce':
             this._drivingForce = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -181,12 +181,13 @@ export class YMotor extends YFunction
      * When an error condition occurred (LOVOLT, HICURR, HIHEAT, FAILSF), the controller
      * status must be explicitly reset using the resetStatus function.
      *
-     * @return a value among Y_MOTORSTATUS_IDLE, Y_MOTORSTATUS_BRAKE, Y_MOTORSTATUS_FORWD,
-     * Y_MOTORSTATUS_BACKWD, Y_MOTORSTATUS_LOVOLT, Y_MOTORSTATUS_HICURR, Y_MOTORSTATUS_HIHEAT and Y_MOTORSTATUS_FAILSF
+     * @return a value among YMotor.MOTORSTATUS_IDLE, YMotor.MOTORSTATUS_BRAKE, YMotor.MOTORSTATUS_FORWD,
+     * YMotor.MOTORSTATUS_BACKWD, YMotor.MOTORSTATUS_LOVOLT, YMotor.MOTORSTATUS_HICURR,
+     * YMotor.MOTORSTATUS_HIHEAT and YMotor.MOTORSTATUS_FAILSF
      *
-     * On failure, throws an exception or returns Y_MOTORSTATUS_INVALID.
+     * On failure, throws an exception or returns YMotor.MOTORSTATUS_INVALID.
      */
-    async get_motorStatus(): Promise<Y_MotorStatus>
+    async get_motorStatus(): Promise<YMotor_MotorStatus>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -198,7 +199,7 @@ export class YMotor extends YFunction
         return res;
     }
 
-    async set_motorStatus(newval: Y_MotorStatus): Promise<number>
+    async set_motorStatus(newval: YMotor_MotorStatus): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -214,7 +215,7 @@ export class YMotor extends YFunction
      *
      * @param newval : a floating point number corresponding to immediately the power sent to the motor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -231,7 +232,7 @@ export class YMotor extends YFunction
      * @return a floating point number corresponding to the power sent to the motor, as a percentage
      * between -100% and +100%
      *
-     * On failure, throws an exception or returns Y_DRIVINGFORCE_INVALID.
+     * On failure, throws an exception or returns YMotor.DRIVINGFORCE_INVALID.
      */
     async get_drivingForce(): Promise<number>
     {
@@ -253,7 +254,7 @@ export class YMotor extends YFunction
      * @param newval : a floating point number corresponding to immediately the braking force applied to
      * the motor (in percents)
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -270,7 +271,7 @@ export class YMotor extends YFunction
      *
      * @return a floating point number corresponding to the braking force applied to the motor, as a percentage
      *
-     * On failure, throws an exception or returns Y_BRAKINGFORCE_INVALID.
+     * On failure, throws an exception or returns YMotor.BRAKINGFORCE_INVALID.
      */
     async get_brakingForce(): Promise<number>
     {
@@ -297,7 +298,7 @@ export class YMotor extends YFunction
      * controller automatically switches to error state
      *         and prevents further current draw
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -317,7 +318,7 @@ export class YMotor extends YFunction
      * automatically switches to error state
      *         and prevents further current draw
      *
-     * On failure, throws an exception or returns Y_CUTOFFVOLTAGE_INVALID.
+     * On failure, throws an exception or returns YMotor.CUTOFFVOLTAGE_INVALID.
      */
     async get_cutOffVoltage(): Promise<number>
     {
@@ -338,7 +339,7 @@ export class YMotor extends YFunction
      * @return an integer corresponding to the current threshold (in mA) above which the controller automatically
      *         switches to error state
      *
-     * On failure, throws an exception or returns Y_OVERCURRENTLIMIT_INVALID.
+     * On failure, throws an exception or returns YMotor.OVERCURRENTLIMIT_INVALID.
      */
     async get_overCurrentLimit(): Promise<number>
     {
@@ -363,7 +364,7 @@ export class YMotor extends YFunction
      * controller automatically
      *         switches to error state
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -383,7 +384,7 @@ export class YMotor extends YFunction
      *
      * @param newval : a floating point number corresponding to the PWM frequency used to control the motor
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -399,7 +400,7 @@ export class YMotor extends YFunction
      *
      * @return a floating point number corresponding to the PWM frequency used to control the motor
      *
-     * On failure, throws an exception or returns Y_FREQUENCY_INVALID.
+     * On failure, throws an exception or returns YMotor.FREQUENCY_INVALID.
      */
     async get_frequency(): Promise<number>
     {
@@ -421,7 +422,7 @@ export class YMotor extends YFunction
      * frequency to help
      *         it start up
      *
-     * On failure, throws an exception or returns Y_STARTERTIME_INVALID.
+     * On failure, throws an exception or returns YMotor.STARTERTIME_INVALID.
      */
     async get_starterTime(): Promise<number>
     {
@@ -444,7 +445,7 @@ export class YMotor extends YFunction
      * at low frequency to help
      *         it start up
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -465,7 +466,7 @@ export class YMotor extends YFunction
      * autonomously without
      *         receiving any instruction from the control process
      *
-     * On failure, throws an exception or returns Y_FAILSAFETIMEOUT_INVALID.
+     * On failure, throws an exception or returns YMotor.FAILSAFETIMEOUT_INVALID.
      */
     async get_failSafeTimeout(): Promise<number>
     {
@@ -491,7 +492,7 @@ export class YMotor extends YFunction
      * run autonomously without
      *         receiving any instruction from the control process
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -522,7 +523,7 @@ export class YMotor extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a motor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -532,11 +533,11 @@ export class YMotor extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMotor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMotor.isOnline() to test if the motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -544,10 +545,10 @@ export class YMotor extends YFunction
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the motor, for instance
+     *         MOTORCTL.motor.
      *
-     * @return a YMotor object allowing you to drive $THEFUNCTION$.
+     * @return a YMotor object allowing you to drive the motor.
      */
     static FindMotor(func: string): YMotor
     {
@@ -561,7 +562,7 @@ export class YMotor extends YFunction
     }
 
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a motor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -571,19 +572,19 @@ export class YMotor extends YFunction
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the motor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YMotor.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YMotor.isOnline() to test if the motor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a motor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the motor, for instance
+     *         MOTORCTL.motor.
      *
-     * @return a YMotor object allowing you to drive $THEFUNCTION$.
+     * @return a YMotor object allowing you to drive the motor.
      */
     static FindMotorInContext(yctx: YAPIContext, func: string): YMotor
     {
@@ -666,7 +667,7 @@ export class YMotor extends YFunction
      * @param targetPower : desired motor power, in percents (between -100% and +100%)
      * @param delay : duration (in ms) of the transition
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -681,7 +682,7 @@ export class YMotor extends YFunction
      * @param targetPower : desired braking force, in percents
      * @param delay : duration (in ms) of the transition
      *
-     * @return YAPI_SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -691,9 +692,14 @@ export class YMotor extends YFunction
     }
 
     /**
-     * Returns the next Motor
+     * Continues the enumeration of motors started using yFirstMotor().
+     * Caution: You can't make any assumption about the returned motors order.
+     * If you want to find a specific a motor, use Motor.findMotor()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YMotor}
+     * @return a pointer to a YMotor object, corresponding to
+     *         a motor currently online, or a null pointer
+     *         if there are no more motors to enumerate.
      */
     nextMotor(): YMotor | null
     {
@@ -705,9 +711,13 @@ export class YMotor extends YFunction
     }
 
     /**
-     * Retrieves the first Motor in a YAPI context
+     * Starts the enumeration of motors currently accessible.
+     * Use the method YMotor.nextMotor() to iterate on
+     * next motors.
      *
-     * @returns {YMotor}
+     * @return a pointer to a YMotor object, corresponding to
+     *         the first motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMotor(): YMotor | null
     {
@@ -717,11 +727,15 @@ export class YMotor extends YFunction
     }
 
     /**
-     * Retrieves the first Motor in a given context
+     * Starts the enumeration of motors currently accessible.
+     * Use the method YMotor.nextMotor() to iterate on
+     * next motors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YMotor}
+     * @return a pointer to a YMotor object, corresponding to
+     *         the first motor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstMotorInContext(yctx: YAPIContext): YMotor | null
     {

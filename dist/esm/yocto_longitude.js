@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_longitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -62,7 +62,7 @@ export class YLongitude extends YSensor {
     }
     //--- (YLongitude implementation)
     /**
-     * Retrieves $AFUNCTION$ for a given identifier.
+     * Retrieves a longitude sensor for a given identifier.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -72,11 +72,11 @@ export class YLongitude extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the longitude sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLongitude.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLongitude.isOnline() to test if the longitude sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a longitude sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -84,10 +84,10 @@ export class YLongitude extends YSensor {
      * you are certain that the matching device is plugged, make sure that you did
      * call registerHub() at application initialization time.
      *
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the longitude sensor, for instance
+     *         YGNSSMK2.longitude.
      *
-     * @return a YLongitude object allowing you to drive $THEFUNCTION$.
+     * @return a YLongitude object allowing you to drive the longitude sensor.
      */
     static FindLongitude(func) {
         let obj;
@@ -99,7 +99,7 @@ export class YLongitude extends YSensor {
         return obj;
     }
     /**
-     * Retrieves $AFUNCTION$ for a given identifier in a YAPI context.
+     * Retrieves a longitude sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      * <ul>
      * <li>FunctionLogicalName</li>
@@ -109,19 +109,19 @@ export class YLongitude extends YSensor {
      * <li>ModuleLogicalName.FunctionLogicalName</li>
      * </ul>
      *
-     * This function does not require that $THEFUNCTION$ is online at the time
+     * This function does not require that the longitude sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
-     * Use the method YLongitude.isOnline() to test if $THEFUNCTION$ is
+     * Use the method YLongitude.isOnline() to test if the longitude sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * $AFUNCTION$ by logical name, no error is notified: the first instance
+     * a longitude sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
      * @param yctx : a YAPI context
-     * @param func : a string that uniquely characterizes $THEFUNCTION$, for instance
-     *         $FULLHARDWAREID$.
+     * @param func : a string that uniquely characterizes the longitude sensor, for instance
+     *         YGNSSMK2.longitude.
      *
-     * @return a YLongitude object allowing you to drive $THEFUNCTION$.
+     * @return a YLongitude object allowing you to drive the longitude sensor.
      */
     static FindLongitudeInContext(yctx, func) {
         let obj;
@@ -213,9 +213,14 @@ export class YLongitude extends YSensor {
         return 0;
     }
     /**
-     * Returns the next Longitude
+     * Continues the enumeration of longitude sensors started using yFirstLongitude().
+     * Caution: You can't make any assumption about the returned longitude sensors order.
+     * If you want to find a specific a longitude sensor, use Longitude.findLongitude()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YLongitude}
+     * @return a pointer to a YLongitude object, corresponding to
+     *         a longitude sensor currently online, or a null pointer
+     *         if there are no more longitude sensors to enumerate.
      */
     nextLongitude() {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
@@ -227,9 +232,13 @@ export class YLongitude extends YSensor {
         return YLongitude.FindLongitudeInContext(this._yapi, next_hwid);
     }
     /**
-     * Retrieves the first Longitude in a YAPI context
+     * Starts the enumeration of longitude sensors currently accessible.
+     * Use the method YLongitude.nextLongitude() to iterate on
+     * next longitude sensors.
      *
-     * @returns {YLongitude}
+     * @return a pointer to a YLongitude object, corresponding to
+     *         the first longitude sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLongitude() {
         let next_hwid = YAPI.imm_getFirstHardwareId('Longitude');
@@ -238,11 +247,15 @@ export class YLongitude extends YSensor {
         return YLongitude.FindLongitude(next_hwid);
     }
     /**
-     * Retrieves the first Longitude in a given context
+     * Starts the enumeration of longitude sensors currently accessible.
+     * Use the method YLongitude.nextLongitude() to iterate on
+     * next longitude sensors.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YLongitude}
+     * @return a pointer to a YLongitude object, corresponding to
+     *         the first longitude sensor currently online, or a null pointer
+     *         if there are none.
      */
     static FirstLongitudeInContext(yctx) {
         let next_hwid = yctx.imm_getFirstHardwareId('Longitude');
