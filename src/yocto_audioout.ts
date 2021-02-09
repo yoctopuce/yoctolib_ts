@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_audioout.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -39,15 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YAudioOut definitions)
-export const enum YAudioOut_Mute {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YAudioOutValueCallback { (func: YAudioOut, value: string): void }
-//--- (end of YAudioOut definitions)
-
 //--- (YAudioOut class start)
 /**
  * YAudioOut Class: audio output control interface
@@ -61,33 +52,30 @@ export class YAudioOut extends YFunction
     //--- (YAudioOut attributes declaration)
     _className: string;
     _volume: number = YAudioOut.VOLUME_INVALID;
-    _mute: YAudioOut_Mute = YAudioOut.MUTE_INVALID;
+    _mute: YAudioOut.MUTE = YAudioOut.MUTE_INVALID;
     _volumeRange: string = YAudioOut.VOLUMERANGE_INVALID;
     _signal: number = YAudioOut.SIGNAL_INVALID;
     _noSignalFor: number = YAudioOut.NOSIGNALFOR_INVALID;
-    _valueCallbackAudioOut: YAudioOutValueCallback | null = null;
+    _valueCallbackAudioOut: YAudioOut.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly VOLUME_INVALID: number = YAPI.INVALID_UINT;
-    public readonly MUTE_FALSE: YAudioOut_Mute = YAudioOut_Mute.FALSE;
-    public readonly MUTE_TRUE: YAudioOut_Mute = YAudioOut_Mute.TRUE;
-    public readonly MUTE_INVALID: YAudioOut_Mute = YAudioOut_Mute.INVALID;
+    public readonly MUTE_FALSE: YAudioOut.MUTE = 0;
+    public readonly MUTE_TRUE: YAudioOut.MUTE = 1;
+    public readonly MUTE_INVALID: YAudioOut.MUTE = -1;
     public readonly VOLUMERANGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly SIGNAL_INVALID: number = YAPI.INVALID_INT;
     public readonly NOSIGNALFOR_INVALID: number = YAPI.INVALID_INT;
 
     // API symbols as static members
     public static readonly VOLUME_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly MUTE_FALSE: YAudioOut_Mute = YAudioOut_Mute.FALSE;
-    public static readonly MUTE_TRUE: YAudioOut_Mute = YAudioOut_Mute.TRUE;
-    public static readonly MUTE_INVALID: YAudioOut_Mute = YAudioOut_Mute.INVALID;
+    public static readonly MUTE_FALSE: YAudioOut.MUTE = 0;
+    public static readonly MUTE_TRUE: YAudioOut.MUTE = 1;
+    public static readonly MUTE_INVALID: YAudioOut.MUTE = -1;
     public static readonly VOLUMERANGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SIGNAL_INVALID: number = YAPI.INVALID_INT;
     public static readonly NOSIGNALFOR_INVALID: number = YAPI.INVALID_INT;
     //--- (end of YAudioOut attributes declaration)
-
-//--- (YAudioOut return codes)
-//--- (end of YAudioOut return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -106,7 +94,7 @@ export class YAudioOut extends YFunction
             this._volume = <number> <number> val;
             return 1;
         case 'mute':
-            this._mute = <YAudioOut_Mute> <number> val;
+            this._mute = <YAudioOut.MUTE> <number> val;
             return 1;
         case 'volumeRange':
             this._volumeRange = <string> <string> val;
@@ -165,7 +153,7 @@ export class YAudioOut extends YFunction
      *
      * On failure, throws an exception or returns YAudioOut.MUTE_INVALID.
      */
-    async get_mute(): Promise<YAudioOut_Mute>
+    async get_mute(): Promise<YAudioOut.MUTE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -187,7 +175,7 @@ export class YAudioOut extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_mute(newval: YAudioOut_Mute): Promise<number>
+    async set_mute(newval: YAudioOut.MUTE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -340,7 +328,7 @@ export class YAudioOut extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YAudioOutValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YAudioOut.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -427,5 +415,16 @@ export class YAudioOut extends YFunction
     }
 
     //--- (end of YAudioOut implementation)
+}
+
+export namespace YAudioOut {
+    //--- (YAudioOut definitions)
+    export const enum MUTE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YAudioOut, value: string): void }
+    //--- (end of YAudioOut definitions)
 }
 

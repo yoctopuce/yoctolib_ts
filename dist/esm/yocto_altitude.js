@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_altitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YAltitude definitions)
 //--- (YAltitude class start)
 /**
  * YAltitude Class: altimeter control interface, available for instance in the Yocto-Altimeter-V2 or
@@ -52,8 +51,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YAltitude class start)
 export class YAltitude extends YSensor {
     //--- (end of YAltitude attributes declaration)
-    //--- (YAltitude return codes)
-    //--- (end of YAltitude return codes)
     constructor(yapi, func) {
         //--- (YAltitude constructor)
         super(yapi, func);

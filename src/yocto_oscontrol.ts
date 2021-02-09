@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -39,10 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YOsControl definitions)
-export interface YOsControlValueCallback { (func: YOsControl, value: string): void }
-//--- (end of YOsControl definitions)
-
 //--- (YOsControl class start)
 /**
  * YOsControl Class: Operating system control interface via the VirtualHub application
@@ -58,7 +54,7 @@ export class YOsControl extends YFunction
     //--- (YOsControl attributes declaration)
     _className: string;
     _shutdownCountdown: number = YOsControl.SHUTDOWNCOUNTDOWN_INVALID;
-    _valueCallbackOsControl: YOsControlValueCallback | null = null;
+    _valueCallbackOsControl: YOsControl.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly SHUTDOWNCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
@@ -66,9 +62,6 @@ export class YOsControl extends YFunction
     // API symbols as static members
     public static readonly SHUTDOWNCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YOsControl attributes declaration)
-
-//--- (YOsControl return codes)
-//--- (end of YOsControl return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -204,7 +197,7 @@ export class YOsControl extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YOsControlValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YOsControl.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -305,5 +298,11 @@ export class YOsControl extends YFunction
     }
 
     //--- (end of YOsControl implementation)
+}
+
+export namespace YOsControl {
+    //--- (YOsControl definitions)
+    export interface ValueCallback { (func: YOsControl, value: string): void }
+    //--- (end of YOsControl definitions)
 }
 

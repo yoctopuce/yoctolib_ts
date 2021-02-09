@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YOsControl definitions)
 //--- (YOsControl class start)
 /**
  * YOsControl Class: Operating system control interface via the VirtualHub application
@@ -49,8 +48,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YOsControl class start)
 export class YOsControl extends YFunction {
     //--- (end of YOsControl attributes declaration)
-    //--- (YOsControl return codes)
-    //--- (end of YOsControl return codes)
     constructor(yapi, func) {
         //--- (YOsControl constructor)
         super(yapi, func);

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_multicellweighscale.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YMultiCellWeighScale = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YMultiCellWeighScale definitions)
 //--- (YMultiCellWeighScale class start)
 /**
  * YMultiCellWeighScale Class: multi-cell weighing scale sensor control interface, available for
@@ -55,8 +54,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YMultiCellWeighScale class start)
 class YMultiCellWeighScale extends yocto_api_js_1.YSensor {
     //--- (end of YMultiCellWeighScale attributes declaration)
-    //--- (YMultiCellWeighScale return codes)
-    //--- (end of YMultiCellWeighScale return codes)
     constructor(yapi, func) {
         //--- (YMultiCellWeighScale constructor)
         super(yapi, func);
@@ -74,13 +71,13 @@ class YMultiCellWeighScale extends yocto_api_js_1.YSensor {
         this._timedReportCallbackMultiCellWeighScale = null;
         // API symbols as object properties
         this.CELLCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.EXTERNALSENSE_FALSE = 0 /* FALSE */;
-        this.EXTERNALSENSE_TRUE = 1 /* TRUE */;
-        this.EXTERNALSENSE_INVALID = -1 /* INVALID */;
-        this.EXCITATION_OFF = 0 /* OFF */;
-        this.EXCITATION_DC = 1 /* DC */;
-        this.EXCITATION_AC = 2 /* AC */;
-        this.EXCITATION_INVALID = -1 /* INVALID */;
+        this.EXTERNALSENSE_FALSE = 0;
+        this.EXTERNALSENSE_TRUE = 1;
+        this.EXTERNALSENSE_INVALID = -1;
+        this.EXCITATION_OFF = 0;
+        this.EXCITATION_DC = 1;
+        this.EXCITATION_AC = 2;
+        this.EXCITATION_INVALID = -1;
         this.TEMPAVGADAPTRATIO_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.TEMPCHGADAPTRATIO_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.COMPTEMPAVG_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
@@ -665,13 +662,13 @@ class YMultiCellWeighScale extends yocto_api_js_1.YSensor {
 exports.YMultiCellWeighScale = YMultiCellWeighScale;
 // API symbols as static members
 YMultiCellWeighScale.CELLCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YMultiCellWeighScale.EXTERNALSENSE_FALSE = 0 /* FALSE */;
-YMultiCellWeighScale.EXTERNALSENSE_TRUE = 1 /* TRUE */;
-YMultiCellWeighScale.EXTERNALSENSE_INVALID = -1 /* INVALID */;
-YMultiCellWeighScale.EXCITATION_OFF = 0 /* OFF */;
-YMultiCellWeighScale.EXCITATION_DC = 1 /* DC */;
-YMultiCellWeighScale.EXCITATION_AC = 2 /* AC */;
-YMultiCellWeighScale.EXCITATION_INVALID = -1 /* INVALID */;
+YMultiCellWeighScale.EXTERNALSENSE_FALSE = 0;
+YMultiCellWeighScale.EXTERNALSENSE_TRUE = 1;
+YMultiCellWeighScale.EXTERNALSENSE_INVALID = -1;
+YMultiCellWeighScale.EXCITATION_OFF = 0;
+YMultiCellWeighScale.EXCITATION_DC = 1;
+YMultiCellWeighScale.EXCITATION_AC = 2;
+YMultiCellWeighScale.EXCITATION_INVALID = -1;
 YMultiCellWeighScale.TEMPAVGADAPTRATIO_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YMultiCellWeighScale.TEMPCHGADAPTRATIO_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YMultiCellWeighScale.COMPTEMPAVG_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;

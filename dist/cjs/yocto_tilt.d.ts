@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tilt.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_tilt.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Tilt functions
  *
@@ -37,18 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YTilt_Axis {
-    X = 0,
-    Y = 1,
-    Z = 2,
-    INVALID = -1
-}
-export interface YTiltValueCallback {
-    (func: YTilt, value: string): void;
-}
-export interface YTiltTimedReportCallback {
-    (func: YTilt, measure: YMeasure): void;
-}
 /**
  * YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2 or the Yocto-Inclinometer
  *
@@ -65,19 +53,19 @@ export interface YTiltTimedReportCallback {
 export declare class YTilt extends YSensor {
     _className: string;
     _bandwidth: number;
-    _axis: YTilt_Axis;
-    _valueCallbackTilt: YTiltValueCallback | null;
-    _timedReportCallbackTilt: YTiltTimedReportCallback | null;
+    _axis: YTilt.AXIS;
+    _valueCallbackTilt: YTilt.ValueCallback | null;
+    _timedReportCallbackTilt: YTilt.TimedReportCallback | null;
     readonly BANDWIDTH_INVALID: number;
-    readonly AXIS_X: YTilt_Axis;
-    readonly AXIS_Y: YTilt_Axis;
-    readonly AXIS_Z: YTilt_Axis;
-    readonly AXIS_INVALID: YTilt_Axis;
+    readonly AXIS_X: YTilt.AXIS;
+    readonly AXIS_Y: YTilt.AXIS;
+    readonly AXIS_Z: YTilt.AXIS;
+    readonly AXIS_INVALID: YTilt.AXIS;
     static readonly BANDWIDTH_INVALID: number;
-    static readonly AXIS_X: YTilt_Axis;
-    static readonly AXIS_Y: YTilt_Axis;
-    static readonly AXIS_Z: YTilt_Axis;
-    static readonly AXIS_INVALID: YTilt_Axis;
+    static readonly AXIS_X: YTilt.AXIS;
+    static readonly AXIS_Y: YTilt.AXIS;
+    static readonly AXIS_Z: YTilt.AXIS;
+    static readonly AXIS_INVALID: YTilt.AXIS;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -101,7 +89,7 @@ export declare class YTilt extends YSensor {
      * On failure, throws an exception or returns a negative error code.
      */
     set_bandwidth(newval: number): Promise<number>;
-    get_axis(): Promise<YTilt_Axis>;
+    get_axis(): Promise<YTilt.AXIS>;
     /**
      * Retrieves a tilt sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -168,7 +156,7 @@ export declare class YTilt extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YTiltValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YTilt.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -181,7 +169,7 @@ export declare class YTilt extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YTiltTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YTilt.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Performs a zero calibration for the tilt measurement (Yocto-Inclinometer only).
@@ -236,4 +224,18 @@ export declare class YTilt extends YSensor {
      *         if there are none.
      */
     static FirstTiltInContext(yctx: YAPIContext): YTilt | null;
+}
+export declare namespace YTilt {
+    const enum AXIS {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YTilt, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YTilt, measure: YMeasure): void;
+    }
 }

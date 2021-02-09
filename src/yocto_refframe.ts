@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_refframe.ts 43775 2021-02-09 10:35:51Z mvuilleu $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -39,37 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YRefFrame definitions)
-export const enum YRefFrame_FusionMode {
-    NDOF = 0,
-    NDOF_FMC_OFF = 1,
-    M4G = 2,
-    COMPASS = 3,
-    IMU = 4,
-    INCLIN_90DEG_1G8 = 5,
-    INCLIN_90DEG_3G6 = 6,
-    INCLIN_10DEG = 7,
-    INVALID = -1
-}
-export const enum YRefFrame_MountPosition {
-    BOTTOM = 0,
-    TOP = 1,
-    FRONT = 2,
-    REAR = 3,
-    RIGHT = 4,
-    LEFT = 5,
-    INVALID = 6
-}
-export const enum YRefFrame_MountOrientation {
-    TWELVE = 0,
-    THREE = 1,
-    SIX = 2,
-    NINE = 3,
-    INVALID = 4
-}
-export interface YRefFrameValueCallback { (func: YRefFrame, value: string): void }
-//--- (end of YRefFrame definitions)
-
 //--- (YRefFrame class start)
 /**
  * YRefFrame Class: 3D reference frame configuration interface, available for instance in the
@@ -90,8 +59,8 @@ export class YRefFrame extends YFunction
     _mountPos: number = YRefFrame.MOUNTPOS_INVALID;
     _bearing: number = YRefFrame.BEARING_INVALID;
     _calibrationParam: string = YRefFrame.CALIBRATIONPARAM_INVALID;
-    _fusionMode: YRefFrame_FusionMode = YRefFrame.FUSIONMODE_INVALID;
-    _valueCallbackRefFrame: YRefFrameValueCallback | null = null;
+    _fusionMode: YRefFrame.FUSIONMODE = YRefFrame.FUSIONMODE_INVALID;
+    _valueCallbackRefFrame: YRefFrame.ValueCallback | null = null;
     _calibV2: boolean = false;
     _calibStage: number = 0;
     _calibStageHint: string = '';
@@ -118,33 +87,54 @@ export class YRefFrame extends YFunction
     public readonly MOUNTPOS_INVALID: number = YAPI.INVALID_UINT;
     public readonly BEARING_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CALIBRATIONPARAM_INVALID: string = YAPI.INVALID_STRING;
-    public readonly FUSIONMODE_NDOF: YRefFrame_FusionMode = YRefFrame_FusionMode.NDOF;
-    public readonly FUSIONMODE_NDOF_FMC_OFF: YRefFrame_FusionMode = YRefFrame_FusionMode.NDOF_FMC_OFF;
-    public readonly FUSIONMODE_M4G: YRefFrame_FusionMode = YRefFrame_FusionMode.M4G;
-    public readonly FUSIONMODE_COMPASS: YRefFrame_FusionMode = YRefFrame_FusionMode.COMPASS;
-    public readonly FUSIONMODE_IMU: YRefFrame_FusionMode = YRefFrame_FusionMode.IMU;
-    public readonly FUSIONMODE_INCLIN_90DEG_1G8: YRefFrame_FusionMode = YRefFrame_FusionMode.INCLIN_90DEG_1G8;
-    public readonly FUSIONMODE_INCLIN_90DEG_3G6: YRefFrame_FusionMode = YRefFrame_FusionMode.INCLIN_90DEG_3G6;
-    public readonly FUSIONMODE_INCLIN_10DEG: YRefFrame_FusionMode = YRefFrame_FusionMode.INCLIN_10DEG;
-    public readonly FUSIONMODE_INVALID: YRefFrame_FusionMode = YRefFrame_FusionMode.INVALID;
+    public readonly FUSIONMODE_NDOF: YRefFrame.FUSIONMODE = 0;
+    public readonly FUSIONMODE_NDOF_FMC_OFF: YRefFrame.FUSIONMODE = 1;
+    public readonly FUSIONMODE_M4G: YRefFrame.FUSIONMODE = 2;
+    public readonly FUSIONMODE_COMPASS: YRefFrame.FUSIONMODE = 3;
+    public readonly FUSIONMODE_IMU: YRefFrame.FUSIONMODE = 4;
+    public readonly FUSIONMODE_INCLIN_90DEG_1G8: YRefFrame.FUSIONMODE = 5;
+    public readonly FUSIONMODE_INCLIN_90DEG_3G6: YRefFrame.FUSIONMODE = 6;
+    public readonly FUSIONMODE_INCLIN_10DEG: YRefFrame.FUSIONMODE = 7;
+    public readonly FUSIONMODE_INVALID: YRefFrame.FUSIONMODE = -1;
+    public readonly MOUNTPOSITION_BOTTOM: YRefFrame.MOUNTPOSITION = 0;
+    public readonly MOUNTPOSITION_TOP: YRefFrame.MOUNTPOSITION = 1;
+    public readonly MOUNTPOSITION_FRONT: YRefFrame.MOUNTPOSITION = 2;
+    public readonly MOUNTPOSITION_REAR: YRefFrame.MOUNTPOSITION = 3;
+    public readonly MOUNTPOSITION_RIGHT: YRefFrame.MOUNTPOSITION = 4;
+    public readonly MOUNTPOSITION_LEFT: YRefFrame.MOUNTPOSITION = 5;
+    public readonly MOUNTPOSITION_INVALID: YRefFrame.MOUNTPOSITION = 6;
+    public readonly MOUNTORIENTATION_TWELVE: YRefFrame.MOUNTORIENTATION = 0;
+    public readonly MOUNTORIENTATION_THREE: YRefFrame.MOUNTORIENTATION = 1;
+    public readonly MOUNTORIENTATION_SIX: YRefFrame.MOUNTORIENTATION = 2;
+    public readonly MOUNTORIENTATION_NINE: YRefFrame.MOUNTORIENTATION = 3;
+    public readonly MOUNTORIENTATION_INVALID: YRefFrame.MOUNTORIENTATION = 4;
 
     // API symbols as static members
     public static readonly MOUNTPOS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly BEARING_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CALIBRATIONPARAM_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly FUSIONMODE_NDOF: YRefFrame_FusionMode = YRefFrame_FusionMode.NDOF;
-    public static readonly FUSIONMODE_NDOF_FMC_OFF: YRefFrame_FusionMode = YRefFrame_FusionMode.NDOF_FMC_OFF;
-    public static readonly FUSIONMODE_M4G: YRefFrame_FusionMode = YRefFrame_FusionMode.M4G;
-    public static readonly FUSIONMODE_COMPASS: YRefFrame_FusionMode = YRefFrame_FusionMode.COMPASS;
-    public static readonly FUSIONMODE_IMU: YRefFrame_FusionMode = YRefFrame_FusionMode.IMU;
-    public static readonly FUSIONMODE_INCLIN_90DEG_1G8: YRefFrame_FusionMode = YRefFrame_FusionMode.INCLIN_90DEG_1G8;
-    public static readonly FUSIONMODE_INCLIN_90DEG_3G6: YRefFrame_FusionMode = YRefFrame_FusionMode.INCLIN_90DEG_3G6;
-    public static readonly FUSIONMODE_INCLIN_10DEG: YRefFrame_FusionMode = YRefFrame_FusionMode.INCLIN_10DEG;
-    public static readonly FUSIONMODE_INVALID: YRefFrame_FusionMode = YRefFrame_FusionMode.INVALID;
+    public static readonly FUSIONMODE_NDOF: YRefFrame.FUSIONMODE = 0;
+    public static readonly FUSIONMODE_NDOF_FMC_OFF: YRefFrame.FUSIONMODE = 1;
+    public static readonly FUSIONMODE_M4G: YRefFrame.FUSIONMODE = 2;
+    public static readonly FUSIONMODE_COMPASS: YRefFrame.FUSIONMODE = 3;
+    public static readonly FUSIONMODE_IMU: YRefFrame.FUSIONMODE = 4;
+    public static readonly FUSIONMODE_INCLIN_90DEG_1G8: YRefFrame.FUSIONMODE = 5;
+    public static readonly FUSIONMODE_INCLIN_90DEG_3G6: YRefFrame.FUSIONMODE = 6;
+    public static readonly FUSIONMODE_INCLIN_10DEG: YRefFrame.FUSIONMODE = 7;
+    public static readonly FUSIONMODE_INVALID: YRefFrame.FUSIONMODE = -1;
+    public static readonly MOUNTPOSITION_BOTTOM: YRefFrame.MOUNTPOSITION = 0;
+    public static readonly MOUNTPOSITION_TOP: YRefFrame.MOUNTPOSITION = 1;
+    public static readonly MOUNTPOSITION_FRONT: YRefFrame.MOUNTPOSITION = 2;
+    public static readonly MOUNTPOSITION_REAR: YRefFrame.MOUNTPOSITION = 3;
+    public static readonly MOUNTPOSITION_RIGHT: YRefFrame.MOUNTPOSITION = 4;
+    public static readonly MOUNTPOSITION_LEFT: YRefFrame.MOUNTPOSITION = 5;
+    public static readonly MOUNTPOSITION_INVALID: YRefFrame.MOUNTPOSITION = 6;
+    public static readonly MOUNTORIENTATION_TWELVE: YRefFrame.MOUNTORIENTATION = 0;
+    public static readonly MOUNTORIENTATION_THREE: YRefFrame.MOUNTORIENTATION = 1;
+    public static readonly MOUNTORIENTATION_SIX: YRefFrame.MOUNTORIENTATION = 2;
+    public static readonly MOUNTORIENTATION_NINE: YRefFrame.MOUNTORIENTATION = 3;
+    public static readonly MOUNTORIENTATION_INVALID: YRefFrame.MOUNTORIENTATION = 4;
     //--- (end of YRefFrame attributes declaration)
-
-//--- (YRefFrame return codes)
-//--- (end of YRefFrame return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -169,7 +159,7 @@ export class YRefFrame extends YFunction
             this._calibrationParam = <string> <string> val;
             return 1;
         case 'fusionMode':
-            this._fusionMode = <YRefFrame_FusionMode> <number> val;
+            this._fusionMode = <YRefFrame.FUSIONMODE> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -273,7 +263,7 @@ export class YRefFrame extends YFunction
      *
      * On failure, throws an exception or returns YRefFrame.FUSIONMODE_INVALID.
      */
-    async get_fusionMode(): Promise<YRefFrame_FusionMode>
+    async get_fusionMode(): Promise<YRefFrame.FUSIONMODE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -298,7 +288,7 @@ export class YRefFrame extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_fusionMode(newval: YRefFrame_FusionMode): Promise<number>
+    async set_fusionMode(newval: YRefFrame.FUSIONMODE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -391,7 +381,7 @@ export class YRefFrame extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YRefFrameValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YRefFrame.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -430,21 +420,21 @@ export class YRefFrame extends YFunction
      * pitch/roll tilt sensors.
      *
      * @return a value among the YRefFrame.MOUNTPOSITION enumeration
-     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,  YRefFrame.MOUNTPOSITION_TOP,
      *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
      *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
      *
      * On failure, throws an exception or returns YRefFrame.MOUNTPOSITION_INVALID.
      */
-    async get_mountPosition(): Promise<YRefFrame_MountPosition>
+    async get_mountPosition(): Promise<YRefFrame.MOUNTPOSITION>
     {
         let position: number;
         position = await this.get_mountPos();
         if (position < 0) {
-            return YRefFrame_MountPosition.INVALID;
+            return YRefFrame.MOUNTPOSITION_INVALID;
         }
-        return <YRefFrame_MountPosition> ((position) >> (2));
+        return <YRefFrame.MOUNTPOSITION> ((position) >> (2));
     }
 
     /**
@@ -462,14 +452,14 @@ export class YRefFrame extends YFunction
      *
      * On failure, throws an exception or returns YRefFrame.MOUNTORIENTATION_INVALID.
      */
-    async get_mountOrientation(): Promise<YRefFrame_MountOrientation>
+    async get_mountOrientation(): Promise<YRefFrame.MOUNTORIENTATION>
     {
         let position: number;
         position = await this.get_mountPos();
         if (position < 0) {
-            return YRefFrame_MountOrientation.INVALID;
+            return YRefFrame.MOUNTORIENTATION_INVALID;
         }
-        return <YRefFrame_MountOrientation> ((position) & (3));
+        return <YRefFrame.MOUNTORIENTATION> ((position) & (3));
     }
 
     /**
@@ -480,7 +470,7 @@ export class YRefFrame extends YFunction
      * the earth surface) so that the measures are made relative to this position.
      *
      * @param position : a value among the YRefFrame.MOUNTPOSITION enumeration
-     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,  YRefFrame.MOUNTPOSITION_TOP,
      *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
      *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
@@ -497,7 +487,7 @@ export class YRefFrame extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_mountPosition(position: YRefFrame_MountPosition, orientation: YRefFrame_MountOrientation): Promise<number>
+    async set_mountPosition(position: YRefFrame.MOUNTPOSITION, orientation: YRefFrame.MOUNTORIENTATION): Promise<number>
     {
         let mixedPos: number;
         mixedPos = ((position) << (2)) + orientation;
@@ -1137,5 +1127,38 @@ export class YRefFrame extends YFunction
     }
 
     //--- (end of YRefFrame implementation)
+}
+
+export namespace YRefFrame {
+    //--- (YRefFrame definitions)
+    export const enum FUSIONMODE {
+        NDOF = 0,
+        NDOF_FMC_OFF = 1,
+        M4G = 2,
+        COMPASS = 3,
+        IMU = 4,
+        INCLIN_90DEG_1G8 = 5,
+        INCLIN_90DEG_3G6 = 6,
+        INCLIN_10DEG = 7,
+        INVALID = -1
+    }
+    export const enum MOUNTPOSITION {
+        BOTTOM = 0,
+        TOP = 1,
+        FRONT = 2,
+        REAR = 3,
+        RIGHT = 4,
+        LEFT = 5,
+        INVALID = 6
+    }
+    export const enum MOUNTORIENTATION {
+        TWELVE = 0,
+        THREE = 1,
+        SIX = 2,
+        NINE = 3,
+        INVALID = 4
+    }
+    export interface ValueCallback { (func: YRefFrame, value: string): void }
+    //--- (end of YRefFrame definitions)
 }
 

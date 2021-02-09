@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwminput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -39,25 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPwmInput definitions)
-export const enum YPwmInput_PwmReportMode {
-    PWM_DUTYCYCLE = 0,
-    PWM_FREQUENCY = 1,
-    PWM_PULSEDURATION = 2,
-    PWM_EDGECOUNT = 3,
-    PWM_PULSECOUNT = 4,
-    PWM_CPS = 5,
-    PWM_CPM = 6,
-    PWM_STATE = 7,
-    PWM_FREQ_CPS = 8,
-    PWM_FREQ_CPM = 9,
-    PWM_PERIODCOUNT = 10,
-    INVALID = -1
-}
-export interface YPwmInputValueCallback { (func: YPwmInput, value: string): void }
-export interface YPwmInputTimedReportCallback { (func: YPwmInput, measure: YMeasure): void }
-//--- (end of YPwmInput definitions)
-
 //--- (YPwmInput class start)
 /**
  * YPwmInput Class: PWM input control interface, available for instance in the Yocto-PWM-Rx
@@ -80,12 +61,12 @@ export class YPwmInput extends YSensor
     _period: number = YPwmInput.PERIOD_INVALID;
     _pulseCounter: number = YPwmInput.PULSECOUNTER_INVALID;
     _pulseTimer: number = YPwmInput.PULSETIMER_INVALID;
-    _pwmReportMode: YPwmInput_PwmReportMode = YPwmInput.PWMREPORTMODE_INVALID;
+    _pwmReportMode: YPwmInput.PWMREPORTMODE = YPwmInput.PWMREPORTMODE_INVALID;
     _debouncePeriod: number = YPwmInput.DEBOUNCEPERIOD_INVALID;
     _bandwidth: number = YPwmInput.BANDWIDTH_INVALID;
     _edgesPerPeriod: number = YPwmInput.EDGESPERPERIOD_INVALID;
-    _valueCallbackPwmInput: YPwmInputValueCallback | null = null;
-    _timedReportCallbackPwmInput: YPwmInputTimedReportCallback | null = null;
+    _valueCallbackPwmInput: YPwmInput.ValueCallback | null = null;
+    _timedReportCallbackPwmInput: YPwmInput.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly DUTYCYCLE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -94,18 +75,18 @@ export class YPwmInput extends YSensor
     public readonly PERIOD_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PULSECOUNTER_INVALID: number = YAPI.INVALID_LONG;
     public readonly PULSETIMER_INVALID: number = YAPI.INVALID_LONG;
-    public readonly PWMREPORTMODE_PWM_DUTYCYCLE: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_DUTYCYCLE;
-    public readonly PWMREPORTMODE_PWM_FREQUENCY: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_FREQUENCY;
-    public readonly PWMREPORTMODE_PWM_PULSEDURATION: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_PULSEDURATION;
-    public readonly PWMREPORTMODE_PWM_EDGECOUNT: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_EDGECOUNT;
-    public readonly PWMREPORTMODE_PWM_PULSECOUNT: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_PULSECOUNT;
-    public readonly PWMREPORTMODE_PWM_CPS: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_CPS;
-    public readonly PWMREPORTMODE_PWM_CPM: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_CPM;
-    public readonly PWMREPORTMODE_PWM_STATE: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_STATE;
-    public readonly PWMREPORTMODE_PWM_FREQ_CPS: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_FREQ_CPS;
-    public readonly PWMREPORTMODE_PWM_FREQ_CPM: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_FREQ_CPM;
-    public readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_PERIODCOUNT;
-    public readonly PWMREPORTMODE_INVALID: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.INVALID;
+    public readonly PWMREPORTMODE_PWM_DUTYCYCLE: YPwmInput.PWMREPORTMODE = 0;
+    public readonly PWMREPORTMODE_PWM_FREQUENCY: YPwmInput.PWMREPORTMODE = 1;
+    public readonly PWMREPORTMODE_PWM_PULSEDURATION: YPwmInput.PWMREPORTMODE = 2;
+    public readonly PWMREPORTMODE_PWM_EDGECOUNT: YPwmInput.PWMREPORTMODE = 3;
+    public readonly PWMREPORTMODE_PWM_PULSECOUNT: YPwmInput.PWMREPORTMODE = 4;
+    public readonly PWMREPORTMODE_PWM_CPS: YPwmInput.PWMREPORTMODE = 5;
+    public readonly PWMREPORTMODE_PWM_CPM: YPwmInput.PWMREPORTMODE = 6;
+    public readonly PWMREPORTMODE_PWM_STATE: YPwmInput.PWMREPORTMODE = 7;
+    public readonly PWMREPORTMODE_PWM_FREQ_CPS: YPwmInput.PWMREPORTMODE = 8;
+    public readonly PWMREPORTMODE_PWM_FREQ_CPM: YPwmInput.PWMREPORTMODE = 9;
+    public readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput.PWMREPORTMODE = 10;
+    public readonly PWMREPORTMODE_INVALID: YPwmInput.PWMREPORTMODE = -1;
     public readonly DEBOUNCEPERIOD_INVALID: number = YAPI.INVALID_UINT;
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly EDGESPERPERIOD_INVALID: number = YAPI.INVALID_UINT;
@@ -117,25 +98,22 @@ export class YPwmInput extends YSensor
     public static readonly PERIOD_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PULSECOUNTER_INVALID: number = YAPI.INVALID_LONG;
     public static readonly PULSETIMER_INVALID: number = YAPI.INVALID_LONG;
-    public static readonly PWMREPORTMODE_PWM_DUTYCYCLE: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_DUTYCYCLE;
-    public static readonly PWMREPORTMODE_PWM_FREQUENCY: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_FREQUENCY;
-    public static readonly PWMREPORTMODE_PWM_PULSEDURATION: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_PULSEDURATION;
-    public static readonly PWMREPORTMODE_PWM_EDGECOUNT: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_EDGECOUNT;
-    public static readonly PWMREPORTMODE_PWM_PULSECOUNT: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_PULSECOUNT;
-    public static readonly PWMREPORTMODE_PWM_CPS: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_CPS;
-    public static readonly PWMREPORTMODE_PWM_CPM: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_CPM;
-    public static readonly PWMREPORTMODE_PWM_STATE: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_STATE;
-    public static readonly PWMREPORTMODE_PWM_FREQ_CPS: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_FREQ_CPS;
-    public static readonly PWMREPORTMODE_PWM_FREQ_CPM: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_FREQ_CPM;
-    public static readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.PWM_PERIODCOUNT;
-    public static readonly PWMREPORTMODE_INVALID: YPwmInput_PwmReportMode = YPwmInput_PwmReportMode.INVALID;
+    public static readonly PWMREPORTMODE_PWM_DUTYCYCLE: YPwmInput.PWMREPORTMODE = 0;
+    public static readonly PWMREPORTMODE_PWM_FREQUENCY: YPwmInput.PWMREPORTMODE = 1;
+    public static readonly PWMREPORTMODE_PWM_PULSEDURATION: YPwmInput.PWMREPORTMODE = 2;
+    public static readonly PWMREPORTMODE_PWM_EDGECOUNT: YPwmInput.PWMREPORTMODE = 3;
+    public static readonly PWMREPORTMODE_PWM_PULSECOUNT: YPwmInput.PWMREPORTMODE = 4;
+    public static readonly PWMREPORTMODE_PWM_CPS: YPwmInput.PWMREPORTMODE = 5;
+    public static readonly PWMREPORTMODE_PWM_CPM: YPwmInput.PWMREPORTMODE = 6;
+    public static readonly PWMREPORTMODE_PWM_STATE: YPwmInput.PWMREPORTMODE = 7;
+    public static readonly PWMREPORTMODE_PWM_FREQ_CPS: YPwmInput.PWMREPORTMODE = 8;
+    public static readonly PWMREPORTMODE_PWM_FREQ_CPM: YPwmInput.PWMREPORTMODE = 9;
+    public static readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput.PWMREPORTMODE = 10;
+    public static readonly PWMREPORTMODE_INVALID: YPwmInput.PWMREPORTMODE = -1;
     public static readonly DEBOUNCEPERIOD_INVALID: number = YAPI.INVALID_UINT;
     public static readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly EDGESPERPERIOD_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YPwmInput attributes declaration)
-
-//--- (YPwmInput return codes)
-//--- (end of YPwmInput return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -169,7 +147,7 @@ export class YPwmInput extends YSensor
             this._pulseTimer = <number> <number> val;
             return 1;
         case 'pwmReportMode':
-            this._pwmReportMode = <YPwmInput_PwmReportMode> <number> val;
+            this._pwmReportMode = <YPwmInput.PWMREPORTMODE> <number> val;
             return 1;
         case 'debouncePeriod':
             this._debouncePeriod = <number> <number> val;
@@ -342,7 +320,7 @@ export class YPwmInput extends YSensor
      *
      * On failure, throws an exception or returns YPwmInput.PWMREPORTMODE_INVALID.
      */
-    async get_pwmReportMode(): Promise<YPwmInput_PwmReportMode>
+    async get_pwmReportMode(): Promise<YPwmInput.PWMREPORTMODE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -374,7 +352,7 @@ export class YPwmInput extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_pwmReportMode(newval: YPwmInput_PwmReportMode): Promise<number>
+    async set_pwmReportMode(newval: YPwmInput.PWMREPORTMODE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -562,7 +540,7 @@ export class YPwmInput extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPwmInputValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPwmInput.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -606,7 +584,7 @@ export class YPwmInput extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YPwmInputTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YPwmInput.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -699,5 +677,25 @@ export class YPwmInput extends YSensor
     }
 
     //--- (end of YPwmInput implementation)
+}
+
+export namespace YPwmInput {
+    //--- (YPwmInput definitions)
+    export const enum PWMREPORTMODE {
+        PWM_DUTYCYCLE = 0,
+        PWM_FREQUENCY = 1,
+        PWM_PULSEDURATION = 2,
+        PWM_EDGECOUNT = 3,
+        PWM_PULSECOUNT = 4,
+        PWM_CPS = 5,
+        PWM_CPM = 6,
+        PWM_STATE = 7,
+        PWM_FREQ_CPS = 8,
+        PWM_FREQ_CPM = 9,
+        PWM_PERIODCOUNT = 10,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YPwmInput, value: string): void }    export interface TimedReportCallback { (func: YPwmInput, measure: YMeasure): void }
+    //--- (end of YPwmInput definitions)
 }
 

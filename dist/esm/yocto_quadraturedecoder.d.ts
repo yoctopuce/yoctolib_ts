@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -37,17 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YQuadratureDecoder_Decoding {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YQuadratureDecoderValueCallback {
-    (func: YQuadratureDecoder, value: string): void;
-}
-export interface YQuadratureDecoderTimedReportCallback {
-    (func: YQuadratureDecoder, measure: YMeasure): void;
-}
 /**
  * YQuadratureDecoder Class: quadrature decoder control interface, available for instance in the Yocto-PWM-Rx
  *
@@ -58,17 +47,17 @@ export interface YQuadratureDecoderTimedReportCallback {
 export declare class YQuadratureDecoder extends YSensor {
     _className: string;
     _speed: number;
-    _decoding: YQuadratureDecoder_Decoding;
-    _valueCallbackQuadratureDecoder: YQuadratureDecoderValueCallback | null;
-    _timedReportCallbackQuadratureDecoder: YQuadratureDecoderTimedReportCallback | null;
+    _decoding: YQuadratureDecoder.DECODING;
+    _valueCallbackQuadratureDecoder: YQuadratureDecoder.ValueCallback | null;
+    _timedReportCallbackQuadratureDecoder: YQuadratureDecoder.TimedReportCallback | null;
     readonly SPEED_INVALID: number;
-    readonly DECODING_OFF: YQuadratureDecoder_Decoding;
-    readonly DECODING_ON: YQuadratureDecoder_Decoding;
-    readonly DECODING_INVALID: YQuadratureDecoder_Decoding;
+    readonly DECODING_OFF: YQuadratureDecoder.DECODING;
+    readonly DECODING_ON: YQuadratureDecoder.DECODING;
+    readonly DECODING_INVALID: YQuadratureDecoder.DECODING;
     static readonly SPEED_INVALID: number;
-    static readonly DECODING_OFF: YQuadratureDecoder_Decoding;
-    static readonly DECODING_ON: YQuadratureDecoder_Decoding;
-    static readonly DECODING_INVALID: YQuadratureDecoder_Decoding;
+    static readonly DECODING_OFF: YQuadratureDecoder.DECODING;
+    static readonly DECODING_ON: YQuadratureDecoder.DECODING;
+    static readonly DECODING_INVALID: YQuadratureDecoder.DECODING;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -98,7 +87,7 @@ export declare class YQuadratureDecoder extends YSensor {
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
-    get_decoding(): Promise<YQuadratureDecoder_Decoding>;
+    get_decoding(): Promise<YQuadratureDecoder.DECODING>;
     /**
      * Changes the activation state of the quadrature decoder.
      * Remember to call the saveToFlash()
@@ -111,7 +100,7 @@ export declare class YQuadratureDecoder extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_decoding(newval: YQuadratureDecoder_Decoding): Promise<number>;
+    set_decoding(newval: YQuadratureDecoder.DECODING): Promise<number>;
     /**
      * Retrieves a quadrature decoder for a given identifier.
      * The identifier can be specified using several formats:
@@ -178,7 +167,7 @@ export declare class YQuadratureDecoder extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YQuadratureDecoderValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YQuadratureDecoder.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -191,7 +180,7 @@ export declare class YQuadratureDecoder extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YQuadratureDecoderTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YQuadratureDecoder.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of quadrature decoders started using yFirstQuadratureDecoder().
@@ -226,4 +215,17 @@ export declare class YQuadratureDecoder extends YSensor {
      *         if there are none.
      */
     static FirstQuadratureDecoderInContext(yctx: YAPIContext): YQuadratureDecoder | null;
+}
+export declare namespace YQuadratureDecoder {
+    const enum DECODING {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YQuadratureDecoder, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YQuadratureDecoder, measure: YMeasure): void;
+    }
 }

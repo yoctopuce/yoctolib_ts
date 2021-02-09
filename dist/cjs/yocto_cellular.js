@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_cellular.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -40,8 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YCellular = exports.YCellRecord = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (generated code: YCellRecord definitions)
-//--- (end of generated code: YCellRecord definitions)
 //--- (generated code: YCellRecord class start)
 /**
  * YCellRecord Class: Cellular antenna description, returned by cellular.quickCellSurvey method
@@ -137,7 +135,6 @@ class YCellRecord {
     }
 }
 exports.YCellRecord = YCellRecord;
-//--- (end of generated code: YCellular definitions)
 //--- (generated code: YCellular class start)
 /**
  * YCellular Class: cellular interface control interface, available for instance in the
@@ -176,29 +173,29 @@ class YCellular extends yocto_api_js_1.YFunction {
         this.LINKQUALITY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.CELLOPERATOR_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.CELLIDENTIFIER_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-        this.CELLTYPE_GPRS = 0 /* GPRS */;
-        this.CELLTYPE_EGPRS = 1 /* EGPRS */;
-        this.CELLTYPE_WCDMA = 2 /* WCDMA */;
-        this.CELLTYPE_HSDPA = 3 /* HSDPA */;
-        this.CELLTYPE_NONE = 4 /* NONE */;
-        this.CELLTYPE_CDMA = 5 /* CDMA */;
-        this.CELLTYPE_LTE_M = 6 /* LTE_M */;
-        this.CELLTYPE_NB_IOT = 7 /* NB_IOT */;
-        this.CELLTYPE_EC_GSM_IOT = 8 /* EC_GSM_IOT */;
-        this.CELLTYPE_INVALID = -1 /* INVALID */;
+        this.CELLTYPE_GPRS = 0;
+        this.CELLTYPE_EGPRS = 1;
+        this.CELLTYPE_WCDMA = 2;
+        this.CELLTYPE_HSDPA = 3;
+        this.CELLTYPE_NONE = 4;
+        this.CELLTYPE_CDMA = 5;
+        this.CELLTYPE_LTE_M = 6;
+        this.CELLTYPE_NB_IOT = 7;
+        this.CELLTYPE_EC_GSM_IOT = 8;
+        this.CELLTYPE_INVALID = -1;
         this.IMSI_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.MESSAGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.PIN_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.RADIOCONFIG_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.LOCKEDOPERATOR_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-        this.AIRPLANEMODE_OFF = 0 /* OFF */;
-        this.AIRPLANEMODE_ON = 1 /* ON */;
-        this.AIRPLANEMODE_INVALID = -1 /* INVALID */;
-        this.ENABLEDATA_HOMENETWORK = 0 /* HOMENETWORK */;
-        this.ENABLEDATA_ROAMING = 1 /* ROAMING */;
-        this.ENABLEDATA_NEVER = 2 /* NEVER */;
-        this.ENABLEDATA_NEUTRALITY = 3 /* NEUTRALITY */;
-        this.ENABLEDATA_INVALID = -1 /* INVALID */;
+        this.AIRPLANEMODE_OFF = 0;
+        this.AIRPLANEMODE_ON = 1;
+        this.AIRPLANEMODE_INVALID = -1;
+        this.ENABLEDATA_HOMENETWORK = 0;
+        this.ENABLEDATA_ROAMING = 1;
+        this.ENABLEDATA_NEVER = 2;
+        this.ENABLEDATA_NEUTRALITY = 3;
+        this.ENABLEDATA_INVALID = -1;
         this.APN_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.APNSECRET_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.PINGINTERVAL_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -5952,29 +5949,29 @@ exports.YCellular = YCellular;
 YCellular.LINKQUALITY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YCellular.CELLOPERATOR_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.CELLIDENTIFIER_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-YCellular.CELLTYPE_GPRS = 0 /* GPRS */;
-YCellular.CELLTYPE_EGPRS = 1 /* EGPRS */;
-YCellular.CELLTYPE_WCDMA = 2 /* WCDMA */;
-YCellular.CELLTYPE_HSDPA = 3 /* HSDPA */;
-YCellular.CELLTYPE_NONE = 4 /* NONE */;
-YCellular.CELLTYPE_CDMA = 5 /* CDMA */;
-YCellular.CELLTYPE_LTE_M = 6 /* LTE_M */;
-YCellular.CELLTYPE_NB_IOT = 7 /* NB_IOT */;
-YCellular.CELLTYPE_EC_GSM_IOT = 8 /* EC_GSM_IOT */;
-YCellular.CELLTYPE_INVALID = -1 /* INVALID */;
+YCellular.CELLTYPE_GPRS = 0;
+YCellular.CELLTYPE_EGPRS = 1;
+YCellular.CELLTYPE_WCDMA = 2;
+YCellular.CELLTYPE_HSDPA = 3;
+YCellular.CELLTYPE_NONE = 4;
+YCellular.CELLTYPE_CDMA = 5;
+YCellular.CELLTYPE_LTE_M = 6;
+YCellular.CELLTYPE_NB_IOT = 7;
+YCellular.CELLTYPE_EC_GSM_IOT = 8;
+YCellular.CELLTYPE_INVALID = -1;
 YCellular.IMSI_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.MESSAGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.PIN_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.RADIOCONFIG_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.LOCKEDOPERATOR_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-YCellular.AIRPLANEMODE_OFF = 0 /* OFF */;
-YCellular.AIRPLANEMODE_ON = 1 /* ON */;
-YCellular.AIRPLANEMODE_INVALID = -1 /* INVALID */;
-YCellular.ENABLEDATA_HOMENETWORK = 0 /* HOMENETWORK */;
-YCellular.ENABLEDATA_ROAMING = 1 /* ROAMING */;
-YCellular.ENABLEDATA_NEVER = 2 /* NEVER */;
-YCellular.ENABLEDATA_NEUTRALITY = 3 /* NEUTRALITY */;
-YCellular.ENABLEDATA_INVALID = -1 /* INVALID */;
+YCellular.AIRPLANEMODE_OFF = 0;
+YCellular.AIRPLANEMODE_ON = 1;
+YCellular.AIRPLANEMODE_INVALID = -1;
+YCellular.ENABLEDATA_HOMENETWORK = 0;
+YCellular.ENABLEDATA_ROAMING = 1;
+YCellular.ENABLEDATA_NEVER = 2;
+YCellular.ENABLEDATA_NEUTRALITY = 3;
+YCellular.ENABLEDATA_INVALID = -1;
 YCellular.APN_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.APNSECRET_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YCellular.PINGINTERVAL_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;

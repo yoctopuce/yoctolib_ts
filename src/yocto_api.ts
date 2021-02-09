@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ * $Id: yocto_api.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 
-//--- (generated code: YFunction definitions)
+//--- (generated code: YFunction return codes)
 // Yoctopuce error codes, also used by default as function return value
 export const YAPI_SUCCESS                   : number = 0;       // everything worked all right
 export const YAPI_NOT_INITIALIZED           : number = -1;      // call yInitAPI() first !
@@ -54,14 +54,12 @@ export const YAPI_DOUBLE_ACCES              : number = -11;     // you have two 
 export const YAPI_UNAUTHORIZED              : number = -12;     // unauthorized access to password-protected device
 export const YAPI_RTC_NOT_READY             : number = -13;     // real-time clock has not been initialized (or time was lost)
 export const YAPI_FILE_NOT_FOUND            : number = -14;     // the file is not found
-
 export const YAPI_INVALID_INT               : number = 0x7fffffff;
 export const YAPI_INVALID_UINT              : number = -1;
 export const YAPI_INVALID_LONG              : number = 0x7fffffffffffffff;
 export const YAPI_INVALID_DOUBLE            : number = -Number.MAX_VALUE;
 export const YAPI_INVALID_STRING            : string = '!INVALID!';
-export interface YFunctionValueCallback { (func: YFunction, value: string): void }
-//--- (end of generated code: YFunction definitions)
+//--- (end of generated code: YFunction return codes)
 export const YAPI_MIN_DOUBLE                : number = -Number.MAX_VALUE;
 export const YAPI_MAX_DOUBLE                : number = Number.MAX_VALUE;
 export const Y_FUNCTIONDESCRIPTOR_INVALID   : string = YAPI_INVALID_STRING;
@@ -156,61 +154,9 @@ export class YoctoError extends Error
 
 export interface YLogCallback{ (msg: string): void }
 export interface YProgressCallback{ (progress: number, msg: string): void }
-export interface YModuleLogCallback { (module: YModule, msg: string): void }
-export interface YModuleConfigChangeCallback { (module: YModule): void }
-export interface YModuleBeaconCallback { (module: YModule, beacon: number): void }
 export interface yCalibrationHandler { (rawValue: number, calibType: number, parameters: number[], rawValues: number[], refValues: number[]): number }
 export interface YHubDiscoveryCallback { (serial: string, urlToRegister: string | null, urlToUnregister: string | null): void }
 export interface YDeviceUpdateCallback { (module: YModule): void }
-//--- (generated code: YModule definitions)
-export const enum YModule_PersistentSettings {
-    LOADED = 0,
-    SAVED = 1,
-    MODIFIED = 2,
-    INVALID = -1
-}
-export const enum YModule_Beacon {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YModuleValueCallback { (func: YModule, value: string): void }
-//--- (end of generated code: YModule definitions)
-//--- (generated code: YDataLogger definitions)
-export const enum YDataLogger_Recording {
-    OFF = 0,
-    ON = 1,
-    PENDING = 2,
-    INVALID = -1
-}
-export const enum YDataLogger_AutoStart {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export const enum YDataLogger_BeaconDriven {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export const enum YDataLogger_ClearHistory {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YDataLoggerValueCallback { (func: YDataLogger, value: string): void }
-//--- (end of generated code: YDataLogger definitions)
-//--- (generated code: YSensor definitions)
-export const enum YSensor_AdvMode {
-    IMMEDIATE = 0,
-    PERIOD_AVG = 1,
-    PERIOD_MIN = 2,
-    PERIOD_MAX = 3,
-    INVALID = -1
-}
-export interface YSensorValueCallback { (func: YSensor, value: string): void }
-export interface YSensorTimedReportCallback { (func: YSensor, measure: YMeasure): void }
-//--- (end of generated code: YSensor definitions)
 export interface YUnhandledPromiseRejectionCallback { (reason: object, promise: PromiseLike<any>): void }
 
 export interface YConditionalResult {
@@ -2364,7 +2310,7 @@ class YDevice
     private _busy: number;
     private _lastTimeRef: number;
     private _lastDuration: number;
-    private _logCallback: YModuleLogCallback | null;
+    private _logCallback: YModule.LogCallback | null;
     private _logIsPulling: boolean;
     private _logpos: number;
 
@@ -2538,7 +2484,7 @@ class YDevice
         });
     }
 
-    imm_registerLogCallback(callback: YModuleLogCallback | null): void
+    imm_registerLogCallback(callback: YModule.LogCallback | null): void
     {
         this._logCallback = callback;
         if (callback != null) {
@@ -3544,25 +3490,17 @@ export class YFunction
     //--- (generated code: YFunction attributes declaration)
     _logicalName: string = YFunction.LOGICALNAME_INVALID;
     _advertisedValue: string = YFunction.ADVERTISEDVALUE_INVALID;
-    _valueCallbackFunction: YFunctionValueCallback | null = null;
+    _valueCallbackFunction: YFunction.ValueCallback | null = null;
     _cacheExpiration: number = 0;
     _serial: string = '';
     _funId: string = '';
     _hwId: string = '';
 
     // API symbols as object properties
-    public readonly FUNCTIONDESCRIPTOR_INVALID: string = YAPI_INVALID_STRING;
-    public readonly HARDWAREID_INVALID: string = YAPI_INVALID_STRING;
-    public readonly FUNCTIONID_INVALID: string = YAPI_INVALID_STRING;
-    public readonly FRIENDLYNAME_INVALID: string = YAPI_INVALID_STRING;
     public readonly LOGICALNAME_INVALID: string = YAPI_INVALID_STRING;
     public readonly ADVERTISEDVALUE_INVALID: string = YAPI_INVALID_STRING;
 
     // API symbols as static members
-    public static readonly FUNCTIONDESCRIPTOR_INVALID: string = YAPI_INVALID_STRING;
-    public static readonly HARDWAREID_INVALID: string = YAPI_INVALID_STRING;
-    public static readonly FUNCTIONID_INVALID: string = YAPI_INVALID_STRING;
-    public static readonly FRIENDLYNAME_INVALID: string = YAPI_INVALID_STRING;
     public static readonly LOGICALNAME_INVALID: string = YAPI_INVALID_STRING;
     public static readonly ADVERTISEDVALUE_INVALID: string = YAPI_INVALID_STRING;
     //--- (end of generated code: YFunction attributes declaration)
@@ -3651,8 +3589,8 @@ export class YFunction
     async set_logicalName(newval: string): Promise<number>
     {
         let rest_val: string;
-        if (!await this._yapi.CheckLogicalName(newval)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid name :' + newval, this._yapi.INVALID_ARGUMENT);
+        if (!await YAPI.CheckLogicalName(newval)) {
+            return this._throw(YAPI.INVALID_ARGUMENT, 'Invalid name :' + newval, YAPI.INVALID_ARGUMENT);
         }
         rest_val = String(newval);
         return await this._setAttr('logicalName',rest_val);
@@ -3770,7 +3708,7 @@ export class YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YFunctionValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YFunction.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -3868,7 +3806,7 @@ export class YFunction
      *
      * @return a string corresponding to the serial number of the module, as set by the factory.
      *
-     * On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
+     * On failure, throws an exception or returns YFunction.SERIALNUMBER_INVALID.
      */
     async get_serialNumber(): Promise<string>
     {
@@ -4706,7 +4644,7 @@ export class YFunction
      *
      * @return an identifier of type YFUN_DESCR.
      *
-     * If the function has never been contacted, the returned value is YFunction.FUNCTIONDESCRIPTOR_INVALID.
+     * If the function has never been contacted, the returned value is Y$CLASSNAME$.FUNCTIONDESCRIPTOR_INVALID.
      */
     async get_functionDescriptor(): Promise<string>
     {
@@ -4753,6 +4691,17 @@ export class YFunction
 
 }
 
+export namespace YFunction
+{
+    //--- (generated code: YFunction definitions)
+    export const FUNCTIONDESCRIPTOR_INVALID     : string = YAPI_INVALID_STRING;
+    export const HARDWAREID_INVALID             : string = YAPI_INVALID_STRING;
+    export const FUNCTIONID_INVALID             : string = YAPI_INVALID_STRING;
+    export const FRIENDLYNAME_INVALID           : string = YAPI_INVALID_STRING;
+    export interface ValueCallback { (func: YFunction, value: string): void }
+    //--- (end of generated code: YFunction definitions)
+}
+
 //--- (generated code: YModule class start)
 /**
  * YModule Class: Global parameters control interface for all Yoctopuce devices
@@ -4762,7 +4711,6 @@ export class YFunction
  * to enumerate the functions provided by each module.
  */
 //--- (end of generated code: YModule class start)
-/** @extends {YFunction} **/
 export class YModule extends YFunction
 {
     //--- (generated code: YModule attributes declaration)
@@ -4772,17 +4720,17 @@ export class YModule extends YFunction
     _productId: number = YModule.PRODUCTID_INVALID;
     _productRelease: number = YModule.PRODUCTRELEASE_INVALID;
     _firmwareRelease: string = YModule.FIRMWARERELEASE_INVALID;
-    _persistentSettings: YModule_PersistentSettings = YModule.PERSISTENTSETTINGS_INVALID;
+    _persistentSettings: YModule.PERSISTENTSETTINGS = YModule.PERSISTENTSETTINGS_INVALID;
     _luminosity: number = YModule.LUMINOSITY_INVALID;
-    _beacon: YModule_Beacon = YModule.BEACON_INVALID;
+    _beacon: YModule.BEACON = YModule.BEACON_INVALID;
     _upTime: number = YModule.UPTIME_INVALID;
     _usbCurrent: number = YModule.USBCURRENT_INVALID;
     _rebootCountdown: number = YModule.REBOOTCOUNTDOWN_INVALID;
     _userVar: number = YModule.USERVAR_INVALID;
-    _valueCallbackModule: YModuleValueCallback | null = null;
-    _logCallback: YModuleLogCallback | null = null;
-    _confChangeCallback: YModuleConfigChangeCallback | null = null;
-    _beaconCallback: YModuleBeaconCallback | null = null;
+    _valueCallbackModule: YModule.ValueCallback | null = null;
+    _logCallback: YModule.LogCallback | null = null;
+    _confChangeCallback: YModule.ConfigChangeCallback | null = null;
+    _beaconCallback: YModule.BeaconCallback | null = null;
 
     // API symbols as object properties
     public readonly PRODUCTNAME_INVALID: string = YAPI_INVALID_STRING;
@@ -4790,14 +4738,14 @@ export class YModule extends YFunction
     public readonly PRODUCTID_INVALID: number = YAPI_INVALID_UINT;
     public readonly PRODUCTRELEASE_INVALID: number = YAPI_INVALID_UINT;
     public readonly FIRMWARERELEASE_INVALID: string = YAPI_INVALID_STRING;
-    public readonly PERSISTENTSETTINGS_LOADED: YModule_PersistentSettings = YModule_PersistentSettings.LOADED;
-    public readonly PERSISTENTSETTINGS_SAVED: YModule_PersistentSettings = YModule_PersistentSettings.SAVED;
-    public readonly PERSISTENTSETTINGS_MODIFIED: YModule_PersistentSettings = YModule_PersistentSettings.MODIFIED;
-    public readonly PERSISTENTSETTINGS_INVALID: YModule_PersistentSettings = YModule_PersistentSettings.INVALID;
+    public readonly PERSISTENTSETTINGS_LOADED: YModule.PERSISTENTSETTINGS = 0;
+    public readonly PERSISTENTSETTINGS_SAVED: YModule.PERSISTENTSETTINGS = 1;
+    public readonly PERSISTENTSETTINGS_MODIFIED: YModule.PERSISTENTSETTINGS = 2;
+    public readonly PERSISTENTSETTINGS_INVALID: YModule.PERSISTENTSETTINGS = -1;
     public readonly LUMINOSITY_INVALID: number = YAPI_INVALID_UINT;
-    public readonly BEACON_OFF: YModule_Beacon = YModule_Beacon.OFF;
-    public readonly BEACON_ON: YModule_Beacon = YModule_Beacon.ON;
-    public readonly BEACON_INVALID: YModule_Beacon = YModule_Beacon.INVALID;
+    public readonly BEACON_OFF: YModule.BEACON = 0;
+    public readonly BEACON_ON: YModule.BEACON = 1;
+    public readonly BEACON_INVALID: YModule.BEACON = -1;
     public readonly UPTIME_INVALID: number = YAPI_INVALID_LONG;
     public readonly USBCURRENT_INVALID: number = YAPI_INVALID_UINT;
     public readonly REBOOTCOUNTDOWN_INVALID: number = YAPI_INVALID_INT;
@@ -4809,14 +4757,14 @@ export class YModule extends YFunction
     public static readonly PRODUCTID_INVALID: number = YAPI_INVALID_UINT;
     public static readonly PRODUCTRELEASE_INVALID: number = YAPI_INVALID_UINT;
     public static readonly FIRMWARERELEASE_INVALID: string = YAPI_INVALID_STRING;
-    public static readonly PERSISTENTSETTINGS_LOADED: YModule_PersistentSettings = YModule_PersistentSettings.LOADED;
-    public static readonly PERSISTENTSETTINGS_SAVED: YModule_PersistentSettings = YModule_PersistentSettings.SAVED;
-    public static readonly PERSISTENTSETTINGS_MODIFIED: YModule_PersistentSettings = YModule_PersistentSettings.MODIFIED;
-    public static readonly PERSISTENTSETTINGS_INVALID: YModule_PersistentSettings = YModule_PersistentSettings.INVALID;
+    public static readonly PERSISTENTSETTINGS_LOADED: YModule.PERSISTENTSETTINGS = 0;
+    public static readonly PERSISTENTSETTINGS_SAVED: YModule.PERSISTENTSETTINGS = 1;
+    public static readonly PERSISTENTSETTINGS_MODIFIED: YModule.PERSISTENTSETTINGS = 2;
+    public static readonly PERSISTENTSETTINGS_INVALID: YModule.PERSISTENTSETTINGS = -1;
     public static readonly LUMINOSITY_INVALID: number = YAPI_INVALID_UINT;
-    public static readonly BEACON_OFF: YModule_Beacon = YModule_Beacon.OFF;
-    public static readonly BEACON_ON: YModule_Beacon = YModule_Beacon.ON;
-    public static readonly BEACON_INVALID: YModule_Beacon = YModule_Beacon.INVALID;
+    public static readonly BEACON_OFF: YModule.BEACON = 0;
+    public static readonly BEACON_ON: YModule.BEACON = 1;
+    public static readonly BEACON_INVALID: YModule.BEACON = -1;
     public static readonly UPTIME_INVALID: number = YAPI_INVALID_LONG;
     public static readonly USBCURRENT_INVALID: number = YAPI_INVALID_UINT;
     public static readonly REBOOTCOUNTDOWN_INVALID: number = YAPI_INVALID_INT;
@@ -5107,13 +5055,13 @@ export class YModule extends YFunction
             this._firmwareRelease = <string> <string> val;
             return 1;
         case 'persistentSettings':
-            this._persistentSettings = <YModule_PersistentSettings> <number> val;
+            this._persistentSettings = <YModule.PERSISTENTSETTINGS> <number> val;
             return 1;
         case 'luminosity':
             this._luminosity = <number> <number> val;
             return 1;
         case 'beacon':
-            this._beacon = <YModule_Beacon> <number> val;
+            this._beacon = <YModule.BEACON> <number> val;
             return 1;
         case 'upTime':
             this._upTime = <number> <number> val;
@@ -5250,7 +5198,7 @@ export class YModule extends YFunction
      *
      * On failure, throws an exception or returns YModule.PERSISTENTSETTINGS_INVALID.
      */
-    async get_persistentSettings(): Promise<YModule_PersistentSettings>
+    async get_persistentSettings(): Promise<YModule.PERSISTENTSETTINGS>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -5262,7 +5210,7 @@ export class YModule extends YFunction
         return res;
     }
 
-    async set_persistentSettings(newval: YModule_PersistentSettings): Promise<number>
+    async set_persistentSettings(newval: YModule.PERSISTENTSETTINGS): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -5314,7 +5262,7 @@ export class YModule extends YFunction
      *
      * On failure, throws an exception or returns YModule.BEACON_INVALID.
      */
-    async get_beacon(): Promise<YModule_Beacon>
+    async get_beacon(): Promise<YModule.BEACON>
     {
         let res: number;
         let dev: YDevice;
@@ -5340,7 +5288,7 @@ export class YModule extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_beacon(newval: YModule_Beacon): Promise<number>
+    async set_beacon(newval: YModule.BEACON): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -5545,7 +5493,7 @@ export class YModule extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YModuleValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YModule.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -5605,7 +5553,7 @@ export class YModule extends YFunction
      */
     async saveToFlash(): Promise<number>
     {
-        return await this.set_persistentSettings(YModule.PERSISTENTSETTINGS_SAVED);
+        return await this.set_persistentSettings(YModule.PERSISTENTSETTINGS.SAVED);
     }
 
     /**
@@ -5618,7 +5566,7 @@ export class YModule extends YFunction
      */
     async revertFromFlash(): Promise<number>
     {
-        return await this.set_persistentSettings(YModule.PERSISTENTSETTINGS_LOADED);
+        return await this.set_persistentSettings(YModule.PERSISTENTSETTINGS.LOADED);
     }
 
     /**
@@ -5662,7 +5610,7 @@ export class YModule extends YFunction
      *         arguments: the module object that emitted the log message, and the character string containing the log.
      *         On failure, throws an exception or returns a negative error code.
      */
-    async registerLogCallback(callback: YModuleLogCallback | null): Promise<number>
+    async registerLogCallback(callback: YModule.LogCallback | null): Promise<number>
     {
         let serial: string;
 
@@ -5675,7 +5623,7 @@ export class YModule extends YFunction
         return 0;
     }
 
-    async get_logCallback(): Promise<YModuleLogCallback | null>
+    async get_logCallback(): Promise<YModule.LogCallback | null>
     {
         return this._logCallback;
     }
@@ -5687,7 +5635,7 @@ export class YModule extends YFunction
      * @param callback : a procedure taking a YModule parameter, or null
      *         to unregister a previously registered  callback.
      */
-    async registerConfigChangeCallback(callback: YModuleConfigChangeCallback | null): Promise<number>
+    async registerConfigChangeCallback(callback: YModule.ConfigChangeCallback | null): Promise<number>
     {
         if (callback != null) {
             await YModule._updateModuleCallbackList(this, true);
@@ -5718,7 +5666,7 @@ export class YModule extends YFunction
      * @param callback : The callback function to call, or null to unregister a
      *         previously registered callback.
      */
-    async registerBeaconCallback(callback: YModuleBeaconCallback | null): Promise<number>
+    async registerBeaconCallback(callback: YModule.BeaconCallback | null): Promise<number>
     {
         if (callback != null) {
             await YModule._updateModuleCallbackList(this, true);
@@ -6780,6 +6728,26 @@ export class YModule extends YFunction
     //--- (end of generated code: YModule implementation)
 }
 
+export namespace YModule {
+    export interface LogCallback { (module: YModule, msg: string): void }
+    export interface ConfigChangeCallback { (module: YModule): void }
+    export interface BeaconCallback { (module: YModule, beacon: number): void }
+    //--- (generated code: YModule definitions)
+    export const enum PERSISTENTSETTINGS {
+        LOADED = 0,
+        SAVED = 1,
+        MODIFIED = 2,
+        INVALID = -1
+    }
+    export const enum BEACON {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YModule, value: string): void }
+    //--- (end of generated code: YModule definitions)
+}
+
 //--- (generated code: YSensor class start)
 /**
  * YSensor Class: Sensor function interface.
@@ -6795,7 +6763,6 @@ export class YModule extends YFunction
  * from YSensor.
  */
 //--- (end of generated code: YSensor class start)
-/** @extends {YFunction} **/
 export class YSensor extends YFunction
 {
     //--- (generated code: YSensor attributes declaration)
@@ -6807,12 +6774,12 @@ export class YSensor extends YFunction
     _currentRawValue: number = YSensor.CURRENTRAWVALUE_INVALID;
     _logFrequency: string = YSensor.LOGFREQUENCY_INVALID;
     _reportFrequency: string = YSensor.REPORTFREQUENCY_INVALID;
-    _advMode: YSensor_AdvMode = YSensor.ADVMODE_INVALID;
+    _advMode: YSensor.ADVMODE = YSensor.ADVMODE_INVALID;
     _calibrationParam: string = YSensor.CALIBRATIONPARAM_INVALID;
     _resolution: number = YSensor.RESOLUTION_INVALID;
     _sensorState: number = YSensor.SENSORSTATE_INVALID;
-    _valueCallbackSensor: YSensorValueCallback | null = null;
-    _timedReportCallbackSensor: YSensorTimedReportCallback | null = null;
+    _valueCallbackSensor: YSensor.ValueCallback | null = null;
+    _timedReportCallbackSensor: YSensor.TimedReportCallback | null = null;
     _prevTimedReport: number = 0;
     _iresol: number = 0;
     _offset: number = 0;
@@ -6832,11 +6799,11 @@ export class YSensor extends YFunction
     public readonly CURRENTRAWVALUE_INVALID: number = YAPI_INVALID_DOUBLE;
     public readonly LOGFREQUENCY_INVALID: string = YAPI_INVALID_STRING;
     public readonly REPORTFREQUENCY_INVALID: string = YAPI_INVALID_STRING;
-    public readonly ADVMODE_IMMEDIATE: YSensor_AdvMode = YSensor_AdvMode.IMMEDIATE;
-    public readonly ADVMODE_PERIOD_AVG: YSensor_AdvMode = YSensor_AdvMode.PERIOD_AVG;
-    public readonly ADVMODE_PERIOD_MIN: YSensor_AdvMode = YSensor_AdvMode.PERIOD_MIN;
-    public readonly ADVMODE_PERIOD_MAX: YSensor_AdvMode = YSensor_AdvMode.PERIOD_MAX;
-    public readonly ADVMODE_INVALID: YSensor_AdvMode = YSensor_AdvMode.INVALID;
+    public readonly ADVMODE_IMMEDIATE: YSensor.ADVMODE = 0;
+    public readonly ADVMODE_PERIOD_AVG: YSensor.ADVMODE = 1;
+    public readonly ADVMODE_PERIOD_MIN: YSensor.ADVMODE = 2;
+    public readonly ADVMODE_PERIOD_MAX: YSensor.ADVMODE = 3;
+    public readonly ADVMODE_INVALID: YSensor.ADVMODE = -1;
     public readonly CALIBRATIONPARAM_INVALID: string = YAPI_INVALID_STRING;
     public readonly RESOLUTION_INVALID: number = YAPI_INVALID_DOUBLE;
     public readonly SENSORSTATE_INVALID: number = YAPI_INVALID_INT;
@@ -6849,11 +6816,11 @@ export class YSensor extends YFunction
     public static readonly CURRENTRAWVALUE_INVALID: number = YAPI_INVALID_DOUBLE;
     public static readonly LOGFREQUENCY_INVALID: string = YAPI_INVALID_STRING;
     public static readonly REPORTFREQUENCY_INVALID: string = YAPI_INVALID_STRING;
-    public static readonly ADVMODE_IMMEDIATE: YSensor_AdvMode = YSensor_AdvMode.IMMEDIATE;
-    public static readonly ADVMODE_PERIOD_AVG: YSensor_AdvMode = YSensor_AdvMode.PERIOD_AVG;
-    public static readonly ADVMODE_PERIOD_MIN: YSensor_AdvMode = YSensor_AdvMode.PERIOD_MIN;
-    public static readonly ADVMODE_PERIOD_MAX: YSensor_AdvMode = YSensor_AdvMode.PERIOD_MAX;
-    public static readonly ADVMODE_INVALID: YSensor_AdvMode = YSensor_AdvMode.INVALID;
+    public static readonly ADVMODE_IMMEDIATE: YSensor.ADVMODE = 0;
+    public static readonly ADVMODE_PERIOD_AVG: YSensor.ADVMODE = 1;
+    public static readonly ADVMODE_PERIOD_MIN: YSensor.ADVMODE = 2;
+    public static readonly ADVMODE_PERIOD_MAX: YSensor.ADVMODE = 3;
+    public static readonly ADVMODE_INVALID: YSensor.ADVMODE = -1;
     public static readonly CALIBRATIONPARAM_INVALID: string = YAPI_INVALID_STRING;
     public static readonly RESOLUTION_INVALID: number = YAPI_INVALID_DOUBLE;
     public static readonly SENSORSTATE_INVALID: number = YAPI_INVALID_INT;
@@ -6894,7 +6861,7 @@ export class YSensor extends YFunction
             this._reportFrequency = <string> <string> val;
             return 1;
         case 'advMode':
-            this._advMode = <YSensor_AdvMode> <number> val;
+            this._advMode = <YSensor.ADVMODE> <number> val;
             return 1;
         case 'calibrationParam':
             this._calibrationParam = <string> <string> val;
@@ -7157,7 +7124,7 @@ export class YSensor extends YFunction
      *
      * On failure, throws an exception or returns YSensor.ADVMODE_INVALID.
      */
-    async get_advMode(): Promise<YSensor_AdvMode>
+    async get_advMode(): Promise<YSensor.ADVMODE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -7181,7 +7148,7 @@ export class YSensor extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_advMode(newval: YSensor_AdvMode): Promise<number>
+    async set_advMode(newval: YSensor.ADVMODE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -7354,7 +7321,7 @@ export class YSensor extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YSensorValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YSensor.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -7631,7 +7598,7 @@ export class YSensor extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YSensorTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YSensor.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -7960,8 +7927,18 @@ export class YSensor extends YFunction
     //--- (end of generated code: YSensor implementation)
 }
 
-//--- (generated code: YMeasure definitions)
-//--- (end of generated code: YMeasure definitions)
+export namespace YSensor {
+    //--- (generated code: YSensor definitions)
+    export const enum ADVMODE {
+        IMMEDIATE = 0,
+        PERIOD_AVG = 1,
+        PERIOD_MIN = 2,
+        PERIOD_MAX = 3,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YSensor, value: string): void }    export interface TimedReportCallback { (func: YSensor, measure: YMeasure): void }
+    //--- (end of generated code: YSensor definitions)
+}
 
 //--- (generated code: YMeasure class start)
 /**
@@ -8080,6 +8057,11 @@ export class YMeasure
     }
 }
 
+export namespace YMeasure {
+    //--- (generated code: YMeasure definitions)
+    //--- (end of generated code: YMeasure definitions)
+}
+
 //--- (generated code: YDataLogger class start)
 /**
  * YDataLogger Class: DataLogger control interface, available on most Yoctopuce sensors.
@@ -8098,48 +8080,48 @@ export class YDataLogger extends YFunction
     _className: string;
     _currentRunIndex: number = YDataLogger.CURRENTRUNINDEX_INVALID;
     _timeUTC: number = YDataLogger.TIMEUTC_INVALID;
-    _recording: YDataLogger_Recording = YDataLogger.RECORDING_INVALID;
-    _autoStart: YDataLogger_AutoStart = YDataLogger.AUTOSTART_INVALID;
-    _beaconDriven: YDataLogger_BeaconDriven = YDataLogger.BEACONDRIVEN_INVALID;
+    _recording: YDataLogger.RECORDING = YDataLogger.RECORDING_INVALID;
+    _autoStart: YDataLogger.AUTOSTART = YDataLogger.AUTOSTART_INVALID;
+    _beaconDriven: YDataLogger.BEACONDRIVEN = YDataLogger.BEACONDRIVEN_INVALID;
     _usage: number = YDataLogger.USAGE_INVALID;
-    _clearHistory: YDataLogger_ClearHistory = YDataLogger.CLEARHISTORY_INVALID;
-    _valueCallbackDataLogger: YDataLoggerValueCallback | null = null;
+    _clearHistory: YDataLogger.CLEARHISTORY = YDataLogger.CLEARHISTORY_INVALID;
+    _valueCallbackDataLogger: YDataLogger.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly CURRENTRUNINDEX_INVALID: number = YAPI_INVALID_UINT;
     public readonly TIMEUTC_INVALID: number = YAPI_INVALID_LONG;
-    public readonly RECORDING_OFF: YDataLogger_Recording = YDataLogger_Recording.OFF;
-    public readonly RECORDING_ON: YDataLogger_Recording = YDataLogger_Recording.ON;
-    public readonly RECORDING_PENDING: YDataLogger_Recording = YDataLogger_Recording.PENDING;
-    public readonly RECORDING_INVALID: YDataLogger_Recording = YDataLogger_Recording.INVALID;
-    public readonly AUTOSTART_OFF: YDataLogger_AutoStart = YDataLogger_AutoStart.OFF;
-    public readonly AUTOSTART_ON: YDataLogger_AutoStart = YDataLogger_AutoStart.ON;
-    public readonly AUTOSTART_INVALID: YDataLogger_AutoStart = YDataLogger_AutoStart.INVALID;
-    public readonly BEACONDRIVEN_OFF: YDataLogger_BeaconDriven = YDataLogger_BeaconDriven.OFF;
-    public readonly BEACONDRIVEN_ON: YDataLogger_BeaconDriven = YDataLogger_BeaconDriven.ON;
-    public readonly BEACONDRIVEN_INVALID: YDataLogger_BeaconDriven = YDataLogger_BeaconDriven.INVALID;
+    public readonly RECORDING_OFF: YDataLogger.RECORDING = 0;
+    public readonly RECORDING_ON: YDataLogger.RECORDING = 1;
+    public readonly RECORDING_PENDING: YDataLogger.RECORDING = 2;
+    public readonly RECORDING_INVALID: YDataLogger.RECORDING = -1;
+    public readonly AUTOSTART_OFF: YDataLogger.AUTOSTART = 0;
+    public readonly AUTOSTART_ON: YDataLogger.AUTOSTART = 1;
+    public readonly AUTOSTART_INVALID: YDataLogger.AUTOSTART = -1;
+    public readonly BEACONDRIVEN_OFF: YDataLogger.BEACONDRIVEN = 0;
+    public readonly BEACONDRIVEN_ON: YDataLogger.BEACONDRIVEN = 1;
+    public readonly BEACONDRIVEN_INVALID: YDataLogger.BEACONDRIVEN = -1;
     public readonly USAGE_INVALID: number = YAPI_INVALID_UINT;
-    public readonly CLEARHISTORY_FALSE: YDataLogger_ClearHistory = YDataLogger_ClearHistory.FALSE;
-    public readonly CLEARHISTORY_TRUE: YDataLogger_ClearHistory = YDataLogger_ClearHistory.TRUE;
-    public readonly CLEARHISTORY_INVALID: YDataLogger_ClearHistory = YDataLogger_ClearHistory.INVALID;
+    public readonly CLEARHISTORY_FALSE: YDataLogger.CLEARHISTORY = 0;
+    public readonly CLEARHISTORY_TRUE: YDataLogger.CLEARHISTORY = 1;
+    public readonly CLEARHISTORY_INVALID: YDataLogger.CLEARHISTORY = -1;
 
     // API symbols as static members
     public static readonly CURRENTRUNINDEX_INVALID: number = YAPI_INVALID_UINT;
     public static readonly TIMEUTC_INVALID: number = YAPI_INVALID_LONG;
-    public static readonly RECORDING_OFF: YDataLogger_Recording = YDataLogger_Recording.OFF;
-    public static readonly RECORDING_ON: YDataLogger_Recording = YDataLogger_Recording.ON;
-    public static readonly RECORDING_PENDING: YDataLogger_Recording = YDataLogger_Recording.PENDING;
-    public static readonly RECORDING_INVALID: YDataLogger_Recording = YDataLogger_Recording.INVALID;
-    public static readonly AUTOSTART_OFF: YDataLogger_AutoStart = YDataLogger_AutoStart.OFF;
-    public static readonly AUTOSTART_ON: YDataLogger_AutoStart = YDataLogger_AutoStart.ON;
-    public static readonly AUTOSTART_INVALID: YDataLogger_AutoStart = YDataLogger_AutoStart.INVALID;
-    public static readonly BEACONDRIVEN_OFF: YDataLogger_BeaconDriven = YDataLogger_BeaconDriven.OFF;
-    public static readonly BEACONDRIVEN_ON: YDataLogger_BeaconDriven = YDataLogger_BeaconDriven.ON;
-    public static readonly BEACONDRIVEN_INVALID: YDataLogger_BeaconDriven = YDataLogger_BeaconDriven.INVALID;
+    public static readonly RECORDING_OFF: YDataLogger.RECORDING = 0;
+    public static readonly RECORDING_ON: YDataLogger.RECORDING = 1;
+    public static readonly RECORDING_PENDING: YDataLogger.RECORDING = 2;
+    public static readonly RECORDING_INVALID: YDataLogger.RECORDING = -1;
+    public static readonly AUTOSTART_OFF: YDataLogger.AUTOSTART = 0;
+    public static readonly AUTOSTART_ON: YDataLogger.AUTOSTART = 1;
+    public static readonly AUTOSTART_INVALID: YDataLogger.AUTOSTART = -1;
+    public static readonly BEACONDRIVEN_OFF: YDataLogger.BEACONDRIVEN = 0;
+    public static readonly BEACONDRIVEN_ON: YDataLogger.BEACONDRIVEN = 1;
+    public static readonly BEACONDRIVEN_INVALID: YDataLogger.BEACONDRIVEN = -1;
     public static readonly USAGE_INVALID: number = YAPI_INVALID_UINT;
-    public static readonly CLEARHISTORY_FALSE: YDataLogger_ClearHistory = YDataLogger_ClearHistory.FALSE;
-    public static readonly CLEARHISTORY_TRUE: YDataLogger_ClearHistory = YDataLogger_ClearHistory.TRUE;
-    public static readonly CLEARHISTORY_INVALID: YDataLogger_ClearHistory = YDataLogger_ClearHistory.INVALID;
+    public static readonly CLEARHISTORY_FALSE: YDataLogger.CLEARHISTORY = 0;
+    public static readonly CLEARHISTORY_TRUE: YDataLogger.CLEARHISTORY = 1;
+    public static readonly CLEARHISTORY_INVALID: YDataLogger.CLEARHISTORY = -1;
     //--- (end of generated code: YDataLogger attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -8162,19 +8144,19 @@ export class YDataLogger extends YFunction
             this._timeUTC = <number> <number> val;
             return 1;
         case 'recording':
-            this._recording = <YDataLogger_Recording> <number> val;
+            this._recording = <YDataLogger.RECORDING> <number> val;
             return 1;
         case 'autoStart':
-            this._autoStart = <YDataLogger_AutoStart> <number> val;
+            this._autoStart = <YDataLogger.AUTOSTART> <number> val;
             return 1;
         case 'beaconDriven':
-            this._beaconDriven = <YDataLogger_BeaconDriven> <number> val;
+            this._beaconDriven = <YDataLogger.BEACONDRIVEN> <number> val;
             return 1;
         case 'usage':
             this._usage = <number> <number> val;
             return 1;
         case 'clearHistory':
-            this._clearHistory = <YDataLogger_ClearHistory> <number> val;
+            this._clearHistory = <YDataLogger.CLEARHISTORY> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -8244,7 +8226,7 @@ export class YDataLogger extends YFunction
      *
      * On failure, throws an exception or returns YDataLogger.RECORDING_INVALID.
      */
-    async get_recording(): Promise<YDataLogger_Recording>
+    async get_recording(): Promise<YDataLogger.RECORDING>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -8267,7 +8249,7 @@ export class YDataLogger extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_recording(newval: YDataLogger_Recording): Promise<number>
+    async set_recording(newval: YDataLogger.RECORDING): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -8282,7 +8264,7 @@ export class YDataLogger extends YFunction
      *
      * On failure, throws an exception or returns YDataLogger.AUTOSTART_INVALID.
      */
-    async get_autoStart(): Promise<YDataLogger_AutoStart>
+    async get_autoStart(): Promise<YDataLogger.AUTOSTART>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -8308,7 +8290,7 @@ export class YDataLogger extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_autoStart(newval: YDataLogger_AutoStart): Promise<number>
+    async set_autoStart(newval: YDataLogger.AUTOSTART): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -8323,7 +8305,7 @@ export class YDataLogger extends YFunction
      *
      * On failure, throws an exception or returns YDataLogger.BEACONDRIVEN_INVALID.
      */
-    async get_beaconDriven(): Promise<YDataLogger_BeaconDriven>
+    async get_beaconDriven(): Promise<YDataLogger.BEACONDRIVEN>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -8347,7 +8329,7 @@ export class YDataLogger extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_beaconDriven(newval: YDataLogger_BeaconDriven): Promise<number>
+    async set_beaconDriven(newval: YDataLogger.BEACONDRIVEN): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -8373,7 +8355,7 @@ export class YDataLogger extends YFunction
         return res;
     }
 
-    async get_clearHistory(): Promise<YDataLogger_ClearHistory>
+    async get_clearHistory(): Promise<YDataLogger.CLEARHISTORY>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -8385,7 +8367,7 @@ export class YDataLogger extends YFunction
         return res;
     }
 
-    async set_clearHistory(newval: YDataLogger_ClearHistory): Promise<number>
+    async set_clearHistory(newval: YDataLogger.CLEARHISTORY): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -8478,7 +8460,7 @@ export class YDataLogger extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YDataLoggerValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YDataLogger.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -8521,7 +8503,7 @@ export class YDataLogger extends YFunction
      */
     async forgetAllDataStreams(): Promise<number>
     {
-        return await this.set_clearHistory(YDataLogger.CLEARHISTORY_TRUE);
+        return await this.set_clearHistory(YDataLogger.CLEARHISTORY.TRUE);
     }
 
     /**
@@ -8611,6 +8593,33 @@ export class YDataLogger extends YFunction
     }
 
     //--- (end of generated code: YDataLogger implementation)
+}
+
+export namespace YDataLogger {
+    //--- (generated code: YDataLogger definitions)
+    export const enum RECORDING {
+        OFF = 0,
+        ON = 1,
+        PENDING = 2,
+        INVALID = -1
+    }
+    export const enum AUTOSTART {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export const enum BEACONDRIVEN {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export const enum CLEARHISTORY {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YDataLogger, value: string): void }
+    //--- (end of generated code: YDataLogger definitions)
 }
 
 //
@@ -9187,6 +9196,32 @@ export interface _YY_WebSocket {
     terminate?: () => void;
 }
 
+// websocket protocol encoding constants
+const enum YSTREAM {
+    TCP = 1,
+    TCP_CLOSE = 2,
+    META = 5,
+    TCP_NOTIF = 8,
+    TCP_ASYNCCLOSE = 9
+}
+
+const enum USB_META {
+    UTCTIME = 1,
+    DLFLUSH = 2,
+    ACK_D2H_PACKET = 3,
+    WS_ANNOUNCE = 4,
+    WS_AUTHENTICATION = 5,
+    WS_ERROR = 6,
+    ACK_UPLOAD = 7
+}
+const enum WSConnState {
+    DEAD = 0,
+    DISCONNECTED = 1,
+    CONNECTING = 2,
+    AUTHENTICATING = 3,
+    CONNECTED = 4
+}
+
 export abstract class YWebSocketHub extends YGenericHub
 {
     // default transport layer parameters
@@ -9197,21 +9232,6 @@ export abstract class YWebSocketHub extends YGenericHub
     _YIO_DEFAULT_TCP_TIMEOUT = 20000;
     _YIO_1_MINUTE_TCP_TIMEOUT = 60000;
     _YIO_10_MINUTES_TCP_TIMEOUT = 600000;
-
-    // websocket protocol encoding constants
-    _YSTREAM_TCP = 1;
-    _YSTREAM_TCP_CLOSE = 2;
-    _YSTREAM_META = 5;
-    _YSTREAM_TCP_NOTIF = 8;
-    _YSTREAM_TCP_ASYNCCLOSE = 9;
-
-    _USB_META_UTCTIME = 1;
-    _USB_META_DLFLUSH = 2;
-    _USB_META_ACK_D2H_PACKET = 3;
-    _USB_META_WS_ANNOUNCE = 4;
-    _USB_META_WS_AUTHENTICATION = 5;
-    _USB_META_WS_ERROR = 6;
-    _USB_META_ACK_UPLOAD = 7;
 
     _USB_META_UTCTIME_SIZE = 5;
     _USB_META_DLFLUSH_SIZE = 1;
@@ -9224,12 +9244,6 @@ export abstract class YWebSocketHub extends YGenericHub
     _USB_META_WS_VALID_SHA1 = 1;
     _USB_META_WS_RW = 2;
 
-    _WS_DEAD = 0;
-    _WS_DISCONNECTED = 1;
-    _WS_CONNECTING = 2;
-    _WS_AUTHENTICATING = 3;
-    _WS_CONNECTED = 4;
-
     // connection state members
     websocket: _YY_WebSocket | null = null;
     notbynOpenPromise: Promise<YConditionalResult> | null = null;
@@ -9239,7 +9253,7 @@ export abstract class YWebSocketHub extends YGenericHub
     nextAsyncId: number          = 48;
     _reconnectionTimer = null;
     _connectionTime: number = 0;
-    _connectionState: number;
+    _connectionState: WSConnState;
     _remoteVersion: number = 0;
     _remoteSerial: string = '';
     _remoteNonce: number = -1;
@@ -9266,10 +9280,10 @@ export abstract class YWebSocketHub extends YGenericHub
     {
         super(yapi, urlInfo);
         // setup defaults states
-        this._connectionState = this._WS_CONNECTING;
+        this._connectionState = WSConnState.CONNECTING;
         this._tcpRoundTripTime = this._DEFAULT_TCP_ROUND_TRIP_TIME;
         this._tcpMaxWindowSize = this._DEFAULT_TCP_MAX_WINDOW_SIZE;
-        this.fwd_connectionState = this._WS_DISCONNECTED;
+        this.fwd_connectionState = WSConnState.DISCONNECTED;
     }
 
     /** Open an outgoing websocket
@@ -9310,7 +9324,7 @@ export abstract class YWebSocketHub extends YGenericHub
             return YAPI_IO_ERROR;
         }
         // Open WebSocket connection
-        this._connectionState = this._WS_CONNECTING;
+        this._connectionState = WSConnState.CONNECTING;
         if(!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             if (mstimeout) {
@@ -9336,7 +9350,7 @@ export abstract class YWebSocketHub extends YGenericHub
                             } else {
                                 this.websocket.onmessage = ((evt: _YY_WebSocketMessageEvent) => {
                                     this._webSocketMsg(new Uint8Array(evt.data));
-                                    if (this._connectionState == this._WS_CONNECTED) {
+                                    if (this._connectionState == WSConnState.CONNECTED) {
                                         if(!this._hubAdded) {
                                             // registration is now complete
                                             this.notbynOpenTimeout = null;
@@ -9348,7 +9362,7 @@ export abstract class YWebSocketHub extends YGenericHub
                                                 resolve({ errorType: YAPI_SUCCESS, errorMsg: "" });
                                             });
                                         }
-                                    } else if (this._connectionState == this._WS_DEAD) {
+                                    } else if (this._connectionState == WSConnState.DEAD) {
                                         if (errmsg) {
                                             errmsg.msg = <string>this._session_error;
                                         }
@@ -9362,7 +9376,7 @@ export abstract class YWebSocketHub extends YGenericHub
                                     }
                                 });
                                 this.websocket.onclose = ((evt: _YY_WebSocketCloseEvent) => {
-                                    this._connectionState = this._WS_DISCONNECTED;
+                                    this._connectionState = WSConnState.DISCONNECTED;
                                     this.websocket = null;
                                     if (this.timeoutId) {
                                         clearTimeout(this.timeoutId);
@@ -9386,7 +9400,7 @@ export abstract class YWebSocketHub extends YGenericHub
                                     if (this.websocket && this.websocket.terminate) {
                                         this.websocket.terminate();
                                     }
-                                    this._connectionState = this._WS_DISCONNECTED;
+                                    this._connectionState = WSConnState.DISCONNECTED;
                                     this.websocket = null;
                                     if (this.retryDelay < 0) {
                                         this.disconnecting = true;
@@ -9438,7 +9452,7 @@ export abstract class YWebSocketHub extends YGenericHub
      */
     imm_isForwarded(): boolean
     {
-        return (this.fwd_connectionState == this._WS_CONNECTED) && (this.fwd_websocket !== null);
+        return (this.fwd_connectionState == WSConnState.CONNECTED) && (this.fwd_websocket !== null);
     }
 
     /** Handle an incoming packet
@@ -9457,7 +9471,7 @@ export abstract class YWebSocketHub extends YGenericHub
             let reltime = (this._yapi.GetTickCount() - this._connectionTime)/1000.0;
             let ystream = arr_bytes[0] >>> 3;
             let text = '';
-            if(ystream == this._YSTREAM_TCP_NOTIF) {
+            if(ystream == YSTREAM.TCP_NOTIF) {
                 //this._yapi.imm_log(reltime+': TCP_NOTIF len='+arr_bytes.length);
                 for(let i = 1; i < arr_bytes.length; i++) {
                     text += String.fromCharCode(arr_bytes[i]);
@@ -9468,7 +9482,7 @@ export abstract class YWebSocketHub extends YGenericHub
             // Other types of messages
             let ws = this.websocket;
             let tcpchan = arr_bytes[0] & 7;
-            if(ystream == this._YSTREAM_TCP || ystream == this._YSTREAM_TCP_CLOSE || ystream == this._YSTREAM_TCP_ASYNCCLOSE) {
+            if(ystream == YSTREAM.TCP || ystream == YSTREAM.TCP_CLOSE || ystream == YSTREAM.TCP_ASYNCCLOSE) {
                 if(tcpchan > 3) {
                     this.imm_asyncWebSocketError(YAPI_IO_ERROR, 'Unexpected frame for tcpChan '+tcpchan+' ('+ystream+')');
                     return;
@@ -9480,7 +9494,7 @@ export abstract class YWebSocketHub extends YGenericHub
                     this.imm_asyncWebSocketError(YAPI_IO_ERROR, 'Drop frame for closed tcpChan '+tcpchan+' ('+ystream+')');
                     return;
                 }
-                if(ystream == this._YSTREAM_TCP_ASYNCCLOSE) {
+                if(ystream == YSTREAM.TCP_ASYNCCLOSE) {
                     // async close packet, check async signature byte
                     tcp_end--;
                     let rcvId = arr_bytes[tcp_end];
@@ -9508,12 +9522,12 @@ export abstract class YWebSocketHub extends YGenericHub
                 yreq.bin_result = newArr;
 
                 // when the request is closed, post result to caller
-                if(ystream == this._YSTREAM_TCP_CLOSE || ystream == this._YSTREAM_TCP_ASYNCCLOSE) {
+                if(ystream == YSTREAM.TCP_CLOSE || ystream == YSTREAM.TCP_ASYNCCLOSE) {
                     // Pop request from tcp channel
                     this.tcpChan[tcpchan] = yreq.next;
 
                     // Handle synchronous close
-                    if(ystream == this._YSTREAM_TCP_CLOSE) {
+                    if(ystream == YSTREAM.TCP_CLOSE) {
                         // synchronous close
                         if(yreq.asyncId != 0) {
                             if(this._yapi._logLevel >= 4) {
@@ -9544,7 +9558,7 @@ export abstract class YWebSocketHub extends YGenericHub
                             if(yreq.timeoutId) {
                                 // request was not aborted, ack synchronous close by sending YSTREAM_TCP_CLOSE
                                 let frame = new Uint8Array(1);
-                                frame[0] = (this._YSTREAM_TCP_CLOSE << 3) + tcpchan;
+                                frame[0] = (YSTREAM.TCP_CLOSE << 3) + tcpchan;
                                 this.websocket.send(frame);
                             }
                         }
@@ -9605,11 +9619,11 @@ export abstract class YWebSocketHub extends YGenericHub
             if(!this.websocket) {
                 return;
             }
-            if(ystream == this._YSTREAM_META) {
+            if(ystream == YSTREAM.META) {
                 let metatype = arr_bytes[1];
                 //this._yapi.imm_log(reltime+': META type='+metatype+' len='+arr_bytes.length);
                 switch (metatype) {
-                    case this._USB_META_WS_ANNOUNCE:
+                    case USB_META.WS_ANNOUNCE:
                         if(arr_bytes.length < 1+this._USB_META_WS_ANNOUNCE_SIZE) {
                             return;
                         }
@@ -9632,13 +9646,13 @@ export abstract class YWebSocketHub extends YGenericHub
                         this.imm_getRandomValues(nonce);
                         this._nonce = nonce[0]+(nonce[1]<<8)+(nonce[2]<<16)+(nonce[3]<<24);
                         this._connectionTime = this._yapi.GetTickCount();
-                        this._connectionState = this._WS_AUTHENTICATING;
+                        this._connectionState = WSConnState.AUTHENTICATING;
                         // send our authentication packet
                         let frame = new Uint8Array(1+this._USB_META_WS_AUTHENTICATION_SIZE);
                         let version = (this._remoteVersion < 2 ? this._remoteVersion : 2);
                         let flags = 0;
-                        frame[0] = (this._YSTREAM_META << 3);
-                        frame[1] = this._USB_META_WS_AUTHENTICATION;
+                        frame[0] = (YSTREAM.META << 3);
+                        frame[1] = USB_META.WS_AUTHENTICATION;
                         frame[2] = version;
                         if (this.urlInfo.pass != '') {
                             flags = this._USB_META_WS_VALID_SHA1;
@@ -9655,8 +9669,8 @@ export abstract class YWebSocketHub extends YGenericHub
                         frame[8] = (this._nonce >>> 24) & 0xff;
                         this.websocket.send(frame);
                         break;
-                    case this._USB_META_WS_AUTHENTICATION:
-                        if(this._connectionState != this._WS_AUTHENTICATING) {
+                    case USB_META.WS_AUTHENTICATION:
+                        if(this._connectionState != WSConnState.AUTHENTICATING) {
                             return;
                         }
                         if(arr_bytes.length < 1+this._USB_META_WS_AUTHENTICATION_SIZE) {
@@ -9687,16 +9701,16 @@ export abstract class YWebSocketHub extends YGenericHub
                                     // bad signature
                                     this._session_errno = 401;
                                     this._session_error = 'Authentication failed';
-                                    this._connectionState = this._WS_DEAD;
+                                    this._connectionState = WSConnState.DEAD;
                                     return;
                                 }
                             }
                             // Password verified OK
-                            this._connectionState = this._WS_CONNECTED;
+                            this._connectionState = WSConnState.CONNECTED;
                         } else {
                             if(this.urlInfo.pass == '') {
                                 // No password required, connection OK
-                                this._connectionState = this._WS_CONNECTED;
+                                this._connectionState = WSConnState.CONNECTED;
                             } else {
                                 // Hub did not sign password, unauthorized
                                 this._session_errno = 401;
@@ -9705,21 +9719,21 @@ export abstract class YWebSocketHub extends YGenericHub
                                 } else {
                                     this._session_error = 'Password not set on remote hub';
                                 }
-                                this._connectionState = this._WS_DEAD;
+                                this._connectionState = WSConnState.DEAD;
                                 return;
                             }
                         }
                         break;
-                    case this._USB_META_WS_ERROR:
+                    case USB_META.WS_ERROR:
                         this._session_errno = arr_bytes[3]+(arr_bytes[4]<<8);
                         if (this._session_errno == 401) {
                             this._session_error = 'Authentication failed';
                         } else {
                             this._session_error = 'Remote hub closed connection with error '+this._session_errno;
                         }
-                        this._connectionState = this._WS_DEAD;
+                        this._connectionState = WSConnState.DEAD;
                         break;
-                    case this._USB_META_ACK_UPLOAD:
+                    case USB_META.ACK_UPLOAD:
                         tcpchan = arr_bytes[2];
                         if(this.tcpChan[tcpchan]) {
                             let yreq = <YHTTPRequest>this.tcpChan[tcpchan];
@@ -9829,7 +9843,7 @@ export abstract class YWebSocketHub extends YGenericHub
                     try { yreq.acceptor(yreq); } catch(e) {}
                     return;
                 }
-                if(!ws || this.disconnecting || this._connectionState != this._WS_CONNECTED) {
+                if(!ws || this.disconnecting || this._connectionState != WSConnState.CONNECTED) {
                     if(this._yapi._logLevel >= 4) {
                         this._yapi.imm_log('request @' + yreq._creat + ' failed, websocket is down');
                     }
@@ -9874,7 +9888,7 @@ export abstract class YWebSocketHub extends YGenericHub
         let yreq = this.tcpChan[tcpchan];
 
         while(yreq) {
-            if(!this.websocket || this.disconnecting || this._connectionState != this._WS_CONNECTED) {
+            if(!this.websocket || this.disconnecting || this._connectionState != WSConnState.CONNECTED) {
                 if(this._yapi._logLevel >= 4) {
                     this._yapi.imm_log('request @' + yreq._creat + ' failed, websocket is down');
                 }
@@ -9958,12 +9972,12 @@ export abstract class YWebSocketHub extends YGenericHub
 
                 if(isAsync && pos + datalen == yreq.toBeSent.length && framelen < 125) {
                     frame = new Uint8Array(framelen + 1);
-                    frame[0] = 8 * this._YSTREAM_TCP_ASYNCCLOSE + tcpchan;
+                    frame[0] = 8 * YSTREAM.TCP_ASYNCCLOSE + tcpchan;
                     frame[framelen] = yreq.asyncId;
                     asyncCloseSet = true;
                 } else {
                     frame = new Uint8Array(framelen);
-                    frame[0] = 8 * this._YSTREAM_TCP + tcpchan;
+                    frame[0] = 8 * YSTREAM.TCP + tcpchan;
                 }
                 frame.set(yreq.toBeSent.subarray(pos, pos+datalen),1);
                 pos += datalen;
@@ -9983,7 +9997,7 @@ export abstract class YWebSocketHub extends YGenericHub
 
             if(isAsync && !asyncCloseSet) {
                 frame = new Uint8Array(2);
-                frame[0] = 8 * this._YSTREAM_TCP_ASYNCCLOSE + tcpchan;
+                frame[0] = 8 * YSTREAM.TCP_ASYNCCLOSE + tcpchan;
                 frame[1] = yreq.asyncId;
                 this.imm_webSocketSend(frame);
             }
@@ -10051,7 +10065,7 @@ export abstract class YWebSocketHub extends YGenericHub
         if(yreq.asyncId == 0) {
             // send a close to abort synchronous request
             let frame = new Uint8Array(1);
-            frame[0] = 8 * this._YSTREAM_TCP_CLOSE + tcpchan;
+            frame[0] = 8 * YSTREAM.TCP_CLOSE + tcpchan;
             this.imm_webSocketSend(frame);
 
             if(this._yapi._logLevel >= 4) {
@@ -10095,8 +10109,8 @@ export abstract class YWebSocketHub extends YGenericHub
     //
     imm_dropAllPendingConnection()
     {
-        if (this.fwd_connectionState != this._WS_DISCONNECTED && this.fwd_websocket) {
-            this.fwd_connectionState = this._WS_DISCONNECTED;
+        if (this.fwd_connectionState != WSConnState.DISCONNECTED && this.fwd_websocket) {
+            this.fwd_connectionState = WSConnState.DISCONNECTED;
             this.fwd_websocket.close();
             this.fwd_websocket = null;
         }
@@ -10128,7 +10142,7 @@ export abstract class YWebSocketHub extends YGenericHub
 
     async websocketJoin(ws: _YY_WebSocket, arr_credentials: WebSocketCredential[], close_callback: Function): Promise<boolean>
     {
-        if(this._connectionState != this._WS_CONNECTED) {
+        if(this._connectionState != WSConnState.CONNECTED) {
             this.imm_asyncWebSocketError(YAPI_IO_ERROR, 'Hub is disconnected, cannot join');
             return false;
         }
@@ -10137,17 +10151,17 @@ export abstract class YWebSocketHub extends YGenericHub
         this.fwd_websocket = ws;
         this.fwd_credentials = arr_credentials;
         this.fwd_closeCallback = close_callback;
-        this.fwd_connectionState = this._WS_CONNECTING;
+        this.fwd_connectionState = WSConnState.CONNECTING;
         ws.onmessage = ((evt: _YY_WebSocketMessageEvent) => {
-            if(this.fwd_connectionState == this._WS_CONNECTED) {
+            if(this.fwd_connectionState == WSConnState.CONNECTED) {
                 // forward to remote hub
-                if (this._connectionState == this._WS_CONNECTED) {
+                if (this._connectionState == WSConnState.CONNECTED) {
                     this.imm_webSocketSend(evt.data);
                 } else {
                     // drop unexpected frame in disconnected state
                     this._yapi.imm_log('WS: drop packet from fwd API (state='+this._connectionState+')');
                 }
-            } else if(this.fwd_connectionState == this._WS_AUTHENTICATING) {
+            } else if(this.fwd_connectionState == WSConnState.AUTHENTICATING) {
                 // handle authentication packet
                 this.imm_handleAPIAuthPkt(evt.data);
             } else {
@@ -10156,7 +10170,7 @@ export abstract class YWebSocketHub extends YGenericHub
             }
         });
         ws.onclose = ((evt: _YY_WebSocketCloseEvent) => {
-            this.fwd_connectionState = this._WS_DISCONNECTED;
+            this.fwd_connectionState = WSConnState.DISCONNECTED;
             this.fwd_websocket = null;
             if(this.fwd_closeCallback) {
                 this.fwd_closeCallback();
@@ -10174,8 +10188,8 @@ export abstract class YWebSocketHub extends YGenericHub
         let frame = new Uint8Array(1+this._USB_META_WS_ANNOUNCE_SIZE);
         let nonce = new Uint8Array(4);
         this.imm_getRandomValues(nonce);
-        frame[0] = (this._YSTREAM_META << 3);
-        frame[1] = this._USB_META_WS_ANNOUNCE;
+        frame[0] = (YSTREAM.META << 3);
+        frame[1] = USB_META.WS_ANNOUNCE;
         frame[2] = 2;       // protocol version
         frame[3] = (this._tcpMaxWindowSize >> 4) & 0xff;  // TCP window size, in para
         frame[4] = (this._tcpMaxWindowSize >> 12) & 0xff;
@@ -10186,7 +10200,7 @@ export abstract class YWebSocketHub extends YGenericHub
             frame[9+i] = this._remoteSerial.charCodeAt(i);
         }
         this.fwd_nonce = frame[5]+(frame[6]<<8)+(frame[7]<<16)+(frame[8]<<24);
-        this.fwd_connectionState = this._WS_AUTHENTICATING;
+        this.fwd_connectionState = WSConnState.AUTHENTICATING;
         this.fwd_websocket.send(frame);
 
         return true;
@@ -10194,14 +10208,14 @@ export abstract class YWebSocketHub extends YGenericHub
 
     imm_handleAPIAuthPkt(msg: Uint8Array)
     {
-        if(msg.length < 1+this._USB_META_WS_AUTHENTICATION_SIZE || msg[0] != (this._YSTREAM_META << 3)) {
+        if(msg.length < 1+this._USB_META_WS_AUTHENTICATION_SIZE || msg[0] != (YSTREAM.META << 3)) {
             this._yapi.imm_log("bad-apiauth1\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = WSConnState.DEAD;
             return;
         }
-        if (msg[1] != this._USB_META_WS_AUTHENTICATION || msg[2] > 2) {
+        if (msg[1] != USB_META.WS_AUTHENTICATION || msg[2] > 2) {
             this._yapi.imm_log("bad-apiauth2\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = WSConnState.DEAD;
             return;
         }
         this._remoteVersion = msg[2];
@@ -10210,12 +10224,12 @@ export abstract class YWebSocketHub extends YGenericHub
         let flags = msg[3] + (msg[4] << 8);
         if((flags & this._USB_META_WS_VALID_SHA1) == 0) {
             this._yapi.imm_log("bad-apiauth3\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = WSConnState.DEAD;
             return;
         }
         if(!this.fwd_websocket) {
             this._yapi.imm_log("no-fwd-ws\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = WSConnState.DEAD;
             return;
         }
 
@@ -10233,7 +10247,7 @@ export abstract class YWebSocketHub extends YGenericHub
             this._yapi.imm_log("bad-apiauth4\n");
             msg.fill(0, 3);
             this.fwd_websocket.send(msg);
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = WSConnState.DEAD;
             return;
         }
 
@@ -10245,7 +10259,7 @@ export abstract class YWebSocketHub extends YGenericHub
             msg[9+i] = sha1[i];
         }
         this.fwd_websocket.send(msg);
-        this.fwd_connectionState = this._WS_CONNECTED;
+        this.fwd_connectionState = WSConnState.CONNECTED;
     }
 
     async disconnect()
@@ -10281,7 +10295,7 @@ export abstract class YWebSocketHub extends YGenericHub
     async reconnect()
     {
         if(this.websocket) {
-            this._connectionState = this._WS_DISCONNECTED;
+            this._connectionState = WSConnState.DISCONNECTED;
             try {
                 if (this.websocket.terminate) {
                     this.websocket.terminate();
@@ -10296,7 +10310,7 @@ export abstract class YWebSocketHub extends YGenericHub
 
     imm_isOnline()
     {
-        if(this._connectionState != this._WS_CONNECTED) {
+        if(this._connectionState != WSConnState.CONNECTED) {
             return false;
         }
         return super.imm_isOnline();
@@ -10559,42 +10573,55 @@ export class YAPIContext
     exceptionsDisabled: boolean = false;
     /* make sure to add code to reset any new property in imm_ResetToDefaults() */
     //--- (generated code: YAPIContext attributes declaration)
+    public readonly SUCCESS: number = 0;
+    public readonly NOT_INITIALIZED: number = -1;
+    public readonly INVALID_ARGUMENT: number = -2;
+    public readonly NOT_SUPPORTED: number = -3;
+    public readonly DEVICE_NOT_FOUND: number = -4;
+    public readonly VERSION_MISMATCH: number = -5;
+    public readonly DEVICE_BUSY: number = -6;
+    public readonly TIMEOUT: number = -7;
+    public readonly IO_ERROR: number = -8;
+    public readonly NO_MORE_DATA: number = -9;
+    public readonly EXHAUSTED: number = -10;
+    public readonly DOUBLE_ACCES: number = -11;
+    public readonly UNAUTHORIZED: number = -12;
+    public readonly RTC_NOT_READY: number = -13;
+    public readonly FILE_NOT_FOUND: number = -14;
     defaultCacheValidity: number = 5;
 
     // API symbols as static members
+    public static readonly SUCCESS: number = 0;
+    public static readonly NOT_INITIALIZED: number = -1;
+    public static readonly INVALID_ARGUMENT: number = -2;
+    public static readonly NOT_SUPPORTED: number = -3;
+    public static readonly DEVICE_NOT_FOUND: number = -4;
+    public static readonly VERSION_MISMATCH: number = -5;
+    public static readonly DEVICE_BUSY: number = -6;
+    public static readonly TIMEOUT: number = -7;
+    public static readonly IO_ERROR: number = -8;
+    public static readonly NO_MORE_DATA: number = -9;
+    public static readonly EXHAUSTED: number = -10;
+    public static readonly DOUBLE_ACCES: number = -11;
+    public static readonly UNAUTHORIZED: number = -12;
+    public static readonly RTC_NOT_READY: number = -13;
+    public static readonly FILE_NOT_FOUND: number = -14;
     //--- (end of generated code: YAPIContext attributes declaration)
 
     // API symbols
-    INVALID_INT         : number = YAPI_INVALID_INT;
-    INVALID_UINT        : number = YAPI_INVALID_UINT;
-    INVALID_LONG        : number = YAPI_INVALID_LONG;
-    INVALID_DOUBLE      : number = YAPI_INVALID_DOUBLE;
-    MIN_DOUBLE          : number = YAPI_MIN_DOUBLE;
-    MAX_DOUBLE          : number = YAPI_MAX_DOUBLE;
-    INVALID_STRING      : string = YAPI_INVALID_STRING;
-    HASH_BUF_SIZE       : number = YOCTO_HASH_BUF_SIZE;
-    //--- (generated code: YFunction return codes)
-    SUCCESS             : number = YAPI_SUCCESS;             // everything worked all right
-    NOT_INITIALIZED     : number = YAPI_NOT_INITIALIZED;     // call yInitAPI() first !
-    INVALID_ARGUMENT    : number = YAPI_INVALID_ARGUMENT;    // one of the arguments passed to the function is invalid
-    NOT_SUPPORTED       : number = YAPI_NOT_SUPPORTED;       // the operation attempted is (currently) not supported
-    DEVICE_NOT_FOUND    : number = YAPI_DEVICE_NOT_FOUND;    // the requested device is not reachable
-    VERSION_MISMATCH    : number = YAPI_VERSION_MISMATCH;    // the device firmware is incompatible with this API version
-    DEVICE_BUSY         : number = YAPI_DEVICE_BUSY;         // the device is busy with another task and cannot answer
-    TIMEOUT             : number = YAPI_TIMEOUT;             // the device took too long to provide an answer
-    IO_ERROR            : number = YAPI_IO_ERROR;            // there was an I/O problem while talking to the device
-    NO_MORE_DATA        : number = YAPI_NO_MORE_DATA;        // there is no more data to read from
-    EXHAUSTED           : number = YAPI_EXHAUSTED;           // you have run out of a limited resource, check the documentation
-    DOUBLE_ACCES        : number = YAPI_DOUBLE_ACCES;        // you have two process that try to access to the same device
-    UNAUTHORIZED        : number = YAPI_UNAUTHORIZED;        // unauthorized access to password-protected device
-    RTC_NOT_READY       : number = YAPI_RTC_NOT_READY;       // real-time clock has not been initialized (or time was lost)
-    FILE_NOT_FOUND      : number = YAPI_FILE_NOT_FOUND;      // the file is not found
-//--- (end of generated code: YFunction return codes)
+    public readonly INVALID_INT    : number = YAPI_INVALID_INT;
+    public readonly INVALID_UINT   : number = YAPI_INVALID_UINT;
+    public readonly INVALID_LONG   : number = YAPI_INVALID_LONG;
+    public readonly INVALID_DOUBLE : number = YAPI_INVALID_DOUBLE;
+    public readonly MIN_DOUBLE     : number = YAPI_MIN_DOUBLE;
+    public readonly MAX_DOUBLE     : number = YAPI_MAX_DOUBLE;
+    public readonly INVALID_STRING : string = YAPI_INVALID_STRING;
+    public readonly HASH_BUF_SIZE  : number = YOCTO_HASH_BUF_SIZE;
     // yInitAPI constants
-    DETECT_NONE         : number = Y_DETECT_NONE;
-    DETECT_USB          : number = Y_DETECT_USB;
-    DETECT_NET          : number = Y_DETECT_NET;
-    DETECT_ALL          : number = Y_DETECT_ALL;
+    public readonly DETECT_NONE    : number = Y_DETECT_NONE;
+    public readonly DETECT_USB     : number = Y_DETECT_USB;
+    public readonly DETECT_NET     : number = Y_DETECT_NET;
+    public readonly DETECT_ALL     : number = Y_DETECT_ALL;
 
     constructor(system_env?: YSystemEnv)
     {
@@ -12181,7 +12208,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.43583';
+        return /* version number patched automatically */'1.10.43781';
     }
 
     /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pressure.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pressure.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YPressure definitions)
 //--- (YPressure class start)
 /**
  * YPressure Class: pressure sensor control interface, available for instance in the
@@ -51,8 +50,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 export class YPressure extends YSensor {
     // API symbols as static members
     //--- (end of YPressure attributes declaration)
-    //--- (YPressure return codes)
-    //--- (end of YPressure return codes)
     constructor(yapi, func) {
         //--- (YPressure constructor)
         super(yapi, func);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_weighscale.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YWeighScale definitions)
 //--- (YWeighScale class start)
 /**
  * YWeighScale Class: weighing scale sensor control interface, available for instance in the
@@ -52,8 +51,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YWeighScale class start)
 export class YWeighScale extends YSensor {
     //--- (end of YWeighScale attributes declaration)
-    //--- (YWeighScale return codes)
-    //--- (end of YWeighScale return codes)
     constructor(yapi, func) {
         //--- (YWeighScale constructor)
         super(yapi, func);
@@ -68,10 +65,10 @@ export class YWeighScale extends YSensor {
         this._valueCallbackWeighScale = null;
         this._timedReportCallbackWeighScale = null;
         // API symbols as object properties
-        this.EXCITATION_OFF = 0 /* OFF */;
-        this.EXCITATION_DC = 1 /* DC */;
-        this.EXCITATION_AC = 2 /* AC */;
-        this.EXCITATION_INVALID = -1 /* INVALID */;
+        this.EXCITATION_OFF = 0;
+        this.EXCITATION_DC = 1;
+        this.EXCITATION_AC = 2;
+        this.EXCITATION_INVALID = -1;
         this.TEMPAVGADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
         this.TEMPCHGADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
         this.COMPTEMPAVG_INVALID = YAPI.INVALID_DOUBLE;
@@ -794,10 +791,10 @@ export class YWeighScale extends YSensor {
     }
 }
 // API symbols as static members
-YWeighScale.EXCITATION_OFF = 0 /* OFF */;
-YWeighScale.EXCITATION_DC = 1 /* DC */;
-YWeighScale.EXCITATION_AC = 2 /* AC */;
-YWeighScale.EXCITATION_INVALID = -1 /* INVALID */;
+YWeighScale.EXCITATION_OFF = 0;
+YWeighScale.EXCITATION_DC = 1;
+YWeighScale.EXCITATION_AC = 2;
+YWeighScale.EXCITATION_INVALID = -1;
 YWeighScale.TEMPAVGADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
 YWeighScale.TEMPCHGADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
 YWeighScale.COMPTEMPAVG_INVALID = YAPI.INVALID_DOUBLE;

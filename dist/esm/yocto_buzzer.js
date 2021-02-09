@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YBuzzer definitions)
 //--- (YBuzzer class start)
 /**
  * YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer or the Yocto-MaxiBuzzer
@@ -49,8 +48,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YBuzzer class start)
 export class YBuzzer extends YFunction {
     //--- (end of YBuzzer attributes declaration)
-    //--- (YBuzzer return codes)
-    //--- (end of YBuzzer return codes)
     constructor(yapi, func) {
         //--- (YBuzzer constructor)
         super(yapi, func);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_weighscale.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -39,17 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YWeighScale definitions)
-export const enum YWeighScale_Excitation {
-    OFF = 0,
-    DC = 1,
-    AC = 2,
-    INVALID = -1
-}
-export interface YWeighScaleValueCallback { (func: YWeighScale, value: string): void }
-export interface YWeighScaleTimedReportCallback { (func: YWeighScale, measure: YMeasure): void }
-//--- (end of YWeighScale definitions)
-
 //--- (YWeighScale class start)
 /**
  * YWeighScale Class: weighing scale sensor control interface, available for instance in the
@@ -67,7 +56,7 @@ export class YWeighScale extends YSensor
 {
     //--- (YWeighScale attributes declaration)
     _className: string;
-    _excitation: YWeighScale_Excitation = YWeighScale.EXCITATION_INVALID;
+    _excitation: YWeighScale.EXCITATION = YWeighScale.EXCITATION_INVALID;
     _tempAvgAdaptRatio: number = YWeighScale.TEMPAVGADAPTRATIO_INVALID;
     _tempChgAdaptRatio: number = YWeighScale.TEMPCHGADAPTRATIO_INVALID;
     _compTempAvg: number = YWeighScale.COMPTEMPAVG_INVALID;
@@ -75,14 +64,14 @@ export class YWeighScale extends YSensor
     _compensation: number = YWeighScale.COMPENSATION_INVALID;
     _zeroTracking: number = YWeighScale.ZEROTRACKING_INVALID;
     _command: string = YWeighScale.COMMAND_INVALID;
-    _valueCallbackWeighScale: YWeighScaleValueCallback | null = null;
-    _timedReportCallbackWeighScale: YWeighScaleTimedReportCallback | null = null;
+    _valueCallbackWeighScale: YWeighScale.ValueCallback | null = null;
+    _timedReportCallbackWeighScale: YWeighScale.TimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly EXCITATION_OFF: YWeighScale_Excitation = YWeighScale_Excitation.OFF;
-    public readonly EXCITATION_DC: YWeighScale_Excitation = YWeighScale_Excitation.DC;
-    public readonly EXCITATION_AC: YWeighScale_Excitation = YWeighScale_Excitation.AC;
-    public readonly EXCITATION_INVALID: YWeighScale_Excitation = YWeighScale_Excitation.INVALID;
+    public readonly EXCITATION_OFF: YWeighScale.EXCITATION = 0;
+    public readonly EXCITATION_DC: YWeighScale.EXCITATION = 1;
+    public readonly EXCITATION_AC: YWeighScale.EXCITATION = 2;
+    public readonly EXCITATION_INVALID: YWeighScale.EXCITATION = -1;
     public readonly TEMPAVGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly TEMPCHGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly COMPTEMPAVG_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -92,10 +81,10 @@ export class YWeighScale extends YSensor
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly EXCITATION_OFF: YWeighScale_Excitation = YWeighScale_Excitation.OFF;
-    public static readonly EXCITATION_DC: YWeighScale_Excitation = YWeighScale_Excitation.DC;
-    public static readonly EXCITATION_AC: YWeighScale_Excitation = YWeighScale_Excitation.AC;
-    public static readonly EXCITATION_INVALID: YWeighScale_Excitation = YWeighScale_Excitation.INVALID;
+    public static readonly EXCITATION_OFF: YWeighScale.EXCITATION = 0;
+    public static readonly EXCITATION_DC: YWeighScale.EXCITATION = 1;
+    public static readonly EXCITATION_AC: YWeighScale.EXCITATION = 2;
+    public static readonly EXCITATION_INVALID: YWeighScale.EXCITATION = -1;
     public static readonly TEMPAVGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly TEMPCHGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COMPTEMPAVG_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -104,9 +93,6 @@ export class YWeighScale extends YSensor
     public static readonly ZEROTRACKING_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YWeighScale attributes declaration)
-
-//--- (YWeighScale return codes)
-//--- (end of YWeighScale return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -122,7 +108,7 @@ export class YWeighScale extends YSensor
     {
         switch(name) {
         case 'excitation':
-            this._excitation = <YWeighScale_Excitation> <number> val;
+            this._excitation = <YWeighScale.EXCITATION> <number> val;
             return 1;
         case 'tempAvgAdaptRatio':
             this._tempAvgAdaptRatio = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -175,7 +161,7 @@ export class YWeighScale extends YSensor
      *
      * On failure, throws an exception or returns YWeighScale.EXCITATION_INVALID.
      */
-    async get_excitation(): Promise<YWeighScale_Excitation>
+    async get_excitation(): Promise<YWeighScale.EXCITATION>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -199,7 +185,7 @@ export class YWeighScale extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_excitation(newval: YWeighScale_Excitation): Promise<number>
+    async set_excitation(newval: YWeighScale.EXCITATION): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -498,7 +484,7 @@ export class YWeighScale extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YWeighScaleValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YWeighScale.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -542,7 +528,7 @@ export class YWeighScale extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YWeighScaleTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YWeighScale.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -892,5 +878,17 @@ export class YWeighScale extends YSensor
     }
 
     //--- (end of YWeighScale implementation)
+}
+
+export namespace YWeighScale {
+    //--- (YWeighScale definitions)
+    export const enum EXCITATION {
+        OFF = 0,
+        DC = 1,
+        AC = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YWeighScale, value: string): void }    export interface TimedReportCallback { (func: YWeighScale, measure: YMeasure): void }
+    //--- (end of YWeighScale definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_compass.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -39,17 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YCompass definitions)
-export const enum YCompass_Axis {
-    X = 0,
-    Y = 1,
-    Z = 2,
-    INVALID = -1
-}
-export interface YCompassValueCallback { (func: YCompass, value: string): void }
-export interface YCompassTimedReportCallback { (func: YCompass, measure: YMeasure): void }
-//--- (end of YCompass definitions)
-
 //--- (YCompass class start)
 /**
  * YCompass Class: compass function control interface, available for instance in the Yocto-3D-V2
@@ -65,30 +54,27 @@ export class YCompass extends YSensor
     //--- (YCompass attributes declaration)
     _className: string;
     _bandwidth: number = YCompass.BANDWIDTH_INVALID;
-    _axis: YCompass_Axis = YCompass.AXIS_INVALID;
+    _axis: YCompass.AXIS = YCompass.AXIS_INVALID;
     _magneticHeading: number = YCompass.MAGNETICHEADING_INVALID;
-    _valueCallbackCompass: YCompassValueCallback | null = null;
-    _timedReportCallbackCompass: YCompassTimedReportCallback | null = null;
+    _valueCallbackCompass: YCompass.ValueCallback | null = null;
+    _timedReportCallbackCompass: YCompass.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
-    public readonly AXIS_X: YCompass_Axis = YCompass_Axis.X;
-    public readonly AXIS_Y: YCompass_Axis = YCompass_Axis.Y;
-    public readonly AXIS_Z: YCompass_Axis = YCompass_Axis.Z;
-    public readonly AXIS_INVALID: YCompass_Axis = YCompass_Axis.INVALID;
+    public readonly AXIS_X: YCompass.AXIS = 0;
+    public readonly AXIS_Y: YCompass.AXIS = 1;
+    public readonly AXIS_Z: YCompass.AXIS = 2;
+    public readonly AXIS_INVALID: YCompass.AXIS = -1;
     public readonly MAGNETICHEADING_INVALID: number = YAPI.INVALID_DOUBLE;
 
     // API symbols as static members
     public static readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly AXIS_X: YCompass_Axis = YCompass_Axis.X;
-    public static readonly AXIS_Y: YCompass_Axis = YCompass_Axis.Y;
-    public static readonly AXIS_Z: YCompass_Axis = YCompass_Axis.Z;
-    public static readonly AXIS_INVALID: YCompass_Axis = YCompass_Axis.INVALID;
+    public static readonly AXIS_X: YCompass.AXIS = 0;
+    public static readonly AXIS_Y: YCompass.AXIS = 1;
+    public static readonly AXIS_Z: YCompass.AXIS = 2;
+    public static readonly AXIS_INVALID: YCompass.AXIS = -1;
     public static readonly MAGNETICHEADING_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YCompass attributes declaration)
-
-//--- (YCompass return codes)
-//--- (end of YCompass return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -107,7 +93,7 @@ export class YCompass extends YSensor
             this._bandwidth = <number> <number> val;
             return 1;
         case 'axis':
-            this._axis = <YCompass_Axis> <number> val;
+            this._axis = <YCompass.AXIS> <number> val;
             return 1;
         case 'magneticHeading':
             this._magneticHeading = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -154,7 +140,7 @@ export class YCompass extends YSensor
         return await this._setAttr('bandwidth',rest_val);
     }
 
-    async get_axis(): Promise<YCompass_Axis>
+    async get_axis(): Promise<YCompass.AXIS>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -271,7 +257,7 @@ export class YCompass extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YCompassValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YCompass.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -315,7 +301,7 @@ export class YCompass extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YCompassTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YCompass.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -396,5 +382,17 @@ export class YCompass extends YSensor
     }
 
     //--- (end of YCompass implementation)
+}
+
+export namespace YCompass {
+    //--- (YCompass definitions)
+    export const enum AXIS {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YCompass, value: string): void }    export interface TimedReportCallback { (func: YCompass, measure: YMeasure): void }
+    //--- (end of YCompass definitions)
 }
 

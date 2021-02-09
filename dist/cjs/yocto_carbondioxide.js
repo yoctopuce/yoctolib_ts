@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_carbondioxide.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YCarbonDioxide = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YCarbonDioxide definitions)
 //--- (YCarbonDioxide class start)
 /**
  * YCarbonDioxide Class: CO2 sensor control interface, available for instance in the Yocto-CO2-V2
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YCarbonDioxide class start)
 class YCarbonDioxide extends yocto_api_js_1.YSensor {
     //--- (end of YCarbonDioxide attributes declaration)
-    //--- (YCarbonDioxide return codes)
-    //--- (end of YCarbonDioxide return codes)
     constructor(yapi, func) {
         //--- (YCarbonDioxide constructor)
         super(yapi, func);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_rangefinder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -39,18 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YRangeFinder definitions)
-export const enum YRangeFinder_RangeFinderMode {
-    DEFAULT = 0,
-    LONG_RANGE = 1,
-    HIGH_ACCURACY = 2,
-    HIGH_SPEED = 3,
-    INVALID = -1
-}
-export interface YRangeFinderValueCallback { (func: YRangeFinder, value: string): void }
-export interface YRangeFinderTimedReportCallback { (func: YRangeFinder, measure: YMeasure): void }
-//--- (end of YRangeFinder definitions)
-
 //--- (YRangeFinder class start)
 /**
  * YRangeFinder Class: range finder control interface, available for instance in the Yocto-RangeFinder
@@ -67,21 +55,21 @@ export class YRangeFinder extends YSensor
 {
     //--- (YRangeFinder attributes declaration)
     _className: string;
-    _rangeFinderMode: YRangeFinder_RangeFinderMode = YRangeFinder.RANGEFINDERMODE_INVALID;
+    _rangeFinderMode: YRangeFinder.RANGEFINDERMODE = YRangeFinder.RANGEFINDERMODE_INVALID;
     _timeFrame: number = YRangeFinder.TIMEFRAME_INVALID;
     _quality: number = YRangeFinder.QUALITY_INVALID;
     _hardwareCalibration: string = YRangeFinder.HARDWARECALIBRATION_INVALID;
     _currentTemperature: number = YRangeFinder.CURRENTTEMPERATURE_INVALID;
     _command: string = YRangeFinder.COMMAND_INVALID;
-    _valueCallbackRangeFinder: YRangeFinderValueCallback | null = null;
-    _timedReportCallbackRangeFinder: YRangeFinderTimedReportCallback | null = null;
+    _valueCallbackRangeFinder: YRangeFinder.ValueCallback | null = null;
+    _timedReportCallbackRangeFinder: YRangeFinder.TimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly RANGEFINDERMODE_DEFAULT: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.DEFAULT;
-    public readonly RANGEFINDERMODE_LONG_RANGE: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.LONG_RANGE;
-    public readonly RANGEFINDERMODE_HIGH_ACCURACY: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.HIGH_ACCURACY;
-    public readonly RANGEFINDERMODE_HIGH_SPEED: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.HIGH_SPEED;
-    public readonly RANGEFINDERMODE_INVALID: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.INVALID;
+    public readonly RANGEFINDERMODE_DEFAULT: YRangeFinder.RANGEFINDERMODE = 0;
+    public readonly RANGEFINDERMODE_LONG_RANGE: YRangeFinder.RANGEFINDERMODE = 1;
+    public readonly RANGEFINDERMODE_HIGH_ACCURACY: YRangeFinder.RANGEFINDERMODE = 2;
+    public readonly RANGEFINDERMODE_HIGH_SPEED: YRangeFinder.RANGEFINDERMODE = 3;
+    public readonly RANGEFINDERMODE_INVALID: YRangeFinder.RANGEFINDERMODE = -1;
     public readonly TIMEFRAME_INVALID: number = YAPI.INVALID_LONG;
     public readonly QUALITY_INVALID: number = YAPI.INVALID_UINT;
     public readonly HARDWARECALIBRATION_INVALID: string = YAPI.INVALID_STRING;
@@ -89,20 +77,17 @@ export class YRangeFinder extends YSensor
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly RANGEFINDERMODE_DEFAULT: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.DEFAULT;
-    public static readonly RANGEFINDERMODE_LONG_RANGE: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.LONG_RANGE;
-    public static readonly RANGEFINDERMODE_HIGH_ACCURACY: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.HIGH_ACCURACY;
-    public static readonly RANGEFINDERMODE_HIGH_SPEED: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.HIGH_SPEED;
-    public static readonly RANGEFINDERMODE_INVALID: YRangeFinder_RangeFinderMode = YRangeFinder_RangeFinderMode.INVALID;
+    public static readonly RANGEFINDERMODE_DEFAULT: YRangeFinder.RANGEFINDERMODE = 0;
+    public static readonly RANGEFINDERMODE_LONG_RANGE: YRangeFinder.RANGEFINDERMODE = 1;
+    public static readonly RANGEFINDERMODE_HIGH_ACCURACY: YRangeFinder.RANGEFINDERMODE = 2;
+    public static readonly RANGEFINDERMODE_HIGH_SPEED: YRangeFinder.RANGEFINDERMODE = 3;
+    public static readonly RANGEFINDERMODE_INVALID: YRangeFinder.RANGEFINDERMODE = -1;
     public static readonly TIMEFRAME_INVALID: number = YAPI.INVALID_LONG;
     public static readonly QUALITY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly HARDWARECALIBRATION_INVALID: string = YAPI.INVALID_STRING;
     public static readonly CURRENTTEMPERATURE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YRangeFinder attributes declaration)
-
-//--- (YRangeFinder return codes)
-//--- (end of YRangeFinder return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -118,7 +103,7 @@ export class YRangeFinder extends YSensor
     {
         switch(name) {
         case 'rangeFinderMode':
-            this._rangeFinderMode = <YRangeFinder_RangeFinderMode> <number> val;
+            this._rangeFinderMode = <YRangeFinder.RANGEFINDERMODE> <number> val;
             return 1;
         case 'timeFrame':
             this._timeFrame = <number> <number> val;
@@ -169,7 +154,7 @@ export class YRangeFinder extends YSensor
      *
      * On failure, throws an exception or returns YRangeFinder.RANGEFINDERMODE_INVALID.
      */
-    async get_rangeFinderMode(): Promise<YRangeFinder_RangeFinderMode>
+    async get_rangeFinderMode(): Promise<YRangeFinder.RANGEFINDERMODE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -196,7 +181,7 @@ export class YRangeFinder extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_rangeFinderMode(newval: YRangeFinder_RangeFinderMode): Promise<number>
+    async set_rangeFinderMode(newval: YRangeFinder.RANGEFINDERMODE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -407,7 +392,7 @@ export class YRangeFinder extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YRangeFinderValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YRangeFinder.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -451,7 +436,7 @@ export class YRangeFinder extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YRangeFinderTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YRangeFinder.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -637,5 +622,18 @@ export class YRangeFinder extends YSensor
     }
 
     //--- (end of YRangeFinder implementation)
+}
+
+export namespace YRangeFinder {
+    //--- (YRangeFinder definitions)
+    export const enum RANGEFINDERMODE {
+        DEFAULT = 0,
+        LONG_RANGE = 1,
+        HIGH_ACCURACY = 2,
+        HIGH_SPEED = 3,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YRangeFinder, value: string): void }    export interface TimedReportCallback { (func: YRangeFinder, measure: YMeasure): void }
+    //--- (end of YRangeFinder definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_anbutton.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -39,26 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YAnButton definitions)
-export const enum YAnButton_AnalogCalibration {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export const enum YAnButton_IsPressed {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export const enum YAnButton_InputType {
-    ANALOG_FAST = 0,
-    DIGITAL4 = 1,
-    ANALOG_SMOOTH = 2,
-    INVALID = -1
-}
-export interface YAnButtonValueCallback { (func: YAnButton, value: string): void }
-//--- (end of YAnButton definitions)
-
 //--- (YAnButton class start)
 /**
  * YAnButton Class: analog input control interface, available for instance in the Yocto-Buzzer, the
@@ -80,63 +60,60 @@ export class YAnButton extends YFunction
     _className: string;
     _calibratedValue: number = YAnButton.CALIBRATEDVALUE_INVALID;
     _rawValue: number = YAnButton.RAWVALUE_INVALID;
-    _analogCalibration: YAnButton_AnalogCalibration = YAnButton.ANALOGCALIBRATION_INVALID;
+    _analogCalibration: YAnButton.ANALOGCALIBRATION = YAnButton.ANALOGCALIBRATION_INVALID;
     _calibrationMax: number = YAnButton.CALIBRATIONMAX_INVALID;
     _calibrationMin: number = YAnButton.CALIBRATIONMIN_INVALID;
     _sensitivity: number = YAnButton.SENSITIVITY_INVALID;
-    _isPressed: YAnButton_IsPressed = YAnButton.ISPRESSED_INVALID;
+    _isPressed: YAnButton.ISPRESSED = YAnButton.ISPRESSED_INVALID;
     _lastTimePressed: number = YAnButton.LASTTIMEPRESSED_INVALID;
     _lastTimeReleased: number = YAnButton.LASTTIMERELEASED_INVALID;
     _pulseCounter: number = YAnButton.PULSECOUNTER_INVALID;
     _pulseTimer: number = YAnButton.PULSETIMER_INVALID;
-    _inputType: YAnButton_InputType = YAnButton.INPUTTYPE_INVALID;
-    _valueCallbackAnButton: YAnButtonValueCallback | null = null;
+    _inputType: YAnButton.INPUTTYPE = YAnButton.INPUTTYPE_INVALID;
+    _valueCallbackAnButton: YAnButton.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly CALIBRATEDVALUE_INVALID: number = YAPI.INVALID_UINT;
     public readonly RAWVALUE_INVALID: number = YAPI.INVALID_UINT;
-    public readonly ANALOGCALIBRATION_OFF: YAnButton_AnalogCalibration = YAnButton_AnalogCalibration.OFF;
-    public readonly ANALOGCALIBRATION_ON: YAnButton_AnalogCalibration = YAnButton_AnalogCalibration.ON;
-    public readonly ANALOGCALIBRATION_INVALID: YAnButton_AnalogCalibration = YAnButton_AnalogCalibration.INVALID;
+    public readonly ANALOGCALIBRATION_OFF: YAnButton.ANALOGCALIBRATION = 0;
+    public readonly ANALOGCALIBRATION_ON: YAnButton.ANALOGCALIBRATION = 1;
+    public readonly ANALOGCALIBRATION_INVALID: YAnButton.ANALOGCALIBRATION = -1;
     public readonly CALIBRATIONMAX_INVALID: number = YAPI.INVALID_UINT;
     public readonly CALIBRATIONMIN_INVALID: number = YAPI.INVALID_UINT;
     public readonly SENSITIVITY_INVALID: number = YAPI.INVALID_UINT;
-    public readonly ISPRESSED_FALSE: YAnButton_IsPressed = YAnButton_IsPressed.FALSE;
-    public readonly ISPRESSED_TRUE: YAnButton_IsPressed = YAnButton_IsPressed.TRUE;
-    public readonly ISPRESSED_INVALID: YAnButton_IsPressed = YAnButton_IsPressed.INVALID;
+    public readonly ISPRESSED_FALSE: YAnButton.ISPRESSED = 0;
+    public readonly ISPRESSED_TRUE: YAnButton.ISPRESSED = 1;
+    public readonly ISPRESSED_INVALID: YAnButton.ISPRESSED = -1;
     public readonly LASTTIMEPRESSED_INVALID: number = YAPI.INVALID_LONG;
     public readonly LASTTIMERELEASED_INVALID: number = YAPI.INVALID_LONG;
     public readonly PULSECOUNTER_INVALID: number = YAPI.INVALID_LONG;
     public readonly PULSETIMER_INVALID: number = YAPI.INVALID_LONG;
-    public readonly INPUTTYPE_ANALOG_FAST: YAnButton_InputType = YAnButton_InputType.ANALOG_FAST;
-    public readonly INPUTTYPE_DIGITAL4: YAnButton_InputType = YAnButton_InputType.DIGITAL4;
-    public readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton_InputType = YAnButton_InputType.ANALOG_SMOOTH;
-    public readonly INPUTTYPE_INVALID: YAnButton_InputType = YAnButton_InputType.INVALID;
+    public readonly INPUTTYPE_ANALOG_FAST: YAnButton.INPUTTYPE = 0;
+    public readonly INPUTTYPE_DIGITAL4: YAnButton.INPUTTYPE = 1;
+    public readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton.INPUTTYPE = 2;
+    public readonly INPUTTYPE_INVALID: YAnButton.INPUTTYPE = -1;
 
     // API symbols as static members
     public static readonly CALIBRATEDVALUE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly RAWVALUE_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly ANALOGCALIBRATION_OFF: YAnButton_AnalogCalibration = YAnButton_AnalogCalibration.OFF;
-    public static readonly ANALOGCALIBRATION_ON: YAnButton_AnalogCalibration = YAnButton_AnalogCalibration.ON;
-    public static readonly ANALOGCALIBRATION_INVALID: YAnButton_AnalogCalibration = YAnButton_AnalogCalibration.INVALID;
+    public static readonly ANALOGCALIBRATION_OFF: YAnButton.ANALOGCALIBRATION = 0;
+    public static readonly ANALOGCALIBRATION_ON: YAnButton.ANALOGCALIBRATION = 1;
+    public static readonly ANALOGCALIBRATION_INVALID: YAnButton.ANALOGCALIBRATION = -1;
     public static readonly CALIBRATIONMAX_INVALID: number = YAPI.INVALID_UINT;
     public static readonly CALIBRATIONMIN_INVALID: number = YAPI.INVALID_UINT;
     public static readonly SENSITIVITY_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly ISPRESSED_FALSE: YAnButton_IsPressed = YAnButton_IsPressed.FALSE;
-    public static readonly ISPRESSED_TRUE: YAnButton_IsPressed = YAnButton_IsPressed.TRUE;
-    public static readonly ISPRESSED_INVALID: YAnButton_IsPressed = YAnButton_IsPressed.INVALID;
+    public static readonly ISPRESSED_FALSE: YAnButton.ISPRESSED = 0;
+    public static readonly ISPRESSED_TRUE: YAnButton.ISPRESSED = 1;
+    public static readonly ISPRESSED_INVALID: YAnButton.ISPRESSED = -1;
     public static readonly LASTTIMEPRESSED_INVALID: number = YAPI.INVALID_LONG;
     public static readonly LASTTIMERELEASED_INVALID: number = YAPI.INVALID_LONG;
     public static readonly PULSECOUNTER_INVALID: number = YAPI.INVALID_LONG;
     public static readonly PULSETIMER_INVALID: number = YAPI.INVALID_LONG;
-    public static readonly INPUTTYPE_ANALOG_FAST: YAnButton_InputType = YAnButton_InputType.ANALOG_FAST;
-    public static readonly INPUTTYPE_DIGITAL4: YAnButton_InputType = YAnButton_InputType.DIGITAL4;
-    public static readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton_InputType = YAnButton_InputType.ANALOG_SMOOTH;
-    public static readonly INPUTTYPE_INVALID: YAnButton_InputType = YAnButton_InputType.INVALID;
+    public static readonly INPUTTYPE_ANALOG_FAST: YAnButton.INPUTTYPE = 0;
+    public static readonly INPUTTYPE_DIGITAL4: YAnButton.INPUTTYPE = 1;
+    public static readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton.INPUTTYPE = 2;
+    public static readonly INPUTTYPE_INVALID: YAnButton.INPUTTYPE = -1;
     //--- (end of YAnButton attributes declaration)
-
-//--- (YAnButton return codes)
-//--- (end of YAnButton return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -158,7 +135,7 @@ export class YAnButton extends YFunction
             this._rawValue = <number> <number> val;
             return 1;
         case 'analogCalibration':
-            this._analogCalibration = <YAnButton_AnalogCalibration> <number> val;
+            this._analogCalibration = <YAnButton.ANALOGCALIBRATION> <number> val;
             return 1;
         case 'calibrationMax':
             this._calibrationMax = <number> <number> val;
@@ -170,7 +147,7 @@ export class YAnButton extends YFunction
             this._sensitivity = <number> <number> val;
             return 1;
         case 'isPressed':
-            this._isPressed = <YAnButton_IsPressed> <number> val;
+            this._isPressed = <YAnButton.ISPRESSED> <number> val;
             return 1;
         case 'lastTimePressed':
             this._lastTimePressed = <number> <number> val;
@@ -185,7 +162,7 @@ export class YAnButton extends YFunction
             this._pulseTimer = <number> <number> val;
             return 1;
         case 'inputType':
-            this._inputType = <YAnButton_InputType> <number> val;
+            this._inputType = <YAnButton.INPUTTYPE> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -236,7 +213,7 @@ export class YAnButton extends YFunction
      *
      * On failure, throws an exception or returns YAnButton.ANALOGCALIBRATION_INVALID.
      */
-    async get_analogCalibration(): Promise<YAnButton_AnalogCalibration>
+    async get_analogCalibration(): Promise<YAnButton.ANALOGCALIBRATION>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -258,7 +235,7 @@ export class YAnButton extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_analogCalibration(newval: YAnButton_AnalogCalibration): Promise<number>
+    async set_analogCalibration(newval: YAnButton.ANALOGCALIBRATION): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -395,7 +372,7 @@ export class YAnButton extends YFunction
      *
      * On failure, throws an exception or returns YAnButton.ISPRESSED_INVALID.
      */
-    async get_isPressed(): Promise<YAnButton_IsPressed>
+    async get_isPressed(): Promise<YAnButton.ISPRESSED>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -507,7 +484,7 @@ export class YAnButton extends YFunction
      *
      * On failure, throws an exception or returns YAnButton.INPUTTYPE_INVALID.
      */
-    async get_inputType(): Promise<YAnButton_InputType>
+    async get_inputType(): Promise<YAnButton.INPUTTYPE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -531,7 +508,7 @@ export class YAnButton extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_inputType(newval: YAnButton_InputType): Promise<number>
+    async set_inputType(newval: YAnButton.INPUTTYPE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -624,7 +601,7 @@ export class YAnButton extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YAnButtonValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YAnButton.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -723,5 +700,27 @@ export class YAnButton extends YFunction
     }
 
     //--- (end of YAnButton implementation)
+}
+
+export namespace YAnButton {
+    //--- (YAnButton definitions)
+    export const enum ANALOGCALIBRATION {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export const enum ISPRESSED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export const enum INPUTTYPE {
+        ANALOG_FAST = 0,
+        DIGITAL4 = 1,
+        ANALOG_SMOOTH = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YAnButton, value: string): void }
+    //--- (end of YAnButton definitions)
 }
 

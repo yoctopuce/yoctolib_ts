@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_tvoc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YTvoc = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YTvoc definitions)
 //--- (YTvoc class start)
 /**
  * YTvoc Class: Total Volatile Organic Compound sensor control interface, available for instance in
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 class YTvoc extends yocto_api_js_1.YSensor {
     // API symbols as static members
     //--- (end of YTvoc attributes declaration)
-    //--- (YTvoc return codes)
-    //--- (end of YTvoc return codes)
     constructor(yapi, func) {
         //--- (YTvoc constructor)
         super(yapi, func);

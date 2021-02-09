@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_dualpower.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_dualpower.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -39,23 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YDualPower definitions)
-export const enum YDualPower_PowerState {
-    OFF = 0,
-    FROM_USB = 1,
-    FROM_EXT = 2,
-    INVALID = -1
-}
-export const enum YDualPower_PowerControl {
-    AUTO = 0,
-    FROM_USB = 1,
-    FROM_EXT = 2,
-    OFF = 3,
-    INVALID = -1
-}
-export interface YDualPowerValueCallback { (func: YDualPower, value: string): void }
-//--- (end of YDualPower definitions)
-
 //--- (YDualPower class start)
 /**
  * YDualPower Class: dual power switch control interface, available for instance in the Yocto-Servo
@@ -72,38 +55,35 @@ export class YDualPower extends YFunction
 {
     //--- (YDualPower attributes declaration)
     _className: string;
-    _powerState: YDualPower_PowerState = YDualPower.POWERSTATE_INVALID;
-    _powerControl: YDualPower_PowerControl = YDualPower.POWERCONTROL_INVALID;
+    _powerState: YDualPower.POWERSTATE = YDualPower.POWERSTATE_INVALID;
+    _powerControl: YDualPower.POWERCONTROL = YDualPower.POWERCONTROL_INVALID;
     _extVoltage: number = YDualPower.EXTVOLTAGE_INVALID;
-    _valueCallbackDualPower: YDualPowerValueCallback | null = null;
+    _valueCallbackDualPower: YDualPower.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly POWERSTATE_OFF: YDualPower_PowerState = YDualPower_PowerState.OFF;
-    public readonly POWERSTATE_FROM_USB: YDualPower_PowerState = YDualPower_PowerState.FROM_USB;
-    public readonly POWERSTATE_FROM_EXT: YDualPower_PowerState = YDualPower_PowerState.FROM_EXT;
-    public readonly POWERSTATE_INVALID: YDualPower_PowerState = YDualPower_PowerState.INVALID;
-    public readonly POWERCONTROL_AUTO: YDualPower_PowerControl = YDualPower_PowerControl.AUTO;
-    public readonly POWERCONTROL_FROM_USB: YDualPower_PowerControl = YDualPower_PowerControl.FROM_USB;
-    public readonly POWERCONTROL_FROM_EXT: YDualPower_PowerControl = YDualPower_PowerControl.FROM_EXT;
-    public readonly POWERCONTROL_OFF: YDualPower_PowerControl = YDualPower_PowerControl.OFF;
-    public readonly POWERCONTROL_INVALID: YDualPower_PowerControl = YDualPower_PowerControl.INVALID;
+    public readonly POWERSTATE_OFF: YDualPower.POWERSTATE = 0;
+    public readonly POWERSTATE_FROM_USB: YDualPower.POWERSTATE = 1;
+    public readonly POWERSTATE_FROM_EXT: YDualPower.POWERSTATE = 2;
+    public readonly POWERSTATE_INVALID: YDualPower.POWERSTATE = -1;
+    public readonly POWERCONTROL_AUTO: YDualPower.POWERCONTROL = 0;
+    public readonly POWERCONTROL_FROM_USB: YDualPower.POWERCONTROL = 1;
+    public readonly POWERCONTROL_FROM_EXT: YDualPower.POWERCONTROL = 2;
+    public readonly POWERCONTROL_OFF: YDualPower.POWERCONTROL = 3;
+    public readonly POWERCONTROL_INVALID: YDualPower.POWERCONTROL = -1;
     public readonly EXTVOLTAGE_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
-    public static readonly POWERSTATE_OFF: YDualPower_PowerState = YDualPower_PowerState.OFF;
-    public static readonly POWERSTATE_FROM_USB: YDualPower_PowerState = YDualPower_PowerState.FROM_USB;
-    public static readonly POWERSTATE_FROM_EXT: YDualPower_PowerState = YDualPower_PowerState.FROM_EXT;
-    public static readonly POWERSTATE_INVALID: YDualPower_PowerState = YDualPower_PowerState.INVALID;
-    public static readonly POWERCONTROL_AUTO: YDualPower_PowerControl = YDualPower_PowerControl.AUTO;
-    public static readonly POWERCONTROL_FROM_USB: YDualPower_PowerControl = YDualPower_PowerControl.FROM_USB;
-    public static readonly POWERCONTROL_FROM_EXT: YDualPower_PowerControl = YDualPower_PowerControl.FROM_EXT;
-    public static readonly POWERCONTROL_OFF: YDualPower_PowerControl = YDualPower_PowerControl.OFF;
-    public static readonly POWERCONTROL_INVALID: YDualPower_PowerControl = YDualPower_PowerControl.INVALID;
+    public static readonly POWERSTATE_OFF: YDualPower.POWERSTATE = 0;
+    public static readonly POWERSTATE_FROM_USB: YDualPower.POWERSTATE = 1;
+    public static readonly POWERSTATE_FROM_EXT: YDualPower.POWERSTATE = 2;
+    public static readonly POWERSTATE_INVALID: YDualPower.POWERSTATE = -1;
+    public static readonly POWERCONTROL_AUTO: YDualPower.POWERCONTROL = 0;
+    public static readonly POWERCONTROL_FROM_USB: YDualPower.POWERCONTROL = 1;
+    public static readonly POWERCONTROL_FROM_EXT: YDualPower.POWERCONTROL = 2;
+    public static readonly POWERCONTROL_OFF: YDualPower.POWERCONTROL = 3;
+    public static readonly POWERCONTROL_INVALID: YDualPower.POWERCONTROL = -1;
     public static readonly EXTVOLTAGE_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YDualPower attributes declaration)
-
-//--- (YDualPower return codes)
-//--- (end of YDualPower return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -119,10 +99,10 @@ export class YDualPower extends YFunction
     {
         switch(name) {
         case 'powerState':
-            this._powerState = <YDualPower_PowerState> <number> val;
+            this._powerState = <YDualPower.POWERSTATE> <number> val;
             return 1;
         case 'powerControl':
-            this._powerControl = <YDualPower_PowerControl> <number> val;
+            this._powerControl = <YDualPower.POWERCONTROL> <number> val;
             return 1;
         case 'extVoltage':
             this._extVoltage = <number> <number> val;
@@ -140,7 +120,7 @@ export class YDualPower extends YFunction
      *
      * On failure, throws an exception or returns YDualPower.POWERSTATE_INVALID.
      */
-    async get_powerState(): Promise<YDualPower_PowerState>
+    async get_powerState(): Promise<YDualPower.POWERSTATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -161,7 +141,7 @@ export class YDualPower extends YFunction
      *
      * On failure, throws an exception or returns YDualPower.POWERCONTROL_INVALID.
      */
-    async get_powerControl(): Promise<YDualPower_PowerControl>
+    async get_powerControl(): Promise<YDualPower.POWERCONTROL>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -185,7 +165,7 @@ export class YDualPower extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_powerControl(newval: YDualPower_PowerControl): Promise<number>
+    async set_powerControl(newval: YDualPower.POWERCONTROL): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -297,7 +277,7 @@ export class YDualPower extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YDualPowerValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YDualPower.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -384,5 +364,24 @@ export class YDualPower extends YFunction
     }
 
     //--- (end of YDualPower implementation)
+}
+
+export namespace YDualPower {
+    //--- (YDualPower definitions)
+    export const enum POWERSTATE {
+        OFF = 0,
+        FROM_USB = 1,
+        FROM_EXT = 2,
+        INVALID = -1
+    }
+    export const enum POWERCONTROL {
+        AUTO = 0,
+        FROM_USB = 1,
+        FROM_EXT = 2,
+        OFF = 3,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YDualPower, value: string): void }
+    //--- (end of YDualPower definitions)
 }
 

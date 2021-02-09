@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_power.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YPower = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YPower definitions)
 //--- (YPower class start)
 /**
  * YPower Class: electrical power sensor control interface, available for instance in the Yocto-Watt
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YPower class start)
 class YPower extends yocto_api_js_1.YSensor {
     //--- (end of YPower attributes declaration)
-    //--- (YPower return codes)
-    //--- (end of YPower return codes)
     constructor(yapi, func) {
         //--- (YPower constructor)
         super(yapi, func);

@@ -10,7 +10,7 @@
  *
  *********************************************************************/
 
-import { YAPI, YErrorMsg, YModule, YModule_Beacon } from "../../dist/esm/yocto_api_html.js"
+import { YAPI, YErrorMsg, YModule } from "../../dist/esm/yocto_api_html.js"
 import { Chooser } from "./chooser.js"
 
 function error(msg: string)
@@ -45,7 +45,7 @@ async function refresh()
     html += '<tr><td>Serial:</td><td>'+deviceChooser.getHTML(serial)+'</td></tr>';
     if(serial) {
         let module = YModule.FindModule(serial);
-        let beaconChooser = new Chooser('beacon', { 'OFF': YModule_Beacon.OFF, 'ON': YModule_Beacon.ON },
+        let beaconChooser = new Chooser('beacon', { 'OFF': YModule.BEACON.OFF, 'ON': YModule.BEACON.ON },
             (value) => { module.set_beacon(value); });
         html += '<tr><td>Logical name: </td><td>'+await module.get_logicalName()+'</td></tr>';
         html += '<tr><td>Luminosity:   </td><td>'+await module.get_luminosity()+'%</td></tr>';

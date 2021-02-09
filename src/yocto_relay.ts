@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_relay.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -39,33 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YRelay definitions)
-export const enum YRelay_State {
-    A = 0,
-    B = 1,
-    INVALID = -1
-}
-export const enum YRelay_StateAtPowerOn {
-    UNCHANGED = 0,
-    A = 1,
-    B = 2,
-    INVALID = -1
-}
-export const enum YRelay_Output {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-
-class YRelayDelayedPulse
-{
-    public target: number = YAPI.INVALID_INT;
-    public ms: number = YAPI.INVALID_INT;
-    public moving: number = YAPI.INVALID_UINT;
-}
-export interface YRelayValueCallback { (func: YRelay, value: string): void }
-//--- (end of YRelay definitions)
-
 //--- (YRelay class start)
 /**
  * YRelay Class: relay control interface, available for instance in the Yocto-LatchedRelay, the
@@ -84,53 +57,50 @@ export class YRelay extends YFunction
 {
     //--- (YRelay attributes declaration)
     _className: string;
-    _state: YRelay_State = YRelay.STATE_INVALID;
-    _stateAtPowerOn: YRelay_StateAtPowerOn = YRelay.STATEATPOWERON_INVALID;
+    _state: YRelay.STATE = YRelay.STATE_INVALID;
+    _stateAtPowerOn: YRelay.STATEATPOWERON = YRelay.STATEATPOWERON_INVALID;
     _maxTimeOnStateA: number = YRelay.MAXTIMEONSTATEA_INVALID;
     _maxTimeOnStateB: number = YRelay.MAXTIMEONSTATEB_INVALID;
-    _output: YRelay_Output = YRelay.OUTPUT_INVALID;
+    _output: YRelay.OUTPUT = YRelay.OUTPUT_INVALID;
     _pulseTimer: number = YRelay.PULSETIMER_INVALID;
-    _delayedPulseTimer: YRelayDelayedPulse = new YRelayDelayedPulse();
+    _delayedPulseTimer: YRelay.DelayedPulse = {};
     _countdown: number = YRelay.COUNTDOWN_INVALID;
-    _valueCallbackRelay: YRelayValueCallback | null = null;
+    _valueCallbackRelay: YRelay.ValueCallback | null = null;
     _firm: number = 0;
 
     // API symbols as object properties
-    public readonly STATE_A: YRelay_State = YRelay_State.A;
-    public readonly STATE_B: YRelay_State = YRelay_State.B;
-    public readonly STATE_INVALID: YRelay_State = YRelay_State.INVALID;
-    public readonly STATEATPOWERON_UNCHANGED: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.UNCHANGED;
-    public readonly STATEATPOWERON_A: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.A;
-    public readonly STATEATPOWERON_B: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.B;
-    public readonly STATEATPOWERON_INVALID: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.INVALID;
+    public readonly STATE_A: YRelay.STATE = 0;
+    public readonly STATE_B: YRelay.STATE = 1;
+    public readonly STATE_INVALID: YRelay.STATE = -1;
+    public readonly STATEATPOWERON_UNCHANGED: YRelay.STATEATPOWERON = 0;
+    public readonly STATEATPOWERON_A: YRelay.STATEATPOWERON = 1;
+    public readonly STATEATPOWERON_B: YRelay.STATEATPOWERON = 2;
+    public readonly STATEATPOWERON_INVALID: YRelay.STATEATPOWERON = -1;
     public readonly MAXTIMEONSTATEA_INVALID: number = YAPI.INVALID_LONG;
     public readonly MAXTIMEONSTATEB_INVALID: number = YAPI.INVALID_LONG;
-    public readonly OUTPUT_OFF: YRelay_Output = YRelay_Output.OFF;
-    public readonly OUTPUT_ON: YRelay_Output = YRelay_Output.ON;
-    public readonly OUTPUT_INVALID: YRelay_Output = YRelay_Output.INVALID;
+    public readonly OUTPUT_OFF: YRelay.OUTPUT = 0;
+    public readonly OUTPUT_ON: YRelay.OUTPUT = 1;
+    public readonly OUTPUT_INVALID: YRelay.OUTPUT = -1;
     public readonly PULSETIMER_INVALID: number = YAPI.INVALID_LONG;
     public readonly COUNTDOWN_INVALID: number = YAPI.INVALID_LONG;
 
     // API symbols as static members
-    public static readonly DELAYEDPULSETIMER_INVALID: YRelayDelayedPulse = new YRelayDelayedPulse();
-    public static readonly STATE_A: YRelay_State = YRelay_State.A;
-    public static readonly STATE_B: YRelay_State = YRelay_State.B;
-    public static readonly STATE_INVALID: YRelay_State = YRelay_State.INVALID;
-    public static readonly STATEATPOWERON_UNCHANGED: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.UNCHANGED;
-    public static readonly STATEATPOWERON_A: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.A;
-    public static readonly STATEATPOWERON_B: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.B;
-    public static readonly STATEATPOWERON_INVALID: YRelay_StateAtPowerOn = YRelay_StateAtPowerOn.INVALID;
+    public static readonly DELAYEDPULSETIMER_INVALID: YRelay.DelayedPulse = {};
+    public static readonly STATE_A: YRelay.STATE = 0;
+    public static readonly STATE_B: YRelay.STATE = 1;
+    public static readonly STATE_INVALID: YRelay.STATE = -1;
+    public static readonly STATEATPOWERON_UNCHANGED: YRelay.STATEATPOWERON = 0;
+    public static readonly STATEATPOWERON_A: YRelay.STATEATPOWERON = 1;
+    public static readonly STATEATPOWERON_B: YRelay.STATEATPOWERON = 2;
+    public static readonly STATEATPOWERON_INVALID: YRelay.STATEATPOWERON = -1;
     public static readonly MAXTIMEONSTATEA_INVALID: number = YAPI.INVALID_LONG;
     public static readonly MAXTIMEONSTATEB_INVALID: number = YAPI.INVALID_LONG;
-    public static readonly OUTPUT_OFF: YRelay_Output = YRelay_Output.OFF;
-    public static readonly OUTPUT_ON: YRelay_Output = YRelay_Output.ON;
-    public static readonly OUTPUT_INVALID: YRelay_Output = YRelay_Output.INVALID;
+    public static readonly OUTPUT_OFF: YRelay.OUTPUT = 0;
+    public static readonly OUTPUT_ON: YRelay.OUTPUT = 1;
+    public static readonly OUTPUT_INVALID: YRelay.OUTPUT = -1;
     public static readonly PULSETIMER_INVALID: number = YAPI.INVALID_LONG;
     public static readonly COUNTDOWN_INVALID: number = YAPI.INVALID_LONG;
     //--- (end of YRelay attributes declaration)
-
-//--- (YRelay return codes)
-//--- (end of YRelay return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -146,10 +116,10 @@ export class YRelay extends YFunction
     {
         switch(name) {
         case 'state':
-            this._state = <YRelay_State> <number> val;
+            this._state = <YRelay.STATE> <number> val;
             return 1;
         case 'stateAtPowerOn':
-            this._stateAtPowerOn = <YRelay_StateAtPowerOn> <number> val;
+            this._stateAtPowerOn = <YRelay.STATEATPOWERON> <number> val;
             return 1;
         case 'maxTimeOnStateA':
             this._maxTimeOnStateA = <number> <number> val;
@@ -158,13 +128,13 @@ export class YRelay extends YFunction
             this._maxTimeOnStateB = <number> <number> val;
             return 1;
         case 'output':
-            this._output = <YRelay_Output> <number> val;
+            this._output = <YRelay.OUTPUT> <number> val;
             return 1;
         case 'pulseTimer':
             this._pulseTimer = <number> <number> val;
             return 1;
         case 'delayedPulseTimer':
-            this._delayedPulseTimer = <YRelayDelayedPulse> val;
+            this._delayedPulseTimer = <YRelay.DelayedPulse> val;
             return 1;
         case 'countdown':
             this._countdown = <number> <number> val;
@@ -181,7 +151,7 @@ export class YRelay extends YFunction
      *
      * On failure, throws an exception or returns YRelay.STATE_INVALID.
      */
-    async get_state(): Promise<YRelay_State>
+    async get_state(): Promise<YRelay.STATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -203,7 +173,7 @@ export class YRelay extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_state(newval: YRelay_State): Promise<number>
+    async set_state(newval: YRelay.STATE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -220,7 +190,7 @@ export class YRelay extends YFunction
      *
      * On failure, throws an exception or returns YRelay.STATEATPOWERON_INVALID.
      */
-    async get_stateAtPowerOn(): Promise<YRelay_StateAtPowerOn>
+    async get_stateAtPowerOn(): Promise<YRelay.STATEATPOWERON>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -246,7 +216,7 @@ export class YRelay extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_stateAtPowerOn(newval: YRelay_StateAtPowerOn): Promise<number>
+    async set_stateAtPowerOn(newval: YRelay.STATEATPOWERON): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -343,7 +313,7 @@ export class YRelay extends YFunction
      *
      * On failure, throws an exception or returns YRelay.OUTPUT_INVALID.
      */
-    async get_output(): Promise<YRelay_Output>
+    async get_output(): Promise<YRelay.OUTPUT>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -365,7 +335,7 @@ export class YRelay extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_output(newval: YRelay_Output): Promise<number>
+    async set_output(newval: YRelay.OUTPUT): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -418,9 +388,9 @@ export class YRelay extends YFunction
         return await this._setAttr('pulseTimer',rest_val);
     }
 
-    async get_delayedPulseTimer(): Promise<YRelayDelayedPulse>
+    async get_delayedPulseTimer(): Promise<YRelay.DelayedPulse>
     {
-        let res: YRelayDelayedPulse;
+        let res: YRelay.DelayedPulse;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YRelay.DELAYEDPULSETIMER_INVALID;
@@ -430,7 +400,7 @@ export class YRelay extends YFunction
         return res;
     }
 
-    async set_delayedPulseTimer(newval: YRelayDelayedPulse): Promise<number>
+    async set_delayedPulseTimer(newval: YRelay.DelayedPulse): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
@@ -561,7 +531,7 @@ export class YRelay extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YRelayValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YRelay.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -684,5 +654,28 @@ export class YRelay extends YFunction
     }
 
     //--- (end of YRelay implementation)
+}
+
+export namespace YRelay {
+    //--- (YRelay definitions)
+    export const enum STATE {
+        A = 0,
+        B = 1,
+        INVALID = -1
+    }
+    export const enum STATEATPOWERON {
+        UNCHANGED = 0,
+        A = 1,
+        B = 2,
+        INVALID = -1
+    }
+    export const enum OUTPUT {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export interface DelayedPulse { target?: number; ms?: number; moving?: number; }
+    export interface ValueCallback { (func: YRelay, value: string): void }
+    //--- (end of YRelay definitions)
 }
 

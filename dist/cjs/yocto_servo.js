@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_servo.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_servo.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -40,14 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YServo = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-class YServoMove {
-    constructor() {
-        this.target = yocto_api_js_1.YAPI.INVALID_INT;
-        this.ms = yocto_api_js_1.YAPI.INVALID_INT;
-        this.moving = yocto_api_js_1.YAPI.INVALID_UINT;
-    }
-}
-//--- (end of YServo definitions)
 //--- (YServo class start)
 /**
  * YServo Class: RC servo motor control interface, available for instance in the Yocto-Servo
@@ -61,8 +53,6 @@ class YServoMove {
 //--- (end of YServo class start)
 class YServo extends yocto_api_js_1.YFunction {
     //--- (end of YServo attributes declaration)
-    //--- (YServo return codes)
-    //--- (end of YServo return codes)
     constructor(yapi, func) {
         //--- (YServo constructor)
         super(yapi, func);
@@ -70,21 +60,21 @@ class YServo extends yocto_api_js_1.YFunction {
         this._enabled = YServo.ENABLED_INVALID;
         this._range = YServo.RANGE_INVALID;
         this._neutral = YServo.NEUTRAL_INVALID;
-        this._move = new YServoMove();
+        this._move = {};
         this._positionAtPowerOn = YServo.POSITIONATPOWERON_INVALID;
         this._enabledAtPowerOn = YServo.ENABLEDATPOWERON_INVALID;
         this._valueCallbackServo = null;
         // API symbols as object properties
         this.POSITION_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
         this.RANGE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.NEUTRAL_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.POSITIONATPOWERON_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
-        this.ENABLEDATPOWERON_FALSE = 0 /* FALSE */;
-        this.ENABLEDATPOWERON_TRUE = 1 /* TRUE */;
-        this.ENABLEDATPOWERON_INVALID = -1 /* INVALID */;
+        this.ENABLEDATPOWERON_FALSE = 0;
+        this.ENABLEDATPOWERON_TRUE = 1;
+        this.ENABLEDATPOWERON_INVALID = -1;
         this._className = 'Servo';
         //--- (end of YServo constructor)
     }
@@ -514,15 +504,15 @@ class YServo extends yocto_api_js_1.YFunction {
 }
 exports.YServo = YServo;
 // API symbols as static members
-YServo.MOVE_INVALID = new YServoMove();
+YServo.MOVE_INVALID = {};
 YServo.POSITION_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
-YServo.ENABLED_FALSE = 0 /* FALSE */;
-YServo.ENABLED_TRUE = 1 /* TRUE */;
-YServo.ENABLED_INVALID = -1 /* INVALID */;
+YServo.ENABLED_FALSE = 0;
+YServo.ENABLED_TRUE = 1;
+YServo.ENABLED_INVALID = -1;
 YServo.RANGE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YServo.NEUTRAL_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YServo.POSITIONATPOWERON_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
-YServo.ENABLEDATPOWERON_FALSE = 0 /* FALSE */;
-YServo.ENABLEDATPOWERON_TRUE = 1 /* TRUE */;
-YServo.ENABLEDATPOWERON_INVALID = -1 /* INVALID */;
+YServo.ENABLEDATPOWERON_FALSE = 0;
+YServo.ENABLEDATPOWERON_TRUE = 1;
+YServo.ENABLEDATPOWERON_INVALID = -1;
 //# sourceMappingURL=yocto_servo.js.map

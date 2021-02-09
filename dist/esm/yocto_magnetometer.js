@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_magnetometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YMagnetometer definitions)
 //--- (YMagnetometer class start)
 /**
  * YMagnetometer Class: magnetometer control interface, available for instance in the Yocto-3D-V2
@@ -55,8 +54,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YMagnetometer class start)
 export class YMagnetometer extends YSensor {
     //--- (end of YMagnetometer attributes declaration)
-    //--- (YMagnetometer return codes)
-    //--- (end of YMagnetometer return codes)
     constructor(yapi, func) {
         //--- (YMagnetometer constructor)
         super(yapi, func);

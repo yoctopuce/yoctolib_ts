@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YOsControl = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YOsControl definitions)
 //--- (YOsControl class start)
 /**
  * YOsControl Class: Operating system control interface via the VirtualHub application
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YOsControl class start)
 class YOsControl extends yocto_api_js_1.YFunction {
     //--- (end of YOsControl attributes declaration)
-    //--- (YOsControl return codes)
-    //--- (end of YOsControl return codes)
     constructor(yapi, func) {
         //--- (YOsControl constructor)
         super(yapi, func);

@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-prog-display-sequences",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-Display-Sequences example",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_dualpower.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_dualpower.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -37,22 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YDualPower_PowerState {
-    OFF = 0,
-    FROM_USB = 1,
-    FROM_EXT = 2,
-    INVALID = -1
-}
-export declare const enum YDualPower_PowerControl {
-    AUTO = 0,
-    FROM_USB = 1,
-    FROM_EXT = 2,
-    OFF = 3,
-    INVALID = -1
-}
-export interface YDualPowerValueCallback {
-    (func: YDualPower, value: string): void;
-}
 /**
  * YDualPower Class: dual power switch control interface, available for instance in the Yocto-Servo
  *
@@ -64,29 +48,29 @@ export interface YDualPowerValueCallback {
  */
 export declare class YDualPower extends YFunction {
     _className: string;
-    _powerState: YDualPower_PowerState;
-    _powerControl: YDualPower_PowerControl;
+    _powerState: YDualPower.POWERSTATE;
+    _powerControl: YDualPower.POWERCONTROL;
     _extVoltage: number;
-    _valueCallbackDualPower: YDualPowerValueCallback | null;
-    readonly POWERSTATE_OFF: YDualPower_PowerState;
-    readonly POWERSTATE_FROM_USB: YDualPower_PowerState;
-    readonly POWERSTATE_FROM_EXT: YDualPower_PowerState;
-    readonly POWERSTATE_INVALID: YDualPower_PowerState;
-    readonly POWERCONTROL_AUTO: YDualPower_PowerControl;
-    readonly POWERCONTROL_FROM_USB: YDualPower_PowerControl;
-    readonly POWERCONTROL_FROM_EXT: YDualPower_PowerControl;
-    readonly POWERCONTROL_OFF: YDualPower_PowerControl;
-    readonly POWERCONTROL_INVALID: YDualPower_PowerControl;
+    _valueCallbackDualPower: YDualPower.ValueCallback | null;
+    readonly POWERSTATE_OFF: YDualPower.POWERSTATE;
+    readonly POWERSTATE_FROM_USB: YDualPower.POWERSTATE;
+    readonly POWERSTATE_FROM_EXT: YDualPower.POWERSTATE;
+    readonly POWERSTATE_INVALID: YDualPower.POWERSTATE;
+    readonly POWERCONTROL_AUTO: YDualPower.POWERCONTROL;
+    readonly POWERCONTROL_FROM_USB: YDualPower.POWERCONTROL;
+    readonly POWERCONTROL_FROM_EXT: YDualPower.POWERCONTROL;
+    readonly POWERCONTROL_OFF: YDualPower.POWERCONTROL;
+    readonly POWERCONTROL_INVALID: YDualPower.POWERCONTROL;
     readonly EXTVOLTAGE_INVALID: number;
-    static readonly POWERSTATE_OFF: YDualPower_PowerState;
-    static readonly POWERSTATE_FROM_USB: YDualPower_PowerState;
-    static readonly POWERSTATE_FROM_EXT: YDualPower_PowerState;
-    static readonly POWERSTATE_INVALID: YDualPower_PowerState;
-    static readonly POWERCONTROL_AUTO: YDualPower_PowerControl;
-    static readonly POWERCONTROL_FROM_USB: YDualPower_PowerControl;
-    static readonly POWERCONTROL_FROM_EXT: YDualPower_PowerControl;
-    static readonly POWERCONTROL_OFF: YDualPower_PowerControl;
-    static readonly POWERCONTROL_INVALID: YDualPower_PowerControl;
+    static readonly POWERSTATE_OFF: YDualPower.POWERSTATE;
+    static readonly POWERSTATE_FROM_USB: YDualPower.POWERSTATE;
+    static readonly POWERSTATE_FROM_EXT: YDualPower.POWERSTATE;
+    static readonly POWERSTATE_INVALID: YDualPower.POWERSTATE;
+    static readonly POWERCONTROL_AUTO: YDualPower.POWERCONTROL;
+    static readonly POWERCONTROL_FROM_USB: YDualPower.POWERCONTROL;
+    static readonly POWERCONTROL_FROM_EXT: YDualPower.POWERCONTROL;
+    static readonly POWERCONTROL_OFF: YDualPower.POWERCONTROL;
+    static readonly POWERCONTROL_INVALID: YDualPower.POWERCONTROL;
     static readonly EXTVOLTAGE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -99,7 +83,7 @@ export declare class YDualPower extends YFunction {
      *
      * On failure, throws an exception or returns YDualPower.POWERSTATE_INVALID.
      */
-    get_powerState(): Promise<YDualPower_PowerState>;
+    get_powerState(): Promise<YDualPower.POWERSTATE>;
     /**
      * Returns the selected power source for module functions that require lots of current.
      *
@@ -109,7 +93,7 @@ export declare class YDualPower extends YFunction {
      *
      * On failure, throws an exception or returns YDualPower.POWERCONTROL_INVALID.
      */
-    get_powerControl(): Promise<YDualPower_PowerControl>;
+    get_powerControl(): Promise<YDualPower.POWERCONTROL>;
     /**
      * Changes the selected power source for module functions that require lots of current.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
@@ -122,7 +106,7 @@ export declare class YDualPower extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_powerControl(newval: YDualPower_PowerControl): Promise<number>;
+    set_powerControl(newval: YDualPower.POWERCONTROL): Promise<number>;
     /**
      * Returns the measured voltage on the external power source, in millivolts.
      *
@@ -197,7 +181,7 @@ export declare class YDualPower extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YDualPowerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YDualPower.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of dual power switches started using yFirstDualPower().
@@ -232,4 +216,22 @@ export declare class YDualPower extends YFunction {
      *         if there are none.
      */
     static FirstDualPowerInContext(yctx: YAPIContext): YDualPower | null;
+}
+export declare namespace YDualPower {
+    const enum POWERSTATE {
+        OFF = 0,
+        FROM_USB = 1,
+        FROM_EXT = 2,
+        INVALID = -1
+    }
+    const enum POWERCONTROL {
+        AUTO = 0,
+        FROM_USB = 1,
+        FROM_EXT = 2,
+        OFF = 3,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YDualPower, value: string): void;
+    }
 }

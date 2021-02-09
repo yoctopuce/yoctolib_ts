@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_current.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Current functions
  *
@@ -39,16 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YCurrent definitions)
-export const enum YCurrent_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YCurrentValueCallback { (func: YCurrent, value: string): void }
-export interface YCurrentTimedReportCallback { (func: YCurrent, measure: YMeasure): void }
-//--- (end of YCurrent definitions)
-
 //--- (YCurrent class start)
 /**
  * YCurrent Class: current sensor control interface, available for instance in the Yocto-Amp, the
@@ -64,23 +54,20 @@ export class YCurrent extends YSensor
 {
     //--- (YCurrent attributes declaration)
     _className: string;
-    _enabled: YCurrent_Enabled = YCurrent.ENABLED_INVALID;
-    _valueCallbackCurrent: YCurrentValueCallback | null = null;
-    _timedReportCallbackCurrent: YCurrentTimedReportCallback | null = null;
+    _enabled: YCurrent.ENABLED = YCurrent.ENABLED_INVALID;
+    _valueCallbackCurrent: YCurrent.ValueCallback | null = null;
+    _timedReportCallbackCurrent: YCurrent.TimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly ENABLED_FALSE: YCurrent_Enabled = YCurrent_Enabled.FALSE;
-    public readonly ENABLED_TRUE: YCurrent_Enabled = YCurrent_Enabled.TRUE;
-    public readonly ENABLED_INVALID: YCurrent_Enabled = YCurrent_Enabled.INVALID;
+    public readonly ENABLED_FALSE: YCurrent.ENABLED = 0;
+    public readonly ENABLED_TRUE: YCurrent.ENABLED = 1;
+    public readonly ENABLED_INVALID: YCurrent.ENABLED = -1;
 
     // API symbols as static members
-    public static readonly ENABLED_FALSE: YCurrent_Enabled = YCurrent_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: YCurrent_Enabled = YCurrent_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: YCurrent_Enabled = YCurrent_Enabled.INVALID;
+    public static readonly ENABLED_FALSE: YCurrent.ENABLED = 0;
+    public static readonly ENABLED_TRUE: YCurrent.ENABLED = 1;
+    public static readonly ENABLED_INVALID: YCurrent.ENABLED = -1;
     //--- (end of YCurrent attributes declaration)
-
-//--- (YCurrent return codes)
-//--- (end of YCurrent return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -96,7 +83,7 @@ export class YCurrent extends YSensor
     {
         switch(name) {
         case 'enabled':
-            this._enabled = <YCurrent_Enabled> <number> val;
+            this._enabled = <YCurrent.ENABLED> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -109,7 +96,7 @@ export class YCurrent extends YSensor
      *
      * On failure, throws an exception or returns YCurrent.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<YCurrent_Enabled>
+    async get_enabled(): Promise<YCurrent.ENABLED>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -136,7 +123,7 @@ export class YCurrent extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: YCurrent_Enabled): Promise<number>
+    async set_enabled(newval: YCurrent.ENABLED): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -229,7 +216,7 @@ export class YCurrent extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YCurrentValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YCurrent.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -273,7 +260,7 @@ export class YCurrent extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YCurrentTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YCurrent.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -354,5 +341,16 @@ export class YCurrent extends YSensor
     }
 
     //--- (end of YCurrent implementation)
+}
+
+export namespace YCurrent {
+    //--- (YCurrent definitions)
+    export const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YCurrent, value: string): void }    export interface TimedReportCallback { (func: YCurrent, measure: YMeasure): void }
+    //--- (end of YCurrent definitions)
 }
 

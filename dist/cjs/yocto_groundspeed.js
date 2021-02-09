@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_groundspeed.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_groundspeed.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for GroundSpeed functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YGroundSpeed = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YGroundSpeed definitions)
 //--- (YGroundSpeed class start)
 /**
  * YGroundSpeed Class: ground speed sensor control interface, available for instance in the Yocto-GPS-V2
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 class YGroundSpeed extends yocto_api_js_1.YSensor {
     // API symbols as static members
     //--- (end of YGroundSpeed attributes declaration)
-    //--- (YGroundSpeed return codes)
-    //--- (end of YGroundSpeed return codes)
     constructor(yapi, func) {
         //--- (YGroundSpeed constructor)
         super(yapi, func);

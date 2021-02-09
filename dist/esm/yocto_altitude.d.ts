@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_altitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YAltitudeValueCallback {
-    (func: YAltitude, value: string): void;
-}
-export interface YAltitudeTimedReportCallback {
-    (func: YAltitude, measure: YMeasure): void;
-}
 /**
  * YAltitude Class: altimeter control interface, available for instance in the Yocto-Altimeter-V2 or
  * the Yocto-GPS-V2
@@ -57,8 +51,8 @@ export declare class YAltitude extends YSensor {
     _className: string;
     _qnh: number;
     _technology: string;
-    _valueCallbackAltitude: YAltitudeValueCallback | null;
-    _timedReportCallbackAltitude: YAltitudeTimedReportCallback | null;
+    _valueCallbackAltitude: YAltitude.ValueCallback | null;
+    _timedReportCallbackAltitude: YAltitude.TimedReportCallback | null;
     readonly QNH_INVALID: number;
     readonly TECHNOLOGY_INVALID: string;
     static readonly QNH_INVALID: number;
@@ -180,7 +174,7 @@ export declare class YAltitude extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YAltitudeValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YAltitude.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -193,7 +187,7 @@ export declare class YAltitude extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YAltitudeTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YAltitude.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of altimeters started using yFirstAltitude().
@@ -228,4 +222,12 @@ export declare class YAltitude extends YSensor {
      *         if there are none.
      */
     static FirstAltitudeInContext(yctx: YAPIContext): YAltitude | null;
+}
+export declare namespace YAltitude {
+    interface ValueCallback {
+        (func: YAltitude, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YAltitude, measure: YMeasure): void;
+    }
 }

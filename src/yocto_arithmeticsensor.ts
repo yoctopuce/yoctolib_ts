@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_arithmeticsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YArithmeticSensor definitions)
-export interface YArithmeticSensorValueCallback { (func: YArithmeticSensor, value: string): void }
-export interface YArithmeticSensorTimedReportCallback { (func: YArithmeticSensor, measure: YMeasure): void }
-//--- (end of YArithmeticSensor definitions)
-
 //--- (YArithmeticSensor class start)
 /**
  * YArithmeticSensor Class: arithmetic sensor control interface, available for instance in the
@@ -62,8 +57,8 @@ export class YArithmeticSensor extends YSensor
     _className: string;
     _description: string = YArithmeticSensor.DESCRIPTION_INVALID;
     _command: string = YArithmeticSensor.COMMAND_INVALID;
-    _valueCallbackArithmeticSensor: YArithmeticSensorValueCallback | null = null;
-    _timedReportCallbackArithmeticSensor: YArithmeticSensorTimedReportCallback | null = null;
+    _valueCallbackArithmeticSensor: YArithmeticSensor.ValueCallback | null = null;
+    _timedReportCallbackArithmeticSensor: YArithmeticSensor.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly DESCRIPTION_INVALID: string = YAPI.INVALID_STRING;
@@ -73,9 +68,6 @@ export class YArithmeticSensor extends YSensor
     public static readonly DESCRIPTION_INVALID: string = YAPI.INVALID_STRING;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YArithmeticSensor attributes declaration)
-
-//--- (YArithmeticSensor return codes)
-//--- (end of YArithmeticSensor return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -242,7 +234,7 @@ export class YArithmeticSensor extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YArithmeticSensorValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YArithmeticSensor.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -286,7 +278,7 @@ export class YArithmeticSensor extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YArithmeticSensorTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YArithmeticSensor.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -504,5 +496,11 @@ export class YArithmeticSensor extends YSensor
     }
 
     //--- (end of YArithmeticSensor implementation)
+}
+
+export namespace YArithmeticSensor {
+    //--- (YArithmeticSensor definitions)
+    export interface ValueCallback { (func: YArithmeticSensor, value: string): void }    export interface TimedReportCallback { (func: YArithmeticSensor, measure: YMeasure): void }
+    //--- (end of YArithmeticSensor definitions)
 }
 

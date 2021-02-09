@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_magnetometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YMagnetometer = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YMagnetometer definitions)
 //--- (YMagnetometer class start)
 /**
  * YMagnetometer Class: magnetometer control interface, available for instance in the Yocto-3D-V2
@@ -58,8 +57,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YMagnetometer class start)
 class YMagnetometer extends yocto_api_js_1.YSensor {
     //--- (end of YMagnetometer attributes declaration)
-    //--- (YMagnetometer return codes)
-    //--- (end of YMagnetometer return codes)
     constructor(yapi, func) {
         //--- (YMagnetometer constructor)
         super(yapi, func);

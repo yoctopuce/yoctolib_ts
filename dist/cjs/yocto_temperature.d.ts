@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_temperature.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -37,33 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YTemperature_SensorType {
-    DIGITAL = 0,
-    TYPE_K = 1,
-    TYPE_E = 2,
-    TYPE_J = 3,
-    TYPE_N = 4,
-    TYPE_R = 5,
-    TYPE_S = 6,
-    TYPE_T = 7,
-    PT100_4WIRES = 8,
-    PT100_3WIRES = 9,
-    PT100_2WIRES = 10,
-    RES_OHM = 11,
-    RES_NTC = 12,
-    RES_LINEAR = 13,
-    RES_INTERNAL = 14,
-    IR = 15,
-    RES_PT1000 = 16,
-    CHANNEL_OFF = 17,
-    INVALID = -1
-}
-export interface YTemperatureValueCallback {
-    (func: YTemperature, value: string): void;
-}
-export interface YTemperatureTimedReportCallback {
-    (func: YTemperature, measure: YMeasure): void;
-}
 /**
  * YTemperature Class: temperature sensor control interface, available for instance in the
  * Yocto-Meteo-V2, the Yocto-PT100, the Yocto-Temperature or the Yocto-Thermocouple
@@ -76,53 +49,53 @@ export interface YTemperatureTimedReportCallback {
  */
 export declare class YTemperature extends YSensor {
     _className: string;
-    _sensorType: YTemperature_SensorType;
+    _sensorType: YTemperature.SENSORTYPE;
     _signalValue: number;
     _signalUnit: string;
     _command: string;
-    _valueCallbackTemperature: YTemperatureValueCallback | null;
-    _timedReportCallbackTemperature: YTemperatureTimedReportCallback | null;
-    readonly SENSORTYPE_DIGITAL: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_K: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_E: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_J: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_N: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_R: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_S: YTemperature_SensorType;
-    readonly SENSORTYPE_TYPE_T: YTemperature_SensorType;
-    readonly SENSORTYPE_PT100_4WIRES: YTemperature_SensorType;
-    readonly SENSORTYPE_PT100_3WIRES: YTemperature_SensorType;
-    readonly SENSORTYPE_PT100_2WIRES: YTemperature_SensorType;
-    readonly SENSORTYPE_RES_OHM: YTemperature_SensorType;
-    readonly SENSORTYPE_RES_NTC: YTemperature_SensorType;
-    readonly SENSORTYPE_RES_LINEAR: YTemperature_SensorType;
-    readonly SENSORTYPE_RES_INTERNAL: YTemperature_SensorType;
-    readonly SENSORTYPE_IR: YTemperature_SensorType;
-    readonly SENSORTYPE_RES_PT1000: YTemperature_SensorType;
-    readonly SENSORTYPE_CHANNEL_OFF: YTemperature_SensorType;
-    readonly SENSORTYPE_INVALID: YTemperature_SensorType;
+    _valueCallbackTemperature: YTemperature.ValueCallback | null;
+    _timedReportCallbackTemperature: YTemperature.TimedReportCallback | null;
+    readonly SENSORTYPE_DIGITAL: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_K: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_E: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_J: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_N: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_R: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_S: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_TYPE_T: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_PT100_4WIRES: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_PT100_3WIRES: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_PT100_2WIRES: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_RES_OHM: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_RES_NTC: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_RES_LINEAR: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_RES_INTERNAL: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_IR: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_RES_PT1000: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_CHANNEL_OFF: YTemperature.SENSORTYPE;
+    readonly SENSORTYPE_INVALID: YTemperature.SENSORTYPE;
     readonly SIGNALVALUE_INVALID: number;
     readonly SIGNALUNIT_INVALID: string;
     readonly COMMAND_INVALID: string;
-    static readonly SENSORTYPE_DIGITAL: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_K: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_E: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_J: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_N: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_R: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_S: YTemperature_SensorType;
-    static readonly SENSORTYPE_TYPE_T: YTemperature_SensorType;
-    static readonly SENSORTYPE_PT100_4WIRES: YTemperature_SensorType;
-    static readonly SENSORTYPE_PT100_3WIRES: YTemperature_SensorType;
-    static readonly SENSORTYPE_PT100_2WIRES: YTemperature_SensorType;
-    static readonly SENSORTYPE_RES_OHM: YTemperature_SensorType;
-    static readonly SENSORTYPE_RES_NTC: YTemperature_SensorType;
-    static readonly SENSORTYPE_RES_LINEAR: YTemperature_SensorType;
-    static readonly SENSORTYPE_RES_INTERNAL: YTemperature_SensorType;
-    static readonly SENSORTYPE_IR: YTemperature_SensorType;
-    static readonly SENSORTYPE_RES_PT1000: YTemperature_SensorType;
-    static readonly SENSORTYPE_CHANNEL_OFF: YTemperature_SensorType;
-    static readonly SENSORTYPE_INVALID: YTemperature_SensorType;
+    static readonly SENSORTYPE_DIGITAL: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_K: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_E: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_J: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_N: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_R: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_S: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_TYPE_T: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_PT100_4WIRES: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_PT100_3WIRES: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_PT100_2WIRES: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_RES_OHM: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_RES_NTC: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_RES_LINEAR: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_RES_INTERNAL: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_IR: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_RES_PT1000: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_CHANNEL_OFF: YTemperature.SENSORTYPE;
+    static readonly SENSORTYPE_INVALID: YTemperature.SENSORTYPE;
     static readonly SIGNALVALUE_INVALID: number;
     static readonly SIGNALUNIT_INVALID: string;
     static readonly COMMAND_INVALID: string;
@@ -161,7 +134,7 @@ export declare class YTemperature extends YSensor {
      *
      * On failure, throws an exception or returns YTemperature.SENSORTYPE_INVALID.
      */
-    get_sensorType(): Promise<YTemperature_SensorType>;
+    get_sensorType(): Promise<YTemperature.SENSORTYPE>;
     /**
      * Changes the temperature sensor type.  This function is used
      * to define the type of thermocouple (K,E...) used with the device.
@@ -183,7 +156,7 @@ export declare class YTemperature extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_sensorType(newval: YTemperature_SensorType): Promise<number>;
+    set_sensorType(newval: YTemperature.SENSORTYPE): Promise<number>;
     /**
      * Returns the current value of the electrical signal measured by the sensor.
      *
@@ -269,7 +242,7 @@ export declare class YTemperature extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YTemperatureValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YTemperature.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -282,7 +255,7 @@ export declare class YTemperature extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YTemperatureTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YTemperature.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Configures NTC thermistor parameters in order to properly compute the temperature from
@@ -365,4 +338,33 @@ export declare class YTemperature extends YSensor {
      *         if there are none.
      */
     static FirstTemperatureInContext(yctx: YAPIContext): YTemperature | null;
+}
+export declare namespace YTemperature {
+    const enum SENSORTYPE {
+        DIGITAL = 0,
+        TYPE_K = 1,
+        TYPE_E = 2,
+        TYPE_J = 3,
+        TYPE_N = 4,
+        TYPE_R = 5,
+        TYPE_S = 6,
+        TYPE_T = 7,
+        PT100_4WIRES = 8,
+        PT100_3WIRES = 9,
+        PT100_2WIRES = 10,
+        RES_OHM = 11,
+        RES_NTC = 12,
+        RES_LINEAR = 13,
+        RES_INTERNAL = 14,
+        IR = 15,
+        RES_PT1000 = 16,
+        CHANNEL_OFF = 17,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YTemperature, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YTemperature, measure: YMeasure): void;
+    }
 }

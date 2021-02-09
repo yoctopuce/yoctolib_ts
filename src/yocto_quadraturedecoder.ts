@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -39,16 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YQuadratureDecoder definitions)
-export const enum YQuadratureDecoder_Decoding {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YQuadratureDecoderValueCallback { (func: YQuadratureDecoder, value: string): void }
-export interface YQuadratureDecoderTimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }
-//--- (end of YQuadratureDecoder definitions)
-
 //--- (YQuadratureDecoder class start)
 /**
  * YQuadratureDecoder Class: quadrature decoder control interface, available for instance in the Yocto-PWM-Rx
@@ -64,25 +54,22 @@ export class YQuadratureDecoder extends YSensor
     //--- (YQuadratureDecoder attributes declaration)
     _className: string;
     _speed: number = YQuadratureDecoder.SPEED_INVALID;
-    _decoding: YQuadratureDecoder_Decoding = YQuadratureDecoder.DECODING_INVALID;
-    _valueCallbackQuadratureDecoder: YQuadratureDecoderValueCallback | null = null;
-    _timedReportCallbackQuadratureDecoder: YQuadratureDecoderTimedReportCallback | null = null;
+    _decoding: YQuadratureDecoder.DECODING = YQuadratureDecoder.DECODING_INVALID;
+    _valueCallbackQuadratureDecoder: YQuadratureDecoder.ValueCallback | null = null;
+    _timedReportCallbackQuadratureDecoder: YQuadratureDecoder.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly DECODING_OFF: YQuadratureDecoder_Decoding = YQuadratureDecoder_Decoding.OFF;
-    public readonly DECODING_ON: YQuadratureDecoder_Decoding = YQuadratureDecoder_Decoding.ON;
-    public readonly DECODING_INVALID: YQuadratureDecoder_Decoding = YQuadratureDecoder_Decoding.INVALID;
+    public readonly DECODING_OFF: YQuadratureDecoder.DECODING = 0;
+    public readonly DECODING_ON: YQuadratureDecoder.DECODING = 1;
+    public readonly DECODING_INVALID: YQuadratureDecoder.DECODING = -1;
 
     // API symbols as static members
     public static readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly DECODING_OFF: YQuadratureDecoder_Decoding = YQuadratureDecoder_Decoding.OFF;
-    public static readonly DECODING_ON: YQuadratureDecoder_Decoding = YQuadratureDecoder_Decoding.ON;
-    public static readonly DECODING_INVALID: YQuadratureDecoder_Decoding = YQuadratureDecoder_Decoding.INVALID;
+    public static readonly DECODING_OFF: YQuadratureDecoder.DECODING = 0;
+    public static readonly DECODING_ON: YQuadratureDecoder.DECODING = 1;
+    public static readonly DECODING_INVALID: YQuadratureDecoder.DECODING = -1;
     //--- (end of YQuadratureDecoder attributes declaration)
-
-//--- (YQuadratureDecoder return codes)
-//--- (end of YQuadratureDecoder return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -101,7 +88,7 @@ export class YQuadratureDecoder extends YSensor
             this._speed = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'decoding':
-            this._decoding = <YQuadratureDecoder_Decoding> <number> val;
+            this._decoding = <YQuadratureDecoder.DECODING> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -151,7 +138,7 @@ export class YQuadratureDecoder extends YSensor
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
-    async get_decoding(): Promise<YQuadratureDecoder_Decoding>
+    async get_decoding(): Promise<YQuadratureDecoder.DECODING>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -175,7 +162,7 @@ export class YQuadratureDecoder extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_decoding(newval: YQuadratureDecoder_Decoding): Promise<number>
+    async set_decoding(newval: YQuadratureDecoder.DECODING): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -268,7 +255,7 @@ export class YQuadratureDecoder extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YQuadratureDecoderValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YQuadratureDecoder.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -312,7 +299,7 @@ export class YQuadratureDecoder extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YQuadratureDecoderTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YQuadratureDecoder.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -393,5 +380,16 @@ export class YQuadratureDecoder extends YSensor
     }
 
     //--- (end of YQuadratureDecoder implementation)
+}
+
+export namespace YQuadratureDecoder {
+    //--- (YQuadratureDecoder definitions)
+    export const enum DECODING {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YQuadratureDecoder, value: string): void }    export interface TimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }
+    //--- (end of YQuadratureDecoder definitions)
 }
 

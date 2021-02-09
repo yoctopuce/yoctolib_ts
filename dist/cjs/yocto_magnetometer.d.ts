@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_magnetometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YMagnetometerValueCallback {
-    (func: YMagnetometer, value: string): void;
-}
-export interface YMagnetometerTimedReportCallback {
-    (func: YMagnetometer, measure: YMeasure): void;
-}
 /**
  * YMagnetometer Class: magnetometer control interface, available for instance in the Yocto-3D-V2
  *
@@ -62,8 +56,8 @@ export declare class YMagnetometer extends YSensor {
     _xValue: number;
     _yValue: number;
     _zValue: number;
-    _valueCallbackMagnetometer: YMagnetometerValueCallback | null;
-    _timedReportCallbackMagnetometer: YMagnetometerTimedReportCallback | null;
+    _valueCallbackMagnetometer: YMagnetometer.ValueCallback | null;
+    _timedReportCallbackMagnetometer: YMagnetometer.TimedReportCallback | null;
     readonly BANDWIDTH_INVALID: number;
     readonly XVALUE_INVALID: number;
     readonly YVALUE_INVALID: number;
@@ -188,7 +182,7 @@ export declare class YMagnetometer extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YMagnetometerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YMagnetometer.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -201,7 +195,7 @@ export declare class YMagnetometer extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YMagnetometerTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YMagnetometer.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of magnetometers started using yFirstMagnetometer().
@@ -236,4 +230,12 @@ export declare class YMagnetometer extends YSensor {
      *         if there are none.
      */
     static FirstMagnetometerInContext(yctx: YAPIContext): YMagnetometer | null;
+}
+export declare namespace YMagnetometer {
+    interface ValueCallback {
+        (func: YMagnetometer, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YMagnetometer, measure: YMeasure): void;
+    }
 }

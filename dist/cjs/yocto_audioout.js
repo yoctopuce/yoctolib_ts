@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_audioout.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YAudioOut = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YAudioOut definitions)
 //--- (YAudioOut class start)
 /**
  * YAudioOut Class: audio output control interface
@@ -50,8 +49,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YAudioOut class start)
 class YAudioOut extends yocto_api_js_1.YFunction {
     //--- (end of YAudioOut attributes declaration)
-    //--- (YAudioOut return codes)
-    //--- (end of YAudioOut return codes)
     constructor(yapi, func) {
         //--- (YAudioOut constructor)
         super(yapi, func);
@@ -63,9 +60,9 @@ class YAudioOut extends yocto_api_js_1.YFunction {
         this._valueCallbackAudioOut = null;
         // API symbols as object properties
         this.VOLUME_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.MUTE_FALSE = 0 /* FALSE */;
-        this.MUTE_TRUE = 1 /* TRUE */;
-        this.MUTE_INVALID = -1 /* INVALID */;
+        this.MUTE_FALSE = 0;
+        this.MUTE_TRUE = 1;
+        this.MUTE_INVALID = -1;
         this.VOLUMERANGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.SIGNAL_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
         this.NOSIGNALFOR_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
@@ -381,9 +378,9 @@ class YAudioOut extends yocto_api_js_1.YFunction {
 exports.YAudioOut = YAudioOut;
 // API symbols as static members
 YAudioOut.VOLUME_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YAudioOut.MUTE_FALSE = 0 /* FALSE */;
-YAudioOut.MUTE_TRUE = 1 /* TRUE */;
-YAudioOut.MUTE_INVALID = -1 /* INVALID */;
+YAudioOut.MUTE_FALSE = 0;
+YAudioOut.MUTE_TRUE = 1;
+YAudioOut.MUTE_INVALID = -1;
 YAudioOut.VOLUMERANGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YAudioOut.SIGNAL_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
 YAudioOut.NOSIGNALFOR_INVALID = yocto_api_js_1.YAPI.INVALID_INT;

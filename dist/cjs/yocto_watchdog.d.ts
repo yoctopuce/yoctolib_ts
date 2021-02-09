@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -37,40 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YWatchdog_State {
-    A = 0,
-    B = 1,
-    INVALID = -1
-}
-export declare const enum YWatchdog_StateAtPowerOn {
-    UNCHANGED = 0,
-    A = 1,
-    B = 2,
-    INVALID = -1
-}
-export declare const enum YWatchdog_Output {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YWatchdog_AutoStart {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YWatchdog_Running {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-declare class YWatchdogDelayedPulse {
-    target: number;
-    ms: number;
-    moving: number;
-}
-export interface YWatchdogValueCallback {
-    (func: YWatchdog, value: string): void;
-}
 /**
  * YWatchdog Class: watchdog control interface, available for instance in the Yocto-WatchdogDC
  *
@@ -85,63 +51,63 @@ export interface YWatchdogValueCallback {
  */
 export declare class YWatchdog extends YFunction {
     _className: string;
-    _state: YWatchdog_State;
-    _stateAtPowerOn: YWatchdog_StateAtPowerOn;
+    _state: YWatchdog.STATE;
+    _stateAtPowerOn: YWatchdog.STATEATPOWERON;
     _maxTimeOnStateA: number;
     _maxTimeOnStateB: number;
-    _output: YWatchdog_Output;
+    _output: YWatchdog.OUTPUT;
     _pulseTimer: number;
-    _delayedPulseTimer: YWatchdogDelayedPulse;
+    _delayedPulseTimer: YWatchdog.DelayedPulse;
     _countdown: number;
-    _autoStart: YWatchdog_AutoStart;
-    _running: YWatchdog_Running;
+    _autoStart: YWatchdog.AUTOSTART;
+    _running: YWatchdog.RUNNING;
     _triggerDelay: number;
     _triggerDuration: number;
-    _valueCallbackWatchdog: YWatchdogValueCallback | null;
+    _valueCallbackWatchdog: YWatchdog.ValueCallback | null;
     _firm: number;
-    readonly STATE_A: YWatchdog_State;
-    readonly STATE_B: YWatchdog_State;
-    readonly STATE_INVALID: YWatchdog_State;
-    readonly STATEATPOWERON_UNCHANGED: YWatchdog_StateAtPowerOn;
-    readonly STATEATPOWERON_A: YWatchdog_StateAtPowerOn;
-    readonly STATEATPOWERON_B: YWatchdog_StateAtPowerOn;
-    readonly STATEATPOWERON_INVALID: YWatchdog_StateAtPowerOn;
+    readonly STATE_A: YWatchdog.STATE;
+    readonly STATE_B: YWatchdog.STATE;
+    readonly STATE_INVALID: YWatchdog.STATE;
+    readonly STATEATPOWERON_UNCHANGED: YWatchdog.STATEATPOWERON;
+    readonly STATEATPOWERON_A: YWatchdog.STATEATPOWERON;
+    readonly STATEATPOWERON_B: YWatchdog.STATEATPOWERON;
+    readonly STATEATPOWERON_INVALID: YWatchdog.STATEATPOWERON;
     readonly MAXTIMEONSTATEA_INVALID: number;
     readonly MAXTIMEONSTATEB_INVALID: number;
-    readonly OUTPUT_OFF: YWatchdog_Output;
-    readonly OUTPUT_ON: YWatchdog_Output;
-    readonly OUTPUT_INVALID: YWatchdog_Output;
+    readonly OUTPUT_OFF: YWatchdog.OUTPUT;
+    readonly OUTPUT_ON: YWatchdog.OUTPUT;
+    readonly OUTPUT_INVALID: YWatchdog.OUTPUT;
     readonly PULSETIMER_INVALID: number;
     readonly COUNTDOWN_INVALID: number;
-    readonly AUTOSTART_OFF: YWatchdog_AutoStart;
-    readonly AUTOSTART_ON: YWatchdog_AutoStart;
-    readonly AUTOSTART_INVALID: YWatchdog_AutoStart;
-    readonly RUNNING_OFF: YWatchdog_Running;
-    readonly RUNNING_ON: YWatchdog_Running;
-    readonly RUNNING_INVALID: YWatchdog_Running;
+    readonly AUTOSTART_OFF: YWatchdog.AUTOSTART;
+    readonly AUTOSTART_ON: YWatchdog.AUTOSTART;
+    readonly AUTOSTART_INVALID: YWatchdog.AUTOSTART;
+    readonly RUNNING_OFF: YWatchdog.RUNNING;
+    readonly RUNNING_ON: YWatchdog.RUNNING;
+    readonly RUNNING_INVALID: YWatchdog.RUNNING;
     readonly TRIGGERDELAY_INVALID: number;
     readonly TRIGGERDURATION_INVALID: number;
-    static readonly DELAYEDPULSETIMER_INVALID: YWatchdogDelayedPulse;
-    static readonly STATE_A: YWatchdog_State;
-    static readonly STATE_B: YWatchdog_State;
-    static readonly STATE_INVALID: YWatchdog_State;
-    static readonly STATEATPOWERON_UNCHANGED: YWatchdog_StateAtPowerOn;
-    static readonly STATEATPOWERON_A: YWatchdog_StateAtPowerOn;
-    static readonly STATEATPOWERON_B: YWatchdog_StateAtPowerOn;
-    static readonly STATEATPOWERON_INVALID: YWatchdog_StateAtPowerOn;
+    static readonly DELAYEDPULSETIMER_INVALID: YWatchdog.DelayedPulse;
+    static readonly STATE_A: YWatchdog.STATE;
+    static readonly STATE_B: YWatchdog.STATE;
+    static readonly STATE_INVALID: YWatchdog.STATE;
+    static readonly STATEATPOWERON_UNCHANGED: YWatchdog.STATEATPOWERON;
+    static readonly STATEATPOWERON_A: YWatchdog.STATEATPOWERON;
+    static readonly STATEATPOWERON_B: YWatchdog.STATEATPOWERON;
+    static readonly STATEATPOWERON_INVALID: YWatchdog.STATEATPOWERON;
     static readonly MAXTIMEONSTATEA_INVALID: number;
     static readonly MAXTIMEONSTATEB_INVALID: number;
-    static readonly OUTPUT_OFF: YWatchdog_Output;
-    static readonly OUTPUT_ON: YWatchdog_Output;
-    static readonly OUTPUT_INVALID: YWatchdog_Output;
+    static readonly OUTPUT_OFF: YWatchdog.OUTPUT;
+    static readonly OUTPUT_ON: YWatchdog.OUTPUT;
+    static readonly OUTPUT_INVALID: YWatchdog.OUTPUT;
     static readonly PULSETIMER_INVALID: number;
     static readonly COUNTDOWN_INVALID: number;
-    static readonly AUTOSTART_OFF: YWatchdog_AutoStart;
-    static readonly AUTOSTART_ON: YWatchdog_AutoStart;
-    static readonly AUTOSTART_INVALID: YWatchdog_AutoStart;
-    static readonly RUNNING_OFF: YWatchdog_Running;
-    static readonly RUNNING_ON: YWatchdog_Running;
-    static readonly RUNNING_INVALID: YWatchdog_Running;
+    static readonly AUTOSTART_OFF: YWatchdog.AUTOSTART;
+    static readonly AUTOSTART_ON: YWatchdog.AUTOSTART;
+    static readonly AUTOSTART_INVALID: YWatchdog.AUTOSTART;
+    static readonly RUNNING_OFF: YWatchdog.RUNNING;
+    static readonly RUNNING_ON: YWatchdog.RUNNING;
+    static readonly RUNNING_INVALID: YWatchdog.RUNNING;
     static readonly TRIGGERDELAY_INVALID: number;
     static readonly TRIGGERDURATION_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
@@ -154,7 +120,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns YWatchdog.STATE_INVALID.
      */
-    get_state(): Promise<YWatchdog_State>;
+    get_state(): Promise<YWatchdog.STATE>;
     /**
      * Changes the state of the watchdog (A for the idle position, B for the active position).
      *
@@ -165,7 +131,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_state(newval: YWatchdog_State): Promise<number>;
+    set_state(newval: YWatchdog.STATE): Promise<number>;
     /**
      * Returns the state of the watchdog at device startup (A for the idle position,
      * B for the active position, UNCHANGED to leave the relay state as is).
@@ -177,7 +143,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns YWatchdog.STATEATPOWERON_INVALID.
      */
-    get_stateAtPowerOn(): Promise<YWatchdog_StateAtPowerOn>;
+    get_stateAtPowerOn(): Promise<YWatchdog.STATEATPOWERON>;
     /**
      * Changes the state of the watchdog at device startup (A for the idle position,
      * B for the active position, UNCHANGED to leave the relay state as is).
@@ -193,7 +159,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_stateAtPowerOn(newval: YWatchdog_StateAtPowerOn): Promise<number>;
+    set_stateAtPowerOn(newval: YWatchdog.STATEATPOWERON): Promise<number>;
     /**
      * Returns the maximum time (ms) allowed for the watchdog to stay in state
      * A before automatically switching back in to B state. Zero means no time limit.
@@ -250,7 +216,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns YWatchdog.OUTPUT_INVALID.
      */
-    get_output(): Promise<YWatchdog_Output>;
+    get_output(): Promise<YWatchdog.OUTPUT>;
     /**
      * Changes the output state of the watchdog, when used as a simple switch (single throw).
      *
@@ -261,7 +227,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_output(newval: YWatchdog_Output): Promise<number>;
+    set_output(newval: YWatchdog.OUTPUT): Promise<number>;
     /**
      * Returns the number of milliseconds remaining before the watchdog is returned to idle position
      * (state A), during a measured pulse generation. When there is no ongoing pulse, returns zero.
@@ -285,8 +251,8 @@ export declare class YWatchdog extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     pulse(ms_duration: number): Promise<number>;
-    get_delayedPulseTimer(): Promise<YWatchdogDelayedPulse>;
-    set_delayedPulseTimer(newval: YWatchdogDelayedPulse): Promise<number>;
+    get_delayedPulseTimer(): Promise<YWatchdog.DelayedPulse>;
+    set_delayedPulseTimer(newval: YWatchdog.DelayedPulse): Promise<number>;
     /**
      * Schedules a pulse.
      *
@@ -316,7 +282,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns YWatchdog.AUTOSTART_INVALID.
      */
-    get_autoStart(): Promise<YWatchdog_AutoStart>;
+    get_autoStart(): Promise<YWatchdog.AUTOSTART>;
     /**
      * Changes the watchdog running state at module power on. Remember to call the
      * saveToFlash() method and then to reboot the module to apply this setting.
@@ -328,7 +294,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_autoStart(newval: YWatchdog_AutoStart): Promise<number>;
+    set_autoStart(newval: YWatchdog.AUTOSTART): Promise<number>;
     /**
      * Returns the watchdog running state.
      *
@@ -336,7 +302,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns YWatchdog.RUNNING_INVALID.
      */
-    get_running(): Promise<YWatchdog_Running>;
+    get_running(): Promise<YWatchdog.RUNNING>;
     /**
      * Changes the running state of the watchdog.
      *
@@ -347,7 +313,7 @@ export declare class YWatchdog extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_running(newval: YWatchdog_Running): Promise<number>;
+    set_running(newval: YWatchdog.RUNNING): Promise<number>;
     /**
      * Resets the watchdog. When the watchdog is running, this function
      * must be called on a regular basis to prevent the watchdog to
@@ -466,7 +432,7 @@ export declare class YWatchdog extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YWatchdogValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YWatchdog.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Switch the relay to the opposite state.
@@ -510,4 +476,39 @@ export declare class YWatchdog extends YFunction {
      */
     static FirstWatchdogInContext(yctx: YAPIContext): YWatchdog | null;
 }
-export {};
+export declare namespace YWatchdog {
+    const enum STATE {
+        A = 0,
+        B = 1,
+        INVALID = -1
+    }
+    const enum STATEATPOWERON {
+        UNCHANGED = 0,
+        A = 1,
+        B = 2,
+        INVALID = -1
+    }
+    const enum OUTPUT {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    interface DelayedPulse {
+        target?: number;
+        ms?: number;
+        moving?: number;
+    }
+    const enum AUTOSTART {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    const enum RUNNING {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YWatchdog, value: string): void;
+    }
+}

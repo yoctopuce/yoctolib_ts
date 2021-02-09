@@ -64,6 +64,7 @@ function listener(message, response) {
     let abspath = path.join(HTTP_ROOT, relpath);
     let extension = path.extname(relpath);
     let mimetype = MimeTypes[extension.toLowerCase()];
+    let headers = { 'Content-Type': MimeTypes[extension] };
     // Redirect server root to our demo subdirectory
     if (!relpath) {
         response.writeHead(302, { 'Location': DEFAULT_FILE, 'Content-Type': 'text/plain' });
@@ -74,6 +75,15 @@ function listener(message, response) {
     // Make sure we know about this file
     //console.log('Request for ['+abspath+']');
     let fileexists = fs.existsSync(abspath);
+    if (!fileexists) {
+        // fallback to gzip-encoded file, if available
+        let gzipname = abspath + '.gz';
+        fileexists = fs.existsSync(gzipname);
+        if (fileexists) {
+            headers['Content-Encoding'] = 'gzip';
+            abspath = gzipname;
+        }
+    }
     if (!fileexists || !mimetype) {
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         if (!fileexists) {
@@ -86,10 +96,11 @@ function listener(message, response) {
         return;
     }
     // Output file to browser at once
-    response.writeHead(200, { 'Content-Type': MimeTypes[extension] });
     fs.readFile(abspath, (err, data) => {
         if (err)
             throw err;
+        headers['Content-Length'] = data.length;
+        response.writeHead(200, headers);
         response.write(data, 'utf8');
         response.end();
     });

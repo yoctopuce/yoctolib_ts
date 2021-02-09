@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -66,14 +66,7 @@ export declare class YI2cSnoopingRecord {
      */
     get_message(): Promise<string>;
 }
-export declare const enum YI2cPort_I2cVoltageLevel {
-    OFF = 0,
-    _3V3 = 1,
-    _1V8 = 2,
-    INVALID = -1
-}
-export interface YI2cPortValueCallback {
-    (func: YI2cPort, value: string): void;
+export declare namespace YI2cSnoopingRecord {
 }
 /**
  * YI2cPort Class: I2C port control interface, available for instance in the Yocto-I2C
@@ -99,9 +92,9 @@ export declare class YI2cPort extends YFunction {
     _jobMaxSize: number;
     _command: string;
     _protocol: string;
-    _i2cVoltageLevel: YI2cPort_I2cVoltageLevel;
+    _i2cVoltageLevel: YI2cPort.I2CVOLTAGELEVEL;
     _i2cMode: string;
-    _valueCallbackI2cPort: YI2cPortValueCallback | null;
+    _valueCallbackI2cPort: YI2cPort.ValueCallback | null;
     _rxptr: number;
     _rxbuff: Uint8Array;
     _rxbuffptr: number;
@@ -117,10 +110,10 @@ export declare class YI2cPort extends YFunction {
     readonly JOBMAXSIZE_INVALID: number;
     readonly COMMAND_INVALID: string;
     readonly PROTOCOL_INVALID: string;
-    readonly I2CVOLTAGELEVEL_OFF: YI2cPort_I2cVoltageLevel;
-    readonly I2CVOLTAGELEVEL_3V3: YI2cPort_I2cVoltageLevel;
-    readonly I2CVOLTAGELEVEL_1V8: YI2cPort_I2cVoltageLevel;
-    readonly I2CVOLTAGELEVEL_INVALID: YI2cPort_I2cVoltageLevel;
+    readonly I2CVOLTAGELEVEL_OFF: YI2cPort.I2CVOLTAGELEVEL;
+    readonly I2CVOLTAGELEVEL_3V3: YI2cPort.I2CVOLTAGELEVEL;
+    readonly I2CVOLTAGELEVEL_1V8: YI2cPort.I2CVOLTAGELEVEL;
+    readonly I2CVOLTAGELEVEL_INVALID: YI2cPort.I2CVOLTAGELEVEL;
     readonly I2CMODE_INVALID: string;
     static readonly RXCOUNT_INVALID: number;
     static readonly TXCOUNT_INVALID: number;
@@ -134,10 +127,10 @@ export declare class YI2cPort extends YFunction {
     static readonly JOBMAXSIZE_INVALID: number;
     static readonly COMMAND_INVALID: string;
     static readonly PROTOCOL_INVALID: string;
-    static readonly I2CVOLTAGELEVEL_OFF: YI2cPort_I2cVoltageLevel;
-    static readonly I2CVOLTAGELEVEL_3V3: YI2cPort_I2cVoltageLevel;
-    static readonly I2CVOLTAGELEVEL_1V8: YI2cPort_I2cVoltageLevel;
-    static readonly I2CVOLTAGELEVEL_INVALID: YI2cPort_I2cVoltageLevel;
+    static readonly I2CVOLTAGELEVEL_OFF: YI2cPort.I2CVOLTAGELEVEL;
+    static readonly I2CVOLTAGELEVEL_3V3: YI2cPort.I2CVOLTAGELEVEL;
+    static readonly I2CVOLTAGELEVEL_1V8: YI2cPort.I2CVOLTAGELEVEL;
+    static readonly I2CVOLTAGELEVEL_INVALID: YI2cPort.I2CVOLTAGELEVEL;
     static readonly I2CMODE_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -282,7 +275,7 @@ export declare class YI2cPort extends YFunction {
      *
      * On failure, throws an exception or returns YI2cPort.I2CVOLTAGELEVEL_INVALID.
      */
-    get_i2cVoltageLevel(): Promise<YI2cPort_I2cVoltageLevel>;
+    get_i2cVoltageLevel(): Promise<YI2cPort.I2CVOLTAGELEVEL>;
     /**
      * Changes the voltage level used on the I2C bus.
      * Remember to call the saveToFlash() method of the module if the
@@ -295,7 +288,7 @@ export declare class YI2cPort extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_i2cVoltageLevel(newval: YI2cPort_I2cVoltageLevel): Promise<number>;
+    set_i2cVoltageLevel(newval: YI2cPort.I2CVOLTAGELEVEL): Promise<number>;
     /**
      * Returns the I2C port communication parameters, as a string such as
      * "400kbps,2000ms,NoRestart". The string includes the baud rate, the
@@ -392,7 +385,7 @@ export declare class YI2cPort extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YI2cPortValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YI2cPort.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(text: string): Promise<number>;
     /**
@@ -701,4 +694,15 @@ export declare class YI2cPort extends YFunction {
      *         if there are none.
      */
     static FirstI2cPortInContext(yctx: YAPIContext): YI2cPort | null;
+}
+export declare namespace YI2cPort {
+    const enum I2CVOLTAGELEVEL {
+        OFF = 0,
+        _3V3 = 1,
+        _1V8 = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YI2cPort, value: string): void;
+    }
 }

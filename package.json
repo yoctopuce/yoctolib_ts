@@ -2,7 +2,7 @@
   "name": "yoctolib-ts",
   "author": "Yoctopuce",
   "description": "Yoctopuce library for TypeScript",
-  "version": "1.10.43583",
+  "version": "1.10.43781",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",
@@ -30,9 +30,6 @@
     "check_examples": "node bin/build.js checkExamples",
     "clean_examples": "node bin/build.js cleanExamples",
     "app-server": "node bin/app-server.js"
-  },
-  "bin": {
-    "app-server": "bin/app-server.js"
   },
   "dependencies": {
     "ws": "^7.3.1"

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_relay.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -37,14 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YModule } from './yocto_api.js';
-class YRelayDelayedPulse {
-    constructor() {
-        this.target = YAPI.INVALID_INT;
-        this.ms = YAPI.INVALID_INT;
-        this.moving = YAPI.INVALID_UINT;
-    }
-}
-//--- (end of YRelay definitions)
 //--- (YRelay class start)
 /**
  * YRelay Class: relay control interface, available for instance in the Yocto-LatchedRelay, the
@@ -60,8 +52,6 @@ class YRelayDelayedPulse {
 //--- (end of YRelay class start)
 export class YRelay extends YFunction {
     //--- (end of YRelay attributes declaration)
-    //--- (YRelay return codes)
-    //--- (end of YRelay return codes)
     constructor(yapi, func) {
         //--- (YRelay constructor)
         super(yapi, func);
@@ -71,23 +61,23 @@ export class YRelay extends YFunction {
         this._maxTimeOnStateB = YRelay.MAXTIMEONSTATEB_INVALID;
         this._output = YRelay.OUTPUT_INVALID;
         this._pulseTimer = YRelay.PULSETIMER_INVALID;
-        this._delayedPulseTimer = new YRelayDelayedPulse();
+        this._delayedPulseTimer = {};
         this._countdown = YRelay.COUNTDOWN_INVALID;
         this._valueCallbackRelay = null;
         this._firm = 0;
         // API symbols as object properties
-        this.STATE_A = 0 /* A */;
-        this.STATE_B = 1 /* B */;
-        this.STATE_INVALID = -1 /* INVALID */;
-        this.STATEATPOWERON_UNCHANGED = 0 /* UNCHANGED */;
-        this.STATEATPOWERON_A = 1 /* A */;
-        this.STATEATPOWERON_B = 2 /* B */;
-        this.STATEATPOWERON_INVALID = -1 /* INVALID */;
+        this.STATE_A = 0;
+        this.STATE_B = 1;
+        this.STATE_INVALID = -1;
+        this.STATEATPOWERON_UNCHANGED = 0;
+        this.STATEATPOWERON_A = 1;
+        this.STATEATPOWERON_B = 2;
+        this.STATEATPOWERON_INVALID = -1;
         this.MAXTIMEONSTATEA_INVALID = YAPI.INVALID_LONG;
         this.MAXTIMEONSTATEB_INVALID = YAPI.INVALID_LONG;
-        this.OUTPUT_OFF = 0 /* OFF */;
-        this.OUTPUT_ON = 1 /* ON */;
-        this.OUTPUT_INVALID = -1 /* INVALID */;
+        this.OUTPUT_OFF = 0;
+        this.OUTPUT_ON = 1;
+        this.OUTPUT_INVALID = -1;
         this.PULSETIMER_INVALID = YAPI.INVALID_LONG;
         this.COUNTDOWN_INVALID = YAPI.INVALID_LONG;
         this._className = 'Relay';
@@ -594,19 +584,19 @@ export class YRelay extends YFunction {
     }
 }
 // API symbols as static members
-YRelay.DELAYEDPULSETIMER_INVALID = new YRelayDelayedPulse();
-YRelay.STATE_A = 0 /* A */;
-YRelay.STATE_B = 1 /* B */;
-YRelay.STATE_INVALID = -1 /* INVALID */;
-YRelay.STATEATPOWERON_UNCHANGED = 0 /* UNCHANGED */;
-YRelay.STATEATPOWERON_A = 1 /* A */;
-YRelay.STATEATPOWERON_B = 2 /* B */;
-YRelay.STATEATPOWERON_INVALID = -1 /* INVALID */;
+YRelay.DELAYEDPULSETIMER_INVALID = {};
+YRelay.STATE_A = 0;
+YRelay.STATE_B = 1;
+YRelay.STATE_INVALID = -1;
+YRelay.STATEATPOWERON_UNCHANGED = 0;
+YRelay.STATEATPOWERON_A = 1;
+YRelay.STATEATPOWERON_B = 2;
+YRelay.STATEATPOWERON_INVALID = -1;
 YRelay.MAXTIMEONSTATEA_INVALID = YAPI.INVALID_LONG;
 YRelay.MAXTIMEONSTATEB_INVALID = YAPI.INVALID_LONG;
-YRelay.OUTPUT_OFF = 0 /* OFF */;
-YRelay.OUTPUT_ON = 1 /* ON */;
-YRelay.OUTPUT_INVALID = -1 /* INVALID */;
+YRelay.OUTPUT_OFF = 0;
+YRelay.OUTPUT_ON = 1;
+YRelay.OUTPUT_INVALID = -1;
 YRelay.PULSETIMER_INVALID = YAPI.INVALID_LONG;
 YRelay.COUNTDOWN_INVALID = YAPI.INVALID_LONG;
 //# sourceMappingURL=yocto_relay.js.map

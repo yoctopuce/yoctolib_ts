@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -37,9 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export interface YWakeUpScheduleValueCallback {
-    (func: YWakeUpSchedule, value: string): void;
-}
 /**
  * YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
  * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
@@ -57,7 +54,7 @@ export declare class YWakeUpSchedule extends YFunction {
     _monthDays: number;
     _months: number;
     _nextOccurence: number;
-    _valueCallbackWakeUpSchedule: YWakeUpScheduleValueCallback | null;
+    _valueCallbackWakeUpSchedule: YWakeUpSchedule.ValueCallback | null;
     readonly MINUTESA_INVALID: number;
     readonly MINUTESB_INVALID: number;
     readonly HOURS_INVALID: number;
@@ -268,7 +265,7 @@ export declare class YWakeUpSchedule extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YWakeUpScheduleValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YWakeUpSchedule.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Returns all the minutes of each hour that are scheduled for wake up.
@@ -317,4 +314,9 @@ export declare class YWakeUpSchedule extends YFunction {
      *         if there are none.
      */
     static FirstWakeUpScheduleInContext(yctx: YAPIContext): YWakeUpSchedule | null;
+}
+export declare namespace YWakeUpSchedule {
+    interface ValueCallback {
+        (func: YWakeUpSchedule, value: string): void;
+    }
 }

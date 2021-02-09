@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_hubport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_hubport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -37,22 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YHubPort_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YHubPort_PortState {
-    OFF = 0,
-    OVRLD = 1,
-    ON = 2,
-    RUN = 3,
-    PROG = 4,
-    INVALID = -1
-}
-export interface YHubPortValueCallback {
-    (func: YHubPort, value: string): void;
-}
 /**
  * YHubPort Class: YoctoHub slave port control interface, available for instance in the
  * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Shield or the YoctoHub-Wireless-n
@@ -64,29 +48,29 @@ export interface YHubPortValueCallback {
  */
 export declare class YHubPort extends YFunction {
     _className: string;
-    _enabled: YHubPort_Enabled;
-    _portState: YHubPort_PortState;
+    _enabled: YHubPort.ENABLED;
+    _portState: YHubPort.PORTSTATE;
     _baudRate: number;
-    _valueCallbackHubPort: YHubPortValueCallback | null;
-    readonly ENABLED_FALSE: YHubPort_Enabled;
-    readonly ENABLED_TRUE: YHubPort_Enabled;
-    readonly ENABLED_INVALID: YHubPort_Enabled;
-    readonly PORTSTATE_OFF: YHubPort_PortState;
-    readonly PORTSTATE_OVRLD: YHubPort_PortState;
-    readonly PORTSTATE_ON: YHubPort_PortState;
-    readonly PORTSTATE_RUN: YHubPort_PortState;
-    readonly PORTSTATE_PROG: YHubPort_PortState;
-    readonly PORTSTATE_INVALID: YHubPort_PortState;
+    _valueCallbackHubPort: YHubPort.ValueCallback | null;
+    readonly ENABLED_FALSE: YHubPort.ENABLED;
+    readonly ENABLED_TRUE: YHubPort.ENABLED;
+    readonly ENABLED_INVALID: YHubPort.ENABLED;
+    readonly PORTSTATE_OFF: YHubPort.PORTSTATE;
+    readonly PORTSTATE_OVRLD: YHubPort.PORTSTATE;
+    readonly PORTSTATE_ON: YHubPort.PORTSTATE;
+    readonly PORTSTATE_RUN: YHubPort.PORTSTATE;
+    readonly PORTSTATE_PROG: YHubPort.PORTSTATE;
+    readonly PORTSTATE_INVALID: YHubPort.PORTSTATE;
     readonly BAUDRATE_INVALID: number;
-    static readonly ENABLED_FALSE: YHubPort_Enabled;
-    static readonly ENABLED_TRUE: YHubPort_Enabled;
-    static readonly ENABLED_INVALID: YHubPort_Enabled;
-    static readonly PORTSTATE_OFF: YHubPort_PortState;
-    static readonly PORTSTATE_OVRLD: YHubPort_PortState;
-    static readonly PORTSTATE_ON: YHubPort_PortState;
-    static readonly PORTSTATE_RUN: YHubPort_PortState;
-    static readonly PORTSTATE_PROG: YHubPort_PortState;
-    static readonly PORTSTATE_INVALID: YHubPort_PortState;
+    static readonly ENABLED_FALSE: YHubPort.ENABLED;
+    static readonly ENABLED_TRUE: YHubPort.ENABLED;
+    static readonly ENABLED_INVALID: YHubPort.ENABLED;
+    static readonly PORTSTATE_OFF: YHubPort.PORTSTATE;
+    static readonly PORTSTATE_OVRLD: YHubPort.PORTSTATE;
+    static readonly PORTSTATE_ON: YHubPort.PORTSTATE;
+    static readonly PORTSTATE_RUN: YHubPort.PORTSTATE;
+    static readonly PORTSTATE_PROG: YHubPort.PORTSTATE;
+    static readonly PORTSTATE_INVALID: YHubPort.PORTSTATE;
     static readonly BAUDRATE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -98,7 +82,7 @@ export declare class YHubPort extends YFunction {
      *
      * On failure, throws an exception or returns YHubPort.ENABLED_INVALID.
      */
-    get_enabled(): Promise<YHubPort_Enabled>;
+    get_enabled(): Promise<YHubPort.ENABLED>;
     /**
      * Changes the activation of the YoctoHub port. If the port is enabled, the
      * connected module is powered. Otherwise, port power is shut down.
@@ -110,7 +94,7 @@ export declare class YHubPort extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: YHubPort_Enabled): Promise<number>;
+    set_enabled(newval: YHubPort.ENABLED): Promise<number>;
     /**
      * Returns the current state of the YoctoHub port.
      *
@@ -119,7 +103,7 @@ export declare class YHubPort extends YFunction {
      *
      * On failure, throws an exception or returns YHubPort.PORTSTATE_INVALID.
      */
-    get_portState(): Promise<YHubPort_PortState>;
+    get_portState(): Promise<YHubPort.PORTSTATE>;
     /**
      * Returns the current baud rate used by this YoctoHub port, in kbps.
      * The default value is 1000 kbps, but a slower rate may be used if communication
@@ -196,7 +180,7 @@ export declare class YHubPort extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YHubPortValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YHubPort.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of YoctoHub slave ports started using yFirstHubPort().
@@ -231,4 +215,22 @@ export declare class YHubPort extends YFunction {
      *         if there are none.
      */
     static FirstHubPortInContext(yctx: YAPIContext): YHubPort | null;
+}
+export declare namespace YHubPort {
+    const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum PORTSTATE {
+        OFF = 0,
+        OVRLD = 1,
+        ON = 2,
+        RUN = 3,
+        PROG = 4,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YHubPort, value: string): void;
+    }
 }

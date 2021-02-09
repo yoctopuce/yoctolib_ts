@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YQuadratureDecoder definitions)
 //--- (YQuadratureDecoder class start)
 /**
  * YQuadratureDecoder Class: quadrature decoder control interface, available for instance in the Yocto-PWM-Rx
@@ -49,8 +48,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YQuadratureDecoder class start)
 export class YQuadratureDecoder extends YSensor {
     //--- (end of YQuadratureDecoder attributes declaration)
-    //--- (YQuadratureDecoder return codes)
-    //--- (end of YQuadratureDecoder return codes)
     constructor(yapi, func) {
         //--- (YQuadratureDecoder constructor)
         super(yapi, func);
@@ -60,9 +57,9 @@ export class YQuadratureDecoder extends YSensor {
         this._timedReportCallbackQuadratureDecoder = null;
         // API symbols as object properties
         this.SPEED_INVALID = YAPI.INVALID_DOUBLE;
-        this.DECODING_OFF = 0 /* OFF */;
-        this.DECODING_ON = 1 /* ON */;
-        this.DECODING_INVALID = -1 /* INVALID */;
+        this.DECODING_OFF = 0;
+        this.DECODING_ON = 1;
+        this.DECODING_INVALID = -1;
         this._className = 'QuadratureDecoder';
         //--- (end of YQuadratureDecoder constructor)
     }
@@ -350,7 +347,7 @@ export class YQuadratureDecoder extends YSensor {
 }
 // API symbols as static members
 YQuadratureDecoder.SPEED_INVALID = YAPI.INVALID_DOUBLE;
-YQuadratureDecoder.DECODING_OFF = 0 /* OFF */;
-YQuadratureDecoder.DECODING_ON = 1 /* ON */;
-YQuadratureDecoder.DECODING_INVALID = -1 /* INVALID */;
+YQuadratureDecoder.DECODING_OFF = 0;
+YQuadratureDecoder.DECODING_ON = 1;
+YQuadratureDecoder.DECODING_INVALID = -1;
 //# sourceMappingURL=yocto_quadraturedecoder.js.map

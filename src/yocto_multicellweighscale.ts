@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_multicellweighscale.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -39,22 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YMultiCellWeighScale definitions)
-export const enum YMultiCellWeighScale_ExternalSense {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export const enum YMultiCellWeighScale_Excitation {
-    OFF = 0,
-    DC = 1,
-    AC = 2,
-    INVALID = -1
-}
-export interface YMultiCellWeighScaleValueCallback { (func: YMultiCellWeighScale, value: string): void }
-export interface YMultiCellWeighScaleTimedReportCallback { (func: YMultiCellWeighScale, measure: YMeasure): void }
-//--- (end of YMultiCellWeighScale definitions)
-
 //--- (YMultiCellWeighScale class start)
 /**
  * YMultiCellWeighScale Class: multi-cell weighing scale sensor control interface, available for
@@ -73,8 +57,8 @@ export class YMultiCellWeighScale extends YSensor
     //--- (YMultiCellWeighScale attributes declaration)
     _className: string;
     _cellCount: number = YMultiCellWeighScale.CELLCOUNT_INVALID;
-    _externalSense: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale.EXTERNALSENSE_INVALID;
-    _excitation: YMultiCellWeighScale_Excitation = YMultiCellWeighScale.EXCITATION_INVALID;
+    _externalSense: YMultiCellWeighScale.EXTERNALSENSE = YMultiCellWeighScale.EXTERNALSENSE_INVALID;
+    _excitation: YMultiCellWeighScale.EXCITATION = YMultiCellWeighScale.EXCITATION_INVALID;
     _tempAvgAdaptRatio: number = YMultiCellWeighScale.TEMPAVGADAPTRATIO_INVALID;
     _tempChgAdaptRatio: number = YMultiCellWeighScale.TEMPCHGADAPTRATIO_INVALID;
     _compTempAvg: number = YMultiCellWeighScale.COMPTEMPAVG_INVALID;
@@ -82,18 +66,18 @@ export class YMultiCellWeighScale extends YSensor
     _compensation: number = YMultiCellWeighScale.COMPENSATION_INVALID;
     _zeroTracking: number = YMultiCellWeighScale.ZEROTRACKING_INVALID;
     _command: string = YMultiCellWeighScale.COMMAND_INVALID;
-    _valueCallbackMultiCellWeighScale: YMultiCellWeighScaleValueCallback | null = null;
-    _timedReportCallbackMultiCellWeighScale: YMultiCellWeighScaleTimedReportCallback | null = null;
+    _valueCallbackMultiCellWeighScale: YMultiCellWeighScale.ValueCallback | null = null;
+    _timedReportCallbackMultiCellWeighScale: YMultiCellWeighScale.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly CELLCOUNT_INVALID: number = YAPI.INVALID_UINT;
-    public readonly EXTERNALSENSE_FALSE: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale_ExternalSense.FALSE;
-    public readonly EXTERNALSENSE_TRUE: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale_ExternalSense.TRUE;
-    public readonly EXTERNALSENSE_INVALID: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale_ExternalSense.INVALID;
-    public readonly EXCITATION_OFF: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.OFF;
-    public readonly EXCITATION_DC: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.DC;
-    public readonly EXCITATION_AC: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.AC;
-    public readonly EXCITATION_INVALID: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.INVALID;
+    public readonly EXTERNALSENSE_FALSE: YMultiCellWeighScale.EXTERNALSENSE = 0;
+    public readonly EXTERNALSENSE_TRUE: YMultiCellWeighScale.EXTERNALSENSE = 1;
+    public readonly EXTERNALSENSE_INVALID: YMultiCellWeighScale.EXTERNALSENSE = -1;
+    public readonly EXCITATION_OFF: YMultiCellWeighScale.EXCITATION = 0;
+    public readonly EXCITATION_DC: YMultiCellWeighScale.EXCITATION = 1;
+    public readonly EXCITATION_AC: YMultiCellWeighScale.EXCITATION = 2;
+    public readonly EXCITATION_INVALID: YMultiCellWeighScale.EXCITATION = -1;
     public readonly TEMPAVGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly TEMPCHGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly COMPTEMPAVG_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -104,13 +88,13 @@ export class YMultiCellWeighScale extends YSensor
 
     // API symbols as static members
     public static readonly CELLCOUNT_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly EXTERNALSENSE_FALSE: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale_ExternalSense.FALSE;
-    public static readonly EXTERNALSENSE_TRUE: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale_ExternalSense.TRUE;
-    public static readonly EXTERNALSENSE_INVALID: YMultiCellWeighScale_ExternalSense = YMultiCellWeighScale_ExternalSense.INVALID;
-    public static readonly EXCITATION_OFF: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.OFF;
-    public static readonly EXCITATION_DC: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.DC;
-    public static readonly EXCITATION_AC: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.AC;
-    public static readonly EXCITATION_INVALID: YMultiCellWeighScale_Excitation = YMultiCellWeighScale_Excitation.INVALID;
+    public static readonly EXTERNALSENSE_FALSE: YMultiCellWeighScale.EXTERNALSENSE = 0;
+    public static readonly EXTERNALSENSE_TRUE: YMultiCellWeighScale.EXTERNALSENSE = 1;
+    public static readonly EXTERNALSENSE_INVALID: YMultiCellWeighScale.EXTERNALSENSE = -1;
+    public static readonly EXCITATION_OFF: YMultiCellWeighScale.EXCITATION = 0;
+    public static readonly EXCITATION_DC: YMultiCellWeighScale.EXCITATION = 1;
+    public static readonly EXCITATION_AC: YMultiCellWeighScale.EXCITATION = 2;
+    public static readonly EXCITATION_INVALID: YMultiCellWeighScale.EXCITATION = -1;
     public static readonly TEMPAVGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly TEMPCHGADAPTRATIO_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COMPTEMPAVG_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -119,9 +103,6 @@ export class YMultiCellWeighScale extends YSensor
     public static readonly ZEROTRACKING_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YMultiCellWeighScale attributes declaration)
-
-//--- (YMultiCellWeighScale return codes)
-//--- (end of YMultiCellWeighScale return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -140,10 +121,10 @@ export class YMultiCellWeighScale extends YSensor
             this._cellCount = <number> <number> val;
             return 1;
         case 'externalSense':
-            this._externalSense = <YMultiCellWeighScale_ExternalSense> <number> val;
+            this._externalSense = <YMultiCellWeighScale.EXTERNALSENSE> <number> val;
             return 1;
         case 'excitation':
-            this._excitation = <YMultiCellWeighScale_Excitation> <number> val;
+            this._excitation = <YMultiCellWeighScale.EXCITATION> <number> val;
             return 1;
         case 'tempAvgAdaptRatio':
             this._tempAvgAdaptRatio = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -232,7 +213,7 @@ export class YMultiCellWeighScale extends YSensor
      *
      * On failure, throws an exception or returns YMultiCellWeighScale.EXTERNALSENSE_INVALID.
      */
-    async get_externalSense(): Promise<YMultiCellWeighScale_ExternalSense>
+    async get_externalSense(): Promise<YMultiCellWeighScale.EXTERNALSENSE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -258,7 +239,7 @@ export class YMultiCellWeighScale extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_externalSense(newval: YMultiCellWeighScale_ExternalSense): Promise<number>
+    async set_externalSense(newval: YMultiCellWeighScale.EXTERNALSENSE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -273,7 +254,7 @@ export class YMultiCellWeighScale extends YSensor
      *
      * On failure, throws an exception or returns YMultiCellWeighScale.EXCITATION_INVALID.
      */
-    async get_excitation(): Promise<YMultiCellWeighScale_Excitation>
+    async get_excitation(): Promise<YMultiCellWeighScale.EXCITATION>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -298,7 +279,7 @@ export class YMultiCellWeighScale extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_excitation(newval: YMultiCellWeighScale_Excitation): Promise<number>
+    async set_excitation(newval: YMultiCellWeighScale.EXCITATION): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -597,7 +578,7 @@ export class YMultiCellWeighScale extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YMultiCellWeighScaleValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YMultiCellWeighScale.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -641,7 +622,7 @@ export class YMultiCellWeighScale extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YMultiCellWeighScaleTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YMultiCellWeighScale.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -753,5 +734,22 @@ export class YMultiCellWeighScale extends YSensor
     }
 
     //--- (end of YMultiCellWeighScale implementation)
+}
+
+export namespace YMultiCellWeighScale {
+    //--- (YMultiCellWeighScale definitions)
+    export const enum EXTERNALSENSE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export const enum EXCITATION {
+        OFF = 0,
+        DC = 1,
+        AC = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YMultiCellWeighScale, value: string): void }    export interface TimedReportCallback { (func: YMultiCellWeighScale, measure: YMeasure): void }
+    //--- (end of YMultiCellWeighScale definitions)
 }
 

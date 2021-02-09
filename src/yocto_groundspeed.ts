@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_groundspeed.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_groundspeed.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for GroundSpeed functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YGroundSpeed definitions)
-export interface YGroundSpeedValueCallback { (func: YGroundSpeed, value: string): void }
-export interface YGroundSpeedTimedReportCallback { (func: YGroundSpeed, measure: YMeasure): void }
-//--- (end of YGroundSpeed definitions)
-
 //--- (YGroundSpeed class start)
 /**
  * YGroundSpeed Class: ground speed sensor control interface, available for instance in the Yocto-GPS-V2
@@ -58,14 +53,11 @@ export class YGroundSpeed extends YSensor
 {
     //--- (YGroundSpeed attributes declaration)
     _className: string;
-    _valueCallbackGroundSpeed: YGroundSpeedValueCallback | null = null;
-    _timedReportCallbackGroundSpeed: YGroundSpeedTimedReportCallback | null = null;
+    _valueCallbackGroundSpeed: YGroundSpeed.ValueCallback | null = null;
+    _timedReportCallbackGroundSpeed: YGroundSpeed.TimedReportCallback | null = null;
 
     // API symbols as static members
     //--- (end of YGroundSpeed attributes declaration)
-
-//--- (YGroundSpeed return codes)
-//--- (end of YGroundSpeed return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -163,7 +155,7 @@ export class YGroundSpeed extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YGroundSpeedValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YGroundSpeed.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -207,7 +199,7 @@ export class YGroundSpeed extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YGroundSpeedTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YGroundSpeed.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -288,5 +280,11 @@ export class YGroundSpeed extends YSensor
     }
 
     //--- (end of YGroundSpeed implementation)
+}
+
+export namespace YGroundSpeed {
+    //--- (YGroundSpeed definitions)
+    export interface ValueCallback { (func: YGroundSpeed, value: string): void }    export interface TimedReportCallback { (func: YGroundSpeed, measure: YMeasure): void }
+    //--- (end of YGroundSpeed definitions)
 }
 

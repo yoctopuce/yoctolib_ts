@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -37,19 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YPowerSupply_PowerOutput {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YPowerSupply_VoltageSense {
-    INT = 0,
-    EXT = 1,
-    INVALID = -1
-}
-export interface YPowerSupplyValueCallback {
-    (func: YPowerSupply, value: string): void;
-}
 /**
  * YPowerSupply Class: regulated power supply control interface
  *
@@ -61,8 +48,8 @@ export declare class YPowerSupply extends YFunction {
     _className: string;
     _voltageSetPoint: number;
     _currentLimit: number;
-    _powerOutput: YPowerSupply_PowerOutput;
-    _voltageSense: YPowerSupply_VoltageSense;
+    _powerOutput: YPowerSupply.POWEROUTPUT;
+    _voltageSense: YPowerSupply.VOLTAGESENSE;
     _measuredVoltage: number;
     _measuredCurrent: number;
     _inputVoltage: number;
@@ -72,15 +59,15 @@ export declare class YPowerSupply extends YFunction {
     _voltageAtStartUp: number;
     _currentAtStartUp: number;
     _command: string;
-    _valueCallbackPowerSupply: YPowerSupplyValueCallback | null;
+    _valueCallbackPowerSupply: YPowerSupply.ValueCallback | null;
     readonly VOLTAGESETPOINT_INVALID: number;
     readonly CURRENTLIMIT_INVALID: number;
-    readonly POWEROUTPUT_OFF: YPowerSupply_PowerOutput;
-    readonly POWEROUTPUT_ON: YPowerSupply_PowerOutput;
-    readonly POWEROUTPUT_INVALID: YPowerSupply_PowerOutput;
-    readonly VOLTAGESENSE_INT: YPowerSupply_VoltageSense;
-    readonly VOLTAGESENSE_EXT: YPowerSupply_VoltageSense;
-    readonly VOLTAGESENSE_INVALID: YPowerSupply_VoltageSense;
+    readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT;
+    readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT;
+    readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT;
+    readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE;
+    readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE;
+    readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE;
     readonly MEASUREDVOLTAGE_INVALID: number;
     readonly MEASUREDCURRENT_INVALID: number;
     readonly INPUTVOLTAGE_INVALID: number;
@@ -92,12 +79,12 @@ export declare class YPowerSupply extends YFunction {
     readonly COMMAND_INVALID: string;
     static readonly VOLTAGESETPOINT_INVALID: number;
     static readonly CURRENTLIMIT_INVALID: number;
-    static readonly POWEROUTPUT_OFF: YPowerSupply_PowerOutput;
-    static readonly POWEROUTPUT_ON: YPowerSupply_PowerOutput;
-    static readonly POWEROUTPUT_INVALID: YPowerSupply_PowerOutput;
-    static readonly VOLTAGESENSE_INT: YPowerSupply_VoltageSense;
-    static readonly VOLTAGESENSE_EXT: YPowerSupply_VoltageSense;
-    static readonly VOLTAGESENSE_INVALID: YPowerSupply_VoltageSense;
+    static readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT;
+    static readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT;
+    static readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT;
+    static readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE;
+    static readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE;
+    static readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE;
     static readonly MEASUREDVOLTAGE_INVALID: number;
     static readonly MEASUREDCURRENT_INVALID: number;
     static readonly INPUTVOLTAGE_INVALID: number;
@@ -153,7 +140,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * On failure, throws an exception or returns YPowerSupply.POWEROUTPUT_INVALID.
      */
-    get_powerOutput(): Promise<YPowerSupply_PowerOutput>;
+    get_powerOutput(): Promise<YPowerSupply.POWEROUTPUT>;
     /**
      * Changes the power supply output switch state.
      *
@@ -164,7 +151,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_powerOutput(newval: YPowerSupply_PowerOutput): Promise<number>;
+    set_powerOutput(newval: YPowerSupply.POWEROUTPUT): Promise<number>;
     /**
      * Returns the output voltage control point.
      *
@@ -173,7 +160,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * On failure, throws an exception or returns YPowerSupply.VOLTAGESENSE_INVALID.
      */
-    get_voltageSense(): Promise<YPowerSupply_VoltageSense>;
+    get_voltageSense(): Promise<YPowerSupply.VOLTAGESENSE>;
     /**
      * Changes the voltage control point.
      *
@@ -184,7 +171,7 @@ export declare class YPowerSupply extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_voltageSense(newval: YPowerSupply_VoltageSense): Promise<number>;
+    set_voltageSense(newval: YPowerSupply.VOLTAGESENSE): Promise<number>;
     /**
      * Returns the measured output voltage, in V.
      *
@@ -333,7 +320,7 @@ export declare class YPowerSupply extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YPowerSupplyValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YPowerSupply.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Performs a smooth transition of output voltage. Any explicit voltage
@@ -379,4 +366,19 @@ export declare class YPowerSupply extends YFunction {
      *         if there are none.
      */
     static FirstPowerSupplyInContext(yctx: YAPIContext): YPowerSupply | null;
+}
+export declare namespace YPowerSupply {
+    const enum POWEROUTPUT {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    const enum VOLTAGESENSE {
+        INT = 0,
+        EXT = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YPowerSupply, value: string): void;
+    }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-prog-httpcallback",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-HTTPCallback",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

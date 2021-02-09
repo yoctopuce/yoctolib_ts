@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_arithmeticsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YArithmeticSensorValueCallback {
-    (func: YArithmeticSensor, value: string): void;
-}
-export interface YArithmeticSensorTimedReportCallback {
-    (func: YArithmeticSensor, measure: YMeasure): void;
-}
 /**
  * YArithmeticSensor Class: arithmetic sensor control interface, available for instance in the
  * Yocto-MaxiMicroVolt-Rx
@@ -56,8 +50,8 @@ export declare class YArithmeticSensor extends YSensor {
     _className: string;
     _description: string;
     _command: string;
-    _valueCallbackArithmeticSensor: YArithmeticSensorValueCallback | null;
-    _timedReportCallbackArithmeticSensor: YArithmeticSensorTimedReportCallback | null;
+    _valueCallbackArithmeticSensor: YArithmeticSensor.ValueCallback | null;
+    _timedReportCallbackArithmeticSensor: YArithmeticSensor.TimedReportCallback | null;
     readonly DESCRIPTION_INVALID: string;
     readonly COMMAND_INVALID: string;
     static readonly DESCRIPTION_INVALID: string;
@@ -152,7 +146,7 @@ export declare class YArithmeticSensor extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YArithmeticSensorValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YArithmeticSensor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -165,7 +159,7 @@ export declare class YArithmeticSensor extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YArithmeticSensorTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YArithmeticSensor.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Defines the arithmetic function by means of an algebraic expression. The expression
@@ -255,4 +249,12 @@ export declare class YArithmeticSensor extends YSensor {
      *         if there are none.
      */
     static FirstArithmeticSensorInContext(yctx: YAPIContext): YArithmeticSensor | null;
+}
+export declare namespace YArithmeticSensor {
+    interface ValueCallback {
+        (func: YArithmeticSensor, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YArithmeticSensor, measure: YMeasure): void;
+    }
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_anbutton.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -37,25 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YAnButton_AnalogCalibration {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YAnButton_IsPressed {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YAnButton_InputType {
-    ANALOG_FAST = 0,
-    DIGITAL4 = 1,
-    ANALOG_SMOOTH = 2,
-    INVALID = -1
-}
-export interface YAnButtonValueCallback {
-    (func: YAnButton, value: string): void;
-}
 /**
  * YAnButton Class: analog input control interface, available for instance in the Yocto-Buzzer, the
  * Yocto-Knob, the Yocto-MaxiBuzzer or the Yocto-MaxiDisplay
@@ -72,55 +53,55 @@ export declare class YAnButton extends YFunction {
     _className: string;
     _calibratedValue: number;
     _rawValue: number;
-    _analogCalibration: YAnButton_AnalogCalibration;
+    _analogCalibration: YAnButton.ANALOGCALIBRATION;
     _calibrationMax: number;
     _calibrationMin: number;
     _sensitivity: number;
-    _isPressed: YAnButton_IsPressed;
+    _isPressed: YAnButton.ISPRESSED;
     _lastTimePressed: number;
     _lastTimeReleased: number;
     _pulseCounter: number;
     _pulseTimer: number;
-    _inputType: YAnButton_InputType;
-    _valueCallbackAnButton: YAnButtonValueCallback | null;
+    _inputType: YAnButton.INPUTTYPE;
+    _valueCallbackAnButton: YAnButton.ValueCallback | null;
     readonly CALIBRATEDVALUE_INVALID: number;
     readonly RAWVALUE_INVALID: number;
-    readonly ANALOGCALIBRATION_OFF: YAnButton_AnalogCalibration;
-    readonly ANALOGCALIBRATION_ON: YAnButton_AnalogCalibration;
-    readonly ANALOGCALIBRATION_INVALID: YAnButton_AnalogCalibration;
+    readonly ANALOGCALIBRATION_OFF: YAnButton.ANALOGCALIBRATION;
+    readonly ANALOGCALIBRATION_ON: YAnButton.ANALOGCALIBRATION;
+    readonly ANALOGCALIBRATION_INVALID: YAnButton.ANALOGCALIBRATION;
     readonly CALIBRATIONMAX_INVALID: number;
     readonly CALIBRATIONMIN_INVALID: number;
     readonly SENSITIVITY_INVALID: number;
-    readonly ISPRESSED_FALSE: YAnButton_IsPressed;
-    readonly ISPRESSED_TRUE: YAnButton_IsPressed;
-    readonly ISPRESSED_INVALID: YAnButton_IsPressed;
+    readonly ISPRESSED_FALSE: YAnButton.ISPRESSED;
+    readonly ISPRESSED_TRUE: YAnButton.ISPRESSED;
+    readonly ISPRESSED_INVALID: YAnButton.ISPRESSED;
     readonly LASTTIMEPRESSED_INVALID: number;
     readonly LASTTIMERELEASED_INVALID: number;
     readonly PULSECOUNTER_INVALID: number;
     readonly PULSETIMER_INVALID: number;
-    readonly INPUTTYPE_ANALOG_FAST: YAnButton_InputType;
-    readonly INPUTTYPE_DIGITAL4: YAnButton_InputType;
-    readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton_InputType;
-    readonly INPUTTYPE_INVALID: YAnButton_InputType;
+    readonly INPUTTYPE_ANALOG_FAST: YAnButton.INPUTTYPE;
+    readonly INPUTTYPE_DIGITAL4: YAnButton.INPUTTYPE;
+    readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton.INPUTTYPE;
+    readonly INPUTTYPE_INVALID: YAnButton.INPUTTYPE;
     static readonly CALIBRATEDVALUE_INVALID: number;
     static readonly RAWVALUE_INVALID: number;
-    static readonly ANALOGCALIBRATION_OFF: YAnButton_AnalogCalibration;
-    static readonly ANALOGCALIBRATION_ON: YAnButton_AnalogCalibration;
-    static readonly ANALOGCALIBRATION_INVALID: YAnButton_AnalogCalibration;
+    static readonly ANALOGCALIBRATION_OFF: YAnButton.ANALOGCALIBRATION;
+    static readonly ANALOGCALIBRATION_ON: YAnButton.ANALOGCALIBRATION;
+    static readonly ANALOGCALIBRATION_INVALID: YAnButton.ANALOGCALIBRATION;
     static readonly CALIBRATIONMAX_INVALID: number;
     static readonly CALIBRATIONMIN_INVALID: number;
     static readonly SENSITIVITY_INVALID: number;
-    static readonly ISPRESSED_FALSE: YAnButton_IsPressed;
-    static readonly ISPRESSED_TRUE: YAnButton_IsPressed;
-    static readonly ISPRESSED_INVALID: YAnButton_IsPressed;
+    static readonly ISPRESSED_FALSE: YAnButton.ISPRESSED;
+    static readonly ISPRESSED_TRUE: YAnButton.ISPRESSED;
+    static readonly ISPRESSED_INVALID: YAnButton.ISPRESSED;
     static readonly LASTTIMEPRESSED_INVALID: number;
     static readonly LASTTIMERELEASED_INVALID: number;
     static readonly PULSECOUNTER_INVALID: number;
     static readonly PULSETIMER_INVALID: number;
-    static readonly INPUTTYPE_ANALOG_FAST: YAnButton_InputType;
-    static readonly INPUTTYPE_DIGITAL4: YAnButton_InputType;
-    static readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton_InputType;
-    static readonly INPUTTYPE_INVALID: YAnButton_InputType;
+    static readonly INPUTTYPE_ANALOG_FAST: YAnButton.INPUTTYPE;
+    static readonly INPUTTYPE_DIGITAL4: YAnButton.INPUTTYPE;
+    static readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton.INPUTTYPE;
+    static readonly INPUTTYPE_INVALID: YAnButton.INPUTTYPE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -146,7 +127,7 @@ export declare class YAnButton extends YFunction {
      *
      * On failure, throws an exception or returns YAnButton.ANALOGCALIBRATION_INVALID.
      */
-    get_analogCalibration(): Promise<YAnButton_AnalogCalibration>;
+    get_analogCalibration(): Promise<YAnButton.ANALOGCALIBRATION>;
     /**
      * Starts or stops the calibration process. Remember to call the saveToFlash()
      * method of the module at the end of the calibration if the modification must be kept.
@@ -157,7 +138,7 @@ export declare class YAnButton extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_analogCalibration(newval: YAnButton_AnalogCalibration): Promise<number>;
+    set_analogCalibration(newval: YAnButton.ANALOGCALIBRATION): Promise<number>;
     /**
      * Returns the maximal value measured during the calibration (between 0 and 4095, included).
      *
@@ -237,7 +218,7 @@ export declare class YAnButton extends YFunction {
      *
      * On failure, throws an exception or returns YAnButton.ISPRESSED_INVALID.
      */
-    get_isPressed(): Promise<YAnButton_IsPressed>;
+    get_isPressed(): Promise<YAnButton.ISPRESSED>;
     /**
      * Returns the number of elapsed milliseconds between the module power on and the last time
      * the input button was pressed (the input contact transitioned from open to closed).
@@ -288,7 +269,7 @@ export declare class YAnButton extends YFunction {
      *
      * On failure, throws an exception or returns YAnButton.INPUTTYPE_INVALID.
      */
-    get_inputType(): Promise<YAnButton_InputType>;
+    get_inputType(): Promise<YAnButton.INPUTTYPE>;
     /**
      * Changes the decoding method applied to the input (analog or multiplexed binary switches).
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
@@ -301,7 +282,7 @@ export declare class YAnButton extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_inputType(newval: YAnButton_InputType): Promise<number>;
+    set_inputType(newval: YAnButton.INPUTTYPE): Promise<number>;
     /**
      * Retrieves an analog input for a given identifier.
      * The identifier can be specified using several formats:
@@ -368,7 +349,7 @@ export declare class YAnButton extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YAnButtonValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YAnButton.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Returns the pulse counter value as well as its timer.
@@ -411,4 +392,25 @@ export declare class YAnButton extends YFunction {
      *         if there are none.
      */
     static FirstAnButtonInContext(yctx: YAPIContext): YAnButton | null;
+}
+export declare namespace YAnButton {
+    const enum ANALOGCALIBRATION {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    const enum ISPRESSED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum INPUTTYPE {
+        ANALOG_FAST = 0,
+        DIGITAL4 = 1,
+        ANALOG_SMOOTH = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YAnButton, value: string): void;
+    }
 }

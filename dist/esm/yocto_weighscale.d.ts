@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_weighscale.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -37,18 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YWeighScale_Excitation {
-    OFF = 0,
-    DC = 1,
-    AC = 2,
-    INVALID = -1
-}
-export interface YWeighScaleValueCallback {
-    (func: YWeighScale, value: string): void;
-}
-export interface YWeighScaleTimedReportCallback {
-    (func: YWeighScale, measure: YMeasure): void;
-}
 /**
  * YWeighScale Class: weighing scale sensor control interface, available for instance in the
  * Yocto-Bridge or the Yocto-MaxiBridge
@@ -61,7 +49,7 @@ export interface YWeighScaleTimedReportCallback {
  */
 export declare class YWeighScale extends YSensor {
     _className: string;
-    _excitation: YWeighScale_Excitation;
+    _excitation: YWeighScale.EXCITATION;
     _tempAvgAdaptRatio: number;
     _tempChgAdaptRatio: number;
     _compTempAvg: number;
@@ -69,12 +57,12 @@ export declare class YWeighScale extends YSensor {
     _compensation: number;
     _zeroTracking: number;
     _command: string;
-    _valueCallbackWeighScale: YWeighScaleValueCallback | null;
-    _timedReportCallbackWeighScale: YWeighScaleTimedReportCallback | null;
-    readonly EXCITATION_OFF: YWeighScale_Excitation;
-    readonly EXCITATION_DC: YWeighScale_Excitation;
-    readonly EXCITATION_AC: YWeighScale_Excitation;
-    readonly EXCITATION_INVALID: YWeighScale_Excitation;
+    _valueCallbackWeighScale: YWeighScale.ValueCallback | null;
+    _timedReportCallbackWeighScale: YWeighScale.TimedReportCallback | null;
+    readonly EXCITATION_OFF: YWeighScale.EXCITATION;
+    readonly EXCITATION_DC: YWeighScale.EXCITATION;
+    readonly EXCITATION_AC: YWeighScale.EXCITATION;
+    readonly EXCITATION_INVALID: YWeighScale.EXCITATION;
     readonly TEMPAVGADAPTRATIO_INVALID: number;
     readonly TEMPCHGADAPTRATIO_INVALID: number;
     readonly COMPTEMPAVG_INVALID: number;
@@ -82,10 +70,10 @@ export declare class YWeighScale extends YSensor {
     readonly COMPENSATION_INVALID: number;
     readonly ZEROTRACKING_INVALID: number;
     readonly COMMAND_INVALID: string;
-    static readonly EXCITATION_OFF: YWeighScale_Excitation;
-    static readonly EXCITATION_DC: YWeighScale_Excitation;
-    static readonly EXCITATION_AC: YWeighScale_Excitation;
-    static readonly EXCITATION_INVALID: YWeighScale_Excitation;
+    static readonly EXCITATION_OFF: YWeighScale.EXCITATION;
+    static readonly EXCITATION_DC: YWeighScale.EXCITATION;
+    static readonly EXCITATION_AC: YWeighScale.EXCITATION;
+    static readonly EXCITATION_INVALID: YWeighScale.EXCITATION;
     static readonly TEMPAVGADAPTRATIO_INVALID: number;
     static readonly TEMPCHGADAPTRATIO_INVALID: number;
     static readonly COMPTEMPAVG_INVALID: number;
@@ -115,7 +103,7 @@ export declare class YWeighScale extends YSensor {
      *
      * On failure, throws an exception or returns YWeighScale.EXCITATION_INVALID.
      */
-    get_excitation(): Promise<YWeighScale_Excitation>;
+    get_excitation(): Promise<YWeighScale.EXCITATION>;
     /**
      * Changes the current load cell bridge excitation method.
      * Remember to call the saveToFlash() method of the module if the
@@ -128,7 +116,7 @@ export declare class YWeighScale extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_excitation(newval: YWeighScale_Excitation): Promise<number>;
+    set_excitation(newval: YWeighScale.EXCITATION): Promise<number>;
     /**
      * Changes the averaged temperature update rate, in per mille.
      * The purpose of this adaptation ratio is to model the thermal inertia of the load cell.
@@ -300,7 +288,7 @@ export declare class YWeighScale extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YWeighScaleValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YWeighScale.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -313,7 +301,7 @@ export declare class YWeighScale extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YWeighScaleTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YWeighScale.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Adapts the load cell signal bias (stored in the corresponding genericSensor)
@@ -500,4 +488,18 @@ export declare class YWeighScale extends YSensor {
      *         if there are none.
      */
     static FirstWeighScaleInContext(yctx: YAPIContext): YWeighScale | null;
+}
+export declare namespace YWeighScale {
+    const enum EXCITATION {
+        OFF = 0,
+        DC = 1,
+        AC = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YWeighScale, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YWeighScale, measure: YMeasure): void;
+    }
 }

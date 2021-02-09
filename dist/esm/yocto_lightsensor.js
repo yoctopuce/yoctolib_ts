@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YLightSensor definitions)
 //--- (YLightSensor class start)
 /**
  * YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V3,
@@ -54,8 +53,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YLightSensor class start)
 export class YLightSensor extends YSensor {
     //--- (end of YLightSensor attributes declaration)
-    //--- (YLightSensor return codes)
-    //--- (end of YLightSensor return codes)
     constructor(yapi, func) {
         //--- (YLightSensor constructor)
         super(yapi, func);
@@ -63,13 +60,13 @@ export class YLightSensor extends YSensor {
         this._valueCallbackLightSensor = null;
         this._timedReportCallbackLightSensor = null;
         // API symbols as object properties
-        this.MEASURETYPE_HUMAN_EYE = 0 /* HUMAN_EYE */;
-        this.MEASURETYPE_WIDE_SPECTRUM = 1 /* WIDE_SPECTRUM */;
-        this.MEASURETYPE_INFRARED = 2 /* INFRARED */;
-        this.MEASURETYPE_HIGH_RATE = 3 /* HIGH_RATE */;
-        this.MEASURETYPE_HIGH_ENERGY = 4 /* HIGH_ENERGY */;
-        this.MEASURETYPE_HIGH_RESOLUTION = 5 /* HIGH_RESOLUTION */;
-        this.MEASURETYPE_INVALID = -1 /* INVALID */;
+        this.MEASURETYPE_HUMAN_EYE = 0;
+        this.MEASURETYPE_WIDE_SPECTRUM = 1;
+        this.MEASURETYPE_INFRARED = 2;
+        this.MEASURETYPE_HIGH_RATE = 3;
+        this.MEASURETYPE_HIGH_ENERGY = 4;
+        this.MEASURETYPE_HIGH_RESOLUTION = 5;
+        this.MEASURETYPE_INVALID = -1;
         this._className = 'LightSensor';
         //--- (end of YLightSensor constructor)
     }
@@ -350,11 +347,11 @@ export class YLightSensor extends YSensor {
     }
 }
 // API symbols as static members
-YLightSensor.MEASURETYPE_HUMAN_EYE = 0 /* HUMAN_EYE */;
-YLightSensor.MEASURETYPE_WIDE_SPECTRUM = 1 /* WIDE_SPECTRUM */;
-YLightSensor.MEASURETYPE_INFRARED = 2 /* INFRARED */;
-YLightSensor.MEASURETYPE_HIGH_RATE = 3 /* HIGH_RATE */;
-YLightSensor.MEASURETYPE_HIGH_ENERGY = 4 /* HIGH_ENERGY */;
-YLightSensor.MEASURETYPE_HIGH_RESOLUTION = 5 /* HIGH_RESOLUTION */;
-YLightSensor.MEASURETYPE_INVALID = -1 /* INVALID */;
+YLightSensor.MEASURETYPE_HUMAN_EYE = 0;
+YLightSensor.MEASURETYPE_WIDE_SPECTRUM = 1;
+YLightSensor.MEASURETYPE_INFRARED = 2;
+YLightSensor.MEASURETYPE_HIGH_RATE = 3;
+YLightSensor.MEASURETYPE_HIGH_ENERGY = 4;
+YLightSensor.MEASURETYPE_HIGH_RESOLUTION = 5;
+YLightSensor.MEASURETYPE_INVALID = -1;
 //# sourceMappingURL=yocto_lightsensor.js.map

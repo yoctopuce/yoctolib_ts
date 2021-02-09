@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -37,14 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YMultiSensController_MaintenanceMode {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YMultiSensControllerValueCallback {
-    (func: YMultiSensController, value: string): void;
-}
 /**
  * YMultiSensController Class: Sensor chain configuration interface, available for instance in the
  * Yocto-Temperature-IR
@@ -56,20 +48,20 @@ export declare class YMultiSensController extends YFunction {
     _className: string;
     _nSensors: number;
     _maxSensors: number;
-    _maintenanceMode: YMultiSensController_MaintenanceMode;
+    _maintenanceMode: YMultiSensController.MAINTENANCEMODE;
     _command: string;
-    _valueCallbackMultiSensController: YMultiSensControllerValueCallback | null;
+    _valueCallbackMultiSensController: YMultiSensController.ValueCallback | null;
     readonly NSENSORS_INVALID: number;
     readonly MAXSENSORS_INVALID: number;
-    readonly MAINTENANCEMODE_FALSE: YMultiSensController_MaintenanceMode;
-    readonly MAINTENANCEMODE_TRUE: YMultiSensController_MaintenanceMode;
-    readonly MAINTENANCEMODE_INVALID: YMultiSensController_MaintenanceMode;
+    readonly MAINTENANCEMODE_FALSE: YMultiSensController.MAINTENANCEMODE;
+    readonly MAINTENANCEMODE_TRUE: YMultiSensController.MAINTENANCEMODE;
+    readonly MAINTENANCEMODE_INVALID: YMultiSensController.MAINTENANCEMODE;
     readonly COMMAND_INVALID: string;
     static readonly NSENSORS_INVALID: number;
     static readonly MAXSENSORS_INVALID: number;
-    static readonly MAINTENANCEMODE_FALSE: YMultiSensController_MaintenanceMode;
-    static readonly MAINTENANCEMODE_TRUE: YMultiSensController_MaintenanceMode;
-    static readonly MAINTENANCEMODE_INVALID: YMultiSensController_MaintenanceMode;
+    static readonly MAINTENANCEMODE_FALSE: YMultiSensController.MAINTENANCEMODE;
+    static readonly MAINTENANCEMODE_TRUE: YMultiSensController.MAINTENANCEMODE;
+    static readonly MAINTENANCEMODE_INVALID: YMultiSensController.MAINTENANCEMODE;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -111,7 +103,7 @@ export declare class YMultiSensController extends YFunction {
      *
      * On failure, throws an exception or returns YMultiSensController.MAINTENANCEMODE_INVALID.
      */
-    get_maintenanceMode(): Promise<YMultiSensController_MaintenanceMode>;
+    get_maintenanceMode(): Promise<YMultiSensController.MAINTENANCEMODE>;
     /**
      * Changes the device mode to enable maintenance and to stop sensor polling.
      * This way, the device does not automatically restart when it cannot
@@ -125,7 +117,7 @@ export declare class YMultiSensController extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_maintenanceMode(newval: YMultiSensController_MaintenanceMode): Promise<number>;
+    set_maintenanceMode(newval: YMultiSensController.MAINTENANCEMODE): Promise<number>;
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
@@ -194,7 +186,7 @@ export declare class YMultiSensController extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YMultiSensControllerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YMultiSensController.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Configures the I2C address of the only sensor connected to the device.
@@ -244,4 +236,14 @@ export declare class YMultiSensController extends YFunction {
      *         if there are none.
      */
     static FirstMultiSensControllerInContext(yctx: YAPIContext): YMultiSensController | null;
+}
+export declare namespace YMultiSensController {
+    const enum MAINTENANCEMODE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YMultiSensController, value: string): void;
+    }
 }

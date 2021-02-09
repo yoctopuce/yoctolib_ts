@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tilt.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_tilt.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Tilt functions
  *
@@ -39,17 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YTilt definitions)
-export const enum YTilt_Axis {
-    X = 0,
-    Y = 1,
-    Z = 2,
-    INVALID = -1
-}
-export interface YTiltValueCallback { (func: YTilt, value: string): void }
-export interface YTiltTimedReportCallback { (func: YTilt, measure: YMeasure): void }
-//--- (end of YTilt definitions)
-
 //--- (YTilt class start)
 /**
  * YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2 or the Yocto-Inclinometer
@@ -71,27 +60,24 @@ export class YTilt extends YSensor
     //--- (YTilt attributes declaration)
     _className: string;
     _bandwidth: number = YTilt.BANDWIDTH_INVALID;
-    _axis: YTilt_Axis = YTilt.AXIS_INVALID;
-    _valueCallbackTilt: YTiltValueCallback | null = null;
-    _timedReportCallbackTilt: YTiltTimedReportCallback | null = null;
+    _axis: YTilt.AXIS = YTilt.AXIS_INVALID;
+    _valueCallbackTilt: YTilt.ValueCallback | null = null;
+    _timedReportCallbackTilt: YTilt.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
-    public readonly AXIS_X: YTilt_Axis = YTilt_Axis.X;
-    public readonly AXIS_Y: YTilt_Axis = YTilt_Axis.Y;
-    public readonly AXIS_Z: YTilt_Axis = YTilt_Axis.Z;
-    public readonly AXIS_INVALID: YTilt_Axis = YTilt_Axis.INVALID;
+    public readonly AXIS_X: YTilt.AXIS = 0;
+    public readonly AXIS_Y: YTilt.AXIS = 1;
+    public readonly AXIS_Z: YTilt.AXIS = 2;
+    public readonly AXIS_INVALID: YTilt.AXIS = -1;
 
     // API symbols as static members
     public static readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly AXIS_X: YTilt_Axis = YTilt_Axis.X;
-    public static readonly AXIS_Y: YTilt_Axis = YTilt_Axis.Y;
-    public static readonly AXIS_Z: YTilt_Axis = YTilt_Axis.Z;
-    public static readonly AXIS_INVALID: YTilt_Axis = YTilt_Axis.INVALID;
+    public static readonly AXIS_X: YTilt.AXIS = 0;
+    public static readonly AXIS_Y: YTilt.AXIS = 1;
+    public static readonly AXIS_Z: YTilt.AXIS = 2;
+    public static readonly AXIS_INVALID: YTilt.AXIS = -1;
     //--- (end of YTilt attributes declaration)
-
-//--- (YTilt return codes)
-//--- (end of YTilt return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -110,7 +96,7 @@ export class YTilt extends YSensor
             this._bandwidth = <number> <number> val;
             return 1;
         case 'axis':
-            this._axis = <YTilt_Axis> <number> val;
+            this._axis = <YTilt.AXIS> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -154,7 +140,7 @@ export class YTilt extends YSensor
         return await this._setAttr('bandwidth',rest_val);
     }
 
-    async get_axis(): Promise<YTilt_Axis>
+    async get_axis(): Promise<YTilt.AXIS>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -252,7 +238,7 @@ export class YTilt extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YTiltValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YTilt.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -296,7 +282,7 @@ export class YTilt extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YTiltTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YTilt.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -413,5 +399,17 @@ export class YTilt extends YSensor
     }
 
     //--- (end of YTilt implementation)
+}
+
+export namespace YTilt {
+    //--- (YTilt definitions)
+    export const enum AXIS {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YTilt, value: string): void }    export interface TimedReportCallback { (func: YTilt, measure: YMeasure): void }
+    //--- (end of YTilt definitions)
 }
 

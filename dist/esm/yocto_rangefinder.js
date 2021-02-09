@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_rangefinder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YRangeFinder definitions)
 //--- (YRangeFinder class start)
 /**
  * YRangeFinder Class: range finder control interface, available for instance in the Yocto-RangeFinder
@@ -51,8 +50,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YRangeFinder class start)
 export class YRangeFinder extends YSensor {
     //--- (end of YRangeFinder attributes declaration)
-    //--- (YRangeFinder return codes)
-    //--- (end of YRangeFinder return codes)
     constructor(yapi, func) {
         //--- (YRangeFinder constructor)
         super(yapi, func);
@@ -65,11 +62,11 @@ export class YRangeFinder extends YSensor {
         this._valueCallbackRangeFinder = null;
         this._timedReportCallbackRangeFinder = null;
         // API symbols as object properties
-        this.RANGEFINDERMODE_DEFAULT = 0 /* DEFAULT */;
-        this.RANGEFINDERMODE_LONG_RANGE = 1 /* LONG_RANGE */;
-        this.RANGEFINDERMODE_HIGH_ACCURACY = 2 /* HIGH_ACCURACY */;
-        this.RANGEFINDERMODE_HIGH_SPEED = 3 /* HIGH_SPEED */;
-        this.RANGEFINDERMODE_INVALID = -1 /* INVALID */;
+        this.RANGEFINDERMODE_DEFAULT = 0;
+        this.RANGEFINDERMODE_LONG_RANGE = 1;
+        this.RANGEFINDERMODE_HIGH_ACCURACY = 2;
+        this.RANGEFINDERMODE_HIGH_SPEED = 3;
+        this.RANGEFINDERMODE_INVALID = -1;
         this.TIMEFRAME_INVALID = YAPI.INVALID_LONG;
         this.QUALITY_INVALID = YAPI.INVALID_UINT;
         this.HARDWARECALIBRATION_INVALID = YAPI.INVALID_STRING;
@@ -561,11 +558,11 @@ export class YRangeFinder extends YSensor {
     }
 }
 // API symbols as static members
-YRangeFinder.RANGEFINDERMODE_DEFAULT = 0 /* DEFAULT */;
-YRangeFinder.RANGEFINDERMODE_LONG_RANGE = 1 /* LONG_RANGE */;
-YRangeFinder.RANGEFINDERMODE_HIGH_ACCURACY = 2 /* HIGH_ACCURACY */;
-YRangeFinder.RANGEFINDERMODE_HIGH_SPEED = 3 /* HIGH_SPEED */;
-YRangeFinder.RANGEFINDERMODE_INVALID = -1 /* INVALID */;
+YRangeFinder.RANGEFINDERMODE_DEFAULT = 0;
+YRangeFinder.RANGEFINDERMODE_LONG_RANGE = 1;
+YRangeFinder.RANGEFINDERMODE_HIGH_ACCURACY = 2;
+YRangeFinder.RANGEFINDERMODE_HIGH_SPEED = 3;
+YRangeFinder.RANGEFINDERMODE_INVALID = -1;
 YRangeFinder.TIMEFRAME_INVALID = YAPI.INVALID_LONG;
 YRangeFinder.QUALITY_INVALID = YAPI.INVALID_UINT;
 YRangeFinder.HARDWARECALIBRATION_INVALID = YAPI.INVALID_STRING;

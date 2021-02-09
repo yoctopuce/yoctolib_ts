@@ -36,8 +36,10 @@ async function startDemo(args: string[]): Promise<void>
         console.log('serial:       '+await module.get_serialNumber());
         console.log('logical name: '+await module.get_logicalName());
         console.log('luminosity:   '+await module.get_luminosity()+'%');
-        console.log('beacon:       '+(await module.get_beacon()==YModule.BEACON_ON?'ON':'OFF'));
-        console.log('upTime:       '+((await module.get_upTime()/1000)>>0)+' sec');
+        console.log('beacon:       '+
+            (await module.get_beacon() == YModule.BEACON_ON ? 'ON' : 'OFF'));
+        console.log('upTime:       '+
+            ((await module.get_upTime()/1000)>>0) +' sec');
         console.log('USB current:  '+await module.get_usbCurrent()+' mA');
         console.log('logs:');
         console.log(await module.get_lastLogs());

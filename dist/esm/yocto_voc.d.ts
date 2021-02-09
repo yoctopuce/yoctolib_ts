@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Voc functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YVocValueCallback {
-    (func: YVoc, value: string): void;
-}
-export interface YVocTimedReportCallback {
-    (func: YVoc, measure: YMeasure): void;
-}
 /**
  * YVoc Class: Volatile Organic Compound sensor control interface, available for instance in the Yocto-VOC-V3
  *
@@ -52,8 +46,8 @@ export interface YVocTimedReportCallback {
  */
 export declare class YVoc extends YSensor {
     _className: string;
-    _valueCallbackVoc: YVocValueCallback | null;
-    _timedReportCallbackVoc: YVocTimedReportCallback | null;
+    _valueCallbackVoc: YVoc.ValueCallback | null;
+    _timedReportCallbackVoc: YVoc.TimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
      * Retrieves a Volatile Organic Compound sensor for a given identifier.
@@ -121,7 +115,7 @@ export declare class YVoc extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YVocValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YVoc.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -134,7 +128,7 @@ export declare class YVoc extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YVocTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YVoc.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of Volatile Organic Compound sensors started using yFirstVoc().
@@ -169,4 +163,12 @@ export declare class YVoc extends YSensor {
      *         if there are none.
      */
     static FirstVocInContext(yctx: YAPIContext): YVoc | null;
+}
+export declare namespace YVoc {
+    interface ValueCallback {
+        (func: YVoc, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YVoc, measure: YMeasure): void;
+    }
 }

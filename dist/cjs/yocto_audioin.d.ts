@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioin.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_audioin.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AudioIn functions
  *
@@ -37,14 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YAudioIn_Mute {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YAudioInValueCallback {
-    (func: YAudioIn, value: string): void;
-}
 /**
  * YAudioIn Class: audio input control interface
  *
@@ -53,22 +45,22 @@ export interface YAudioInValueCallback {
 export declare class YAudioIn extends YFunction {
     _className: string;
     _volume: number;
-    _mute: YAudioIn_Mute;
+    _mute: YAudioIn.MUTE;
     _volumeRange: string;
     _signal: number;
     _noSignalFor: number;
-    _valueCallbackAudioIn: YAudioInValueCallback | null;
+    _valueCallbackAudioIn: YAudioIn.ValueCallback | null;
     readonly VOLUME_INVALID: number;
-    readonly MUTE_FALSE: YAudioIn_Mute;
-    readonly MUTE_TRUE: YAudioIn_Mute;
-    readonly MUTE_INVALID: YAudioIn_Mute;
+    readonly MUTE_FALSE: YAudioIn.MUTE;
+    readonly MUTE_TRUE: YAudioIn.MUTE;
+    readonly MUTE_INVALID: YAudioIn.MUTE;
     readonly VOLUMERANGE_INVALID: string;
     readonly SIGNAL_INVALID: number;
     readonly NOSIGNALFOR_INVALID: number;
     static readonly VOLUME_INVALID: number;
-    static readonly MUTE_FALSE: YAudioIn_Mute;
-    static readonly MUTE_TRUE: YAudioIn_Mute;
-    static readonly MUTE_INVALID: YAudioIn_Mute;
+    static readonly MUTE_FALSE: YAudioIn.MUTE;
+    static readonly MUTE_TRUE: YAudioIn.MUTE;
+    static readonly MUTE_INVALID: YAudioIn.MUTE;
     static readonly VOLUMERANGE_INVALID: string;
     static readonly SIGNAL_INVALID: number;
     static readonly NOSIGNALFOR_INVALID: number;
@@ -101,7 +93,7 @@ export declare class YAudioIn extends YFunction {
      *
      * On failure, throws an exception or returns YAudioIn.MUTE_INVALID.
      */
-    get_mute(): Promise<YAudioIn_Mute>;
+    get_mute(): Promise<YAudioIn.MUTE>;
     /**
      * Changes the state of the mute function. Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
@@ -112,7 +104,7 @@ export declare class YAudioIn extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_mute(newval: YAudioIn_Mute): Promise<number>;
+    set_mute(newval: YAudioIn.MUTE): Promise<number>;
     /**
      * Returns the supported volume range. The low value of the
      * range corresponds to the minimal audible value. To
@@ -206,7 +198,7 @@ export declare class YAudioIn extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YAudioInValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YAudioIn.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of audio inputs started using yFirstAudioIn().
@@ -241,4 +233,14 @@ export declare class YAudioIn extends YFunction {
      *         if there are none.
      */
     static FirstAudioInInContext(yctx: YAPIContext): YAudioIn | null;
+}
+export declare namespace YAudioIn {
+    const enum MUTE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YAudioIn, value: string): void;
+    }
 }

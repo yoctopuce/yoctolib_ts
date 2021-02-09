@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupmonitor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YWakeUpMonitor = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YWakeUpMonitor definitions)
 //--- (YWakeUpMonitor class start)
 /**
  * YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YWakeUpMonitor class start)
 class YWakeUpMonitor extends yocto_api_js_1.YFunction {
     //--- (end of YWakeUpMonitor attributes declaration)
-    //--- (YWakeUpMonitor return codes)
-    //--- (end of YWakeUpMonitor return codes)
     constructor(yapi, func) {
         //--- (YWakeUpMonitor constructor)
         super(yapi, func);
@@ -69,16 +66,16 @@ class YWakeUpMonitor extends yocto_api_js_1.YFunction {
         this.POWERDURATION_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.SLEEPCOUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.NEXTWAKEUP_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-        this.WAKEUPREASON_USBPOWER = 0 /* USBPOWER */;
-        this.WAKEUPREASON_EXTPOWER = 1 /* EXTPOWER */;
-        this.WAKEUPREASON_ENDOFSLEEP = 2 /* ENDOFSLEEP */;
-        this.WAKEUPREASON_EXTSIG1 = 3 /* EXTSIG1 */;
-        this.WAKEUPREASON_SCHEDULE1 = 4 /* SCHEDULE1 */;
-        this.WAKEUPREASON_SCHEDULE2 = 5 /* SCHEDULE2 */;
-        this.WAKEUPREASON_INVALID = -1 /* INVALID */;
-        this.WAKEUPSTATE_SLEEPING = 0 /* SLEEPING */;
-        this.WAKEUPSTATE_AWAKE = 1 /* AWAKE */;
-        this.WAKEUPSTATE_INVALID = -1 /* INVALID */;
+        this.WAKEUPREASON_USBPOWER = 0;
+        this.WAKEUPREASON_EXTPOWER = 1;
+        this.WAKEUPREASON_ENDOFSLEEP = 2;
+        this.WAKEUPREASON_EXTSIG1 = 3;
+        this.WAKEUPREASON_SCHEDULE1 = 4;
+        this.WAKEUPREASON_SCHEDULE2 = 5;
+        this.WAKEUPREASON_INVALID = -1;
+        this.WAKEUPSTATE_SLEEPING = 0;
+        this.WAKEUPSTATE_AWAKE = 1;
+        this.WAKEUPSTATE_INVALID = -1;
         this.RTCTIME_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this._className = 'WakeUpMonitor';
         //--- (end of YWakeUpMonitor constructor)
@@ -508,15 +505,15 @@ exports.YWakeUpMonitor = YWakeUpMonitor;
 YWakeUpMonitor.POWERDURATION_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YWakeUpMonitor.SLEEPCOUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YWakeUpMonitor.NEXTWAKEUP_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-YWakeUpMonitor.WAKEUPREASON_USBPOWER = 0 /* USBPOWER */;
-YWakeUpMonitor.WAKEUPREASON_EXTPOWER = 1 /* EXTPOWER */;
-YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP = 2 /* ENDOFSLEEP */;
-YWakeUpMonitor.WAKEUPREASON_EXTSIG1 = 3 /* EXTSIG1 */;
-YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 = 4 /* SCHEDULE1 */;
-YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 = 5 /* SCHEDULE2 */;
-YWakeUpMonitor.WAKEUPREASON_INVALID = -1 /* INVALID */;
-YWakeUpMonitor.WAKEUPSTATE_SLEEPING = 0 /* SLEEPING */;
-YWakeUpMonitor.WAKEUPSTATE_AWAKE = 1 /* AWAKE */;
-YWakeUpMonitor.WAKEUPSTATE_INVALID = -1 /* INVALID */;
+YWakeUpMonitor.WAKEUPREASON_USBPOWER = 0;
+YWakeUpMonitor.WAKEUPREASON_EXTPOWER = 1;
+YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP = 2;
+YWakeUpMonitor.WAKEUPREASON_EXTSIG1 = 3;
+YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 = 4;
+YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 = 5;
+YWakeUpMonitor.WAKEUPREASON_INVALID = -1;
+YWakeUpMonitor.WAKEUPSTATE_SLEEPING = 0;
+YWakeUpMonitor.WAKEUPSTATE_AWAKE = 1;
+YWakeUpMonitor.WAKEUPSTATE_INVALID = -1;
 YWakeUpMonitor.RTCTIME_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 //# sourceMappingURL=yocto_wakeupmonitor.js.map

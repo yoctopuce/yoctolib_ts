@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_poweroutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_poweroutput.ts 43762 2021-02-08 15:30:55Z mvuilleu $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -39,18 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPowerOutput definitions)
-export const enum YPowerOutput_Voltage {
-    OFF = 0,
-    OUT3V3 = 1,
-    OUT5V = 2,
-    OUT4V7 = 3,
-    OUT1V8 = 4,
-    INVALID = -1
-}
-export interface YPowerOutputValueCallback { (func: YPowerOutput, value: string): void }
-//--- (end of YPowerOutput definitions)
-
 //--- (YPowerOutput class start)
 /**
  * YPowerOutput Class: power output control interface, available for instance in the Yocto-I2C, the
@@ -65,28 +53,25 @@ export class YPowerOutput extends YFunction
 {
     //--- (YPowerOutput attributes declaration)
     _className: string;
-    _voltage: YPowerOutput_Voltage = YPowerOutput.VOLTAGE_INVALID;
-    _valueCallbackPowerOutput: YPowerOutputValueCallback | null = null;
+    _voltage: YPowerOutput.VOLTAGE = YPowerOutput.VOLTAGE_INVALID;
+    _valueCallbackPowerOutput: YPowerOutput.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly VOLTAGE_OFF: YPowerOutput_Voltage = YPowerOutput_Voltage.OFF;
-    public readonly VOLTAGE_OUT3V3: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT3V3;
-    public readonly VOLTAGE_OUT5V: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT5V;
-    public readonly VOLTAGE_OUT4V7: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT4V7;
-    public readonly VOLTAGE_OUT1V8: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT1V8;
-    public readonly VOLTAGE_INVALID: YPowerOutput_Voltage = YPowerOutput_Voltage.INVALID;
+    public readonly VOLTAGE_OFF: YPowerOutput.VOLTAGE = 0;
+    public readonly VOLTAGE_OUT3V3: YPowerOutput.VOLTAGE = 1;
+    public readonly VOLTAGE_OUT5V: YPowerOutput.VOLTAGE = 2;
+    public readonly VOLTAGE_OUT4V7: YPowerOutput.VOLTAGE = 3;
+    public readonly VOLTAGE_OUT1V8: YPowerOutput.VOLTAGE = 4;
+    public readonly VOLTAGE_INVALID: YPowerOutput.VOLTAGE = -1;
 
     // API symbols as static members
-    public static readonly VOLTAGE_OFF: YPowerOutput_Voltage = YPowerOutput_Voltage.OFF;
-    public static readonly VOLTAGE_OUT3V3: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT3V3;
-    public static readonly VOLTAGE_OUT5V: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT5V;
-    public static readonly VOLTAGE_OUT4V7: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT4V7;
-    public static readonly VOLTAGE_OUT1V8: YPowerOutput_Voltage = YPowerOutput_Voltage.OUT1V8;
-    public static readonly VOLTAGE_INVALID: YPowerOutput_Voltage = YPowerOutput_Voltage.INVALID;
+    public static readonly VOLTAGE_OFF: YPowerOutput.VOLTAGE = 0;
+    public static readonly VOLTAGE_OUT3V3: YPowerOutput.VOLTAGE = 1;
+    public static readonly VOLTAGE_OUT5V: YPowerOutput.VOLTAGE = 2;
+    public static readonly VOLTAGE_OUT4V7: YPowerOutput.VOLTAGE = 3;
+    public static readonly VOLTAGE_OUT1V8: YPowerOutput.VOLTAGE = 4;
+    public static readonly VOLTAGE_INVALID: YPowerOutput.VOLTAGE = -1;
     //--- (end of YPowerOutput attributes declaration)
-
-//--- (YPowerOutput return codes)
-//--- (end of YPowerOutput return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -102,7 +87,7 @@ export class YPowerOutput extends YFunction
     {
         switch(name) {
         case 'voltage':
-            this._voltage = <YPowerOutput_Voltage> <number> val;
+            this._voltage = <YPowerOutput.VOLTAGE> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -117,7 +102,7 @@ export class YPowerOutput extends YFunction
      *
      * On failure, throws an exception or returns YPowerOutput.VOLTAGE_INVALID.
      */
-    async get_voltage(): Promise<YPowerOutput_Voltage>
+    async get_voltage(): Promise<YPowerOutput.VOLTAGE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -143,7 +128,7 @@ export class YPowerOutput extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_voltage(newval: YPowerOutput_Voltage): Promise<number>
+    async set_voltage(newval: YPowerOutput.VOLTAGE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -236,7 +221,7 @@ export class YPowerOutput extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPowerOutputValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPowerOutput.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -323,5 +308,19 @@ export class YPowerOutput extends YFunction
     }
 
     //--- (end of YPowerOutput implementation)
+}
+
+export namespace YPowerOutput {
+    //--- (YPowerOutput definitions)
+    export const enum VOLTAGE {
+        OFF = 0,
+        OUT3V3 = 1,
+        OUT5V = 2,
+        OUT4V7 = 3,
+        OUT1V8 = 4,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YPowerOutput, value: string): void }
+    //--- (end of YPowerOutput definitions)
 }
 

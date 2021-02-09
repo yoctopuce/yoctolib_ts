@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -37,14 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YRealTimeClock_TimeSet {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YRealTimeClockValueCallback {
-    (func: YRealTimeClock, value: string): void;
-}
 /**
  * YRealTimeClock Class: real-time clock control interface, available for instance in the
  * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
@@ -60,20 +52,20 @@ export declare class YRealTimeClock extends YFunction {
     _unixTime: number;
     _dateTime: string;
     _utcOffset: number;
-    _timeSet: YRealTimeClock_TimeSet;
-    _valueCallbackRealTimeClock: YRealTimeClockValueCallback | null;
+    _timeSet: YRealTimeClock.TIMESET;
+    _valueCallbackRealTimeClock: YRealTimeClock.ValueCallback | null;
     readonly UNIXTIME_INVALID: number;
     readonly DATETIME_INVALID: string;
     readonly UTCOFFSET_INVALID: number;
-    readonly TIMESET_FALSE: YRealTimeClock_TimeSet;
-    readonly TIMESET_TRUE: YRealTimeClock_TimeSet;
-    readonly TIMESET_INVALID: YRealTimeClock_TimeSet;
+    readonly TIMESET_FALSE: YRealTimeClock.TIMESET;
+    readonly TIMESET_TRUE: YRealTimeClock.TIMESET;
+    readonly TIMESET_INVALID: YRealTimeClock.TIMESET;
     static readonly UNIXTIME_INVALID: number;
     static readonly DATETIME_INVALID: string;
     static readonly UTCOFFSET_INVALID: number;
-    static readonly TIMESET_FALSE: YRealTimeClock_TimeSet;
-    static readonly TIMESET_TRUE: YRealTimeClock_TimeSet;
-    static readonly TIMESET_INVALID: YRealTimeClock_TimeSet;
+    static readonly TIMESET_FALSE: YRealTimeClock.TIMESET;
+    static readonly TIMESET_TRUE: YRealTimeClock.TIMESET;
+    static readonly TIMESET_INVALID: YRealTimeClock.TIMESET;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -132,7 +124,7 @@ export declare class YRealTimeClock extends YFunction {
      *
      * On failure, throws an exception or returns YRealTimeClock.TIMESET_INVALID.
      */
-    get_timeSet(): Promise<YRealTimeClock_TimeSet>;
+    get_timeSet(): Promise<YRealTimeClock.TIMESET>;
     /**
      * Retrieves a real-time clock for a given identifier.
      * The identifier can be specified using several formats:
@@ -199,7 +191,7 @@ export declare class YRealTimeClock extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YRealTimeClockValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YRealTimeClock.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of real-time clocks started using yFirstRealTimeClock().
@@ -234,4 +226,14 @@ export declare class YRealTimeClock extends YFunction {
      *         if there are none.
      */
     static FirstRealTimeClockInContext(yctx: YAPIContext): YRealTimeClock | null;
+}
+export declare namespace YRealTimeClock {
+    const enum TIMESET {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YRealTimeClock, value: string): void;
+    }
 }

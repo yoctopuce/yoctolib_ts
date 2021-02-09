@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_steppermotor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -37,26 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YStepperMotor_MotorState {
-    ABSENT = 0,
-    ALERT = 1,
-    HI_Z = 2,
-    STOP = 3,
-    RUN = 4,
-    BATCH = 5,
-    INVALID = -1
-}
-export declare const enum YStepperMotor_Stepping {
-    MICROSTEP16 = 0,
-    MICROSTEP8 = 1,
-    MICROSTEP4 = 2,
-    HALFSTEP = 3,
-    FULLSTEP = 4,
-    INVALID = -1
-}
-export interface YStepperMotorValueCallback {
-    (func: YStepperMotor, value: string): void;
-}
 /**
  * YStepperMotor Class: stepper motor control interface
  *
@@ -64,14 +44,14 @@ export interface YStepperMotorValueCallback {
  */
 export declare class YStepperMotor extends YFunction {
     _className: string;
-    _motorState: YStepperMotor_MotorState;
+    _motorState: YStepperMotor.MOTORSTATE;
     _diags: number;
     _stepPos: number;
     _speed: number;
     _pullinSpeed: number;
     _maxAccel: number;
     _maxSpeed: number;
-    _stepping: YStepperMotor_Stepping;
+    _stepping: YStepperMotor.STEPPING;
     _overcurrent: number;
     _tCurrStop: number;
     _tCurrRun: number;
@@ -79,26 +59,26 @@ export declare class YStepperMotor extends YFunction {
     _auxMode: string;
     _auxSignal: number;
     _command: string;
-    _valueCallbackStepperMotor: YStepperMotorValueCallback | null;
-    readonly MOTORSTATE_ABSENT: YStepperMotor_MotorState;
-    readonly MOTORSTATE_ALERT: YStepperMotor_MotorState;
-    readonly MOTORSTATE_HI_Z: YStepperMotor_MotorState;
-    readonly MOTORSTATE_STOP: YStepperMotor_MotorState;
-    readonly MOTORSTATE_RUN: YStepperMotor_MotorState;
-    readonly MOTORSTATE_BATCH: YStepperMotor_MotorState;
-    readonly MOTORSTATE_INVALID: YStepperMotor_MotorState;
+    _valueCallbackStepperMotor: YStepperMotor.ValueCallback | null;
+    readonly MOTORSTATE_ABSENT: YStepperMotor.MOTORSTATE;
+    readonly MOTORSTATE_ALERT: YStepperMotor.MOTORSTATE;
+    readonly MOTORSTATE_HI_Z: YStepperMotor.MOTORSTATE;
+    readonly MOTORSTATE_STOP: YStepperMotor.MOTORSTATE;
+    readonly MOTORSTATE_RUN: YStepperMotor.MOTORSTATE;
+    readonly MOTORSTATE_BATCH: YStepperMotor.MOTORSTATE;
+    readonly MOTORSTATE_INVALID: YStepperMotor.MOTORSTATE;
     readonly DIAGS_INVALID: number;
     readonly STEPPOS_INVALID: number;
     readonly SPEED_INVALID: number;
     readonly PULLINSPEED_INVALID: number;
     readonly MAXACCEL_INVALID: number;
     readonly MAXSPEED_INVALID: number;
-    readonly STEPPING_MICROSTEP16: YStepperMotor_Stepping;
-    readonly STEPPING_MICROSTEP8: YStepperMotor_Stepping;
-    readonly STEPPING_MICROSTEP4: YStepperMotor_Stepping;
-    readonly STEPPING_HALFSTEP: YStepperMotor_Stepping;
-    readonly STEPPING_FULLSTEP: YStepperMotor_Stepping;
-    readonly STEPPING_INVALID: YStepperMotor_Stepping;
+    readonly STEPPING_MICROSTEP16: YStepperMotor.STEPPING;
+    readonly STEPPING_MICROSTEP8: YStepperMotor.STEPPING;
+    readonly STEPPING_MICROSTEP4: YStepperMotor.STEPPING;
+    readonly STEPPING_HALFSTEP: YStepperMotor.STEPPING;
+    readonly STEPPING_FULLSTEP: YStepperMotor.STEPPING;
+    readonly STEPPING_INVALID: YStepperMotor.STEPPING;
     readonly OVERCURRENT_INVALID: number;
     readonly TCURRSTOP_INVALID: number;
     readonly TCURRRUN_INVALID: number;
@@ -106,25 +86,25 @@ export declare class YStepperMotor extends YFunction {
     readonly AUXMODE_INVALID: string;
     readonly AUXSIGNAL_INVALID: number;
     readonly COMMAND_INVALID: string;
-    static readonly MOTORSTATE_ABSENT: YStepperMotor_MotorState;
-    static readonly MOTORSTATE_ALERT: YStepperMotor_MotorState;
-    static readonly MOTORSTATE_HI_Z: YStepperMotor_MotorState;
-    static readonly MOTORSTATE_STOP: YStepperMotor_MotorState;
-    static readonly MOTORSTATE_RUN: YStepperMotor_MotorState;
-    static readonly MOTORSTATE_BATCH: YStepperMotor_MotorState;
-    static readonly MOTORSTATE_INVALID: YStepperMotor_MotorState;
+    static readonly MOTORSTATE_ABSENT: YStepperMotor.MOTORSTATE;
+    static readonly MOTORSTATE_ALERT: YStepperMotor.MOTORSTATE;
+    static readonly MOTORSTATE_HI_Z: YStepperMotor.MOTORSTATE;
+    static readonly MOTORSTATE_STOP: YStepperMotor.MOTORSTATE;
+    static readonly MOTORSTATE_RUN: YStepperMotor.MOTORSTATE;
+    static readonly MOTORSTATE_BATCH: YStepperMotor.MOTORSTATE;
+    static readonly MOTORSTATE_INVALID: YStepperMotor.MOTORSTATE;
     static readonly DIAGS_INVALID: number;
     static readonly STEPPOS_INVALID: number;
     static readonly SPEED_INVALID: number;
     static readonly PULLINSPEED_INVALID: number;
     static readonly MAXACCEL_INVALID: number;
     static readonly MAXSPEED_INVALID: number;
-    static readonly STEPPING_MICROSTEP16: YStepperMotor_Stepping;
-    static readonly STEPPING_MICROSTEP8: YStepperMotor_Stepping;
-    static readonly STEPPING_MICROSTEP4: YStepperMotor_Stepping;
-    static readonly STEPPING_HALFSTEP: YStepperMotor_Stepping;
-    static readonly STEPPING_FULLSTEP: YStepperMotor_Stepping;
-    static readonly STEPPING_INVALID: YStepperMotor_Stepping;
+    static readonly STEPPING_MICROSTEP16: YStepperMotor.STEPPING;
+    static readonly STEPPING_MICROSTEP8: YStepperMotor.STEPPING;
+    static readonly STEPPING_MICROSTEP4: YStepperMotor.STEPPING;
+    static readonly STEPPING_HALFSTEP: YStepperMotor.STEPPING;
+    static readonly STEPPING_FULLSTEP: YStepperMotor.STEPPING;
+    static readonly STEPPING_INVALID: YStepperMotor.STEPPING;
     static readonly OVERCURRENT_INVALID: number;
     static readonly TCURRSTOP_INVALID: number;
     static readonly TCURRRUN_INVALID: number;
@@ -143,7 +123,7 @@ export declare class YStepperMotor extends YFunction {
      *
      * On failure, throws an exception or returns YStepperMotor.MOTORSTATE_INVALID.
      */
-    get_motorState(): Promise<YStepperMotor_MotorState>;
+    get_motorState(): Promise<YStepperMotor.MOTORSTATE>;
     /**
      * Returns the stepper motor controller diagnostics, as a bitmap.
      *
@@ -242,7 +222,7 @@ export declare class YStepperMotor extends YFunction {
      *
      * On failure, throws an exception or returns YStepperMotor.STEPPING_INVALID.
      */
-    get_stepping(): Promise<YStepperMotor_Stepping>;
+    get_stepping(): Promise<YStepperMotor.STEPPING>;
     /**
      * Changes the stepping mode used to drive the motor.
      *
@@ -255,7 +235,7 @@ export declare class YStepperMotor extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_stepping(newval: YStepperMotor_Stepping): Promise<number>;
+    set_stepping(newval: YStepperMotor.STEPPING): Promise<number>;
     /**
      * Returns the overcurrent alert and emergency stop threshold, measured in mA.
      *
@@ -403,7 +383,7 @@ export declare class YStepperMotor extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YStepperMotorValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YStepperMotor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(command: string): Promise<number>;
     /**
@@ -550,4 +530,26 @@ export declare class YStepperMotor extends YFunction {
      *         if there are none.
      */
     static FirstStepperMotorInContext(yctx: YAPIContext): YStepperMotor | null;
+}
+export declare namespace YStepperMotor {
+    const enum MOTORSTATE {
+        ABSENT = 0,
+        ALERT = 1,
+        HI_Z = 2,
+        STOP = 3,
+        RUN = 4,
+        BATCH = 5,
+        INVALID = -1
+    }
+    const enum STEPPING {
+        MICROSTEP16 = 0,
+        MICROSTEP8 = 1,
+        MICROSTEP4 = 2,
+        HALFSTEP = 3,
+        FULLSTEP = 4,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YStepperMotor, value: string): void;
+    }
 }

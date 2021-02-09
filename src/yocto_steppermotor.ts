@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_steppermotor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -39,27 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YStepperMotor definitions)
-export const enum YStepperMotor_MotorState {
-    ABSENT = 0,
-    ALERT = 1,
-    HI_Z = 2,
-    STOP = 3,
-    RUN = 4,
-    BATCH = 5,
-    INVALID = -1
-}
-export const enum YStepperMotor_Stepping {
-    MICROSTEP16 = 0,
-    MICROSTEP8 = 1,
-    MICROSTEP4 = 2,
-    HALFSTEP = 3,
-    FULLSTEP = 4,
-    INVALID = -1
-}
-export interface YStepperMotorValueCallback { (func: YStepperMotor, value: string): void }
-//--- (end of YStepperMotor definitions)
-
 //--- (YStepperMotor class start)
 /**
  * YStepperMotor Class: stepper motor control interface
@@ -72,14 +51,14 @@ export class YStepperMotor extends YFunction
 {
     //--- (YStepperMotor attributes declaration)
     _className: string;
-    _motorState: YStepperMotor_MotorState = YStepperMotor.MOTORSTATE_INVALID;
+    _motorState: YStepperMotor.MOTORSTATE = YStepperMotor.MOTORSTATE_INVALID;
     _diags: number = YStepperMotor.DIAGS_INVALID;
     _stepPos: number = YStepperMotor.STEPPOS_INVALID;
     _speed: number = YStepperMotor.SPEED_INVALID;
     _pullinSpeed: number = YStepperMotor.PULLINSPEED_INVALID;
     _maxAccel: number = YStepperMotor.MAXACCEL_INVALID;
     _maxSpeed: number = YStepperMotor.MAXSPEED_INVALID;
-    _stepping: YStepperMotor_Stepping = YStepperMotor.STEPPING_INVALID;
+    _stepping: YStepperMotor.STEPPING = YStepperMotor.STEPPING_INVALID;
     _overcurrent: number = YStepperMotor.OVERCURRENT_INVALID;
     _tCurrStop: number = YStepperMotor.TCURRSTOP_INVALID;
     _tCurrRun: number = YStepperMotor.TCURRRUN_INVALID;
@@ -87,28 +66,28 @@ export class YStepperMotor extends YFunction
     _auxMode: string = YStepperMotor.AUXMODE_INVALID;
     _auxSignal: number = YStepperMotor.AUXSIGNAL_INVALID;
     _command: string = YStepperMotor.COMMAND_INVALID;
-    _valueCallbackStepperMotor: YStepperMotorValueCallback | null = null;
+    _valueCallbackStepperMotor: YStepperMotor.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly MOTORSTATE_ABSENT: YStepperMotor_MotorState = YStepperMotor_MotorState.ABSENT;
-    public readonly MOTORSTATE_ALERT: YStepperMotor_MotorState = YStepperMotor_MotorState.ALERT;
-    public readonly MOTORSTATE_HI_Z: YStepperMotor_MotorState = YStepperMotor_MotorState.HI_Z;
-    public readonly MOTORSTATE_STOP: YStepperMotor_MotorState = YStepperMotor_MotorState.STOP;
-    public readonly MOTORSTATE_RUN: YStepperMotor_MotorState = YStepperMotor_MotorState.RUN;
-    public readonly MOTORSTATE_BATCH: YStepperMotor_MotorState = YStepperMotor_MotorState.BATCH;
-    public readonly MOTORSTATE_INVALID: YStepperMotor_MotorState = YStepperMotor_MotorState.INVALID;
+    public readonly MOTORSTATE_ABSENT: YStepperMotor.MOTORSTATE = 0;
+    public readonly MOTORSTATE_ALERT: YStepperMotor.MOTORSTATE = 1;
+    public readonly MOTORSTATE_HI_Z: YStepperMotor.MOTORSTATE = 2;
+    public readonly MOTORSTATE_STOP: YStepperMotor.MOTORSTATE = 3;
+    public readonly MOTORSTATE_RUN: YStepperMotor.MOTORSTATE = 4;
+    public readonly MOTORSTATE_BATCH: YStepperMotor.MOTORSTATE = 5;
+    public readonly MOTORSTATE_INVALID: YStepperMotor.MOTORSTATE = -1;
     public readonly DIAGS_INVALID: number = YAPI.INVALID_UINT;
     public readonly STEPPOS_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PULLINSPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly MAXACCEL_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly MAXSPEED_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly STEPPING_MICROSTEP16: YStepperMotor_Stepping = YStepperMotor_Stepping.MICROSTEP16;
-    public readonly STEPPING_MICROSTEP8: YStepperMotor_Stepping = YStepperMotor_Stepping.MICROSTEP8;
-    public readonly STEPPING_MICROSTEP4: YStepperMotor_Stepping = YStepperMotor_Stepping.MICROSTEP4;
-    public readonly STEPPING_HALFSTEP: YStepperMotor_Stepping = YStepperMotor_Stepping.HALFSTEP;
-    public readonly STEPPING_FULLSTEP: YStepperMotor_Stepping = YStepperMotor_Stepping.FULLSTEP;
-    public readonly STEPPING_INVALID: YStepperMotor_Stepping = YStepperMotor_Stepping.INVALID;
+    public readonly STEPPING_MICROSTEP16: YStepperMotor.STEPPING = 0;
+    public readonly STEPPING_MICROSTEP8: YStepperMotor.STEPPING = 1;
+    public readonly STEPPING_MICROSTEP4: YStepperMotor.STEPPING = 2;
+    public readonly STEPPING_HALFSTEP: YStepperMotor.STEPPING = 3;
+    public readonly STEPPING_FULLSTEP: YStepperMotor.STEPPING = 4;
+    public readonly STEPPING_INVALID: YStepperMotor.STEPPING = -1;
     public readonly OVERCURRENT_INVALID: number = YAPI.INVALID_UINT;
     public readonly TCURRSTOP_INVALID: number = YAPI.INVALID_UINT;
     public readonly TCURRRUN_INVALID: number = YAPI.INVALID_UINT;
@@ -118,25 +97,25 @@ export class YStepperMotor extends YFunction
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly MOTORSTATE_ABSENT: YStepperMotor_MotorState = YStepperMotor_MotorState.ABSENT;
-    public static readonly MOTORSTATE_ALERT: YStepperMotor_MotorState = YStepperMotor_MotorState.ALERT;
-    public static readonly MOTORSTATE_HI_Z: YStepperMotor_MotorState = YStepperMotor_MotorState.HI_Z;
-    public static readonly MOTORSTATE_STOP: YStepperMotor_MotorState = YStepperMotor_MotorState.STOP;
-    public static readonly MOTORSTATE_RUN: YStepperMotor_MotorState = YStepperMotor_MotorState.RUN;
-    public static readonly MOTORSTATE_BATCH: YStepperMotor_MotorState = YStepperMotor_MotorState.BATCH;
-    public static readonly MOTORSTATE_INVALID: YStepperMotor_MotorState = YStepperMotor_MotorState.INVALID;
+    public static readonly MOTORSTATE_ABSENT: YStepperMotor.MOTORSTATE = 0;
+    public static readonly MOTORSTATE_ALERT: YStepperMotor.MOTORSTATE = 1;
+    public static readonly MOTORSTATE_HI_Z: YStepperMotor.MOTORSTATE = 2;
+    public static readonly MOTORSTATE_STOP: YStepperMotor.MOTORSTATE = 3;
+    public static readonly MOTORSTATE_RUN: YStepperMotor.MOTORSTATE = 4;
+    public static readonly MOTORSTATE_BATCH: YStepperMotor.MOTORSTATE = 5;
+    public static readonly MOTORSTATE_INVALID: YStepperMotor.MOTORSTATE = -1;
     public static readonly DIAGS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly STEPPOS_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PULLINSPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly MAXACCEL_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly MAXSPEED_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly STEPPING_MICROSTEP16: YStepperMotor_Stepping = YStepperMotor_Stepping.MICROSTEP16;
-    public static readonly STEPPING_MICROSTEP8: YStepperMotor_Stepping = YStepperMotor_Stepping.MICROSTEP8;
-    public static readonly STEPPING_MICROSTEP4: YStepperMotor_Stepping = YStepperMotor_Stepping.MICROSTEP4;
-    public static readonly STEPPING_HALFSTEP: YStepperMotor_Stepping = YStepperMotor_Stepping.HALFSTEP;
-    public static readonly STEPPING_FULLSTEP: YStepperMotor_Stepping = YStepperMotor_Stepping.FULLSTEP;
-    public static readonly STEPPING_INVALID: YStepperMotor_Stepping = YStepperMotor_Stepping.INVALID;
+    public static readonly STEPPING_MICROSTEP16: YStepperMotor.STEPPING = 0;
+    public static readonly STEPPING_MICROSTEP8: YStepperMotor.STEPPING = 1;
+    public static readonly STEPPING_MICROSTEP4: YStepperMotor.STEPPING = 2;
+    public static readonly STEPPING_HALFSTEP: YStepperMotor.STEPPING = 3;
+    public static readonly STEPPING_FULLSTEP: YStepperMotor.STEPPING = 4;
+    public static readonly STEPPING_INVALID: YStepperMotor.STEPPING = -1;
     public static readonly OVERCURRENT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly TCURRSTOP_INVALID: number = YAPI.INVALID_UINT;
     public static readonly TCURRRUN_INVALID: number = YAPI.INVALID_UINT;
@@ -145,9 +124,6 @@ export class YStepperMotor extends YFunction
     public static readonly AUXSIGNAL_INVALID: number = YAPI.INVALID_INT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YStepperMotor attributes declaration)
-
-//--- (YStepperMotor return codes)
-//--- (end of YStepperMotor return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -163,7 +139,7 @@ export class YStepperMotor extends YFunction
     {
         switch(name) {
         case 'motorState':
-            this._motorState = <YStepperMotor_MotorState> <number> val;
+            this._motorState = <YStepperMotor.MOTORSTATE> <number> val;
             return 1;
         case 'diags':
             this._diags = <number> <number> val;
@@ -181,7 +157,7 @@ export class YStepperMotor extends YFunction
             this._maxSpeed = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'stepping':
-            this._stepping = <YStepperMotor_Stepping> <number> val;
+            this._stepping = <YStepperMotor.STEPPING> <number> val;
             return 1;
         case 'overcurrent':
             this._overcurrent = <number> <number> val;
@@ -217,7 +193,7 @@ export class YStepperMotor extends YFunction
      *
      * On failure, throws an exception or returns YStepperMotor.MOTORSTATE_INVALID.
      */
-    async get_motorState(): Promise<YStepperMotor_MotorState>
+    async get_motorState(): Promise<YStepperMotor.MOTORSTATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -406,7 +382,7 @@ export class YStepperMotor extends YFunction
      *
      * On failure, throws an exception or returns YStepperMotor.STEPPING_INVALID.
      */
-    async get_stepping(): Promise<YStepperMotor_Stepping>
+    async get_stepping(): Promise<YStepperMotor.STEPPING>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -430,7 +406,7 @@ export class YStepperMotor extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_stepping(newval: YStepperMotor_Stepping): Promise<number>
+    async set_stepping(newval: YStepperMotor.STEPPING): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -723,7 +699,7 @@ export class YStepperMotor extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YStepperMotorValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YStepperMotor.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -999,5 +975,28 @@ export class YStepperMotor extends YFunction
     }
 
     //--- (end of YStepperMotor implementation)
+}
+
+export namespace YStepperMotor {
+    //--- (YStepperMotor definitions)
+    export const enum MOTORSTATE {
+        ABSENT = 0,
+        ALERT = 1,
+        HI_Z = 2,
+        STOP = 3,
+        RUN = 4,
+        BATCH = 5,
+        INVALID = -1
+    }
+    export const enum STEPPING {
+        MICROSTEP16 = 0,
+        MICROSTEP8 = 1,
+        MICROSTEP4 = 2,
+        HALFSTEP = 3,
+        FULLSTEP = 4,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YStepperMotor, value: string): void }
+    //--- (end of YStepperMotor definitions)
 }
 

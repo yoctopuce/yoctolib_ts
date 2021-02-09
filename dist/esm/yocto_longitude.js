@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_longitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_longitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YLongitude definitions)
 //--- (YLongitude class start)
 /**
  * YLongitude Class: longitude sensor control interface, available for instance in the Yocto-GPS-V2
@@ -50,8 +49,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 export class YLongitude extends YSensor {
     // API symbols as static members
     //--- (end of YLongitude attributes declaration)
-    //--- (YLongitude return codes)
-    //--- (end of YLongitude return codes)
     constructor(yapi, func) {
         //--- (YLongitude constructor)
         super(yapi, func);

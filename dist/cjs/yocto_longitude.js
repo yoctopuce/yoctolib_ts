@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_longitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_longitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YLongitude = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YLongitude definitions)
 //--- (YLongitude class start)
 /**
  * YLongitude Class: longitude sensor control interface, available for instance in the Yocto-GPS-V2
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 class YLongitude extends yocto_api_js_1.YSensor {
     // API symbols as static members
     //--- (end of YLongitude attributes declaration)
-    //--- (YLongitude return codes)
-    //--- (end of YLongitude return codes)
     constructor(yapi, func) {
         //--- (YLongitude constructor)
         super(yapi, func);

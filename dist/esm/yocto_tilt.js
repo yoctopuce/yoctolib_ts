@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tilt.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_tilt.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Tilt functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YTilt definitions)
 //--- (YTilt class start)
 /**
  * YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2 or the Yocto-Inclinometer
@@ -55,8 +54,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YTilt class start)
 export class YTilt extends YSensor {
     //--- (end of YTilt attributes declaration)
-    //--- (YTilt return codes)
-    //--- (end of YTilt return codes)
     constructor(yapi, func) {
         //--- (YTilt constructor)
         super(yapi, func);
@@ -66,10 +63,10 @@ export class YTilt extends YSensor {
         this._timedReportCallbackTilt = null;
         // API symbols as object properties
         this.BANDWIDTH_INVALID = YAPI.INVALID_UINT;
-        this.AXIS_X = 0 /* X */;
-        this.AXIS_Y = 1 /* Y */;
-        this.AXIS_Z = 2 /* Z */;
-        this.AXIS_INVALID = -1 /* INVALID */;
+        this.AXIS_X = 0;
+        this.AXIS_Y = 1;
+        this.AXIS_Z = 2;
+        this.AXIS_INVALID = -1;
         this._className = 'Tilt';
         //--- (end of YTilt constructor)
     }
@@ -366,8 +363,8 @@ export class YTilt extends YSensor {
 }
 // API symbols as static members
 YTilt.BANDWIDTH_INVALID = YAPI.INVALID_UINT;
-YTilt.AXIS_X = 0 /* X */;
-YTilt.AXIS_Y = 1 /* Y */;
-YTilt.AXIS_Z = 2 /* Z */;
-YTilt.AXIS_INVALID = -1 /* INVALID */;
+YTilt.AXIS_X = 0;
+YTilt.AXIS_Y = 1;
+YTilt.AXIS_Z = 2;
+YTilt.AXIS_INVALID = -1;
 //# sourceMappingURL=yocto_tilt.js.map

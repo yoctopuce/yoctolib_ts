@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_compass.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -37,18 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YCompass_Axis {
-    X = 0,
-    Y = 1,
-    Z = 2,
-    INVALID = -1
-}
-export interface YCompassValueCallback {
-    (func: YCompass, value: string): void;
-}
-export interface YCompassTimedReportCallback {
-    (func: YCompass, measure: YMeasure): void;
-}
 /**
  * YCompass Class: compass function control interface, available for instance in the Yocto-3D-V2
  *
@@ -59,21 +47,21 @@ export interface YCompassTimedReportCallback {
 export declare class YCompass extends YSensor {
     _className: string;
     _bandwidth: number;
-    _axis: YCompass_Axis;
+    _axis: YCompass.AXIS;
     _magneticHeading: number;
-    _valueCallbackCompass: YCompassValueCallback | null;
-    _timedReportCallbackCompass: YCompassTimedReportCallback | null;
+    _valueCallbackCompass: YCompass.ValueCallback | null;
+    _timedReportCallbackCompass: YCompass.TimedReportCallback | null;
     readonly BANDWIDTH_INVALID: number;
-    readonly AXIS_X: YCompass_Axis;
-    readonly AXIS_Y: YCompass_Axis;
-    readonly AXIS_Z: YCompass_Axis;
-    readonly AXIS_INVALID: YCompass_Axis;
+    readonly AXIS_X: YCompass.AXIS;
+    readonly AXIS_Y: YCompass.AXIS;
+    readonly AXIS_Z: YCompass.AXIS;
+    readonly AXIS_INVALID: YCompass.AXIS;
     readonly MAGNETICHEADING_INVALID: number;
     static readonly BANDWIDTH_INVALID: number;
-    static readonly AXIS_X: YCompass_Axis;
-    static readonly AXIS_Y: YCompass_Axis;
-    static readonly AXIS_Z: YCompass_Axis;
-    static readonly AXIS_INVALID: YCompass_Axis;
+    static readonly AXIS_X: YCompass.AXIS;
+    static readonly AXIS_Y: YCompass.AXIS;
+    static readonly AXIS_Z: YCompass.AXIS;
+    static readonly AXIS_INVALID: YCompass.AXIS;
     static readonly MAGNETICHEADING_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -98,7 +86,7 @@ export declare class YCompass extends YSensor {
      * On failure, throws an exception or returns a negative error code.
      */
     set_bandwidth(newval: number): Promise<number>;
-    get_axis(): Promise<YCompass_Axis>;
+    get_axis(): Promise<YCompass.AXIS>;
     /**
      * Returns the magnetic heading, regardless of the configured bearing.
      *
@@ -173,7 +161,7 @@ export declare class YCompass extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YCompassValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YCompass.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -186,7 +174,7 @@ export declare class YCompass extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YCompassTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YCompass.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of compass functions started using yFirstCompass().
@@ -221,4 +209,18 @@ export declare class YCompass extends YSensor {
      *         if there are none.
      */
     static FirstCompassInContext(yctx: YAPIContext): YCompass | null;
+}
+export declare namespace YCompass {
+    const enum AXIS {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YCompass, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YCompass, measure: YMeasure): void;
+    }
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_messagebox.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -148,8 +148,7 @@ export declare class YSms {
     send(): Promise<number>;
     deleteFromSIM(): Promise<number>;
 }
-export interface YMessageBoxValueCallback {
-    (func: YMessageBox, value: string): void;
+export declare namespace YSms {
 }
 /**
  * YMessageBox Class: SMS message box interface control interface, available for instance in the
@@ -167,7 +166,7 @@ export declare class YMessageBox extends YFunction {
     _pduSent: number;
     _pduReceived: number;
     _command: string;
-    _valueCallbackMessageBox: YMessageBoxValueCallback | null;
+    _valueCallbackMessageBox: YMessageBox.ValueCallback | null;
     _nextMsgRef: number;
     _prevBitmapStr: string;
     _pdus: YSms[];
@@ -310,7 +309,7 @@ export declare class YMessageBox extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YMessageBoxValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YMessageBox.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     nextMsgRef(): Promise<number>;
     clearSIMSlot(slot: number): Promise<number>;
@@ -415,4 +414,9 @@ export declare class YMessageBox extends YFunction {
      *         if there are none.
      */
     static FirstMessageBoxInContext(yctx: YAPIContext): YMessageBox | null;
+}
+export declare namespace YMessageBox {
+    interface ValueCallback {
+        (func: YMessageBox, value: string): void;
+    }
 }

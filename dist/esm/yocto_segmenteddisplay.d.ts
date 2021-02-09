@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_segmenteddisplay.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_segmenteddisplay.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for SegmentedDisplay functions
  *
@@ -37,16 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YSegmentedDisplay_DisplayMode {
-    DISCONNECTED = 0,
-    MANUAL = 1,
-    AUTO1 = 2,
-    AUTO60 = 3,
-    INVALID = -1
-}
-export interface YSegmentedDisplayValueCallback {
-    (func: YSegmentedDisplay, value: string): void;
-}
 /**
  * YSegmentedDisplay Class: segmented display control interface
  *
@@ -55,20 +45,20 @@ export interface YSegmentedDisplayValueCallback {
 export declare class YSegmentedDisplay extends YFunction {
     _className: string;
     _displayedText: string;
-    _displayMode: YSegmentedDisplay_DisplayMode;
-    _valueCallbackSegmentedDisplay: YSegmentedDisplayValueCallback | null;
+    _displayMode: YSegmentedDisplay.DISPLAYMODE;
+    _valueCallbackSegmentedDisplay: YSegmentedDisplay.ValueCallback | null;
     readonly DISPLAYEDTEXT_INVALID: string;
-    readonly DISPLAYMODE_DISCONNECTED: YSegmentedDisplay_DisplayMode;
-    readonly DISPLAYMODE_MANUAL: YSegmentedDisplay_DisplayMode;
-    readonly DISPLAYMODE_AUTO1: YSegmentedDisplay_DisplayMode;
-    readonly DISPLAYMODE_AUTO60: YSegmentedDisplay_DisplayMode;
-    readonly DISPLAYMODE_INVALID: YSegmentedDisplay_DisplayMode;
+    readonly DISPLAYMODE_DISCONNECTED: YSegmentedDisplay.DISPLAYMODE;
+    readonly DISPLAYMODE_MANUAL: YSegmentedDisplay.DISPLAYMODE;
+    readonly DISPLAYMODE_AUTO1: YSegmentedDisplay.DISPLAYMODE;
+    readonly DISPLAYMODE_AUTO60: YSegmentedDisplay.DISPLAYMODE;
+    readonly DISPLAYMODE_INVALID: YSegmentedDisplay.DISPLAYMODE;
     static readonly DISPLAYEDTEXT_INVALID: string;
-    static readonly DISPLAYMODE_DISCONNECTED: YSegmentedDisplay_DisplayMode;
-    static readonly DISPLAYMODE_MANUAL: YSegmentedDisplay_DisplayMode;
-    static readonly DISPLAYMODE_AUTO1: YSegmentedDisplay_DisplayMode;
-    static readonly DISPLAYMODE_AUTO60: YSegmentedDisplay_DisplayMode;
-    static readonly DISPLAYMODE_INVALID: YSegmentedDisplay_DisplayMode;
+    static readonly DISPLAYMODE_DISCONNECTED: YSegmentedDisplay.DISPLAYMODE;
+    static readonly DISPLAYMODE_MANUAL: YSegmentedDisplay.DISPLAYMODE;
+    static readonly DISPLAYMODE_AUTO1: YSegmentedDisplay.DISPLAYMODE;
+    static readonly DISPLAYMODE_AUTO60: YSegmentedDisplay.DISPLAYMODE;
+    static readonly DISPLAYMODE_INVALID: YSegmentedDisplay.DISPLAYMODE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -89,8 +79,8 @@ export declare class YSegmentedDisplay extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_displayedText(newval: string): Promise<number>;
-    get_displayMode(): Promise<YSegmentedDisplay_DisplayMode>;
-    set_displayMode(newval: YSegmentedDisplay_DisplayMode): Promise<number>;
+    get_displayMode(): Promise<YSegmentedDisplay.DISPLAYMODE>;
+    set_displayMode(newval: YSegmentedDisplay.DISPLAYMODE): Promise<number>;
     /**
      * Retrieves a segmented display for a given identifier.
      * The identifier can be specified using several formats:
@@ -157,7 +147,7 @@ export declare class YSegmentedDisplay extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YSegmentedDisplayValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YSegmentedDisplay.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of segmented displays started using yFirstSegmentedDisplay().
@@ -192,4 +182,16 @@ export declare class YSegmentedDisplay extends YFunction {
      *         if there are none.
      */
     static FirstSegmentedDisplayInContext(yctx: YAPIContext): YSegmentedDisplay | null;
+}
+export declare namespace YSegmentedDisplay {
+    const enum DISPLAYMODE {
+        DISCONNECTED = 0,
+        MANUAL = 1,
+        AUTO1 = 2,
+        AUTO60 = 3,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YSegmentedDisplay, value: string): void;
+    }
 }

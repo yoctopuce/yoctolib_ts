@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_digitalio.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -39,16 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YDigitalIO definitions)
-export const enum YDigitalIO_OutputVoltage {
-    USB_5V = 0,
-    USB_3V = 1,
-    EXT_V = 2,
-    INVALID = -1
-}
-export interface YDigitalIOValueCallback { (func: YDigitalIO, value: string): void }
-//--- (end of YDigitalIO definitions)
-
 //--- (YDigitalIO class start)
 /**
  * YDigitalIO Class: digital IO port control interface, available for instance in the Yocto-IO or the
@@ -76,9 +66,9 @@ export class YDigitalIO extends YFunction
     _portPolarity: number = YDigitalIO.PORTPOLARITY_INVALID;
     _portDiags: number = YDigitalIO.PORTDIAGS_INVALID;
     _portSize: number = YDigitalIO.PORTSIZE_INVALID;
-    _outputVoltage: YDigitalIO_OutputVoltage = YDigitalIO.OUTPUTVOLTAGE_INVALID;
+    _outputVoltage: YDigitalIO.OUTPUTVOLTAGE = YDigitalIO.OUTPUTVOLTAGE_INVALID;
     _command: string = YDigitalIO.COMMAND_INVALID;
-    _valueCallbackDigitalIO: YDigitalIOValueCallback | null = null;
+    _valueCallbackDigitalIO: YDigitalIO.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly PORTSTATE_INVALID: number = YAPI.INVALID_UINT;
@@ -87,10 +77,10 @@ export class YDigitalIO extends YFunction
     public readonly PORTPOLARITY_INVALID: number = YAPI.INVALID_UINT;
     public readonly PORTDIAGS_INVALID: number = YAPI.INVALID_UINT;
     public readonly PORTSIZE_INVALID: number = YAPI.INVALID_UINT;
-    public readonly OUTPUTVOLTAGE_USB_5V: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.USB_5V;
-    public readonly OUTPUTVOLTAGE_USB_3V: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.USB_3V;
-    public readonly OUTPUTVOLTAGE_EXT_V: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.EXT_V;
-    public readonly OUTPUTVOLTAGE_INVALID: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.INVALID;
+    public readonly OUTPUTVOLTAGE_USB_5V: YDigitalIO.OUTPUTVOLTAGE = 0;
+    public readonly OUTPUTVOLTAGE_USB_3V: YDigitalIO.OUTPUTVOLTAGE = 1;
+    public readonly OUTPUTVOLTAGE_EXT_V: YDigitalIO.OUTPUTVOLTAGE = 2;
+    public readonly OUTPUTVOLTAGE_INVALID: YDigitalIO.OUTPUTVOLTAGE = -1;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
@@ -100,15 +90,12 @@ export class YDigitalIO extends YFunction
     public static readonly PORTPOLARITY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly PORTDIAGS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly PORTSIZE_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly OUTPUTVOLTAGE_USB_5V: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.USB_5V;
-    public static readonly OUTPUTVOLTAGE_USB_3V: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.USB_3V;
-    public static readonly OUTPUTVOLTAGE_EXT_V: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.EXT_V;
-    public static readonly OUTPUTVOLTAGE_INVALID: YDigitalIO_OutputVoltage = YDigitalIO_OutputVoltage.INVALID;
+    public static readonly OUTPUTVOLTAGE_USB_5V: YDigitalIO.OUTPUTVOLTAGE = 0;
+    public static readonly OUTPUTVOLTAGE_USB_3V: YDigitalIO.OUTPUTVOLTAGE = 1;
+    public static readonly OUTPUTVOLTAGE_EXT_V: YDigitalIO.OUTPUTVOLTAGE = 2;
+    public static readonly OUTPUTVOLTAGE_INVALID: YDigitalIO.OUTPUTVOLTAGE = -1;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YDigitalIO attributes declaration)
-
-//--- (YDigitalIO return codes)
-//--- (end of YDigitalIO return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -142,7 +129,7 @@ export class YDigitalIO extends YFunction
             this._portSize = <number> <number> val;
             return 1;
         case 'outputVoltage':
-            this._outputVoltage = <YDigitalIO_OutputVoltage> <number> val;
+            this._outputVoltage = <YDigitalIO.OUTPUTVOLTAGE> <number> val;
             return 1;
         case 'command':
             this._command = <string> <string> val;
@@ -369,7 +356,7 @@ export class YDigitalIO extends YFunction
      *
      * On failure, throws an exception or returns YDigitalIO.OUTPUTVOLTAGE_INVALID.
      */
-    async get_outputVoltage(): Promise<YDigitalIO_OutputVoltage>
+    async get_outputVoltage(): Promise<YDigitalIO.OUTPUTVOLTAGE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -392,7 +379,7 @@ export class YDigitalIO extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_outputVoltage(newval: YDigitalIO_OutputVoltage): Promise<number>
+    async set_outputVoltage(newval: YDigitalIO.OUTPUTVOLTAGE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -504,7 +491,7 @@ export class YDigitalIO extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YDigitalIOValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YDigitalIO.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -797,5 +784,17 @@ export class YDigitalIO extends YFunction
     }
 
     //--- (end of YDigitalIO implementation)
+}
+
+export namespace YDigitalIO {
+    //--- (YDigitalIO definitions)
+    export const enum OUTPUTVOLTAGE {
+        USB_5V = 0,
+        USB_3V = 1,
+        EXT_V = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YDigitalIO, value: string): void }
+    //--- (end of YDigitalIO definitions)
 }
 

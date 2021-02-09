@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_tvoc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YTvocValueCallback {
-    (func: YTvoc, value: string): void;
-}
-export interface YTvocTimedReportCallback {
-    (func: YTvoc, measure: YMeasure): void;
-}
 /**
  * YTvoc Class: Total Volatile Organic Compound sensor control interface, available for instance in
  * the Yocto-VOC-V3
@@ -53,8 +47,8 @@ export interface YTvocTimedReportCallback {
  */
 export declare class YTvoc extends YSensor {
     _className: string;
-    _valueCallbackTvoc: YTvocValueCallback | null;
-    _timedReportCallbackTvoc: YTvocTimedReportCallback | null;
+    _valueCallbackTvoc: YTvoc.ValueCallback | null;
+    _timedReportCallbackTvoc: YTvoc.TimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
      * Retrieves a Total  Volatile Organic Compound sensor for a given identifier.
@@ -122,7 +116,7 @@ export declare class YTvoc extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YTvocValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YTvoc.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -135,7 +129,7 @@ export declare class YTvoc extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YTvocTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YTvoc.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of Total Volatile Organic Compound sensors started using yFirstTvoc().
@@ -170,4 +164,12 @@ export declare class YTvoc extends YSensor {
      *         if there are none.
      */
     static FirstTvocInContext(yctx: YAPIContext): YTvoc | null;
+}
+export declare namespace YTvoc {
+    interface ValueCallback {
+        (func: YTvoc, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YTvoc, measure: YMeasure): void;
+    }
 }

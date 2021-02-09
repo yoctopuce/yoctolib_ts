@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -37,25 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YGenericSensor_SignalSampling {
-    HIGH_RATE = 0,
-    HIGH_RATE_FILTERED = 1,
-    LOW_NOISE = 2,
-    LOW_NOISE_FILTERED = 3,
-    HIGHEST_RATE = 4,
-    INVALID = -1
-}
-export declare const enum YGenericSensor_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YGenericSensorValueCallback {
-    (func: YGenericSensor, value: string): void;
-}
-export interface YGenericSensorTimedReportCallback {
-    (func: YGenericSensor, measure: YMeasure): void;
-}
 /**
  * YGenericSensor Class: GenericSensor control interface, available for instance in the
  * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-Serial or the Yocto-milliVolt-Rx
@@ -73,38 +54,38 @@ export declare class YGenericSensor extends YSensor {
     _signalRange: string;
     _valueRange: string;
     _signalBias: number;
-    _signalSampling: YGenericSensor_SignalSampling;
-    _enabled: YGenericSensor_Enabled;
-    _valueCallbackGenericSensor: YGenericSensorValueCallback | null;
-    _timedReportCallbackGenericSensor: YGenericSensorTimedReportCallback | null;
+    _signalSampling: YGenericSensor.SIGNALSAMPLING;
+    _enabled: YGenericSensor.ENABLED;
+    _valueCallbackGenericSensor: YGenericSensor.ValueCallback | null;
+    _timedReportCallbackGenericSensor: YGenericSensor.TimedReportCallback | null;
     readonly SIGNALVALUE_INVALID: number;
     readonly SIGNALUNIT_INVALID: string;
     readonly SIGNALRANGE_INVALID: string;
     readonly VALUERANGE_INVALID: string;
     readonly SIGNALBIAS_INVALID: number;
-    readonly SIGNALSAMPLING_HIGH_RATE: YGenericSensor_SignalSampling;
-    readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: YGenericSensor_SignalSampling;
-    readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor_SignalSampling;
-    readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor_SignalSampling;
-    readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor_SignalSampling;
-    readonly SIGNALSAMPLING_INVALID: YGenericSensor_SignalSampling;
-    readonly ENABLED_FALSE: YGenericSensor_Enabled;
-    readonly ENABLED_TRUE: YGenericSensor_Enabled;
-    readonly ENABLED_INVALID: YGenericSensor_Enabled;
+    readonly SIGNALSAMPLING_HIGH_RATE: YGenericSensor.SIGNALSAMPLING;
+    readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: YGenericSensor.SIGNALSAMPLING;
+    readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor.SIGNALSAMPLING;
+    readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor.SIGNALSAMPLING;
+    readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor.SIGNALSAMPLING;
+    readonly SIGNALSAMPLING_INVALID: YGenericSensor.SIGNALSAMPLING;
+    readonly ENABLED_FALSE: YGenericSensor.ENABLED;
+    readonly ENABLED_TRUE: YGenericSensor.ENABLED;
+    readonly ENABLED_INVALID: YGenericSensor.ENABLED;
     static readonly SIGNALVALUE_INVALID: number;
     static readonly SIGNALUNIT_INVALID: string;
     static readonly SIGNALRANGE_INVALID: string;
     static readonly VALUERANGE_INVALID: string;
     static readonly SIGNALBIAS_INVALID: number;
-    static readonly SIGNALSAMPLING_HIGH_RATE: YGenericSensor_SignalSampling;
-    static readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: YGenericSensor_SignalSampling;
-    static readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor_SignalSampling;
-    static readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor_SignalSampling;
-    static readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor_SignalSampling;
-    static readonly SIGNALSAMPLING_INVALID: YGenericSensor_SignalSampling;
-    static readonly ENABLED_FALSE: YGenericSensor_Enabled;
-    static readonly ENABLED_TRUE: YGenericSensor_Enabled;
-    static readonly ENABLED_INVALID: YGenericSensor_Enabled;
+    static readonly SIGNALSAMPLING_HIGH_RATE: YGenericSensor.SIGNALSAMPLING;
+    static readonly SIGNALSAMPLING_HIGH_RATE_FILTERED: YGenericSensor.SIGNALSAMPLING;
+    static readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor.SIGNALSAMPLING;
+    static readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor.SIGNALSAMPLING;
+    static readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor.SIGNALSAMPLING;
+    static readonly SIGNALSAMPLING_INVALID: YGenericSensor.SIGNALSAMPLING;
+    static readonly ENABLED_FALSE: YGenericSensor.ENABLED;
+    static readonly ENABLED_TRUE: YGenericSensor.ENABLED;
+    static readonly ENABLED_INVALID: YGenericSensor.ENABLED;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -230,7 +211,7 @@ export declare class YGenericSensor extends YSensor {
      *
      * On failure, throws an exception or returns YGenericSensor.SIGNALSAMPLING_INVALID.
      */
-    get_signalSampling(): Promise<YGenericSensor_SignalSampling>;
+    get_signalSampling(): Promise<YGenericSensor.SIGNALSAMPLING>;
     /**
      * Changes the electric signal sampling method to use.
      * The HIGH_RATE method uses the highest sampling frequency, without any filtering.
@@ -250,7 +231,7 @@ export declare class YGenericSensor extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_signalSampling(newval: YGenericSensor_SignalSampling): Promise<number>;
+    set_signalSampling(newval: YGenericSensor.SIGNALSAMPLING): Promise<number>;
     /**
      * Returns the activation state of this input.
      *
@@ -259,7 +240,7 @@ export declare class YGenericSensor extends YSensor {
      *
      * On failure, throws an exception or returns YGenericSensor.ENABLED_INVALID.
      */
-    get_enabled(): Promise<YGenericSensor_Enabled>;
+    get_enabled(): Promise<YGenericSensor.ENABLED>;
     /**
      * Changes the activation state of this input. When an input is disabled,
      * its value is no more updated. On some devices, disabling an input can
@@ -274,7 +255,7 @@ export declare class YGenericSensor extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: YGenericSensor_Enabled): Promise<number>;
+    set_enabled(newval: YGenericSensor.ENABLED): Promise<number>;
     /**
      * Retrieves a generic sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -341,7 +322,7 @@ export declare class YGenericSensor extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YGenericSensorValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YGenericSensor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -354,7 +335,7 @@ export declare class YGenericSensor extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YGenericSensorTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YGenericSensor.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Adjusts the signal bias so that the current signal value is need
@@ -399,4 +380,25 @@ export declare class YGenericSensor extends YSensor {
      *         if there are none.
      */
     static FirstGenericSensorInContext(yctx: YAPIContext): YGenericSensor | null;
+}
+export declare namespace YGenericSensor {
+    const enum SIGNALSAMPLING {
+        HIGH_RATE = 0,
+        HIGH_RATE_FILTERED = 1,
+        LOW_NOISE = 2,
+        LOW_NOISE_FILTERED = 3,
+        HIGHEST_RATE = 4,
+        INVALID = -1
+    }
+    const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YGenericSensor, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YGenericSensor, measure: YMeasure): void;
+    }
 }

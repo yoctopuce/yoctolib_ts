@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_proximity.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YProximity = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YProximity definitions)
 //--- (YProximity class start)
 /**
  * YProximity Class: proximity sensor control interface, available for instance in the Yocto-Proximity
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YProximity class start)
 class YProximity extends yocto_api_js_1.YSensor {
     //--- (end of YProximity attributes declaration)
-    //--- (YProximity return codes)
-    //--- (end of YProximity return codes)
     constructor(yapi, func) {
         //--- (YProximity constructor)
         super(yapi, func);
@@ -78,17 +75,17 @@ class YProximity extends yocto_api_js_1.YSensor {
         this.DETECTIONHYSTERESIS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.PRESENCEMINTIME_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.REMOVALMINTIME_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.ISPRESENT_FALSE = 0 /* FALSE */;
-        this.ISPRESENT_TRUE = 1 /* TRUE */;
-        this.ISPRESENT_INVALID = -1 /* INVALID */;
+        this.ISPRESENT_FALSE = 0;
+        this.ISPRESENT_TRUE = 1;
+        this.ISPRESENT_INVALID = -1;
         this.LASTTIMEAPPROACHED_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.LASTTIMEREMOVED_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.PULSECOUNTER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-        this.PROXIMITYREPORTMODE_NUMERIC = 0 /* NUMERIC */;
-        this.PROXIMITYREPORTMODE_PRESENCE = 1 /* PRESENCE */;
-        this.PROXIMITYREPORTMODE_PULSECOUNT = 2 /* PULSECOUNT */;
-        this.PROXIMITYREPORTMODE_INVALID = -1 /* INVALID */;
+        this.PROXIMITYREPORTMODE_NUMERIC = 0;
+        this.PROXIMITYREPORTMODE_PRESENCE = 1;
+        this.PROXIMITYREPORTMODE_PULSECOUNT = 2;
+        this.PROXIMITYREPORTMODE_INVALID = -1;
         this._className = 'Proximity';
         //--- (end of YProximity constructor)
     }
@@ -654,15 +651,15 @@ YProximity.DETECTIONTHRESHOLD_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YProximity.DETECTIONHYSTERESIS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YProximity.PRESENCEMINTIME_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YProximity.REMOVALMINTIME_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YProximity.ISPRESENT_FALSE = 0 /* FALSE */;
-YProximity.ISPRESENT_TRUE = 1 /* TRUE */;
-YProximity.ISPRESENT_INVALID = -1 /* INVALID */;
+YProximity.ISPRESENT_FALSE = 0;
+YProximity.ISPRESENT_TRUE = 1;
+YProximity.ISPRESENT_INVALID = -1;
 YProximity.LASTTIMEAPPROACHED_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YProximity.LASTTIMEREMOVED_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YProximity.PULSECOUNTER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YProximity.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-YProximity.PROXIMITYREPORTMODE_NUMERIC = 0 /* NUMERIC */;
-YProximity.PROXIMITYREPORTMODE_PRESENCE = 1 /* PRESENCE */;
-YProximity.PROXIMITYREPORTMODE_PULSECOUNT = 2 /* PULSECOUNT */;
-YProximity.PROXIMITYREPORTMODE_INVALID = -1 /* INVALID */;
+YProximity.PROXIMITYREPORTMODE_NUMERIC = 0;
+YProximity.PROXIMITYREPORTMODE_PRESENCE = 1;
+YProximity.PROXIMITYREPORTMODE_PULSECOUNT = 2;
+YProximity.PROXIMITYREPORTMODE_INVALID = -1;
 //# sourceMappingURL=yocto_proximity.js.map

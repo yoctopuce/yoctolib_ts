@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -39,15 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YRealTimeClock definitions)
-export const enum YRealTimeClock_TimeSet {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YRealTimeClockValueCallback { (func: YRealTimeClock, value: string): void }
-//--- (end of YRealTimeClock definitions)
-
 //--- (YRealTimeClock class start)
 /**
  * YRealTimeClock Class: real-time clock control interface, available for instance in the
@@ -68,28 +59,25 @@ export class YRealTimeClock extends YFunction
     _unixTime: number = YRealTimeClock.UNIXTIME_INVALID;
     _dateTime: string = YRealTimeClock.DATETIME_INVALID;
     _utcOffset: number = YRealTimeClock.UTCOFFSET_INVALID;
-    _timeSet: YRealTimeClock_TimeSet = YRealTimeClock.TIMESET_INVALID;
-    _valueCallbackRealTimeClock: YRealTimeClockValueCallback | null = null;
+    _timeSet: YRealTimeClock.TIMESET = YRealTimeClock.TIMESET_INVALID;
+    _valueCallbackRealTimeClock: YRealTimeClock.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly UNIXTIME_INVALID: number = YAPI.INVALID_LONG;
     public readonly DATETIME_INVALID: string = YAPI.INVALID_STRING;
     public readonly UTCOFFSET_INVALID: number = YAPI.INVALID_INT;
-    public readonly TIMESET_FALSE: YRealTimeClock_TimeSet = YRealTimeClock_TimeSet.FALSE;
-    public readonly TIMESET_TRUE: YRealTimeClock_TimeSet = YRealTimeClock_TimeSet.TRUE;
-    public readonly TIMESET_INVALID: YRealTimeClock_TimeSet = YRealTimeClock_TimeSet.INVALID;
+    public readonly TIMESET_FALSE: YRealTimeClock.TIMESET = 0;
+    public readonly TIMESET_TRUE: YRealTimeClock.TIMESET = 1;
+    public readonly TIMESET_INVALID: YRealTimeClock.TIMESET = -1;
 
     // API symbols as static members
     public static readonly UNIXTIME_INVALID: number = YAPI.INVALID_LONG;
     public static readonly DATETIME_INVALID: string = YAPI.INVALID_STRING;
     public static readonly UTCOFFSET_INVALID: number = YAPI.INVALID_INT;
-    public static readonly TIMESET_FALSE: YRealTimeClock_TimeSet = YRealTimeClock_TimeSet.FALSE;
-    public static readonly TIMESET_TRUE: YRealTimeClock_TimeSet = YRealTimeClock_TimeSet.TRUE;
-    public static readonly TIMESET_INVALID: YRealTimeClock_TimeSet = YRealTimeClock_TimeSet.INVALID;
+    public static readonly TIMESET_FALSE: YRealTimeClock.TIMESET = 0;
+    public static readonly TIMESET_TRUE: YRealTimeClock.TIMESET = 1;
+    public static readonly TIMESET_INVALID: YRealTimeClock.TIMESET = -1;
     //--- (end of YRealTimeClock attributes declaration)
-
-//--- (YRealTimeClock return codes)
-//--- (end of YRealTimeClock return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -114,7 +102,7 @@ export class YRealTimeClock extends YFunction
             this._utcOffset = <number> <number> val;
             return 1;
         case 'timeSet':
-            this._timeSet = <YRealTimeClock_TimeSet> <number> val;
+            this._timeSet = <YRealTimeClock.TIMESET> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -221,7 +209,7 @@ export class YRealTimeClock extends YFunction
      *
      * On failure, throws an exception or returns YRealTimeClock.TIMESET_INVALID.
      */
-    async get_timeSet(): Promise<YRealTimeClock_TimeSet>
+    async get_timeSet(): Promise<YRealTimeClock.TIMESET>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -319,7 +307,7 @@ export class YRealTimeClock extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YRealTimeClockValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YRealTimeClock.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -406,5 +394,16 @@ export class YRealTimeClock extends YFunction
     }
 
     //--- (end of YRealTimeClock implementation)
+}
+
+export namespace YRealTimeClock {
+    //--- (YRealTimeClock definitions)
+    export const enum TIMESET {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YRealTimeClock, value: string): void }
+    //--- (end of YRealTimeClock definitions)
 }
 

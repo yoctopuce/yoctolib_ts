@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_longitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_longitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YLongitudeValueCallback {
-    (func: YLongitude, value: string): void;
-}
-export interface YLongitudeTimedReportCallback {
-    (func: YLongitude, measure: YMeasure): void;
-}
 /**
  * YLongitude Class: longitude sensor control interface, available for instance in the Yocto-GPS-V2
  *
@@ -52,8 +46,8 @@ export interface YLongitudeTimedReportCallback {
  */
 export declare class YLongitude extends YSensor {
     _className: string;
-    _valueCallbackLongitude: YLongitudeValueCallback | null;
-    _timedReportCallbackLongitude: YLongitudeTimedReportCallback | null;
+    _valueCallbackLongitude: YLongitude.ValueCallback | null;
+    _timedReportCallbackLongitude: YLongitude.TimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
      * Retrieves a longitude sensor for a given identifier.
@@ -121,7 +115,7 @@ export declare class YLongitude extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YLongitudeValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YLongitude.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -134,7 +128,7 @@ export declare class YLongitude extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YLongitudeTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YLongitude.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of longitude sensors started using yFirstLongitude().
@@ -169,4 +163,12 @@ export declare class YLongitude extends YSensor {
      *         if there are none.
      */
     static FirstLongitudeInContext(yctx: YAPIContext): YLongitude | null;
+}
+export declare namespace YLongitude {
+    interface ValueCallback {
+        (func: YLongitude, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YLongitude, measure: YMeasure): void;
+    }
 }

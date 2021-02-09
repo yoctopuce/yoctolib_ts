@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_humidity.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YHumidityValueCallback {
-    (func: YHumidity, value: string): void;
-}
-export interface YHumidityTimedReportCallback {
-    (func: YHumidity, measure: YMeasure): void;
-}
 /**
  * YHumidity Class: humidity sensor control interface, available for instance in the Yocto-CO2-V2, the
  * Yocto-Meteo-V2 or the Yocto-VOC-V3
@@ -55,8 +49,8 @@ export declare class YHumidity extends YSensor {
     _className: string;
     _relHum: number;
     _absHum: number;
-    _valueCallbackHumidity: YHumidityValueCallback | null;
-    _timedReportCallbackHumidity: YHumidityTimedReportCallback | null;
+    _valueCallbackHumidity: YHumidity.ValueCallback | null;
+    _timedReportCallbackHumidity: YHumidity.TimedReportCallback | null;
     readonly RELHUM_INVALID: number;
     readonly ABSHUM_INVALID: number;
     static readonly RELHUM_INVALID: number;
@@ -161,7 +155,7 @@ export declare class YHumidity extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YHumidityValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YHumidity.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -174,7 +168,7 @@ export declare class YHumidity extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YHumidityTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YHumidity.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of humidity sensors started using yFirstHumidity().
@@ -209,4 +203,12 @@ export declare class YHumidity extends YSensor {
      *         if there are none.
      */
     static FirstHumidityInContext(yctx: YAPIContext): YHumidity | null;
+}
+export declare namespace YHumidity {
+    interface ValueCallback {
+        (func: YHumidity, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YHumidity, measure: YMeasure): void;
+    }
 }

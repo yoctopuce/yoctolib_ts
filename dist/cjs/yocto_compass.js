@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_compass.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YCompass = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YCompass definitions)
 //--- (YCompass class start)
 /**
  * YCompass Class: compass function control interface, available for instance in the Yocto-3D-V2
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YCompass class start)
 class YCompass extends yocto_api_js_1.YSensor {
     //--- (end of YCompass attributes declaration)
-    //--- (YCompass return codes)
-    //--- (end of YCompass return codes)
     constructor(yapi, func) {
         //--- (YCompass constructor)
         super(yapi, func);
@@ -64,10 +61,10 @@ class YCompass extends yocto_api_js_1.YSensor {
         this._timedReportCallbackCompass = null;
         // API symbols as object properties
         this.BANDWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.AXIS_X = 0 /* X */;
-        this.AXIS_Y = 1 /* Y */;
-        this.AXIS_Z = 2 /* Z */;
-        this.AXIS_INVALID = -1 /* INVALID */;
+        this.AXIS_X = 0;
+        this.AXIS_Y = 1;
+        this.AXIS_Z = 2;
+        this.AXIS_INVALID = -1;
         this.MAGNETICHEADING_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this._className = 'Compass';
         //--- (end of YCompass constructor)
@@ -354,9 +351,9 @@ class YCompass extends yocto_api_js_1.YSensor {
 exports.YCompass = YCompass;
 // API symbols as static members
 YCompass.BANDWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YCompass.AXIS_X = 0 /* X */;
-YCompass.AXIS_Y = 1 /* Y */;
-YCompass.AXIS_Z = 2 /* Z */;
-YCompass.AXIS_INVALID = -1 /* INVALID */;
+YCompass.AXIS_X = 0;
+YCompass.AXIS_Y = 1;
+YCompass.AXIS_Z = 2;
+YCompass.AXIS_INVALID = -1;
 YCompass.MAGNETICHEADING_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 //# sourceMappingURL=yocto_compass.js.map

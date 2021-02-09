@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_serialport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -37,8 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (generated code: YSnoopingRecord definitions)
-//--- (end of generated code: YSnoopingRecord definitions)
 //--- (generated code: YSnoopingRecord class start)
 /**
  * YSnoopingRecord Class: Intercepted serial message description, returned by serialPort.snoopMessages method
@@ -87,7 +85,6 @@ export class YSnoopingRecord {
         return this._msg;
     }
 }
-//--- (end of generated code: YSerialPort definitions)
 //--- (generated code: YSerialPort class start)
 /**
  * YSerialPort Class: serial port control interface, available for instance in the Yocto-RS232, the
@@ -137,15 +134,15 @@ export class YSerialPort extends YFunction {
         this.JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this.PROTOCOL_INVALID = YAPI.INVALID_STRING;
-        this.VOLTAGELEVEL_OFF = 0 /* OFF */;
-        this.VOLTAGELEVEL_TTL3V = 1 /* TTL3V */;
-        this.VOLTAGELEVEL_TTL3VR = 2 /* TTL3VR */;
-        this.VOLTAGELEVEL_TTL5V = 3 /* TTL5V */;
-        this.VOLTAGELEVEL_TTL5VR = 4 /* TTL5VR */;
-        this.VOLTAGELEVEL_RS232 = 5 /* RS232 */;
-        this.VOLTAGELEVEL_RS485 = 6 /* RS485 */;
-        this.VOLTAGELEVEL_TTL1V8 = 7 /* TTL1V8 */;
-        this.VOLTAGELEVEL_INVALID = -1 /* INVALID */;
+        this.VOLTAGELEVEL_OFF = 0;
+        this.VOLTAGELEVEL_TTL3V = 1;
+        this.VOLTAGELEVEL_TTL3VR = 2;
+        this.VOLTAGELEVEL_TTL5V = 3;
+        this.VOLTAGELEVEL_TTL5VR = 4;
+        this.VOLTAGELEVEL_RS232 = 5;
+        this.VOLTAGELEVEL_RS485 = 6;
+        this.VOLTAGELEVEL_TTL1V8 = 7;
+        this.VOLTAGELEVEL_INVALID = -1;
         this.SERIALMODE_INVALID = YAPI.INVALID_STRING;
         this._className = 'SerialPort';
         //--- (end of generated code: YSerialPort constructor)
@@ -1942,14 +1939,14 @@ YSerialPort.JOBMAXTASK_INVALID = YAPI.INVALID_UINT;
 YSerialPort.JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
 YSerialPort.COMMAND_INVALID = YAPI.INVALID_STRING;
 YSerialPort.PROTOCOL_INVALID = YAPI.INVALID_STRING;
-YSerialPort.VOLTAGELEVEL_OFF = 0 /* OFF */;
-YSerialPort.VOLTAGELEVEL_TTL3V = 1 /* TTL3V */;
-YSerialPort.VOLTAGELEVEL_TTL3VR = 2 /* TTL3VR */;
-YSerialPort.VOLTAGELEVEL_TTL5V = 3 /* TTL5V */;
-YSerialPort.VOLTAGELEVEL_TTL5VR = 4 /* TTL5VR */;
-YSerialPort.VOLTAGELEVEL_RS232 = 5 /* RS232 */;
-YSerialPort.VOLTAGELEVEL_RS485 = 6 /* RS485 */;
-YSerialPort.VOLTAGELEVEL_TTL1V8 = 7 /* TTL1V8 */;
-YSerialPort.VOLTAGELEVEL_INVALID = -1 /* INVALID */;
+YSerialPort.VOLTAGELEVEL_OFF = 0;
+YSerialPort.VOLTAGELEVEL_TTL3V = 1;
+YSerialPort.VOLTAGELEVEL_TTL3VR = 2;
+YSerialPort.VOLTAGELEVEL_TTL5V = 3;
+YSerialPort.VOLTAGELEVEL_TTL5VR = 4;
+YSerialPort.VOLTAGELEVEL_RS232 = 5;
+YSerialPort.VOLTAGELEVEL_RS485 = 6;
+YSerialPort.VOLTAGELEVEL_TTL1V8 = 7;
+YSerialPort.VOLTAGELEVEL_INVALID = -1;
 YSerialPort.SERIALMODE_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_serialport.js.map

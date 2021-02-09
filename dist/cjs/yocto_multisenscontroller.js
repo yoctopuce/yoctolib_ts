@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YMultiSensController = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YMultiSensController definitions)
 //--- (YMultiSensController class start)
 /**
  * YMultiSensController Class: Sensor chain configuration interface, available for instance in the
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YMultiSensController class start)
 class YMultiSensController extends yocto_api_js_1.YFunction {
     //--- (end of YMultiSensController attributes declaration)
-    //--- (YMultiSensController return codes)
-    //--- (end of YMultiSensController return codes)
     constructor(yapi, func) {
         //--- (YMultiSensController constructor)
         super(yapi, func);
@@ -65,9 +62,9 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         // API symbols as object properties
         this.NSENSORS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.MAXSENSORS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.MAINTENANCEMODE_FALSE = 0 /* FALSE */;
-        this.MAINTENANCEMODE_TRUE = 1 /* TRUE */;
-        this.MAINTENANCEMODE_INVALID = -1 /* INVALID */;
+        this.MAINTENANCEMODE_FALSE = 0;
+        this.MAINTENANCEMODE_TRUE = 1;
+        this.MAINTENANCEMODE_INVALID = -1;
         this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this._className = 'MultiSensController';
         //--- (end of YMultiSensController constructor)
@@ -382,8 +379,8 @@ exports.YMultiSensController = YMultiSensController;
 // API symbols as static members
 YMultiSensController.NSENSORS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YMultiSensController.MAXSENSORS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YMultiSensController.MAINTENANCEMODE_FALSE = 0 /* FALSE */;
-YMultiSensController.MAINTENANCEMODE_TRUE = 1 /* TRUE */;
-YMultiSensController.MAINTENANCEMODE_INVALID = -1 /* INVALID */;
+YMultiSensController.MAINTENANCEMODE_FALSE = 0;
+YMultiSensController.MAINTENANCEMODE_TRUE = 1;
+YMultiSensController.MAINTENANCEMODE_INVALID = -1;
 YMultiSensController.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_multisenscontroller.js.map

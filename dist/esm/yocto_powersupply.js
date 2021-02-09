@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YPowerSupply definitions)
 //--- (YPowerSupply class start)
 /**
  * YPowerSupply Class: regulated power supply control interface
@@ -49,8 +48,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YPowerSupply class start)
 export class YPowerSupply extends YFunction {
     //--- (end of YPowerSupply attributes declaration)
-    //--- (YPowerSupply return codes)
-    //--- (end of YPowerSupply return codes)
     constructor(yapi, func) {
         //--- (YPowerSupply constructor)
         super(yapi, func);
@@ -71,12 +68,12 @@ export class YPowerSupply extends YFunction {
         // API symbols as object properties
         this.VOLTAGESETPOINT_INVALID = YAPI.INVALID_DOUBLE;
         this.CURRENTLIMIT_INVALID = YAPI.INVALID_DOUBLE;
-        this.POWEROUTPUT_OFF = 0 /* OFF */;
-        this.POWEROUTPUT_ON = 1 /* ON */;
-        this.POWEROUTPUT_INVALID = -1 /* INVALID */;
-        this.VOLTAGESENSE_INT = 0 /* INT */;
-        this.VOLTAGESENSE_EXT = 1 /* EXT */;
-        this.VOLTAGESENSE_INVALID = -1 /* INVALID */;
+        this.POWEROUTPUT_OFF = 0;
+        this.POWEROUTPUT_ON = 1;
+        this.POWEROUTPUT_INVALID = -1;
+        this.VOLTAGESENSE_INT = 0;
+        this.VOLTAGESENSE_EXT = 1;
+        this.VOLTAGESENSE_INVALID = -1;
         this.MEASUREDVOLTAGE_INVALID = YAPI.INVALID_DOUBLE;
         this.MEASUREDCURRENT_INVALID = YAPI.INVALID_DOUBLE;
         this.INPUTVOLTAGE_INVALID = YAPI.INVALID_DOUBLE;
@@ -628,12 +625,12 @@ export class YPowerSupply extends YFunction {
 // API symbols as static members
 YPowerSupply.VOLTAGESETPOINT_INVALID = YAPI.INVALID_DOUBLE;
 YPowerSupply.CURRENTLIMIT_INVALID = YAPI.INVALID_DOUBLE;
-YPowerSupply.POWEROUTPUT_OFF = 0 /* OFF */;
-YPowerSupply.POWEROUTPUT_ON = 1 /* ON */;
-YPowerSupply.POWEROUTPUT_INVALID = -1 /* INVALID */;
-YPowerSupply.VOLTAGESENSE_INT = 0 /* INT */;
-YPowerSupply.VOLTAGESENSE_EXT = 1 /* EXT */;
-YPowerSupply.VOLTAGESENSE_INVALID = -1 /* INVALID */;
+YPowerSupply.POWEROUTPUT_OFF = 0;
+YPowerSupply.POWEROUTPUT_ON = 1;
+YPowerSupply.POWEROUTPUT_INVALID = -1;
+YPowerSupply.VOLTAGESENSE_INT = 0;
+YPowerSupply.VOLTAGESENSE_EXT = 1;
+YPowerSupply.VOLTAGESENSE_INVALID = -1;
 YPowerSupply.MEASUREDVOLTAGE_INVALID = YAPI.INVALID_DOUBLE;
 YPowerSupply.MEASUREDCURRENT_INVALID = YAPI.INVALID_DOUBLE;
 YPowerSupply.INPUTVOLTAGE_INVALID = YAPI.INVALID_DOUBLE;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pressure.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pressure.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YPressureValueCallback {
-    (func: YPressure, value: string): void;
-}
-export interface YPressureTimedReportCallback {
-    (func: YPressure, measure: YMeasure): void;
-}
 /**
  * YPressure Class: pressure sensor control interface, available for instance in the
  * Yocto-Altimeter-V2, the Yocto-CO2-V2, the Yocto-Meteo-V2 or the Yocto-Pressure
@@ -53,8 +47,8 @@ export interface YPressureTimedReportCallback {
  */
 export declare class YPressure extends YSensor {
     _className: string;
-    _valueCallbackPressure: YPressureValueCallback | null;
-    _timedReportCallbackPressure: YPressureTimedReportCallback | null;
+    _valueCallbackPressure: YPressure.ValueCallback | null;
+    _timedReportCallbackPressure: YPressure.TimedReportCallback | null;
     constructor(yapi: YAPIContext, func: string);
     /**
      * Retrieves a pressure sensor for a given identifier.
@@ -122,7 +116,7 @@ export declare class YPressure extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YPressureValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YPressure.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -135,7 +129,7 @@ export declare class YPressure extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YPressureTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YPressure.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of pressure sensors started using yFirstPressure().
@@ -170,4 +164,12 @@ export declare class YPressure extends YSensor {
      *         if there are none.
      */
     static FirstPressureInContext(yctx: YAPIContext): YPressure | null;
+}
+export declare namespace YPressure {
+    interface ValueCallback {
+        (func: YPressure, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YPressure, measure: YMeasure): void;
+    }
 }

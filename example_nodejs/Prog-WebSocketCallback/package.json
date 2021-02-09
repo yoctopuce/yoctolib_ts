@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-prog-websocketcallback",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-WebSocketCallback",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

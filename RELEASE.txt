@@ -1,3 +1,5 @@
-TypeScript v1.10.43583
+TypeScript v1.10.43781
 
-- Fix wrong build number
+use api version 1.0
+- move class-specific interfaces to a namespace identical to the class name, for easier import
+- improve documentation

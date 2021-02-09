@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_led.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_led.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Led functions
  *
@@ -37,23 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YLed_Power {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YLed_Blinking {
-    STILL = 0,
-    RELAX = 1,
-    AWARE = 2,
-    RUN = 3,
-    CALL = 4,
-    PANIC = 5,
-    INVALID = -1
-}
-export interface YLedValueCallback {
-    (func: YLed, value: string): void;
-}
 /**
  * YLed Class: monochrome LED control interface, available for instance in the Yocto-Buzzer, the
  * YoctoBox-Short-Thin-Black-Prox, the YoctoBox-Short-Thin-Transp or the YoctoBox-Short-Thin-Transp-Prox
@@ -64,32 +47,32 @@ export interface YLedValueCallback {
  */
 export declare class YLed extends YFunction {
     _className: string;
-    _power: YLed_Power;
+    _power: YLed.POWER;
     _luminosity: number;
-    _blinking: YLed_Blinking;
-    _valueCallbackLed: YLedValueCallback | null;
-    readonly POWER_OFF: YLed_Power;
-    readonly POWER_ON: YLed_Power;
-    readonly POWER_INVALID: YLed_Power;
+    _blinking: YLed.BLINKING;
+    _valueCallbackLed: YLed.ValueCallback | null;
+    readonly POWER_OFF: YLed.POWER;
+    readonly POWER_ON: YLed.POWER;
+    readonly POWER_INVALID: YLed.POWER;
     readonly LUMINOSITY_INVALID: number;
-    readonly BLINKING_STILL: YLed_Blinking;
-    readonly BLINKING_RELAX: YLed_Blinking;
-    readonly BLINKING_AWARE: YLed_Blinking;
-    readonly BLINKING_RUN: YLed_Blinking;
-    readonly BLINKING_CALL: YLed_Blinking;
-    readonly BLINKING_PANIC: YLed_Blinking;
-    readonly BLINKING_INVALID: YLed_Blinking;
-    static readonly POWER_OFF: YLed_Power;
-    static readonly POWER_ON: YLed_Power;
-    static readonly POWER_INVALID: YLed_Power;
+    readonly BLINKING_STILL: YLed.BLINKING;
+    readonly BLINKING_RELAX: YLed.BLINKING;
+    readonly BLINKING_AWARE: YLed.BLINKING;
+    readonly BLINKING_RUN: YLed.BLINKING;
+    readonly BLINKING_CALL: YLed.BLINKING;
+    readonly BLINKING_PANIC: YLed.BLINKING;
+    readonly BLINKING_INVALID: YLed.BLINKING;
+    static readonly POWER_OFF: YLed.POWER;
+    static readonly POWER_ON: YLed.POWER;
+    static readonly POWER_INVALID: YLed.POWER;
     static readonly LUMINOSITY_INVALID: number;
-    static readonly BLINKING_STILL: YLed_Blinking;
-    static readonly BLINKING_RELAX: YLed_Blinking;
-    static readonly BLINKING_AWARE: YLed_Blinking;
-    static readonly BLINKING_RUN: YLed_Blinking;
-    static readonly BLINKING_CALL: YLed_Blinking;
-    static readonly BLINKING_PANIC: YLed_Blinking;
-    static readonly BLINKING_INVALID: YLed_Blinking;
+    static readonly BLINKING_STILL: YLed.BLINKING;
+    static readonly BLINKING_RELAX: YLed.BLINKING;
+    static readonly BLINKING_AWARE: YLed.BLINKING;
+    static readonly BLINKING_RUN: YLed.BLINKING;
+    static readonly BLINKING_CALL: YLed.BLINKING;
+    static readonly BLINKING_PANIC: YLed.BLINKING;
+    static readonly BLINKING_INVALID: YLed.BLINKING;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -99,7 +82,7 @@ export declare class YLed extends YFunction {
      *
      * On failure, throws an exception or returns YLed.POWER_INVALID.
      */
-    get_power(): Promise<YLed_Power>;
+    get_power(): Promise<YLed.POWER>;
     /**
      * Changes the state of the LED.
      *
@@ -109,7 +92,7 @@ export declare class YLed extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_power(newval: YLed_Power): Promise<number>;
+    set_power(newval: YLed.POWER): Promise<number>;
     /**
      * Returns the current LED intensity (in per cent).
      *
@@ -137,7 +120,7 @@ export declare class YLed extends YFunction {
      *
      * On failure, throws an exception or returns YLed.BLINKING_INVALID.
      */
-    get_blinking(): Promise<YLed_Blinking>;
+    get_blinking(): Promise<YLed.BLINKING>;
     /**
      * Changes the current LED signaling mode.
      *
@@ -148,7 +131,7 @@ export declare class YLed extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_blinking(newval: YLed_Blinking): Promise<number>;
+    set_blinking(newval: YLed.BLINKING): Promise<number>;
     /**
      * Retrieves a monochrome LED for a given identifier.
      * The identifier can be specified using several formats:
@@ -215,7 +198,7 @@ export declare class YLed extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YLedValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YLed.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of monochrome LEDs started using yFirstLed().
@@ -250,4 +233,23 @@ export declare class YLed extends YFunction {
      *         if there are none.
      */
     static FirstLedInContext(yctx: YAPIContext): YLed | null;
+}
+export declare namespace YLed {
+    const enum POWER {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    const enum BLINKING {
+        STILL = 0,
+        RELAX = 1,
+        AWARE = 2,
+        RUN = 3,
+        CALL = 4,
+        PANIC = 5,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YLed, value: string): void;
+    }
 }

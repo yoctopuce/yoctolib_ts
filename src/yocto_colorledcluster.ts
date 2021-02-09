@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -39,15 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YColorLedCluster definitions)
-export const enum YColorLedCluster_LedType {
-    RGB = 0,
-    RGBW = 1,
-    INVALID = -1
-}
-export interface YColorLedClusterValueCallback { (func: YColorLedCluster, value: string): void }
-//--- (end of YColorLedCluster definitions)
-
 //--- (YColorLedCluster class start)
 /**
  * YColorLedCluster Class: RGB LED cluster control interface, available for instance in the
@@ -69,18 +60,18 @@ export class YColorLedCluster extends YFunction
     //--- (YColorLedCluster attributes declaration)
     _className: string;
     _activeLedCount: number = YColorLedCluster.ACTIVELEDCOUNT_INVALID;
-    _ledType: YColorLedCluster_LedType = YColorLedCluster.LEDTYPE_INVALID;
+    _ledType: YColorLedCluster.LEDTYPE = YColorLedCluster.LEDTYPE_INVALID;
     _maxLedCount: number = YColorLedCluster.MAXLEDCOUNT_INVALID;
     _blinkSeqMaxCount: number = YColorLedCluster.BLINKSEQMAXCOUNT_INVALID;
     _blinkSeqMaxSize: number = YColorLedCluster.BLINKSEQMAXSIZE_INVALID;
     _command: string = YColorLedCluster.COMMAND_INVALID;
-    _valueCallbackColorLedCluster: YColorLedClusterValueCallback | null = null;
+    _valueCallbackColorLedCluster: YColorLedCluster.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly ACTIVELEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
-    public readonly LEDTYPE_RGB: YColorLedCluster_LedType = YColorLedCluster_LedType.RGB;
-    public readonly LEDTYPE_RGBW: YColorLedCluster_LedType = YColorLedCluster_LedType.RGBW;
-    public readonly LEDTYPE_INVALID: YColorLedCluster_LedType = YColorLedCluster_LedType.INVALID;
+    public readonly LEDTYPE_RGB: YColorLedCluster.LEDTYPE = 0;
+    public readonly LEDTYPE_RGBW: YColorLedCluster.LEDTYPE = 1;
+    public readonly LEDTYPE_INVALID: YColorLedCluster.LEDTYPE = -1;
     public readonly MAXLEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly BLINKSEQMAXCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly BLINKSEQMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
@@ -88,17 +79,14 @@ export class YColorLedCluster extends YFunction
 
     // API symbols as static members
     public static readonly ACTIVELEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly LEDTYPE_RGB: YColorLedCluster_LedType = YColorLedCluster_LedType.RGB;
-    public static readonly LEDTYPE_RGBW: YColorLedCluster_LedType = YColorLedCluster_LedType.RGBW;
-    public static readonly LEDTYPE_INVALID: YColorLedCluster_LedType = YColorLedCluster_LedType.INVALID;
+    public static readonly LEDTYPE_RGB: YColorLedCluster.LEDTYPE = 0;
+    public static readonly LEDTYPE_RGBW: YColorLedCluster.LEDTYPE = 1;
+    public static readonly LEDTYPE_INVALID: YColorLedCluster.LEDTYPE = -1;
     public static readonly MAXLEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly BLINKSEQMAXCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly BLINKSEQMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YColorLedCluster attributes declaration)
-
-//--- (YColorLedCluster return codes)
-//--- (end of YColorLedCluster return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -117,7 +105,7 @@ export class YColorLedCluster extends YFunction
             this._activeLedCount = <number> <number> val;
             return 1;
         case 'ledType':
-            this._ledType = <YColorLedCluster_LedType> <number> val;
+            this._ledType = <YColorLedCluster.LEDTYPE> <number> val;
             return 1;
         case 'maxLedCount':
             this._maxLedCount = <number> <number> val;
@@ -180,7 +168,7 @@ export class YColorLedCluster extends YFunction
      *
      * On failure, throws an exception or returns YColorLedCluster.LEDTYPE_INVALID.
      */
-    async get_ledType(): Promise<YColorLedCluster_LedType>
+    async get_ledType(): Promise<YColorLedCluster.LEDTYPE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -204,7 +192,7 @@ export class YColorLedCluster extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_ledType(newval: YColorLedCluster_LedType): Promise<number>
+    async set_ledType(newval: YColorLedCluster.LEDTYPE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -373,7 +361,7 @@ export class YColorLedCluster extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YColorLedClusterValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YColorLedCluster.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -1375,5 +1363,16 @@ export class YColorLedCluster extends YFunction
     }
 
     //--- (end of YColorLedCluster implementation)
+}
+
+export namespace YColorLedCluster {
+    //--- (YColorLedCluster definitions)
+    export const enum LEDTYPE {
+        RGB = 0,
+        RGBW = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YColorLedCluster, value: string): void }
+    //--- (end of YColorLedCluster definitions)
 }
 

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_gyro.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -270,7 +270,6 @@ class YQt extends yocto_api_js_1.YSensor {
     }
 }
 exports.YQt = YQt;
-//--- (end of generated code: YGyro definitions)
 async function yInternalGyroCallback(YQt_obj, str_value) {
     var gyro = await YQt_obj.get_userData();
     if (!gyro)

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -37,21 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YLightSensor_MeasureType {
-    HUMAN_EYE = 0,
-    WIDE_SPECTRUM = 1,
-    INFRARED = 2,
-    HIGH_RATE = 3,
-    HIGH_ENERGY = 4,
-    HIGH_RESOLUTION = 5,
-    INVALID = -1
-}
-export interface YLightSensorValueCallback {
-    (func: YLightSensor, value: string): void;
-}
-export interface YLightSensorTimedReportCallback {
-    (func: YLightSensor, measure: YMeasure): void;
-}
 /**
  * YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V3,
  * the Yocto-Proximity or the Yocto-RangeFinder
@@ -66,23 +51,23 @@ export interface YLightSensorTimedReportCallback {
  */
 export declare class YLightSensor extends YSensor {
     _className: string;
-    _measureType: YLightSensor_MeasureType;
-    _valueCallbackLightSensor: YLightSensorValueCallback | null;
-    _timedReportCallbackLightSensor: YLightSensorTimedReportCallback | null;
-    readonly MEASURETYPE_HUMAN_EYE: YLightSensor_MeasureType;
-    readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor_MeasureType;
-    readonly MEASURETYPE_INFRARED: YLightSensor_MeasureType;
-    readonly MEASURETYPE_HIGH_RATE: YLightSensor_MeasureType;
-    readonly MEASURETYPE_HIGH_ENERGY: YLightSensor_MeasureType;
-    readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor_MeasureType;
-    readonly MEASURETYPE_INVALID: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_HUMAN_EYE: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_INFRARED: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_HIGH_RATE: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_HIGH_ENERGY: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor_MeasureType;
-    static readonly MEASURETYPE_INVALID: YLightSensor_MeasureType;
+    _measureType: YLightSensor.MEASURETYPE;
+    _valueCallbackLightSensor: YLightSensor.ValueCallback | null;
+    _timedReportCallbackLightSensor: YLightSensor.TimedReportCallback | null;
+    readonly MEASURETYPE_HUMAN_EYE: YLightSensor.MEASURETYPE;
+    readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor.MEASURETYPE;
+    readonly MEASURETYPE_INFRARED: YLightSensor.MEASURETYPE;
+    readonly MEASURETYPE_HIGH_RATE: YLightSensor.MEASURETYPE;
+    readonly MEASURETYPE_HIGH_ENERGY: YLightSensor.MEASURETYPE;
+    readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor.MEASURETYPE;
+    readonly MEASURETYPE_INVALID: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_HUMAN_EYE: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_INFRARED: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_HIGH_RATE: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_HIGH_ENERGY: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor.MEASURETYPE;
+    static readonly MEASURETYPE_INVALID: YLightSensor.MEASURETYPE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     set_currentValue(newval: number): Promise<number>;
@@ -110,7 +95,7 @@ export declare class YLightSensor extends YSensor {
      *
      * On failure, throws an exception or returns YLightSensor.MEASURETYPE_INVALID.
      */
-    get_measureType(): Promise<YLightSensor_MeasureType>;
+    get_measureType(): Promise<YLightSensor.MEASURETYPE>;
     /**
      * Changes the light sensor type used in the device. The measure can either
      * approximate the response of the human eye, focus on a specific light
@@ -127,7 +112,7 @@ export declare class YLightSensor extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_measureType(newval: YLightSensor_MeasureType): Promise<number>;
+    set_measureType(newval: YLightSensor.MEASURETYPE): Promise<number>;
     /**
      * Retrieves a light sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -194,7 +179,7 @@ export declare class YLightSensor extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YLightSensorValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YLightSensor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -207,7 +192,7 @@ export declare class YLightSensor extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YLightSensorTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YLightSensor.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of light sensors started using yFirstLightSensor().
@@ -242,4 +227,21 @@ export declare class YLightSensor extends YSensor {
      *         if there are none.
      */
     static FirstLightSensorInContext(yctx: YAPIContext): YLightSensor | null;
+}
+export declare namespace YLightSensor {
+    const enum MEASURETYPE {
+        HUMAN_EYE = 0,
+        WIDE_SPECTRUM = 1,
+        INFRARED = 2,
+        HIGH_RATE = 3,
+        HIGH_ENERGY = 4,
+        HIGH_RESOLUTION = 5,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YLightSensor, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YLightSensor, measure: YMeasure): void;
+    }
 }

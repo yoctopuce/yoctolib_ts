@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwmoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -39,20 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPwmOutput definitions)
-export const enum YPwmOutput_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export const enum YPwmOutput_EnabledAtPowerOn {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YPwmOutputValueCallback { (func: YPwmOutput, value: string): void }
-//--- (end of YPwmOutput definitions)
-
 //--- (YPwmOutput class start)
 /**
  * YPwmOutput Class: PWM generator control interface, available for instance in the Yocto-PWM-Tx
@@ -67,47 +53,44 @@ export class YPwmOutput extends YFunction
 {
     //--- (YPwmOutput attributes declaration)
     _className: string;
-    _enabled: YPwmOutput_Enabled = YPwmOutput.ENABLED_INVALID;
+    _enabled: YPwmOutput.ENABLED = YPwmOutput.ENABLED_INVALID;
     _frequency: number = YPwmOutput.FREQUENCY_INVALID;
     _period: number = YPwmOutput.PERIOD_INVALID;
     _dutyCycle: number = YPwmOutput.DUTYCYCLE_INVALID;
     _pulseDuration: number = YPwmOutput.PULSEDURATION_INVALID;
     _pwmTransition: string = YPwmOutput.PWMTRANSITION_INVALID;
-    _enabledAtPowerOn: YPwmOutput_EnabledAtPowerOn = YPwmOutput.ENABLEDATPOWERON_INVALID;
+    _enabledAtPowerOn: YPwmOutput.ENABLEDATPOWERON = YPwmOutput.ENABLEDATPOWERON_INVALID;
     _dutyCycleAtPowerOn: number = YPwmOutput.DUTYCYCLEATPOWERON_INVALID;
-    _valueCallbackPwmOutput: YPwmOutputValueCallback | null = null;
+    _valueCallbackPwmOutput: YPwmOutput.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly ENABLED_FALSE: YPwmOutput_Enabled = YPwmOutput_Enabled.FALSE;
-    public readonly ENABLED_TRUE: YPwmOutput_Enabled = YPwmOutput_Enabled.TRUE;
-    public readonly ENABLED_INVALID: YPwmOutput_Enabled = YPwmOutput_Enabled.INVALID;
+    public readonly ENABLED_FALSE: YPwmOutput.ENABLED = 0;
+    public readonly ENABLED_TRUE: YPwmOutput.ENABLED = 1;
+    public readonly ENABLED_INVALID: YPwmOutput.ENABLED = -1;
     public readonly FREQUENCY_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PERIOD_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly DUTYCYCLE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PULSEDURATION_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PWMTRANSITION_INVALID: string = YAPI.INVALID_STRING;
-    public readonly ENABLEDATPOWERON_FALSE: YPwmOutput_EnabledAtPowerOn = YPwmOutput_EnabledAtPowerOn.FALSE;
-    public readonly ENABLEDATPOWERON_TRUE: YPwmOutput_EnabledAtPowerOn = YPwmOutput_EnabledAtPowerOn.TRUE;
-    public readonly ENABLEDATPOWERON_INVALID: YPwmOutput_EnabledAtPowerOn = YPwmOutput_EnabledAtPowerOn.INVALID;
+    public readonly ENABLEDATPOWERON_FALSE: YPwmOutput.ENABLEDATPOWERON = 0;
+    public readonly ENABLEDATPOWERON_TRUE: YPwmOutput.ENABLEDATPOWERON = 1;
+    public readonly ENABLEDATPOWERON_INVALID: YPwmOutput.ENABLEDATPOWERON = -1;
     public readonly DUTYCYCLEATPOWERON_INVALID: number = YAPI.INVALID_DOUBLE;
 
     // API symbols as static members
-    public static readonly ENABLED_FALSE: YPwmOutput_Enabled = YPwmOutput_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: YPwmOutput_Enabled = YPwmOutput_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: YPwmOutput_Enabled = YPwmOutput_Enabled.INVALID;
+    public static readonly ENABLED_FALSE: YPwmOutput.ENABLED = 0;
+    public static readonly ENABLED_TRUE: YPwmOutput.ENABLED = 1;
+    public static readonly ENABLED_INVALID: YPwmOutput.ENABLED = -1;
     public static readonly FREQUENCY_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PERIOD_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly DUTYCYCLE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PULSEDURATION_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PWMTRANSITION_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly ENABLEDATPOWERON_FALSE: YPwmOutput_EnabledAtPowerOn = YPwmOutput_EnabledAtPowerOn.FALSE;
-    public static readonly ENABLEDATPOWERON_TRUE: YPwmOutput_EnabledAtPowerOn = YPwmOutput_EnabledAtPowerOn.TRUE;
-    public static readonly ENABLEDATPOWERON_INVALID: YPwmOutput_EnabledAtPowerOn = YPwmOutput_EnabledAtPowerOn.INVALID;
+    public static readonly ENABLEDATPOWERON_FALSE: YPwmOutput.ENABLEDATPOWERON = 0;
+    public static readonly ENABLEDATPOWERON_TRUE: YPwmOutput.ENABLEDATPOWERON = 1;
+    public static readonly ENABLEDATPOWERON_INVALID: YPwmOutput.ENABLEDATPOWERON = -1;
     public static readonly DUTYCYCLEATPOWERON_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YPwmOutput attributes declaration)
-
-//--- (YPwmOutput return codes)
-//--- (end of YPwmOutput return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -123,7 +106,7 @@ export class YPwmOutput extends YFunction
     {
         switch(name) {
         case 'enabled':
-            this._enabled = <YPwmOutput_Enabled> <number> val;
+            this._enabled = <YPwmOutput.ENABLED> <number> val;
             return 1;
         case 'frequency':
             this._frequency = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -141,7 +124,7 @@ export class YPwmOutput extends YFunction
             this._pwmTransition = <string> <string> val;
             return 1;
         case 'enabledAtPowerOn':
-            this._enabledAtPowerOn = <YPwmOutput_EnabledAtPowerOn> <number> val;
+            this._enabledAtPowerOn = <YPwmOutput.ENABLEDATPOWERON> <number> val;
             return 1;
         case 'dutyCycleAtPowerOn':
             this._dutyCycleAtPowerOn = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -157,7 +140,7 @@ export class YPwmOutput extends YFunction
      *
      * On failure, throws an exception or returns YPwmOutput.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<YPwmOutput_Enabled>
+    async get_enabled(): Promise<YPwmOutput.ENABLED>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -178,7 +161,7 @@ export class YPwmOutput extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: YPwmOutput_Enabled): Promise<number>
+    async set_enabled(newval: YPwmOutput.ENABLED): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -364,7 +347,7 @@ export class YPwmOutput extends YFunction
      *
      * On failure, throws an exception or returns YPwmOutput.ENABLEDATPOWERON_INVALID.
      */
-    async get_enabledAtPowerOn(): Promise<YPwmOutput_EnabledAtPowerOn>
+    async get_enabledAtPowerOn(): Promise<YPwmOutput.ENABLEDATPOWERON>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -387,7 +370,7 @@ export class YPwmOutput extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabledAtPowerOn(newval: YPwmOutput_EnabledAtPowerOn): Promise<number>
+    async set_enabledAtPowerOn(newval: YPwmOutput.ENABLEDATPOWERON): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -517,7 +500,7 @@ export class YPwmOutput extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPwmOutputValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPwmOutput.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -771,5 +754,21 @@ export class YPwmOutput extends YFunction
     }
 
     //--- (end of YPwmOutput implementation)
+}
+
+export namespace YPwmOutput {
+    //--- (YPwmOutput definitions)
+    export const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export const enum ENABLEDATPOWERON {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YPwmOutput, value: string): void }
+    //--- (end of YPwmOutput definitions)
 }
 

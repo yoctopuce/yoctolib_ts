@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_hubport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_hubport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YHubPort = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YHubPort definitions)
 //--- (YHubPort class start)
 /**
  * YHubPort Class: YoctoHub slave port control interface, available for instance in the
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YHubPort class start)
 class YHubPort extends yocto_api_js_1.YFunction {
     //--- (end of YHubPort attributes declaration)
-    //--- (YHubPort return codes)
-    //--- (end of YHubPort return codes)
     constructor(yapi, func) {
         //--- (YHubPort constructor)
         super(yapi, func);
@@ -64,15 +61,15 @@ class YHubPort extends yocto_api_js_1.YFunction {
         this._baudRate = YHubPort.BAUDRATE_INVALID;
         this._valueCallbackHubPort = null;
         // API symbols as object properties
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
-        this.PORTSTATE_OFF = 0 /* OFF */;
-        this.PORTSTATE_OVRLD = 1 /* OVRLD */;
-        this.PORTSTATE_ON = 2 /* ON */;
-        this.PORTSTATE_RUN = 3 /* RUN */;
-        this.PORTSTATE_PROG = 4 /* PROG */;
-        this.PORTSTATE_INVALID = -1 /* INVALID */;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
+        this.PORTSTATE_OFF = 0;
+        this.PORTSTATE_OVRLD = 1;
+        this.PORTSTATE_ON = 2;
+        this.PORTSTATE_RUN = 3;
+        this.PORTSTATE_PROG = 4;
+        this.PORTSTATE_INVALID = -1;
         this.BAUDRATE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this._className = 'HubPort';
         //--- (end of YHubPort constructor)
@@ -331,14 +328,14 @@ class YHubPort extends yocto_api_js_1.YFunction {
 }
 exports.YHubPort = YHubPort;
 // API symbols as static members
-YHubPort.ENABLED_FALSE = 0 /* FALSE */;
-YHubPort.ENABLED_TRUE = 1 /* TRUE */;
-YHubPort.ENABLED_INVALID = -1 /* INVALID */;
-YHubPort.PORTSTATE_OFF = 0 /* OFF */;
-YHubPort.PORTSTATE_OVRLD = 1 /* OVRLD */;
-YHubPort.PORTSTATE_ON = 2 /* ON */;
-YHubPort.PORTSTATE_RUN = 3 /* RUN */;
-YHubPort.PORTSTATE_PROG = 4 /* PROG */;
-YHubPort.PORTSTATE_INVALID = -1 /* INVALID */;
+YHubPort.ENABLED_FALSE = 0;
+YHubPort.ENABLED_TRUE = 1;
+YHubPort.ENABLED_INVALID = -1;
+YHubPort.PORTSTATE_OFF = 0;
+YHubPort.PORTSTATE_OVRLD = 1;
+YHubPort.PORTSTATE_ON = 2;
+YHubPort.PORTSTATE_RUN = 3;
+YHubPort.PORTSTATE_PROG = 4;
+YHubPort.PORTSTATE_INVALID = -1;
 YHubPort.BAUDRATE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 //# sourceMappingURL=yocto_hubport.js.map

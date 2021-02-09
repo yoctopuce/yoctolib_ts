@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wireless.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -37,8 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (generated code: YWlanRecord definitions)
-//--- (end of generated code: YWlanRecord definitions)
 //--- (generated code: YWlanRecord class start)
 /**
  * YWlanRecord Class: Wireless network description, returned by wireless.get_detectedWlans method
@@ -100,7 +98,6 @@ export class YWlanRecord {
         return this._rssi;
     }
 }
-//--- (end of generated code: YWireless definitions)
 //--- (generated code: YWireless class start)
 /**
  * YWireless Class: wireless LAN interface control interface, available for instance in the
@@ -129,19 +126,19 @@ export class YWireless extends YFunction {
         this.LINKQUALITY_INVALID = YAPI.INVALID_UINT;
         this.SSID_INVALID = YAPI.INVALID_STRING;
         this.CHANNEL_INVALID = YAPI.INVALID_UINT;
-        this.SECURITY_UNKNOWN = 0 /* UNKNOWN */;
-        this.SECURITY_OPEN = 1 /* OPEN */;
-        this.SECURITY_WEP = 2 /* WEP */;
-        this.SECURITY_WPA = 3 /* WPA */;
-        this.SECURITY_WPA2 = 4 /* WPA2 */;
-        this.SECURITY_INVALID = -1 /* INVALID */;
+        this.SECURITY_UNKNOWN = 0;
+        this.SECURITY_OPEN = 1;
+        this.SECURITY_WEP = 2;
+        this.SECURITY_WPA = 3;
+        this.SECURITY_WPA2 = 4;
+        this.SECURITY_INVALID = -1;
         this.MESSAGE_INVALID = YAPI.INVALID_STRING;
         this.WLANCONFIG_INVALID = YAPI.INVALID_STRING;
-        this.WLANSTATE_DOWN = 0 /* DOWN */;
-        this.WLANSTATE_SCANNING = 1 /* SCANNING */;
-        this.WLANSTATE_CONNECTED = 2 /* CONNECTED */;
-        this.WLANSTATE_REJECTED = 3 /* REJECTED */;
-        this.WLANSTATE_INVALID = -1 /* INVALID */;
+        this.WLANSTATE_DOWN = 0;
+        this.WLANSTATE_SCANNING = 1;
+        this.WLANSTATE_CONNECTED = 2;
+        this.WLANSTATE_REJECTED = 3;
+        this.WLANSTATE_INVALID = -1;
         this._className = 'Wireless';
         //--- (end of generated code: YWireless constructor)
     }
@@ -580,17 +577,17 @@ export class YWireless extends YFunction {
 YWireless.LINKQUALITY_INVALID = YAPI.INVALID_UINT;
 YWireless.SSID_INVALID = YAPI.INVALID_STRING;
 YWireless.CHANNEL_INVALID = YAPI.INVALID_UINT;
-YWireless.SECURITY_UNKNOWN = 0 /* UNKNOWN */;
-YWireless.SECURITY_OPEN = 1 /* OPEN */;
-YWireless.SECURITY_WEP = 2 /* WEP */;
-YWireless.SECURITY_WPA = 3 /* WPA */;
-YWireless.SECURITY_WPA2 = 4 /* WPA2 */;
-YWireless.SECURITY_INVALID = -1 /* INVALID */;
+YWireless.SECURITY_UNKNOWN = 0;
+YWireless.SECURITY_OPEN = 1;
+YWireless.SECURITY_WEP = 2;
+YWireless.SECURITY_WPA = 3;
+YWireless.SECURITY_WPA2 = 4;
+YWireless.SECURITY_INVALID = -1;
 YWireless.MESSAGE_INVALID = YAPI.INVALID_STRING;
 YWireless.WLANCONFIG_INVALID = YAPI.INVALID_STRING;
-YWireless.WLANSTATE_DOWN = 0 /* DOWN */;
-YWireless.WLANSTATE_SCANNING = 1 /* SCANNING */;
-YWireless.WLANSTATE_CONNECTED = 2 /* CONNECTED */;
-YWireless.WLANSTATE_REJECTED = 3 /* REJECTED */;
-YWireless.WLANSTATE_INVALID = -1 /* INVALID */;
+YWireless.WLANSTATE_DOWN = 0;
+YWireless.WLANSTATE_SCANNING = 1;
+YWireless.WLANSTATE_CONNECTED = 2;
+YWireless.WLANSTATE_REJECTED = 3;
+YWireless.WLANSTATE_INVALID = -1;
 //# sourceMappingURL=yocto_wireless.js.map

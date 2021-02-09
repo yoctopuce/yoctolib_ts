@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -37,9 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export interface YBuzzerValueCallback {
-    (func: YBuzzer, value: string): void;
-}
 /**
  * YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer or the Yocto-MaxiBuzzer
  *
@@ -55,7 +52,7 @@ export declare class YBuzzer extends YFunction {
     _playSeqMaxSize: number;
     _playSeqSignature: number;
     _command: string;
-    _valueCallbackBuzzer: YBuzzerValueCallback | null;
+    _valueCallbackBuzzer: YBuzzer.ValueCallback | null;
     readonly FREQUENCY_INVALID: number;
     readonly VOLUME_INVALID: number;
     readonly PLAYSEQSIZE_INVALID: number;
@@ -202,7 +199,7 @@ export declare class YBuzzer extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YBuzzerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YBuzzer.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(command: string): Promise<number>;
     /**
@@ -374,4 +371,9 @@ export declare class YBuzzer extends YFunction {
      *         if there are none.
      */
     static FirstBuzzerInContext(yctx: YAPIContext): YBuzzer | null;
+}
+export declare namespace YBuzzer {
+    interface ValueCallback {
+        (func: YBuzzer, value: string): void;
+    }
 }

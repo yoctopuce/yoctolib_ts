@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorled.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_colorled.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -39,17 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YColorLed definitions)
-
-class YColorLedMove
-{
-    public target: number = YAPI.INVALID_INT;
-    public ms: number = YAPI.INVALID_INT;
-    public moving: number = YAPI.INVALID_UINT;
-}
-export interface YColorLedValueCallback { (func: YColorLed, value: string): void }
-//--- (end of YColorLed definitions)
-
 //--- (YColorLed class start)
 /**
  * YColorLed Class: RGB LED control interface, available for instance in the Yocto-Color-V2, the
@@ -70,14 +59,14 @@ export class YColorLed extends YFunction
     _className: string;
     _rgbColor: number = YColorLed.RGBCOLOR_INVALID;
     _hslColor: number = YColorLed.HSLCOLOR_INVALID;
-    _rgbMove: YColorLedMove = new YColorLedMove();
-    _hslMove: YColorLedMove = new YColorLedMove();
+    _rgbMove: YColorLed.Move = {};
+    _hslMove: YColorLed.Move = {};
     _rgbColorAtPowerOn: number = YColorLed.RGBCOLORATPOWERON_INVALID;
     _blinkSeqSize: number = YColorLed.BLINKSEQSIZE_INVALID;
     _blinkSeqMaxSize: number = YColorLed.BLINKSEQMAXSIZE_INVALID;
     _blinkSeqSignature: number = YColorLed.BLINKSEQSIGNATURE_INVALID;
     _command: string = YColorLed.COMMAND_INVALID;
-    _valueCallbackColorLed: YColorLedValueCallback | null = null;
+    _valueCallbackColorLed: YColorLed.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly RGBCOLOR_INVALID: number = YAPI.INVALID_UINT;
@@ -89,8 +78,8 @@ export class YColorLed extends YFunction
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly RGBMOVE_INVALID: YColorLedMove = new YColorLedMove();
-    public static readonly HSLMOVE_INVALID: YColorLedMove = new YColorLedMove();
+    public static readonly RGBMOVE_INVALID: YColorLed.Move = {};
+    public static readonly HSLMOVE_INVALID: YColorLed.Move = {};
     public static readonly RGBCOLOR_INVALID: number = YAPI.INVALID_UINT;
     public static readonly HSLCOLOR_INVALID: number = YAPI.INVALID_UINT;
     public static readonly RGBCOLORATPOWERON_INVALID: number = YAPI.INVALID_UINT;
@@ -99,9 +88,6 @@ export class YColorLed extends YFunction
     public static readonly BLINKSEQSIGNATURE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YColorLed attributes declaration)
-
-//--- (YColorLed return codes)
-//--- (end of YColorLed return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -123,10 +109,10 @@ export class YColorLed extends YFunction
             this._hslColor = <number> <number> val;
             return 1;
         case 'rgbMove':
-            this._rgbMove = <YColorLedMove> val;
+            this._rgbMove = <YColorLed.Move> val;
             return 1;
         case 'hslMove':
-            this._hslMove = <YColorLedMove> val;
+            this._hslMove = <YColorLed.Move> val;
             return 1;
         case 'rgbColorAtPowerOn':
             this._rgbColorAtPowerOn = <number> <number> val;
@@ -217,9 +203,9 @@ export class YColorLed extends YFunction
         return await this._setAttr('hslColor',rest_val);
     }
 
-    async get_rgbMove(): Promise<YColorLedMove>
+    async get_rgbMove(): Promise<YColorLed.Move>
     {
-        let res: YColorLedMove;
+        let res: YColorLed.Move;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YColorLed.RGBMOVE_INVALID;
@@ -229,7 +215,7 @@ export class YColorLed extends YFunction
         return res;
     }
 
-    async set_rgbMove(newval: YColorLedMove): Promise<number>
+    async set_rgbMove(newval: YColorLed.Move): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
@@ -253,9 +239,9 @@ export class YColorLed extends YFunction
         return await this._setAttr('rgbMove',rest_val);
     }
 
-    async get_hslMove(): Promise<YColorLedMove>
+    async get_hslMove(): Promise<YColorLed.Move>
     {
-        let res: YColorLedMove;
+        let res: YColorLed.Move;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YColorLed.HSLMOVE_INVALID;
@@ -265,7 +251,7 @@ export class YColorLed extends YFunction
         return res;
     }
 
-    async set_hslMove(newval: YColorLedMove): Promise<number>
+    async set_hslMove(newval: YColorLed.Move): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
@@ -492,7 +478,7 @@ export class YColorLed extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YColorLedValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YColorLed.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -649,5 +635,12 @@ export class YColorLed extends YFunction
     }
 
     //--- (end of YColorLed implementation)
+}
+
+export namespace YColorLed {
+    //--- (YColorLed definitions)
+    export interface Move { target?: number; ms?: number; moving?: number; }
+    export interface ValueCallback { (func: YColorLed, value: string): void }
+    //--- (end of YColorLed definitions)
 }
 

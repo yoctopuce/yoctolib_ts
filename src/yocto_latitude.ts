@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_latitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_latitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Latitude functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YLatitude definitions)
-export interface YLatitudeValueCallback { (func: YLatitude, value: string): void }
-export interface YLatitudeTimedReportCallback { (func: YLatitude, measure: YMeasure): void }
-//--- (end of YLatitude definitions)
-
 //--- (YLatitude class start)
 /**
  * YLatitude Class: latitude sensor control interface, available for instance in the Yocto-GPS-V2
@@ -58,14 +53,11 @@ export class YLatitude extends YSensor
 {
     //--- (YLatitude attributes declaration)
     _className: string;
-    _valueCallbackLatitude: YLatitudeValueCallback | null = null;
-    _timedReportCallbackLatitude: YLatitudeTimedReportCallback | null = null;
+    _valueCallbackLatitude: YLatitude.ValueCallback | null = null;
+    _timedReportCallbackLatitude: YLatitude.TimedReportCallback | null = null;
 
     // API symbols as static members
     //--- (end of YLatitude attributes declaration)
-
-//--- (YLatitude return codes)
-//--- (end of YLatitude return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -163,7 +155,7 @@ export class YLatitude extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YLatitudeValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YLatitude.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -207,7 +199,7 @@ export class YLatitude extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YLatitudeTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YLatitude.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -288,5 +280,11 @@ export class YLatitude extends YSensor
     }
 
     //--- (end of YLatitude implementation)
+}
+
+export namespace YLatitude {
+    //--- (YLatitude definitions)
+    export interface ValueCallback { (func: YLatitude, value: string): void }    export interface TimedReportCallback { (func: YLatitude, measure: YMeasure): void }
+    //--- (end of YLatitude definitions)
 }
 

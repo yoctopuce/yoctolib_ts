@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_spiport.ts 43762 2021-02-08 15:30:55Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -37,8 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (generated code: YSpiSnoopingRecord definitions)
-//--- (end of generated code: YSpiSnoopingRecord definitions)
 //--- (generated code: YSpiSnoopingRecord class start)
 /**
  * YSpiSnoopingRecord Class: Intercepted SPI message description, returned by spiPort.snoopMessages method
@@ -87,7 +85,6 @@ export class YSpiSnoopingRecord {
         return this._msg;
     }
 }
-//--- (end of generated code: YSpiPort definitions)
 //--- (generated code: YSpiPort class start)
 /**
  * YSpiPort Class: SPI port control interface, available for instance in the Yocto-SPI
@@ -138,22 +135,22 @@ export class YSpiPort extends YFunction {
         this.JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this.PROTOCOL_INVALID = YAPI.INVALID_STRING;
-        this.VOLTAGELEVEL_OFF = 0 /* OFF */;
-        this.VOLTAGELEVEL_TTL3V = 1 /* TTL3V */;
-        this.VOLTAGELEVEL_TTL3VR = 2 /* TTL3VR */;
-        this.VOLTAGELEVEL_TTL5V = 3 /* TTL5V */;
-        this.VOLTAGELEVEL_TTL5VR = 4 /* TTL5VR */;
-        this.VOLTAGELEVEL_RS232 = 5 /* RS232 */;
-        this.VOLTAGELEVEL_RS485 = 6 /* RS485 */;
-        this.VOLTAGELEVEL_TTL1V8 = 7 /* TTL1V8 */;
-        this.VOLTAGELEVEL_INVALID = -1 /* INVALID */;
+        this.VOLTAGELEVEL_OFF = 0;
+        this.VOLTAGELEVEL_TTL3V = 1;
+        this.VOLTAGELEVEL_TTL3VR = 2;
+        this.VOLTAGELEVEL_TTL5V = 3;
+        this.VOLTAGELEVEL_TTL5VR = 4;
+        this.VOLTAGELEVEL_RS232 = 5;
+        this.VOLTAGELEVEL_RS485 = 6;
+        this.VOLTAGELEVEL_TTL1V8 = 7;
+        this.VOLTAGELEVEL_INVALID = -1;
         this.SPIMODE_INVALID = YAPI.INVALID_STRING;
-        this.SSPOLARITY_ACTIVE_LOW = 0 /* ACTIVE_LOW */;
-        this.SSPOLARITY_ACTIVE_HIGH = 1 /* ACTIVE_HIGH */;
-        this.SSPOLARITY_INVALID = -1 /* INVALID */;
-        this.SHIFTSAMPLING_OFF = 0 /* OFF */;
-        this.SHIFTSAMPLING_ON = 1 /* ON */;
-        this.SHIFTSAMPLING_INVALID = -1 /* INVALID */;
+        this.SSPOLARITY_ACTIVE_LOW = 0;
+        this.SSPOLARITY_ACTIVE_HIGH = 1;
+        this.SSPOLARITY_INVALID = -1;
+        this.SHIFTSAMPLING_OFF = 0;
+        this.SHIFTSAMPLING_ON = 1;
+        this.SHIFTSAMPLING_INVALID = -1;
         this._className = 'SpiPort';
         //--- (end of generated code: YSpiPort constructor)
     }
@@ -1460,20 +1457,20 @@ YSpiPort.JOBMAXTASK_INVALID = YAPI.INVALID_UINT;
 YSpiPort.JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
 YSpiPort.COMMAND_INVALID = YAPI.INVALID_STRING;
 YSpiPort.PROTOCOL_INVALID = YAPI.INVALID_STRING;
-YSpiPort.VOLTAGELEVEL_OFF = 0 /* OFF */;
-YSpiPort.VOLTAGELEVEL_TTL3V = 1 /* TTL3V */;
-YSpiPort.VOLTAGELEVEL_TTL3VR = 2 /* TTL3VR */;
-YSpiPort.VOLTAGELEVEL_TTL5V = 3 /* TTL5V */;
-YSpiPort.VOLTAGELEVEL_TTL5VR = 4 /* TTL5VR */;
-YSpiPort.VOLTAGELEVEL_RS232 = 5 /* RS232 */;
-YSpiPort.VOLTAGELEVEL_RS485 = 6 /* RS485 */;
-YSpiPort.VOLTAGELEVEL_TTL1V8 = 7 /* TTL1V8 */;
-YSpiPort.VOLTAGELEVEL_INVALID = -1 /* INVALID */;
+YSpiPort.VOLTAGELEVEL_OFF = 0;
+YSpiPort.VOLTAGELEVEL_TTL3V = 1;
+YSpiPort.VOLTAGELEVEL_TTL3VR = 2;
+YSpiPort.VOLTAGELEVEL_TTL5V = 3;
+YSpiPort.VOLTAGELEVEL_TTL5VR = 4;
+YSpiPort.VOLTAGELEVEL_RS232 = 5;
+YSpiPort.VOLTAGELEVEL_RS485 = 6;
+YSpiPort.VOLTAGELEVEL_TTL1V8 = 7;
+YSpiPort.VOLTAGELEVEL_INVALID = -1;
 YSpiPort.SPIMODE_INVALID = YAPI.INVALID_STRING;
-YSpiPort.SSPOLARITY_ACTIVE_LOW = 0 /* ACTIVE_LOW */;
-YSpiPort.SSPOLARITY_ACTIVE_HIGH = 1 /* ACTIVE_HIGH */;
-YSpiPort.SSPOLARITY_INVALID = -1 /* INVALID */;
-YSpiPort.SHIFTSAMPLING_OFF = 0 /* OFF */;
-YSpiPort.SHIFTSAMPLING_ON = 1 /* ON */;
-YSpiPort.SHIFTSAMPLING_INVALID = -1 /* INVALID */;
+YSpiPort.SSPOLARITY_ACTIVE_LOW = 0;
+YSpiPort.SSPOLARITY_ACTIVE_HIGH = 1;
+YSpiPort.SSPOLARITY_INVALID = -1;
+YSpiPort.SHIFTSAMPLING_OFF = 0;
+YSpiPort.SHIFTSAMPLING_ON = 1;
+YSpiPort.SHIFTSAMPLING_INVALID = -1;
 //# sourceMappingURL=yocto_spiport.js.map

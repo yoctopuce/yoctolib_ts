@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_steppermotor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YStepperMotor definitions)
 //--- (YStepperMotor class start)
 /**
  * YStepperMotor Class: stepper motor control interface
@@ -47,8 +46,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YStepperMotor class start)
 export class YStepperMotor extends YFunction {
     //--- (end of YStepperMotor attributes declaration)
-    //--- (YStepperMotor return codes)
-    //--- (end of YStepperMotor return codes)
     constructor(yapi, func) {
         //--- (YStepperMotor constructor)
         super(yapi, func);
@@ -69,25 +66,25 @@ export class YStepperMotor extends YFunction {
         this._command = YStepperMotor.COMMAND_INVALID;
         this._valueCallbackStepperMotor = null;
         // API symbols as object properties
-        this.MOTORSTATE_ABSENT = 0 /* ABSENT */;
-        this.MOTORSTATE_ALERT = 1 /* ALERT */;
-        this.MOTORSTATE_HI_Z = 2 /* HI_Z */;
-        this.MOTORSTATE_STOP = 3 /* STOP */;
-        this.MOTORSTATE_RUN = 4 /* RUN */;
-        this.MOTORSTATE_BATCH = 5 /* BATCH */;
-        this.MOTORSTATE_INVALID = -1 /* INVALID */;
+        this.MOTORSTATE_ABSENT = 0;
+        this.MOTORSTATE_ALERT = 1;
+        this.MOTORSTATE_HI_Z = 2;
+        this.MOTORSTATE_STOP = 3;
+        this.MOTORSTATE_RUN = 4;
+        this.MOTORSTATE_BATCH = 5;
+        this.MOTORSTATE_INVALID = -1;
         this.DIAGS_INVALID = YAPI.INVALID_UINT;
         this.STEPPOS_INVALID = YAPI.INVALID_DOUBLE;
         this.SPEED_INVALID = YAPI.INVALID_DOUBLE;
         this.PULLINSPEED_INVALID = YAPI.INVALID_DOUBLE;
         this.MAXACCEL_INVALID = YAPI.INVALID_DOUBLE;
         this.MAXSPEED_INVALID = YAPI.INVALID_DOUBLE;
-        this.STEPPING_MICROSTEP16 = 0 /* MICROSTEP16 */;
-        this.STEPPING_MICROSTEP8 = 1 /* MICROSTEP8 */;
-        this.STEPPING_MICROSTEP4 = 2 /* MICROSTEP4 */;
-        this.STEPPING_HALFSTEP = 3 /* HALFSTEP */;
-        this.STEPPING_FULLSTEP = 4 /* FULLSTEP */;
-        this.STEPPING_INVALID = -1 /* INVALID */;
+        this.STEPPING_MICROSTEP16 = 0;
+        this.STEPPING_MICROSTEP8 = 1;
+        this.STEPPING_MICROSTEP4 = 2;
+        this.STEPPING_HALFSTEP = 3;
+        this.STEPPING_FULLSTEP = 4;
+        this.STEPPING_INVALID = -1;
         this.OVERCURRENT_INVALID = YAPI.INVALID_UINT;
         this.TCURRSTOP_INVALID = YAPI.INVALID_UINT;
         this.TCURRRUN_INVALID = YAPI.INVALID_UINT;
@@ -854,25 +851,25 @@ export class YStepperMotor extends YFunction {
     }
 }
 // API symbols as static members
-YStepperMotor.MOTORSTATE_ABSENT = 0 /* ABSENT */;
-YStepperMotor.MOTORSTATE_ALERT = 1 /* ALERT */;
-YStepperMotor.MOTORSTATE_HI_Z = 2 /* HI_Z */;
-YStepperMotor.MOTORSTATE_STOP = 3 /* STOP */;
-YStepperMotor.MOTORSTATE_RUN = 4 /* RUN */;
-YStepperMotor.MOTORSTATE_BATCH = 5 /* BATCH */;
-YStepperMotor.MOTORSTATE_INVALID = -1 /* INVALID */;
+YStepperMotor.MOTORSTATE_ABSENT = 0;
+YStepperMotor.MOTORSTATE_ALERT = 1;
+YStepperMotor.MOTORSTATE_HI_Z = 2;
+YStepperMotor.MOTORSTATE_STOP = 3;
+YStepperMotor.MOTORSTATE_RUN = 4;
+YStepperMotor.MOTORSTATE_BATCH = 5;
+YStepperMotor.MOTORSTATE_INVALID = -1;
 YStepperMotor.DIAGS_INVALID = YAPI.INVALID_UINT;
 YStepperMotor.STEPPOS_INVALID = YAPI.INVALID_DOUBLE;
 YStepperMotor.SPEED_INVALID = YAPI.INVALID_DOUBLE;
 YStepperMotor.PULLINSPEED_INVALID = YAPI.INVALID_DOUBLE;
 YStepperMotor.MAXACCEL_INVALID = YAPI.INVALID_DOUBLE;
 YStepperMotor.MAXSPEED_INVALID = YAPI.INVALID_DOUBLE;
-YStepperMotor.STEPPING_MICROSTEP16 = 0 /* MICROSTEP16 */;
-YStepperMotor.STEPPING_MICROSTEP8 = 1 /* MICROSTEP8 */;
-YStepperMotor.STEPPING_MICROSTEP4 = 2 /* MICROSTEP4 */;
-YStepperMotor.STEPPING_HALFSTEP = 3 /* HALFSTEP */;
-YStepperMotor.STEPPING_FULLSTEP = 4 /* FULLSTEP */;
-YStepperMotor.STEPPING_INVALID = -1 /* INVALID */;
+YStepperMotor.STEPPING_MICROSTEP16 = 0;
+YStepperMotor.STEPPING_MICROSTEP8 = 1;
+YStepperMotor.STEPPING_MICROSTEP4 = 2;
+YStepperMotor.STEPPING_HALFSTEP = 3;
+YStepperMotor.STEPPING_FULLSTEP = 4;
+YStepperMotor.STEPPING_INVALID = -1;
 YStepperMotor.OVERCURRENT_INVALID = YAPI.INVALID_UINT;
 YStepperMotor.TCURRSTOP_INVALID = YAPI.INVALID_UINT;
 YStepperMotor.TCURRRUN_INVALID = YAPI.INVALID_UINT;

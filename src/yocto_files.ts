@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_files.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -38,9 +38,6 @@
  *********************************************************************/
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
-
-//--- (generated code: YFileRecord definitions)
-//--- (end of generated code: YFileRecord definitions)
 
 //--- (generated code: YFileRecord class start)
 /**
@@ -106,11 +103,11 @@ export class YFileRecord
     //--- (end of generated code: YFileRecord implementation)
 }
 
-//--- (generated code: YFiles definitions)
-export interface YFilesValueCallback { (func: YFiles, value: string): void }
-//--- (end of generated code: YFiles definitions)
+export namespace YFileRecord {
+    //--- (generated code: YFileRecord definitions)
+    //--- (end of generated code: YFileRecord definitions)
+}
 
-//--- (generated code: YFiles class start)
 /**
  * YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
  * Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-Wireless-n
@@ -128,7 +125,7 @@ export class YFiles extends YFunction
     _className: string;
     _filesCount: number = YFiles.FILESCOUNT_INVALID;
     _freeSpace: number = YFiles.FREESPACE_INVALID;
-    _valueCallbackFiles: YFilesValueCallback | null = null;
+    _valueCallbackFiles: YFiles.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly FILESCOUNT_INVALID: number = YAPI.INVALID_UINT;
@@ -286,7 +283,7 @@ export class YFiles extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YFilesValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YFiles.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -509,3 +506,10 @@ export class YFiles extends YFunction
 
     //--- (end of generated code: YFiles implementation)
 }
+
+export namespace YFiles {
+    //--- (generated code: YFiles definitions)
+    export interface ValueCallback { (func: YFiles, value: string): void }
+    //--- (end of generated code: YFiles definitions)
+}
+

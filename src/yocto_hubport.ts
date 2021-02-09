@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_hubport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_hubport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -39,23 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YHubPort definitions)
-export const enum YHubPort_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export const enum YHubPort_PortState {
-    OFF = 0,
-    OVRLD = 1,
-    ON = 2,
-    RUN = 3,
-    PROG = 4,
-    INVALID = -1
-}
-export interface YHubPortValueCallback { (func: YHubPort, value: string): void }
-//--- (end of YHubPort definitions)
-
 //--- (YHubPort class start)
 /**
  * YHubPort Class: YoctoHub slave port control interface, available for instance in the
@@ -72,38 +55,35 @@ export class YHubPort extends YFunction
 {
     //--- (YHubPort attributes declaration)
     _className: string;
-    _enabled: YHubPort_Enabled = YHubPort.ENABLED_INVALID;
-    _portState: YHubPort_PortState = YHubPort.PORTSTATE_INVALID;
+    _enabled: YHubPort.ENABLED = YHubPort.ENABLED_INVALID;
+    _portState: YHubPort.PORTSTATE = YHubPort.PORTSTATE_INVALID;
     _baudRate: number = YHubPort.BAUDRATE_INVALID;
-    _valueCallbackHubPort: YHubPortValueCallback | null = null;
+    _valueCallbackHubPort: YHubPort.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly ENABLED_FALSE: YHubPort_Enabled = YHubPort_Enabled.FALSE;
-    public readonly ENABLED_TRUE: YHubPort_Enabled = YHubPort_Enabled.TRUE;
-    public readonly ENABLED_INVALID: YHubPort_Enabled = YHubPort_Enabled.INVALID;
-    public readonly PORTSTATE_OFF: YHubPort_PortState = YHubPort_PortState.OFF;
-    public readonly PORTSTATE_OVRLD: YHubPort_PortState = YHubPort_PortState.OVRLD;
-    public readonly PORTSTATE_ON: YHubPort_PortState = YHubPort_PortState.ON;
-    public readonly PORTSTATE_RUN: YHubPort_PortState = YHubPort_PortState.RUN;
-    public readonly PORTSTATE_PROG: YHubPort_PortState = YHubPort_PortState.PROG;
-    public readonly PORTSTATE_INVALID: YHubPort_PortState = YHubPort_PortState.INVALID;
+    public readonly ENABLED_FALSE: YHubPort.ENABLED = 0;
+    public readonly ENABLED_TRUE: YHubPort.ENABLED = 1;
+    public readonly ENABLED_INVALID: YHubPort.ENABLED = -1;
+    public readonly PORTSTATE_OFF: YHubPort.PORTSTATE = 0;
+    public readonly PORTSTATE_OVRLD: YHubPort.PORTSTATE = 1;
+    public readonly PORTSTATE_ON: YHubPort.PORTSTATE = 2;
+    public readonly PORTSTATE_RUN: YHubPort.PORTSTATE = 3;
+    public readonly PORTSTATE_PROG: YHubPort.PORTSTATE = 4;
+    public readonly PORTSTATE_INVALID: YHubPort.PORTSTATE = -1;
     public readonly BAUDRATE_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
-    public static readonly ENABLED_FALSE: YHubPort_Enabled = YHubPort_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: YHubPort_Enabled = YHubPort_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: YHubPort_Enabled = YHubPort_Enabled.INVALID;
-    public static readonly PORTSTATE_OFF: YHubPort_PortState = YHubPort_PortState.OFF;
-    public static readonly PORTSTATE_OVRLD: YHubPort_PortState = YHubPort_PortState.OVRLD;
-    public static readonly PORTSTATE_ON: YHubPort_PortState = YHubPort_PortState.ON;
-    public static readonly PORTSTATE_RUN: YHubPort_PortState = YHubPort_PortState.RUN;
-    public static readonly PORTSTATE_PROG: YHubPort_PortState = YHubPort_PortState.PROG;
-    public static readonly PORTSTATE_INVALID: YHubPort_PortState = YHubPort_PortState.INVALID;
+    public static readonly ENABLED_FALSE: YHubPort.ENABLED = 0;
+    public static readonly ENABLED_TRUE: YHubPort.ENABLED = 1;
+    public static readonly ENABLED_INVALID: YHubPort.ENABLED = -1;
+    public static readonly PORTSTATE_OFF: YHubPort.PORTSTATE = 0;
+    public static readonly PORTSTATE_OVRLD: YHubPort.PORTSTATE = 1;
+    public static readonly PORTSTATE_ON: YHubPort.PORTSTATE = 2;
+    public static readonly PORTSTATE_RUN: YHubPort.PORTSTATE = 3;
+    public static readonly PORTSTATE_PROG: YHubPort.PORTSTATE = 4;
+    public static readonly PORTSTATE_INVALID: YHubPort.PORTSTATE = -1;
     public static readonly BAUDRATE_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YHubPort attributes declaration)
-
-//--- (YHubPort return codes)
-//--- (end of YHubPort return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -119,10 +99,10 @@ export class YHubPort extends YFunction
     {
         switch(name) {
         case 'enabled':
-            this._enabled = <YHubPort_Enabled> <number> val;
+            this._enabled = <YHubPort.ENABLED> <number> val;
             return 1;
         case 'portState':
-            this._portState = <YHubPort_PortState> <number> val;
+            this._portState = <YHubPort.PORTSTATE> <number> val;
             return 1;
         case 'baudRate':
             this._baudRate = <number> <number> val;
@@ -139,7 +119,7 @@ export class YHubPort extends YFunction
      *
      * On failure, throws an exception or returns YHubPort.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<YHubPort_Enabled>
+    async get_enabled(): Promise<YHubPort.ENABLED>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -162,7 +142,7 @@ export class YHubPort extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: YHubPort_Enabled): Promise<number>
+    async set_enabled(newval: YHubPort.ENABLED): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -177,7 +157,7 @@ export class YHubPort extends YFunction
      *
      * On failure, throws an exception or returns YHubPort.PORTSTATE_INVALID.
      */
-    async get_portState(): Promise<YHubPort_PortState>
+    async get_portState(): Promise<YHubPort.PORTSTATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -296,7 +276,7 @@ export class YHubPort extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YHubPortValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YHubPort.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -383,5 +363,24 @@ export class YHubPort extends YFunction
     }
 
     //--- (end of YHubPort implementation)
+}
+
+export namespace YHubPort {
+    //--- (YHubPort definitions)
+    export const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export const enum PORTSTATE {
+        OFF = 0,
+        OVRLD = 1,
+        ON = 2,
+        RUN = 3,
+        PROG = 4,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YHubPort, value: string): void }
+    //--- (end of YHubPort definitions)
 }
 

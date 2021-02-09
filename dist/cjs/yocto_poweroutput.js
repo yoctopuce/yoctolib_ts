@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_poweroutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_poweroutput.ts 43762 2021-02-08 15:30:55Z mvuilleu $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YPowerOutput = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YPowerOutput definitions)
 //--- (YPowerOutput class start)
 /**
  * YPowerOutput Class: power output control interface, available for instance in the Yocto-I2C, the
@@ -52,20 +51,18 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YPowerOutput class start)
 class YPowerOutput extends yocto_api_js_1.YFunction {
     //--- (end of YPowerOutput attributes declaration)
-    //--- (YPowerOutput return codes)
-    //--- (end of YPowerOutput return codes)
     constructor(yapi, func) {
         //--- (YPowerOutput constructor)
         super(yapi, func);
         this._voltage = YPowerOutput.VOLTAGE_INVALID;
         this._valueCallbackPowerOutput = null;
         // API symbols as object properties
-        this.VOLTAGE_OFF = 0 /* OFF */;
-        this.VOLTAGE_OUT3V3 = 1 /* OUT3V3 */;
-        this.VOLTAGE_OUT5V = 2 /* OUT5V */;
-        this.VOLTAGE_OUT4V7 = 3 /* OUT4V7 */;
-        this.VOLTAGE_OUT1V8 = 4 /* OUT1V8 */;
-        this.VOLTAGE_INVALID = -1 /* INVALID */;
+        this.VOLTAGE_OFF = 0;
+        this.VOLTAGE_OUT3V3 = 1;
+        this.VOLTAGE_OUT5V = 2;
+        this.VOLTAGE_OUT4V7 = 3;
+        this.VOLTAGE_OUT1V8 = 4;
+        this.VOLTAGE_INVALID = -1;
         this._className = 'PowerOutput';
         //--- (end of YPowerOutput constructor)
     }
@@ -284,10 +281,10 @@ class YPowerOutput extends yocto_api_js_1.YFunction {
 }
 exports.YPowerOutput = YPowerOutput;
 // API symbols as static members
-YPowerOutput.VOLTAGE_OFF = 0 /* OFF */;
-YPowerOutput.VOLTAGE_OUT3V3 = 1 /* OUT3V3 */;
-YPowerOutput.VOLTAGE_OUT5V = 2 /* OUT5V */;
-YPowerOutput.VOLTAGE_OUT4V7 = 3 /* OUT4V7 */;
-YPowerOutput.VOLTAGE_OUT1V8 = 4 /* OUT1V8 */;
-YPowerOutput.VOLTAGE_INVALID = -1 /* INVALID */;
+YPowerOutput.VOLTAGE_OFF = 0;
+YPowerOutput.VOLTAGE_OUT3V3 = 1;
+YPowerOutput.VOLTAGE_OUT5V = 2;
+YPowerOutput.VOLTAGE_OUT4V7 = 3;
+YPowerOutput.VOLTAGE_OUT1V8 = 4;
+YPowerOutput.VOLTAGE_INVALID = -1;
 //# sourceMappingURL=yocto_poweroutput.js.map

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_bluetoothlink.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -37,23 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YBluetoothLink_Mute {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YBluetoothLink_LinkState {
-    DOWN = 0,
-    FREE = 1,
-    SEARCH = 2,
-    EXISTS = 3,
-    LINKED = 4,
-    PLAY = 5,
-    INVALID = -1
-}
-export interface YBluetoothLinkValueCallback {
-    (func: YBluetoothLink, value: string): void;
-}
 /**
  * YBluetoothLink Class: Bluetooth sound controller control interface
  *
@@ -66,47 +49,47 @@ export declare class YBluetoothLink extends YFunction {
     _pairingPin: string;
     _remoteAddress: string;
     _remoteName: string;
-    _mute: YBluetoothLink_Mute;
+    _mute: YBluetoothLink.MUTE;
     _preAmplifier: number;
     _volume: number;
-    _linkState: YBluetoothLink_LinkState;
+    _linkState: YBluetoothLink.LINKSTATE;
     _linkQuality: number;
     _command: string;
-    _valueCallbackBluetoothLink: YBluetoothLinkValueCallback | null;
+    _valueCallbackBluetoothLink: YBluetoothLink.ValueCallback | null;
     readonly OWNADDRESS_INVALID: string;
     readonly PAIRINGPIN_INVALID: string;
     readonly REMOTEADDRESS_INVALID: string;
     readonly REMOTENAME_INVALID: string;
-    readonly MUTE_FALSE: YBluetoothLink_Mute;
-    readonly MUTE_TRUE: YBluetoothLink_Mute;
-    readonly MUTE_INVALID: YBluetoothLink_Mute;
+    readonly MUTE_FALSE: YBluetoothLink.MUTE;
+    readonly MUTE_TRUE: YBluetoothLink.MUTE;
+    readonly MUTE_INVALID: YBluetoothLink.MUTE;
     readonly PREAMPLIFIER_INVALID: number;
     readonly VOLUME_INVALID: number;
-    readonly LINKSTATE_DOWN: YBluetoothLink_LinkState;
-    readonly LINKSTATE_FREE: YBluetoothLink_LinkState;
-    readonly LINKSTATE_SEARCH: YBluetoothLink_LinkState;
-    readonly LINKSTATE_EXISTS: YBluetoothLink_LinkState;
-    readonly LINKSTATE_LINKED: YBluetoothLink_LinkState;
-    readonly LINKSTATE_PLAY: YBluetoothLink_LinkState;
-    readonly LINKSTATE_INVALID: YBluetoothLink_LinkState;
+    readonly LINKSTATE_DOWN: YBluetoothLink.LINKSTATE;
+    readonly LINKSTATE_FREE: YBluetoothLink.LINKSTATE;
+    readonly LINKSTATE_SEARCH: YBluetoothLink.LINKSTATE;
+    readonly LINKSTATE_EXISTS: YBluetoothLink.LINKSTATE;
+    readonly LINKSTATE_LINKED: YBluetoothLink.LINKSTATE;
+    readonly LINKSTATE_PLAY: YBluetoothLink.LINKSTATE;
+    readonly LINKSTATE_INVALID: YBluetoothLink.LINKSTATE;
     readonly LINKQUALITY_INVALID: number;
     readonly COMMAND_INVALID: string;
     static readonly OWNADDRESS_INVALID: string;
     static readonly PAIRINGPIN_INVALID: string;
     static readonly REMOTEADDRESS_INVALID: string;
     static readonly REMOTENAME_INVALID: string;
-    static readonly MUTE_FALSE: YBluetoothLink_Mute;
-    static readonly MUTE_TRUE: YBluetoothLink_Mute;
-    static readonly MUTE_INVALID: YBluetoothLink_Mute;
+    static readonly MUTE_FALSE: YBluetoothLink.MUTE;
+    static readonly MUTE_TRUE: YBluetoothLink.MUTE;
+    static readonly MUTE_INVALID: YBluetoothLink.MUTE;
     static readonly PREAMPLIFIER_INVALID: number;
     static readonly VOLUME_INVALID: number;
-    static readonly LINKSTATE_DOWN: YBluetoothLink_LinkState;
-    static readonly LINKSTATE_FREE: YBluetoothLink_LinkState;
-    static readonly LINKSTATE_SEARCH: YBluetoothLink_LinkState;
-    static readonly LINKSTATE_EXISTS: YBluetoothLink_LinkState;
-    static readonly LINKSTATE_LINKED: YBluetoothLink_LinkState;
-    static readonly LINKSTATE_PLAY: YBluetoothLink_LinkState;
-    static readonly LINKSTATE_INVALID: YBluetoothLink_LinkState;
+    static readonly LINKSTATE_DOWN: YBluetoothLink.LINKSTATE;
+    static readonly LINKSTATE_FREE: YBluetoothLink.LINKSTATE;
+    static readonly LINKSTATE_SEARCH: YBluetoothLink.LINKSTATE;
+    static readonly LINKSTATE_EXISTS: YBluetoothLink.LINKSTATE;
+    static readonly LINKSTATE_LINKED: YBluetoothLink.LINKSTATE;
+    static readonly LINKSTATE_PLAY: YBluetoothLink.LINKSTATE;
+    static readonly LINKSTATE_INVALID: YBluetoothLink.LINKSTATE;
     static readonly LINKQUALITY_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
@@ -180,7 +163,7 @@ export declare class YBluetoothLink extends YFunction {
      *
      * On failure, throws an exception or returns YBluetoothLink.MUTE_INVALID.
      */
-    get_mute(): Promise<YBluetoothLink_Mute>;
+    get_mute(): Promise<YBluetoothLink.MUTE>;
     /**
      * Changes the state of the mute function. Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
@@ -192,7 +175,7 @@ export declare class YBluetoothLink extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_mute(newval: YBluetoothLink_Mute): Promise<number>;
+    set_mute(newval: YBluetoothLink.MUTE): Promise<number>;
     /**
      * Returns the audio pre-amplifier volume, in per cents.
      *
@@ -240,7 +223,7 @@ export declare class YBluetoothLink extends YFunction {
      *
      * On failure, throws an exception or returns YBluetoothLink.LINKSTATE_INVALID.
      */
-    get_linkState(): Promise<YBluetoothLink_LinkState>;
+    get_linkState(): Promise<YBluetoothLink.LINKSTATE>;
     /**
      * Returns the bluetooth receiver signal strength, in pourcents, or 0 if no connection is established.
      *
@@ -318,7 +301,7 @@ export declare class YBluetoothLink extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YBluetoothLinkValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YBluetoothLink.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Attempt to connect to the previously selected remote device.
@@ -369,4 +352,23 @@ export declare class YBluetoothLink extends YFunction {
      *         if there are none.
      */
     static FirstBluetoothLinkInContext(yctx: YAPIContext): YBluetoothLink | null;
+}
+export declare namespace YBluetoothLink {
+    const enum MUTE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum LINKSTATE {
+        DOWN = 0,
+        FREE = 1,
+        SEARCH = 2,
+        EXISTS = 3,
+        LINKED = 4,
+        PLAY = 5,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YBluetoothLink, value: string): void;
+    }
 }

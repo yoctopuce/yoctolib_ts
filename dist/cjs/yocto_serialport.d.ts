@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_serialport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -66,19 +66,7 @@ export declare class YSnoopingRecord {
      */
     get_message(): Promise<string>;
 }
-export declare const enum YSerialPort_VoltageLevel {
-    OFF = 0,
-    TTL3V = 1,
-    TTL3VR = 2,
-    TTL5V = 3,
-    TTL5VR = 4,
-    RS232 = 5,
-    RS485 = 6,
-    TTL1V8 = 7,
-    INVALID = -1
-}
-export interface YSerialPortValueCallback {
-    (func: YSerialPort, value: string): void;
+export declare namespace YSnoopingRecord {
 }
 /**
  * YSerialPort Class: serial port control interface, available for instance in the Yocto-RS232, the
@@ -105,9 +93,9 @@ export declare class YSerialPort extends YFunction {
     _jobMaxSize: number;
     _command: string;
     _protocol: string;
-    _voltageLevel: YSerialPort_VoltageLevel;
+    _voltageLevel: YSerialPort.VOLTAGELEVEL;
     _serialMode: string;
-    _valueCallbackSerialPort: YSerialPortValueCallback | null;
+    _valueCallbackSerialPort: YSerialPort.ValueCallback | null;
     _rxptr: number;
     _rxbuff: Uint8Array;
     _rxbuffptr: number;
@@ -123,15 +111,15 @@ export declare class YSerialPort extends YFunction {
     readonly JOBMAXSIZE_INVALID: number;
     readonly COMMAND_INVALID: string;
     readonly PROTOCOL_INVALID: string;
-    readonly VOLTAGELEVEL_OFF: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL3V: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL3VR: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL5V: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL5VR: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_RS232: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_RS485: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL1V8: YSerialPort_VoltageLevel;
-    readonly VOLTAGELEVEL_INVALID: YSerialPort_VoltageLevel;
+    readonly VOLTAGELEVEL_OFF: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL3V: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL3VR: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL5V: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL5VR: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_RS232: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_RS485: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL1V8: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_INVALID: YSerialPort.VOLTAGELEVEL;
     readonly SERIALMODE_INVALID: string;
     static readonly RXCOUNT_INVALID: number;
     static readonly TXCOUNT_INVALID: number;
@@ -145,15 +133,15 @@ export declare class YSerialPort extends YFunction {
     static readonly JOBMAXSIZE_INVALID: number;
     static readonly COMMAND_INVALID: string;
     static readonly PROTOCOL_INVALID: string;
-    static readonly VOLTAGELEVEL_OFF: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL3V: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL3VR: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL5V: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL5VR: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_RS232: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_RS485: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL1V8: YSerialPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_INVALID: YSerialPort_VoltageLevel;
+    static readonly VOLTAGELEVEL_OFF: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL3V: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL3VR: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL5V: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL5VR: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_RS232: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_RS485: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL1V8: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_INVALID: YSerialPort.VOLTAGELEVEL;
     static readonly SERIALMODE_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -312,7 +300,7 @@ export declare class YSerialPort extends YFunction {
      *
      * On failure, throws an exception or returns YSerialPort.VOLTAGELEVEL_INVALID.
      */
-    get_voltageLevel(): Promise<YSerialPort_VoltageLevel>;
+    get_voltageLevel(): Promise<YSerialPort.VOLTAGELEVEL>;
     /**
      * Changes the voltage type used on the serial line. Valid
      * values  will depend on the Yoctopuce device model featuring
@@ -331,7 +319,7 @@ export declare class YSerialPort extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_voltageLevel(newval: YSerialPort_VoltageLevel): Promise<number>;
+    set_voltageLevel(newval: YSerialPort.VOLTAGELEVEL): Promise<number>;
     /**
      * Returns the serial port communication parameters, as a string such as
      * "9600,8N1". The string includes the baud rate, the number of data bits,
@@ -430,7 +418,7 @@ export declare class YSerialPort extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YSerialPortValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YSerialPort.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(text: string): Promise<number>;
     /**
@@ -895,4 +883,20 @@ export declare class YSerialPort extends YFunction {
      *         if there are none.
      */
     static FirstSerialPortInContext(yctx: YAPIContext): YSerialPort | null;
+}
+export declare namespace YSerialPort {
+    const enum VOLTAGELEVEL {
+        OFF = 0,
+        TTL3V = 1,
+        TTL3VR = 2,
+        TTL5V = 3,
+        TTL5VR = 4,
+        RS232 = 5,
+        RS485 = 6,
+        TTL1V8 = 7,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YSerialPort, value: string): void;
+    }
 }

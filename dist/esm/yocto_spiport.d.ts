@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_spiport.ts 43762 2021-02-08 15:30:55Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -66,29 +66,7 @@ export declare class YSpiSnoopingRecord {
      */
     get_message(): Promise<string>;
 }
-export declare const enum YSpiPort_VoltageLevel {
-    OFF = 0,
-    TTL3V = 1,
-    TTL3VR = 2,
-    TTL5V = 3,
-    TTL5VR = 4,
-    RS232 = 5,
-    RS485 = 6,
-    TTL1V8 = 7,
-    INVALID = -1
-}
-export declare const enum YSpiPort_SsPolarity {
-    ACTIVE_LOW = 0,
-    ACTIVE_HIGH = 1,
-    INVALID = -1
-}
-export declare const enum YSpiPort_ShiftSampling {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YSpiPortValueCallback {
-    (func: YSpiPort, value: string): void;
+export declare namespace YSpiSnoopingRecord {
 }
 /**
  * YSpiPort Class: SPI port control interface, available for instance in the Yocto-SPI
@@ -114,11 +92,11 @@ export declare class YSpiPort extends YFunction {
     _jobMaxSize: number;
     _command: string;
     _protocol: string;
-    _voltageLevel: YSpiPort_VoltageLevel;
+    _voltageLevel: YSpiPort.VOLTAGELEVEL;
     _spiMode: string;
-    _ssPolarity: YSpiPort_SsPolarity;
-    _shiftSampling: YSpiPort_ShiftSampling;
-    _valueCallbackSpiPort: YSpiPortValueCallback | null;
+    _ssPolarity: YSpiPort.SSPOLARITY;
+    _shiftSampling: YSpiPort.SHIFTSAMPLING;
+    _valueCallbackSpiPort: YSpiPort.ValueCallback | null;
     _rxptr: number;
     _rxbuff: Uint8Array;
     _rxbuffptr: number;
@@ -134,22 +112,22 @@ export declare class YSpiPort extends YFunction {
     readonly JOBMAXSIZE_INVALID: number;
     readonly COMMAND_INVALID: string;
     readonly PROTOCOL_INVALID: string;
-    readonly VOLTAGELEVEL_OFF: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL3V: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL3VR: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL5V: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL5VR: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_RS232: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_RS485: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_TTL1V8: YSpiPort_VoltageLevel;
-    readonly VOLTAGELEVEL_INVALID: YSpiPort_VoltageLevel;
+    readonly VOLTAGELEVEL_OFF: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL3V: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL3VR: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL5V: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL5VR: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_RS232: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_RS485: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_TTL1V8: YSpiPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_INVALID: YSpiPort.VOLTAGELEVEL;
     readonly SPIMODE_INVALID: string;
-    readonly SSPOLARITY_ACTIVE_LOW: YSpiPort_SsPolarity;
-    readonly SSPOLARITY_ACTIVE_HIGH: YSpiPort_SsPolarity;
-    readonly SSPOLARITY_INVALID: YSpiPort_SsPolarity;
-    readonly SHIFTSAMPLING_OFF: YSpiPort_ShiftSampling;
-    readonly SHIFTSAMPLING_ON: YSpiPort_ShiftSampling;
-    readonly SHIFTSAMPLING_INVALID: YSpiPort_ShiftSampling;
+    readonly SSPOLARITY_ACTIVE_LOW: YSpiPort.SSPOLARITY;
+    readonly SSPOLARITY_ACTIVE_HIGH: YSpiPort.SSPOLARITY;
+    readonly SSPOLARITY_INVALID: YSpiPort.SSPOLARITY;
+    readonly SHIFTSAMPLING_OFF: YSpiPort.SHIFTSAMPLING;
+    readonly SHIFTSAMPLING_ON: YSpiPort.SHIFTSAMPLING;
+    readonly SHIFTSAMPLING_INVALID: YSpiPort.SHIFTSAMPLING;
     static readonly RXCOUNT_INVALID: number;
     static readonly TXCOUNT_INVALID: number;
     static readonly ERRCOUNT_INVALID: number;
@@ -162,22 +140,22 @@ export declare class YSpiPort extends YFunction {
     static readonly JOBMAXSIZE_INVALID: number;
     static readonly COMMAND_INVALID: string;
     static readonly PROTOCOL_INVALID: string;
-    static readonly VOLTAGELEVEL_OFF: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL3V: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL3VR: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL5V: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL5VR: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_RS232: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_RS485: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_TTL1V8: YSpiPort_VoltageLevel;
-    static readonly VOLTAGELEVEL_INVALID: YSpiPort_VoltageLevel;
+    static readonly VOLTAGELEVEL_OFF: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL3V: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL3VR: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL5V: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL5VR: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_RS232: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_RS485: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_TTL1V8: YSpiPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_INVALID: YSpiPort.VOLTAGELEVEL;
     static readonly SPIMODE_INVALID: string;
-    static readonly SSPOLARITY_ACTIVE_LOW: YSpiPort_SsPolarity;
-    static readonly SSPOLARITY_ACTIVE_HIGH: YSpiPort_SsPolarity;
-    static readonly SSPOLARITY_INVALID: YSpiPort_SsPolarity;
-    static readonly SHIFTSAMPLING_OFF: YSpiPort_ShiftSampling;
-    static readonly SHIFTSAMPLING_ON: YSpiPort_ShiftSampling;
-    static readonly SHIFTSAMPLING_INVALID: YSpiPort_ShiftSampling;
+    static readonly SSPOLARITY_ACTIVE_LOW: YSpiPort.SSPOLARITY;
+    static readonly SSPOLARITY_ACTIVE_HIGH: YSpiPort.SSPOLARITY;
+    static readonly SSPOLARITY_INVALID: YSpiPort.SSPOLARITY;
+    static readonly SHIFTSAMPLING_OFF: YSpiPort.SHIFTSAMPLING;
+    static readonly SHIFTSAMPLING_ON: YSpiPort.SHIFTSAMPLING;
+    static readonly SHIFTSAMPLING_INVALID: YSpiPort.SHIFTSAMPLING;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -325,7 +303,7 @@ export declare class YSpiPort extends YFunction {
      *
      * On failure, throws an exception or returns YSpiPort.VOLTAGELEVEL_INVALID.
      */
-    get_voltageLevel(): Promise<YSpiPort_VoltageLevel>;
+    get_voltageLevel(): Promise<YSpiPort.VOLTAGELEVEL>;
     /**
      * Changes the voltage type used on the serial line. Valid
      * values  will depend on the Yoctopuce device model featuring
@@ -344,7 +322,7 @@ export declare class YSpiPort extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_voltageLevel(newval: YSpiPort_VoltageLevel): Promise<number>;
+    set_voltageLevel(newval: YSpiPort.VOLTAGELEVEL): Promise<number>;
     /**
      * Returns the SPI port communication parameters, as a string such as
      * "125000,0,msb". The string includes the baud rate, the SPI mode (between
@@ -379,7 +357,7 @@ export declare class YSpiPort extends YFunction {
      *
      * On failure, throws an exception or returns YSpiPort.SSPOLARITY_INVALID.
      */
-    get_ssPolarity(): Promise<YSpiPort_SsPolarity>;
+    get_ssPolarity(): Promise<YSpiPort.SSPOLARITY>;
     /**
      * Changes the SS line polarity.
      * Remember to call the saveToFlash() method of the module if the
@@ -392,7 +370,7 @@ export declare class YSpiPort extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_ssPolarity(newval: YSpiPort_SsPolarity): Promise<number>;
+    set_ssPolarity(newval: YSpiPort.SSPOLARITY): Promise<number>;
     /**
      * Returns true when the SDI line phase is shifted with regards to the SDO line.
      *
@@ -401,7 +379,7 @@ export declare class YSpiPort extends YFunction {
      *
      * On failure, throws an exception or returns YSpiPort.SHIFTSAMPLING_INVALID.
      */
-    get_shiftSampling(): Promise<YSpiPort_ShiftSampling>;
+    get_shiftSampling(): Promise<YSpiPort.SHIFTSAMPLING>;
     /**
      * Changes the SDI line sampling shift. When disabled, SDI line is
      * sampled in the middle of data output time. When enabled, SDI line is
@@ -416,7 +394,7 @@ export declare class YSpiPort extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_shiftSampling(newval: YSpiPort_ShiftSampling): Promise<number>;
+    set_shiftSampling(newval: YSpiPort.SHIFTSAMPLING): Promise<number>;
     /**
      * Retrieves a SPI port for a given identifier.
      * The identifier can be specified using several formats:
@@ -483,7 +461,7 @@ export declare class YSpiPort extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YSpiPortValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YSpiPort.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(text: string): Promise<number>;
     /**
@@ -780,4 +758,30 @@ export declare class YSpiPort extends YFunction {
      *         if there are none.
      */
     static FirstSpiPortInContext(yctx: YAPIContext): YSpiPort | null;
+}
+export declare namespace YSpiPort {
+    const enum VOLTAGELEVEL {
+        OFF = 0,
+        TTL3V = 1,
+        TTL3VR = 2,
+        TTL5V = 3,
+        TTL5VR = 4,
+        RS232 = 5,
+        RS485 = 6,
+        TTL1V8 = 7,
+        INVALID = -1
+    }
+    const enum SSPOLARITY {
+        ACTIVE_LOW = 0,
+        ACTIVE_HIGH = 1,
+        INVALID = -1
+    }
+    const enum SHIFTSAMPLING {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YSpiPort, value: string): void;
+    }
 }

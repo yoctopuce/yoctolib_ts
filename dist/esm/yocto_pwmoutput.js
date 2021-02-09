@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwmoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YPwmOutput definitions)
 //--- (YPwmOutput class start)
 /**
  * YPwmOutput Class: PWM generator control interface, available for instance in the Yocto-PWM-Tx
@@ -49,8 +48,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YPwmOutput class start)
 export class YPwmOutput extends YFunction {
     //--- (end of YPwmOutput attributes declaration)
-    //--- (YPwmOutput return codes)
-    //--- (end of YPwmOutput return codes)
     constructor(yapi, func) {
         //--- (YPwmOutput constructor)
         super(yapi, func);
@@ -64,17 +61,17 @@ export class YPwmOutput extends YFunction {
         this._dutyCycleAtPowerOn = YPwmOutput.DUTYCYCLEATPOWERON_INVALID;
         this._valueCallbackPwmOutput = null;
         // API symbols as object properties
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
         this.FREQUENCY_INVALID = YAPI.INVALID_DOUBLE;
         this.PERIOD_INVALID = YAPI.INVALID_DOUBLE;
         this.DUTYCYCLE_INVALID = YAPI.INVALID_DOUBLE;
         this.PULSEDURATION_INVALID = YAPI.INVALID_DOUBLE;
         this.PWMTRANSITION_INVALID = YAPI.INVALID_STRING;
-        this.ENABLEDATPOWERON_FALSE = 0 /* FALSE */;
-        this.ENABLEDATPOWERON_TRUE = 1 /* TRUE */;
-        this.ENABLEDATPOWERON_INVALID = -1 /* INVALID */;
+        this.ENABLEDATPOWERON_FALSE = 0;
+        this.ENABLEDATPOWERON_TRUE = 1;
+        this.ENABLEDATPOWERON_INVALID = -1;
         this.DUTYCYCLEATPOWERON_INVALID = YAPI.INVALID_DOUBLE;
         this._className = 'PwmOutput';
         //--- (end of YPwmOutput constructor)
@@ -674,16 +671,16 @@ export class YPwmOutput extends YFunction {
     }
 }
 // API symbols as static members
-YPwmOutput.ENABLED_FALSE = 0 /* FALSE */;
-YPwmOutput.ENABLED_TRUE = 1 /* TRUE */;
-YPwmOutput.ENABLED_INVALID = -1 /* INVALID */;
+YPwmOutput.ENABLED_FALSE = 0;
+YPwmOutput.ENABLED_TRUE = 1;
+YPwmOutput.ENABLED_INVALID = -1;
 YPwmOutput.FREQUENCY_INVALID = YAPI.INVALID_DOUBLE;
 YPwmOutput.PERIOD_INVALID = YAPI.INVALID_DOUBLE;
 YPwmOutput.DUTYCYCLE_INVALID = YAPI.INVALID_DOUBLE;
 YPwmOutput.PULSEDURATION_INVALID = YAPI.INVALID_DOUBLE;
 YPwmOutput.PWMTRANSITION_INVALID = YAPI.INVALID_STRING;
-YPwmOutput.ENABLEDATPOWERON_FALSE = 0 /* FALSE */;
-YPwmOutput.ENABLEDATPOWERON_TRUE = 1 /* TRUE */;
-YPwmOutput.ENABLEDATPOWERON_INVALID = -1 /* INVALID */;
+YPwmOutput.ENABLEDATPOWERON_FALSE = 0;
+YPwmOutput.ENABLEDATPOWERON_TRUE = 1;
+YPwmOutput.ENABLEDATPOWERON_INVALID = -1;
 YPwmOutput.DUTYCYCLEATPOWERON_INVALID = YAPI.INVALID_DOUBLE;
 //# sourceMappingURL=yocto_pwmoutput.js.map

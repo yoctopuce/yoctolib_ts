@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_segmenteddisplay.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_segmenteddisplay.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for SegmentedDisplay functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YSegmentedDisplay = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YSegmentedDisplay definitions)
 //--- (YSegmentedDisplay class start)
 /**
  * YSegmentedDisplay Class: segmented display control interface
@@ -50,8 +49,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YSegmentedDisplay class start)
 class YSegmentedDisplay extends yocto_api_js_1.YFunction {
     //--- (end of YSegmentedDisplay attributes declaration)
-    //--- (YSegmentedDisplay return codes)
-    //--- (end of YSegmentedDisplay return codes)
     constructor(yapi, func) {
         //--- (YSegmentedDisplay constructor)
         super(yapi, func);
@@ -60,11 +57,11 @@ class YSegmentedDisplay extends yocto_api_js_1.YFunction {
         this._valueCallbackSegmentedDisplay = null;
         // API symbols as object properties
         this.DISPLAYEDTEXT_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-        this.DISPLAYMODE_DISCONNECTED = 0 /* DISCONNECTED */;
-        this.DISPLAYMODE_MANUAL = 1 /* MANUAL */;
-        this.DISPLAYMODE_AUTO1 = 2 /* AUTO1 */;
-        this.DISPLAYMODE_AUTO60 = 3 /* AUTO60 */;
-        this.DISPLAYMODE_INVALID = -1 /* INVALID */;
+        this.DISPLAYMODE_DISCONNECTED = 0;
+        this.DISPLAYMODE_MANUAL = 1;
+        this.DISPLAYMODE_AUTO1 = 2;
+        this.DISPLAYMODE_AUTO60 = 3;
+        this.DISPLAYMODE_INVALID = -1;
         this._className = 'SegmentedDisplay';
         //--- (end of YSegmentedDisplay constructor)
     }
@@ -295,9 +292,9 @@ class YSegmentedDisplay extends yocto_api_js_1.YFunction {
 exports.YSegmentedDisplay = YSegmentedDisplay;
 // API symbols as static members
 YSegmentedDisplay.DISPLAYEDTEXT_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-YSegmentedDisplay.DISPLAYMODE_DISCONNECTED = 0 /* DISCONNECTED */;
-YSegmentedDisplay.DISPLAYMODE_MANUAL = 1 /* MANUAL */;
-YSegmentedDisplay.DISPLAYMODE_AUTO1 = 2 /* AUTO1 */;
-YSegmentedDisplay.DISPLAYMODE_AUTO60 = 3 /* AUTO60 */;
-YSegmentedDisplay.DISPLAYMODE_INVALID = -1 /* INVALID */;
+YSegmentedDisplay.DISPLAYMODE_DISCONNECTED = 0;
+YSegmentedDisplay.DISPLAYMODE_MANUAL = 1;
+YSegmentedDisplay.DISPLAYMODE_AUTO1 = 2;
+YSegmentedDisplay.DISPLAYMODE_AUTO60 = 3;
+YSegmentedDisplay.DISPLAYMODE_INVALID = -1;
 //# sourceMappingURL=yocto_segmenteddisplay.js.map

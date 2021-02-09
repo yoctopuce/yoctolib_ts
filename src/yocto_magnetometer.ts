@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_magnetometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YMagnetometer definitions)
-export interface YMagnetometerValueCallback { (func: YMagnetometer, value: string): void }
-export interface YMagnetometerTimedReportCallback { (func: YMagnetometer, measure: YMeasure): void }
-//--- (end of YMagnetometer definitions)
-
 //--- (YMagnetometer class start)
 /**
  * YMagnetometer Class: magnetometer control interface, available for instance in the Yocto-3D-V2
@@ -68,8 +63,8 @@ export class YMagnetometer extends YSensor
     _xValue: number = YMagnetometer.XVALUE_INVALID;
     _yValue: number = YMagnetometer.YVALUE_INVALID;
     _zValue: number = YMagnetometer.ZVALUE_INVALID;
-    _valueCallbackMagnetometer: YMagnetometerValueCallback | null = null;
-    _timedReportCallbackMagnetometer: YMagnetometerTimedReportCallback | null = null;
+    _valueCallbackMagnetometer: YMagnetometer.ValueCallback | null = null;
+    _timedReportCallbackMagnetometer: YMagnetometer.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
@@ -83,9 +78,6 @@ export class YMagnetometer extends YSensor
     public static readonly YVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly ZVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YMagnetometer attributes declaration)
-
-//--- (YMagnetometer return codes)
-//--- (end of YMagnetometer return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -300,7 +292,7 @@ export class YMagnetometer extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YMagnetometerValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YMagnetometer.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -344,7 +336,7 @@ export class YMagnetometer extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YMagnetometerTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YMagnetometer.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -425,5 +417,11 @@ export class YMagnetometer extends YSensor
     }
 
     //--- (end of YMagnetometer implementation)
+}
+
+export namespace YMagnetometer {
+    //--- (YMagnetometer definitions)
+    export interface ValueCallback { (func: YMagnetometer, value: string): void }    export interface TimedReportCallback { (func: YMagnetometer, measure: YMeasure): void }
+    //--- (end of YMagnetometer definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_daisychain.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_daisychain.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -39,18 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YDaisyChain definitions)
-export const enum YDaisyChain_DaisyState {
-    READY = 0,
-    IS_CHILD = 1,
-    FIRMWARE_MISMATCH = 2,
-    CHILD_MISSING = 3,
-    CHILD_LOST = 4,
-    INVALID = -1
-}
-export interface YDaisyChainValueCallback { (func: YDaisyChain, value: string): void }
-//--- (end of YDaisyChain definitions)
-
 //--- (YDaisyChain class start)
 /**
  * YDaisyChain Class: Module chain configuration interface
@@ -65,34 +53,31 @@ export class YDaisyChain extends YFunction
 {
     //--- (YDaisyChain attributes declaration)
     _className: string;
-    _daisyState: YDaisyChain_DaisyState = YDaisyChain.DAISYSTATE_INVALID;
+    _daisyState: YDaisyChain.DAISYSTATE = YDaisyChain.DAISYSTATE_INVALID;
     _childCount: number = YDaisyChain.CHILDCOUNT_INVALID;
     _requiredChildCount: number = YDaisyChain.REQUIREDCHILDCOUNT_INVALID;
-    _valueCallbackDaisyChain: YDaisyChainValueCallback | null = null;
+    _valueCallbackDaisyChain: YDaisyChain.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly DAISYSTATE_READY: YDaisyChain_DaisyState = YDaisyChain_DaisyState.READY;
-    public readonly DAISYSTATE_IS_CHILD: YDaisyChain_DaisyState = YDaisyChain_DaisyState.IS_CHILD;
-    public readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain_DaisyState = YDaisyChain_DaisyState.FIRMWARE_MISMATCH;
-    public readonly DAISYSTATE_CHILD_MISSING: YDaisyChain_DaisyState = YDaisyChain_DaisyState.CHILD_MISSING;
-    public readonly DAISYSTATE_CHILD_LOST: YDaisyChain_DaisyState = YDaisyChain_DaisyState.CHILD_LOST;
-    public readonly DAISYSTATE_INVALID: YDaisyChain_DaisyState = YDaisyChain_DaisyState.INVALID;
+    public readonly DAISYSTATE_READY: YDaisyChain.DAISYSTATE = 0;
+    public readonly DAISYSTATE_IS_CHILD: YDaisyChain.DAISYSTATE = 1;
+    public readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain.DAISYSTATE = 2;
+    public readonly DAISYSTATE_CHILD_MISSING: YDaisyChain.DAISYSTATE = 3;
+    public readonly DAISYSTATE_CHILD_LOST: YDaisyChain.DAISYSTATE = 4;
+    public readonly DAISYSTATE_INVALID: YDaisyChain.DAISYSTATE = -1;
     public readonly CHILDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly REQUIREDCHILDCOUNT_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
-    public static readonly DAISYSTATE_READY: YDaisyChain_DaisyState = YDaisyChain_DaisyState.READY;
-    public static readonly DAISYSTATE_IS_CHILD: YDaisyChain_DaisyState = YDaisyChain_DaisyState.IS_CHILD;
-    public static readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain_DaisyState = YDaisyChain_DaisyState.FIRMWARE_MISMATCH;
-    public static readonly DAISYSTATE_CHILD_MISSING: YDaisyChain_DaisyState = YDaisyChain_DaisyState.CHILD_MISSING;
-    public static readonly DAISYSTATE_CHILD_LOST: YDaisyChain_DaisyState = YDaisyChain_DaisyState.CHILD_LOST;
-    public static readonly DAISYSTATE_INVALID: YDaisyChain_DaisyState = YDaisyChain_DaisyState.INVALID;
+    public static readonly DAISYSTATE_READY: YDaisyChain.DAISYSTATE = 0;
+    public static readonly DAISYSTATE_IS_CHILD: YDaisyChain.DAISYSTATE = 1;
+    public static readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain.DAISYSTATE = 2;
+    public static readonly DAISYSTATE_CHILD_MISSING: YDaisyChain.DAISYSTATE = 3;
+    public static readonly DAISYSTATE_CHILD_LOST: YDaisyChain.DAISYSTATE = 4;
+    public static readonly DAISYSTATE_INVALID: YDaisyChain.DAISYSTATE = -1;
     public static readonly CHILDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly REQUIREDCHILDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YDaisyChain attributes declaration)
-
-//--- (YDaisyChain return codes)
-//--- (end of YDaisyChain return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -108,7 +93,7 @@ export class YDaisyChain extends YFunction
     {
         switch(name) {
         case 'daisyState':
-            this._daisyState = <YDaisyChain_DaisyState> <number> val;
+            this._daisyState = <YDaisyChain.DAISYSTATE> <number> val;
             return 1;
         case 'childCount':
             this._childCount = <number> <number> val;
@@ -129,7 +114,7 @@ export class YDaisyChain extends YFunction
      *
      * On failure, throws an exception or returns YDaisyChain.DAISYSTATE_INVALID.
      */
-    async get_daisyState(): Promise<YDaisyChain_DaisyState>
+    async get_daisyState(): Promise<YDaisyChain.DAISYSTATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -285,7 +270,7 @@ export class YDaisyChain extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YDaisyChainValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YDaisyChain.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -372,5 +357,19 @@ export class YDaisyChain extends YFunction
     }
 
     //--- (end of YDaisyChain implementation)
+}
+
+export namespace YDaisyChain {
+    //--- (YDaisyChain definitions)
+    export const enum DAISYSTATE {
+        READY = 0,
+        IS_CHILD = 1,
+        FIRMWARE_MISMATCH = 2,
+        CHILD_MISSING = 3,
+        CHILD_LOST = 4,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YDaisyChain, value: string): void }
+    //--- (end of YDaisyChain definitions)
 }
 

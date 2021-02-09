@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_gyro.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -39,13 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (generated code: YQt definitions)
-export interface YQtValueCallback { (func: YQt, value: string): void }
-export interface YQtTimedReportCallback { (func: YQt, measure: YMeasure): void }
-//--- (end of generated code: YQt definitions)
-export interface YQuatCallback{ (func: YGyro, w: number, x: number, y:number, z: number): void }
-export interface YAnglesCallback{ (func: YGyro, roll: number, pitch: number, head:number): void }
-
 //--- (generated code: YQt class start)
 /**
  * YQt Class: Base interface to access quaternion components, available for instance in the Yocto-3D-V2
@@ -63,8 +56,8 @@ export class YQt extends YSensor
 {
     //--- (generated code: YQt attributes declaration)
     _className: string;
-    _valueCallbackQt: YQtValueCallback | null = null;
-    _timedReportCallbackQt: YQtTimedReportCallback | null = null;
+    _valueCallbackQt: YQt.ValueCallback | null = null;
+    _timedReportCallbackQt: YQt.TimedReportCallback | null = null;
 
     // API symbols as static members
     //--- (end of generated code: YQt attributes declaration)
@@ -168,7 +161,7 @@ export class YQt extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YQtValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YQt.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -212,7 +205,7 @@ export class YQt extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YQtTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YQt.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -295,17 +288,19 @@ export class YQt extends YSensor
     //--- (end of generated code: YQt implementation)
 }
 
-//--- (generated code: YGyro definitions)
-export interface YGyroValueCallback { (func: YGyro, value: string): void }
-export interface YGyroTimedReportCallback { (func: YGyro, measure: YMeasure): void }
-//--- (end of generated code: YGyro definitions)
-
 async function yInternalGyroCallback(YQt_obj: YQt, str_value: string)
 {
     var gyro: YGyro = <YGyro>await YQt_obj.get_userData();
     if(!gyro) return;
     var idx = parseInt(YQt_obj.imm_get_functionId().slice(2));
     gyro._invokeGyroCallbacks(idx, parseInt(str_value));
+}
+
+export namespace YQt
+{
+    //--- (generated code: YQt definitions)
+    export interface ValueCallback { (func: YQt, value: string): void }    export interface TimedReportCallback { (func: YQt, measure: YMeasure): void }
+    //--- (end of generated code: YQt definitions)
 }
 
 //--- (generated code: YGyro class start)
@@ -330,8 +325,8 @@ export class YGyro extends YSensor
     _xValue: number = YGyro.XVALUE_INVALID;
     _yValue: number = YGyro.YVALUE_INVALID;
     _zValue: number = YGyro.ZVALUE_INVALID;
-    _valueCallbackGyro: YGyroValueCallback | null = null;
-    _timedReportCallbackGyro: YGyroTimedReportCallback | null = null;
+    _valueCallbackGyro: YGyro.ValueCallback | null = null;
+    _timedReportCallbackGyro: YGyro.TimedReportCallback | null = null;
     _qt_stamp: number = 0;
     _qt_w: YQt;
     _qt_x: YQt;
@@ -345,8 +340,8 @@ export class YGyro extends YSensor
     _head: number = 0;
     _pitch: number = 0;
     _roll: number = 0;
-    _quatCallback: YQuatCallback | null = null;
-    _anglesCallback: YAnglesCallback | null = null;
+    _quatCallback: YGyro.YQuatCallback | null = null;
+    _anglesCallback: YGyro.YAnglesCallback | null = null;
 
     // API symbols as object properties
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
@@ -578,7 +573,7 @@ export class YGyro extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YGyroValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YGyro.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -622,7 +617,7 @@ export class YGyro extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YGyroTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YGyro.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -854,7 +849,7 @@ export class YGyro extends YSensor
      *         (as floating-point numbers).
      * @noreturn
      */
-    async registerQuaternionCallback(callback: YQuatCallback | null): Promise<number>
+    async registerQuaternionCallback(callback: YGyro.YQuatCallback | null): Promise<number>
     {
         this._quatCallback = callback;
         if (callback != null) {
@@ -871,10 +866,10 @@ export class YGyro extends YSensor
             await this._qt_z.registerValueCallback(yInternalGyroCallback);
         } else {
             if (!(this._anglesCallback != null)) {
-                await this._qt_w.registerValueCallback(<YQtValueCallback | null> null);
-                await this._qt_x.registerValueCallback(<YQtValueCallback | null> null);
-                await this._qt_y.registerValueCallback(<YQtValueCallback | null> null);
-                await this._qt_z.registerValueCallback(<YQtValueCallback | null> null);
+                await this._qt_w.registerValueCallback(<YQt.ValueCallback | null> null);
+                await this._qt_x.registerValueCallback(<YQt.ValueCallback | null> null);
+                await this._qt_y.registerValueCallback(<YQt.ValueCallback | null> null);
+                await this._qt_z.registerValueCallback(<YQt.ValueCallback | null> null);
             }
         }
         return 0;
@@ -895,7 +890,7 @@ export class YGyro extends YSensor
      *         in degrees (as floating-point numbers).
      * @noreturn
      */
-    async registerAnglesCallback(callback: YAnglesCallback | null): Promise<number>
+    async registerAnglesCallback(callback: YGyro.YAnglesCallback | null): Promise<number>
     {
         this._anglesCallback = callback;
         if (callback != null) {
@@ -912,10 +907,10 @@ export class YGyro extends YSensor
             await this._qt_z.registerValueCallback(yInternalGyroCallback);
         } else {
             if (!(this._quatCallback != null)) {
-                await this._qt_w.registerValueCallback(<YQtValueCallback | null> null);
-                await this._qt_x.registerValueCallback(<YQtValueCallback | null> null);
-                await this._qt_y.registerValueCallback(<YQtValueCallback | null> null);
-                await this._qt_z.registerValueCallback(<YQtValueCallback | null> null);
+                await this._qt_w.registerValueCallback(<YQt.ValueCallback | null> null);
+                await this._qt_x.registerValueCallback(<YQt.ValueCallback | null> null);
+                await this._qt_y.registerValueCallback(<YQt.ValueCallback | null> null);
+                await this._qt_z.registerValueCallback(<YQt.ValueCallback | null> null);
             }
         }
         return 0;
@@ -1013,4 +1008,13 @@ export class YGyro extends YSensor
     }
 
     //--- (end of generated code: YGyro implementation)
+}
+
+export namespace YGyro
+{
+    //--- (generated code: YGyro definitions)
+    export interface ValueCallback { (func: YGyro, value: string): void }    export interface TimedReportCallback { (func: YGyro, measure: YMeasure): void }
+    //--- (end of generated code: YGyro definitions)
+    export interface YQuatCallback{ (func: YGyro, w: number, x: number, y:number, z: number): void }
+    export interface YAnglesCallback{ (func: YGyro, roll: number, pitch: number, head:number): void }
 }

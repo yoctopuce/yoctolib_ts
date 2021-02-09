@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multiaxiscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_multiaxiscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for MultiAxisController functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YMultiAxisController definitions)
 //--- (YMultiAxisController class start)
 /**
  * YMultiAxisController Class: MultiAxisController function interface
@@ -48,8 +47,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YMultiAxisController class start)
 export class YMultiAxisController extends YFunction {
     //--- (end of YMultiAxisController attributes declaration)
-    //--- (YMultiAxisController return codes)
-    //--- (end of YMultiAxisController return codes)
     constructor(yapi, func) {
         //--- (YMultiAxisController constructor)
         super(yapi, func);
@@ -59,13 +56,13 @@ export class YMultiAxisController extends YFunction {
         this._valueCallbackMultiAxisController = null;
         // API symbols as object properties
         this.NAXIS_INVALID = YAPI.INVALID_UINT;
-        this.GLOBALSTATE_ABSENT = 0 /* ABSENT */;
-        this.GLOBALSTATE_ALERT = 1 /* ALERT */;
-        this.GLOBALSTATE_HI_Z = 2 /* HI_Z */;
-        this.GLOBALSTATE_STOP = 3 /* STOP */;
-        this.GLOBALSTATE_RUN = 4 /* RUN */;
-        this.GLOBALSTATE_BATCH = 5 /* BATCH */;
-        this.GLOBALSTATE_INVALID = -1 /* INVALID */;
+        this.GLOBALSTATE_ABSENT = 0;
+        this.GLOBALSTATE_ALERT = 1;
+        this.GLOBALSTATE_HI_Z = 2;
+        this.GLOBALSTATE_STOP = 3;
+        this.GLOBALSTATE_RUN = 4;
+        this.GLOBALSTATE_BATCH = 5;
+        this.GLOBALSTATE_INVALID = -1;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this._className = 'MultiAxisController';
         //--- (end of YMultiAxisController constructor)
@@ -455,12 +452,12 @@ export class YMultiAxisController extends YFunction {
 }
 // API symbols as static members
 YMultiAxisController.NAXIS_INVALID = YAPI.INVALID_UINT;
-YMultiAxisController.GLOBALSTATE_ABSENT = 0 /* ABSENT */;
-YMultiAxisController.GLOBALSTATE_ALERT = 1 /* ALERT */;
-YMultiAxisController.GLOBALSTATE_HI_Z = 2 /* HI_Z */;
-YMultiAxisController.GLOBALSTATE_STOP = 3 /* STOP */;
-YMultiAxisController.GLOBALSTATE_RUN = 4 /* RUN */;
-YMultiAxisController.GLOBALSTATE_BATCH = 5 /* BATCH */;
-YMultiAxisController.GLOBALSTATE_INVALID = -1 /* INVALID */;
+YMultiAxisController.GLOBALSTATE_ABSENT = 0;
+YMultiAxisController.GLOBALSTATE_ALERT = 1;
+YMultiAxisController.GLOBALSTATE_HI_Z = 2;
+YMultiAxisController.GLOBALSTATE_STOP = 3;
+YMultiAxisController.GLOBALSTATE_RUN = 4;
+YMultiAxisController.GLOBALSTATE_BATCH = 5;
+YMultiAxisController.GLOBALSTATE_INVALID = -1;
 YMultiAxisController.COMMAND_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_multiaxiscontroller.js.map

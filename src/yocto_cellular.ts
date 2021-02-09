@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_cellular.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -38,9 +38,6 @@
  *********************************************************************/
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
-
-//--- (generated code: YCellRecord definitions)
-//--- (end of generated code: YCellRecord definitions)
 
 //--- (generated code: YCellRecord class start)
 /**
@@ -159,33 +156,10 @@ export class YCellRecord
     //--- (end of generated code: YCellRecord implementation)
 }
 
-//--- (generated code: YCellular definitions)
-export const enum YCellular_CellType {
-    GPRS = 0,
-    EGPRS = 1,
-    WCDMA = 2,
-    HSDPA = 3,
-    NONE = 4,
-    CDMA = 5,
-    LTE_M = 6,
-    NB_IOT = 7,
-    EC_GSM_IOT = 8,
-    INVALID = -1
+export namespace YCellRecord {
+//--- (generated code: YCellRecord definitions)
+//--- (end of generated code: YCellRecord definitions)
 }
-export const enum YCellular_AirplaneMode {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export const enum YCellular_EnableData {
-    HOMENETWORK = 0,
-    ROAMING = 1,
-    NEVER = 2,
-    NEUTRALITY = 3,
-    INVALID = -1
-}
-export interface YCellularValueCallback { (func: YCellular, value: string): void }
-//--- (end of generated code: YCellular definitions)
 
 //--- (generated code: YCellular class start)
 /**
@@ -205,49 +179,49 @@ export class YCellular extends YFunction
     _linkQuality: number = YCellular.LINKQUALITY_INVALID;
     _cellOperator: string = YCellular.CELLOPERATOR_INVALID;
     _cellIdentifier: string = YCellular.CELLIDENTIFIER_INVALID;
-    _cellType: YCellular_CellType = YCellular.CELLTYPE_INVALID;
+    _cellType: YCellular.CELLTYPE = YCellular.CELLTYPE_INVALID;
     _imsi: string = YCellular.IMSI_INVALID;
     _message: string = YCellular.MESSAGE_INVALID;
     _pin: string = YCellular.PIN_INVALID;
     _radioConfig: string = YCellular.RADIOCONFIG_INVALID;
     _lockedOperator: string = YCellular.LOCKEDOPERATOR_INVALID;
-    _airplaneMode: YCellular_AirplaneMode = YCellular.AIRPLANEMODE_INVALID;
-    _enableData: YCellular_EnableData = YCellular.ENABLEDATA_INVALID;
+    _airplaneMode: YCellular.AIRPLANEMODE = YCellular.AIRPLANEMODE_INVALID;
+    _enableData: YCellular.ENABLEDATA = YCellular.ENABLEDATA_INVALID;
     _apn: string = YCellular.APN_INVALID;
     _apnSecret: string = YCellular.APNSECRET_INVALID;
     _pingInterval: number = YCellular.PINGINTERVAL_INVALID;
     _dataSent: number = YCellular.DATASENT_INVALID;
     _dataReceived: number = YCellular.DATARECEIVED_INVALID;
     _command: string = YCellular.COMMAND_INVALID;
-    _valueCallbackCellular: YCellularValueCallback | null = null;
+    _valueCallbackCellular: YCellular.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly LINKQUALITY_INVALID: number = YAPI.INVALID_UINT;
     public readonly CELLOPERATOR_INVALID: string = YAPI.INVALID_STRING;
     public readonly CELLIDENTIFIER_INVALID: string = YAPI.INVALID_STRING;
-    public readonly CELLTYPE_GPRS: YCellular_CellType = YCellular_CellType.GPRS;
-    public readonly CELLTYPE_EGPRS: YCellular_CellType = YCellular_CellType.EGPRS;
-    public readonly CELLTYPE_WCDMA: YCellular_CellType = YCellular_CellType.WCDMA;
-    public readonly CELLTYPE_HSDPA: YCellular_CellType = YCellular_CellType.HSDPA;
-    public readonly CELLTYPE_NONE: YCellular_CellType = YCellular_CellType.NONE;
-    public readonly CELLTYPE_CDMA: YCellular_CellType = YCellular_CellType.CDMA;
-    public readonly CELLTYPE_LTE_M: YCellular_CellType = YCellular_CellType.LTE_M;
-    public readonly CELLTYPE_NB_IOT: YCellular_CellType = YCellular_CellType.NB_IOT;
-    public readonly CELLTYPE_EC_GSM_IOT: YCellular_CellType = YCellular_CellType.EC_GSM_IOT;
-    public readonly CELLTYPE_INVALID: YCellular_CellType = YCellular_CellType.INVALID;
+    public readonly CELLTYPE_GPRS: YCellular.CELLTYPE = 0;
+    public readonly CELLTYPE_EGPRS: YCellular.CELLTYPE = 1;
+    public readonly CELLTYPE_WCDMA: YCellular.CELLTYPE = 2;
+    public readonly CELLTYPE_HSDPA: YCellular.CELLTYPE = 3;
+    public readonly CELLTYPE_NONE: YCellular.CELLTYPE = 4;
+    public readonly CELLTYPE_CDMA: YCellular.CELLTYPE = 5;
+    public readonly CELLTYPE_LTE_M: YCellular.CELLTYPE = 6;
+    public readonly CELLTYPE_NB_IOT: YCellular.CELLTYPE = 7;
+    public readonly CELLTYPE_EC_GSM_IOT: YCellular.CELLTYPE = 8;
+    public readonly CELLTYPE_INVALID: YCellular.CELLTYPE = -1;
     public readonly IMSI_INVALID: string = YAPI.INVALID_STRING;
     public readonly MESSAGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly PIN_INVALID: string = YAPI.INVALID_STRING;
     public readonly RADIOCONFIG_INVALID: string = YAPI.INVALID_STRING;
     public readonly LOCKEDOPERATOR_INVALID: string = YAPI.INVALID_STRING;
-    public readonly AIRPLANEMODE_OFF: YCellular_AirplaneMode = YCellular_AirplaneMode.OFF;
-    public readonly AIRPLANEMODE_ON: YCellular_AirplaneMode = YCellular_AirplaneMode.ON;
-    public readonly AIRPLANEMODE_INVALID: YCellular_AirplaneMode = YCellular_AirplaneMode.INVALID;
-    public readonly ENABLEDATA_HOMENETWORK: YCellular_EnableData = YCellular_EnableData.HOMENETWORK;
-    public readonly ENABLEDATA_ROAMING: YCellular_EnableData = YCellular_EnableData.ROAMING;
-    public readonly ENABLEDATA_NEVER: YCellular_EnableData = YCellular_EnableData.NEVER;
-    public readonly ENABLEDATA_NEUTRALITY: YCellular_EnableData = YCellular_EnableData.NEUTRALITY;
-    public readonly ENABLEDATA_INVALID: YCellular_EnableData = YCellular_EnableData.INVALID;
+    public readonly AIRPLANEMODE_OFF: YCellular.AIRPLANEMODE = 0;
+    public readonly AIRPLANEMODE_ON: YCellular.AIRPLANEMODE = 1;
+    public readonly AIRPLANEMODE_INVALID: YCellular.AIRPLANEMODE = -1;
+    public readonly ENABLEDATA_HOMENETWORK: YCellular.ENABLEDATA = 0;
+    public readonly ENABLEDATA_ROAMING: YCellular.ENABLEDATA = 1;
+    public readonly ENABLEDATA_NEVER: YCellular.ENABLEDATA = 2;
+    public readonly ENABLEDATA_NEUTRALITY: YCellular.ENABLEDATA = 3;
+    public readonly ENABLEDATA_INVALID: YCellular.ENABLEDATA = -1;
     public readonly APN_INVALID: string = YAPI.INVALID_STRING;
     public readonly APNSECRET_INVALID: string = YAPI.INVALID_STRING;
     public readonly PINGINTERVAL_INVALID: number = YAPI.INVALID_UINT;
@@ -259,29 +233,29 @@ export class YCellular extends YFunction
     public static readonly LINKQUALITY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly CELLOPERATOR_INVALID: string = YAPI.INVALID_STRING;
     public static readonly CELLIDENTIFIER_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly CELLTYPE_GPRS: YCellular_CellType = YCellular_CellType.GPRS;
-    public static readonly CELLTYPE_EGPRS: YCellular_CellType = YCellular_CellType.EGPRS;
-    public static readonly CELLTYPE_WCDMA: YCellular_CellType = YCellular_CellType.WCDMA;
-    public static readonly CELLTYPE_HSDPA: YCellular_CellType = YCellular_CellType.HSDPA;
-    public static readonly CELLTYPE_NONE: YCellular_CellType = YCellular_CellType.NONE;
-    public static readonly CELLTYPE_CDMA: YCellular_CellType = YCellular_CellType.CDMA;
-    public static readonly CELLTYPE_LTE_M: YCellular_CellType = YCellular_CellType.LTE_M;
-    public static readonly CELLTYPE_NB_IOT: YCellular_CellType = YCellular_CellType.NB_IOT;
-    public static readonly CELLTYPE_EC_GSM_IOT: YCellular_CellType = YCellular_CellType.EC_GSM_IOT;
-    public static readonly CELLTYPE_INVALID: YCellular_CellType = YCellular_CellType.INVALID;
+    public static readonly CELLTYPE_GPRS: YCellular.CELLTYPE = 0;
+    public static readonly CELLTYPE_EGPRS: YCellular.CELLTYPE = 1;
+    public static readonly CELLTYPE_WCDMA: YCellular.CELLTYPE = 2;
+    public static readonly CELLTYPE_HSDPA: YCellular.CELLTYPE = 3;
+    public static readonly CELLTYPE_NONE: YCellular.CELLTYPE = 4;
+    public static readonly CELLTYPE_CDMA: YCellular.CELLTYPE = 5;
+    public static readonly CELLTYPE_LTE_M: YCellular.CELLTYPE = 6;
+    public static readonly CELLTYPE_NB_IOT: YCellular.CELLTYPE = 7;
+    public static readonly CELLTYPE_EC_GSM_IOT: YCellular.CELLTYPE = 8;
+    public static readonly CELLTYPE_INVALID: YCellular.CELLTYPE = -1;
     public static readonly IMSI_INVALID: string = YAPI.INVALID_STRING;
     public static readonly MESSAGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly PIN_INVALID: string = YAPI.INVALID_STRING;
     public static readonly RADIOCONFIG_INVALID: string = YAPI.INVALID_STRING;
     public static readonly LOCKEDOPERATOR_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly AIRPLANEMODE_OFF: YCellular_AirplaneMode = YCellular_AirplaneMode.OFF;
-    public static readonly AIRPLANEMODE_ON: YCellular_AirplaneMode = YCellular_AirplaneMode.ON;
-    public static readonly AIRPLANEMODE_INVALID: YCellular_AirplaneMode = YCellular_AirplaneMode.INVALID;
-    public static readonly ENABLEDATA_HOMENETWORK: YCellular_EnableData = YCellular_EnableData.HOMENETWORK;
-    public static readonly ENABLEDATA_ROAMING: YCellular_EnableData = YCellular_EnableData.ROAMING;
-    public static readonly ENABLEDATA_NEVER: YCellular_EnableData = YCellular_EnableData.NEVER;
-    public static readonly ENABLEDATA_NEUTRALITY: YCellular_EnableData = YCellular_EnableData.NEUTRALITY;
-    public static readonly ENABLEDATA_INVALID: YCellular_EnableData = YCellular_EnableData.INVALID;
+    public static readonly AIRPLANEMODE_OFF: YCellular.AIRPLANEMODE = 0;
+    public static readonly AIRPLANEMODE_ON: YCellular.AIRPLANEMODE = 1;
+    public static readonly AIRPLANEMODE_INVALID: YCellular.AIRPLANEMODE = -1;
+    public static readonly ENABLEDATA_HOMENETWORK: YCellular.ENABLEDATA = 0;
+    public static readonly ENABLEDATA_ROAMING: YCellular.ENABLEDATA = 1;
+    public static readonly ENABLEDATA_NEVER: YCellular.ENABLEDATA = 2;
+    public static readonly ENABLEDATA_NEUTRALITY: YCellular.ENABLEDATA = 3;
+    public static readonly ENABLEDATA_INVALID: YCellular.ENABLEDATA = -1;
     public static readonly APN_INVALID: string = YAPI.INVALID_STRING;
     public static readonly APNSECRET_INVALID: string = YAPI.INVALID_STRING;
     public static readonly PINGINTERVAL_INVALID: number = YAPI.INVALID_UINT;
@@ -313,7 +287,7 @@ export class YCellular extends YFunction
             this._cellIdentifier = <string> <string> val;
             return 1;
         case 'cellType':
-            this._cellType = <YCellular_CellType> <number> val;
+            this._cellType = <YCellular.CELLTYPE> <number> val;
             return 1;
         case 'imsi':
             this._imsi = <string> <string> val;
@@ -331,10 +305,10 @@ export class YCellular extends YFunction
             this._lockedOperator = <string> <string> val;
             return 1;
         case 'airplaneMode':
-            this._airplaneMode = <YCellular_AirplaneMode> <number> val;
+            this._airplaneMode = <YCellular.AIRPLANEMODE> <number> val;
             return 1;
         case 'enableData':
-            this._enableData = <YCellular_EnableData> <number> val;
+            this._enableData = <YCellular.ENABLEDATA> <number> val;
             return 1;
         case 'apn':
             this._apn = <string> <string> val;
@@ -425,7 +399,7 @@ export class YCellular extends YFunction
      *
      * On failure, throws an exception or returns YCellular.CELLTYPE_INVALID.
      */
-    async get_cellType(): Promise<YCellular_CellType>
+    async get_cellType(): Promise<YCellular.CELLTYPE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -626,7 +600,7 @@ export class YCellular extends YFunction
      *
      * On failure, throws an exception or returns YCellular.AIRPLANEMODE_INVALID.
      */
-    async get_airplaneMode(): Promise<YCellular_AirplaneMode>
+    async get_airplaneMode(): Promise<YCellular.AIRPLANEMODE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -648,7 +622,7 @@ export class YCellular extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_airplaneMode(newval: YCellular_AirplaneMode): Promise<number>
+    async set_airplaneMode(newval: YCellular.AIRPLANEMODE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -665,7 +639,7 @@ export class YCellular extends YFunction
      *
      * On failure, throws an exception or returns YCellular.ENABLEDATA_INVALID.
      */
-    async get_enableData(): Promise<YCellular_EnableData>
+    async get_enableData(): Promise<YCellular.ENABLEDATA>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -695,7 +669,7 @@ export class YCellular extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enableData(newval: YCellular_EnableData): Promise<number>
+    async set_enableData(newval: YCellular.ENABLEDATA): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -982,7 +956,7 @@ export class YCellular extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YCellularValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YCellular.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -5769,5 +5743,36 @@ export class YCellular extends YFunction
     }
 
     //--- (end of generated code: YCellular implementation)
+}
+
+export namespace YCellular
+{
+    //--- (generated code: YCellular definitions)
+    export const enum CELLTYPE {
+        GPRS = 0,
+        EGPRS = 1,
+        WCDMA = 2,
+        HSDPA = 3,
+        NONE = 4,
+        CDMA = 5,
+        LTE_M = 6,
+        NB_IOT = 7,
+        EC_GSM_IOT = 8,
+        INVALID = -1
+    }
+    export const enum AIRPLANEMODE {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export const enum ENABLEDATA {
+        HOMENETWORK = 0,
+        ROAMING = 1,
+        NEVER = 2,
+        NEUTRALITY = 3,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YCellular, value: string): void }
+    //--- (end of generated code: YCellular definitions)
 }
 

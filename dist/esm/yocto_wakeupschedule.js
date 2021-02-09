@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YWakeUpSchedule definitions)
 //--- (YWakeUpSchedule class start)
 /**
  * YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
@@ -50,8 +49,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YWakeUpSchedule class start)
 export class YWakeUpSchedule extends YFunction {
     //--- (end of YWakeUpSchedule attributes declaration)
-    //--- (YWakeUpSchedule return codes)
-    //--- (end of YWakeUpSchedule return codes)
     constructor(yapi, func) {
         //--- (YWakeUpSchedule constructor)
         super(yapi, func);

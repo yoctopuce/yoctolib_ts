@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_poweroutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_poweroutput.ts 43762 2021-02-08 15:30:55Z mvuilleu $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -37,17 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YPowerOutput_Voltage {
-    OFF = 0,
-    OUT3V3 = 1,
-    OUT5V = 2,
-    OUT4V7 = 3,
-    OUT1V8 = 4,
-    INVALID = -1
-}
-export interface YPowerOutputValueCallback {
-    (func: YPowerOutput, value: string): void;
-}
 /**
  * YPowerOutput Class: power output control interface, available for instance in the Yocto-I2C, the
  * Yocto-MaxiMicroVolt-Rx, the Yocto-SPI or the Yocto-Serial
@@ -57,20 +46,20 @@ export interface YPowerOutputValueCallback {
  */
 export declare class YPowerOutput extends YFunction {
     _className: string;
-    _voltage: YPowerOutput_Voltage;
-    _valueCallbackPowerOutput: YPowerOutputValueCallback | null;
-    readonly VOLTAGE_OFF: YPowerOutput_Voltage;
-    readonly VOLTAGE_OUT3V3: YPowerOutput_Voltage;
-    readonly VOLTAGE_OUT5V: YPowerOutput_Voltage;
-    readonly VOLTAGE_OUT4V7: YPowerOutput_Voltage;
-    readonly VOLTAGE_OUT1V8: YPowerOutput_Voltage;
-    readonly VOLTAGE_INVALID: YPowerOutput_Voltage;
-    static readonly VOLTAGE_OFF: YPowerOutput_Voltage;
-    static readonly VOLTAGE_OUT3V3: YPowerOutput_Voltage;
-    static readonly VOLTAGE_OUT5V: YPowerOutput_Voltage;
-    static readonly VOLTAGE_OUT4V7: YPowerOutput_Voltage;
-    static readonly VOLTAGE_OUT1V8: YPowerOutput_Voltage;
-    static readonly VOLTAGE_INVALID: YPowerOutput_Voltage;
+    _voltage: YPowerOutput.VOLTAGE;
+    _valueCallbackPowerOutput: YPowerOutput.ValueCallback | null;
+    readonly VOLTAGE_OFF: YPowerOutput.VOLTAGE;
+    readonly VOLTAGE_OUT3V3: YPowerOutput.VOLTAGE;
+    readonly VOLTAGE_OUT5V: YPowerOutput.VOLTAGE;
+    readonly VOLTAGE_OUT4V7: YPowerOutput.VOLTAGE;
+    readonly VOLTAGE_OUT1V8: YPowerOutput.VOLTAGE;
+    readonly VOLTAGE_INVALID: YPowerOutput.VOLTAGE;
+    static readonly VOLTAGE_OFF: YPowerOutput.VOLTAGE;
+    static readonly VOLTAGE_OUT3V3: YPowerOutput.VOLTAGE;
+    static readonly VOLTAGE_OUT5V: YPowerOutput.VOLTAGE;
+    static readonly VOLTAGE_OUT4V7: YPowerOutput.VOLTAGE;
+    static readonly VOLTAGE_OUT1V8: YPowerOutput.VOLTAGE;
+    static readonly VOLTAGE_INVALID: YPowerOutput.VOLTAGE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -82,7 +71,7 @@ export declare class YPowerOutput extends YFunction {
      *
      * On failure, throws an exception or returns YPowerOutput.VOLTAGE_INVALID.
      */
-    get_voltage(): Promise<YPowerOutput_Voltage>;
+    get_voltage(): Promise<YPowerOutput.VOLTAGE>;
     /**
      * Changes the voltage on the power output provided by the
      * module. Remember to call the saveToFlash() method of the module if the
@@ -97,7 +86,7 @@ export declare class YPowerOutput extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_voltage(newval: YPowerOutput_Voltage): Promise<number>;
+    set_voltage(newval: YPowerOutput.VOLTAGE): Promise<number>;
     /**
      * Retrieves a power output for a given identifier.
      * The identifier can be specified using several formats:
@@ -164,7 +153,7 @@ export declare class YPowerOutput extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YPowerOutputValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YPowerOutput.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of power output started using yFirstPowerOutput().
@@ -199,4 +188,17 @@ export declare class YPowerOutput extends YFunction {
      *         if there are none.
      */
     static FirstPowerOutputInContext(yctx: YAPIContext): YPowerOutput | null;
+}
+export declare namespace YPowerOutput {
+    const enum VOLTAGE {
+        OFF = 0,
+        OUT3V3 = 1,
+        OUT5V = 2,
+        OUT4V7 = 3,
+        OUT1V8 = 4,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YPowerOutput, value: string): void;
+    }
 }

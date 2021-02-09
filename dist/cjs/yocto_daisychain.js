@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_daisychain.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_daisychain.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YDaisyChain = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YDaisyChain definitions)
 //--- (YDaisyChain class start)
 /**
  * YDaisyChain Class: Module chain configuration interface
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YDaisyChain class start)
 class YDaisyChain extends yocto_api_js_1.YFunction {
     //--- (end of YDaisyChain attributes declaration)
-    //--- (YDaisyChain return codes)
-    //--- (end of YDaisyChain return codes)
     constructor(yapi, func) {
         //--- (YDaisyChain constructor)
         super(yapi, func);
@@ -62,12 +59,12 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
         this._requiredChildCount = YDaisyChain.REQUIREDCHILDCOUNT_INVALID;
         this._valueCallbackDaisyChain = null;
         // API symbols as object properties
-        this.DAISYSTATE_READY = 0 /* READY */;
-        this.DAISYSTATE_IS_CHILD = 1 /* IS_CHILD */;
-        this.DAISYSTATE_FIRMWARE_MISMATCH = 2 /* FIRMWARE_MISMATCH */;
-        this.DAISYSTATE_CHILD_MISSING = 3 /* CHILD_MISSING */;
-        this.DAISYSTATE_CHILD_LOST = 4 /* CHILD_LOST */;
-        this.DAISYSTATE_INVALID = -1 /* INVALID */;
+        this.DAISYSTATE_READY = 0;
+        this.DAISYSTATE_IS_CHILD = 1;
+        this.DAISYSTATE_FIRMWARE_MISMATCH = 2;
+        this.DAISYSTATE_CHILD_MISSING = 3;
+        this.DAISYSTATE_CHILD_LOST = 4;
+        this.DAISYSTATE_INVALID = -1;
         this.CHILDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.REQUIREDCHILDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this._className = 'DaisyChain';
@@ -327,12 +324,12 @@ class YDaisyChain extends yocto_api_js_1.YFunction {
 }
 exports.YDaisyChain = YDaisyChain;
 // API symbols as static members
-YDaisyChain.DAISYSTATE_READY = 0 /* READY */;
-YDaisyChain.DAISYSTATE_IS_CHILD = 1 /* IS_CHILD */;
-YDaisyChain.DAISYSTATE_FIRMWARE_MISMATCH = 2 /* FIRMWARE_MISMATCH */;
-YDaisyChain.DAISYSTATE_CHILD_MISSING = 3 /* CHILD_MISSING */;
-YDaisyChain.DAISYSTATE_CHILD_LOST = 4 /* CHILD_LOST */;
-YDaisyChain.DAISYSTATE_INVALID = -1 /* INVALID */;
+YDaisyChain.DAISYSTATE_READY = 0;
+YDaisyChain.DAISYSTATE_IS_CHILD = 1;
+YDaisyChain.DAISYSTATE_FIRMWARE_MISMATCH = 2;
+YDaisyChain.DAISYSTATE_CHILD_MISSING = 3;
+YDaisyChain.DAISYSTATE_CHILD_LOST = 4;
+YDaisyChain.DAISYSTATE_INVALID = -1;
 YDaisyChain.CHILDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDaisyChain.REQUIREDCHILDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 //# sourceMappingURL=yocto_daisychain.js.map

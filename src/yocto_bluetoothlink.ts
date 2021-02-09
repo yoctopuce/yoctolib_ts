@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_bluetoothlink.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -39,24 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YBluetoothLink definitions)
-export const enum YBluetoothLink_Mute {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export const enum YBluetoothLink_LinkState {
-    DOWN = 0,
-    FREE = 1,
-    SEARCH = 2,
-    EXISTS = 3,
-    LINKED = 4,
-    PLAY = 5,
-    INVALID = -1
-}
-export interface YBluetoothLinkValueCallback { (func: YBluetoothLink, value: string): void }
-//--- (end of YBluetoothLink definitions)
-
 //--- (YBluetoothLink class start)
 /**
  * YBluetoothLink Class: Bluetooth sound controller control interface
@@ -74,31 +56,31 @@ export class YBluetoothLink extends YFunction
     _pairingPin: string = YBluetoothLink.PAIRINGPIN_INVALID;
     _remoteAddress: string = YBluetoothLink.REMOTEADDRESS_INVALID;
     _remoteName: string = YBluetoothLink.REMOTENAME_INVALID;
-    _mute: YBluetoothLink_Mute = YBluetoothLink.MUTE_INVALID;
+    _mute: YBluetoothLink.MUTE = YBluetoothLink.MUTE_INVALID;
     _preAmplifier: number = YBluetoothLink.PREAMPLIFIER_INVALID;
     _volume: number = YBluetoothLink.VOLUME_INVALID;
-    _linkState: YBluetoothLink_LinkState = YBluetoothLink.LINKSTATE_INVALID;
+    _linkState: YBluetoothLink.LINKSTATE = YBluetoothLink.LINKSTATE_INVALID;
     _linkQuality: number = YBluetoothLink.LINKQUALITY_INVALID;
     _command: string = YBluetoothLink.COMMAND_INVALID;
-    _valueCallbackBluetoothLink: YBluetoothLinkValueCallback | null = null;
+    _valueCallbackBluetoothLink: YBluetoothLink.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly OWNADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public readonly PAIRINGPIN_INVALID: string = YAPI.INVALID_STRING;
     public readonly REMOTEADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public readonly REMOTENAME_INVALID: string = YAPI.INVALID_STRING;
-    public readonly MUTE_FALSE: YBluetoothLink_Mute = YBluetoothLink_Mute.FALSE;
-    public readonly MUTE_TRUE: YBluetoothLink_Mute = YBluetoothLink_Mute.TRUE;
-    public readonly MUTE_INVALID: YBluetoothLink_Mute = YBluetoothLink_Mute.INVALID;
+    public readonly MUTE_FALSE: YBluetoothLink.MUTE = 0;
+    public readonly MUTE_TRUE: YBluetoothLink.MUTE = 1;
+    public readonly MUTE_INVALID: YBluetoothLink.MUTE = -1;
     public readonly PREAMPLIFIER_INVALID: number = YAPI.INVALID_UINT;
     public readonly VOLUME_INVALID: number = YAPI.INVALID_UINT;
-    public readonly LINKSTATE_DOWN: YBluetoothLink_LinkState = YBluetoothLink_LinkState.DOWN;
-    public readonly LINKSTATE_FREE: YBluetoothLink_LinkState = YBluetoothLink_LinkState.FREE;
-    public readonly LINKSTATE_SEARCH: YBluetoothLink_LinkState = YBluetoothLink_LinkState.SEARCH;
-    public readonly LINKSTATE_EXISTS: YBluetoothLink_LinkState = YBluetoothLink_LinkState.EXISTS;
-    public readonly LINKSTATE_LINKED: YBluetoothLink_LinkState = YBluetoothLink_LinkState.LINKED;
-    public readonly LINKSTATE_PLAY: YBluetoothLink_LinkState = YBluetoothLink_LinkState.PLAY;
-    public readonly LINKSTATE_INVALID: YBluetoothLink_LinkState = YBluetoothLink_LinkState.INVALID;
+    public readonly LINKSTATE_DOWN: YBluetoothLink.LINKSTATE = 0;
+    public readonly LINKSTATE_FREE: YBluetoothLink.LINKSTATE = 1;
+    public readonly LINKSTATE_SEARCH: YBluetoothLink.LINKSTATE = 2;
+    public readonly LINKSTATE_EXISTS: YBluetoothLink.LINKSTATE = 3;
+    public readonly LINKSTATE_LINKED: YBluetoothLink.LINKSTATE = 4;
+    public readonly LINKSTATE_PLAY: YBluetoothLink.LINKSTATE = 5;
+    public readonly LINKSTATE_INVALID: YBluetoothLink.LINKSTATE = -1;
     public readonly LINKQUALITY_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
@@ -107,24 +89,21 @@ export class YBluetoothLink extends YFunction
     public static readonly PAIRINGPIN_INVALID: string = YAPI.INVALID_STRING;
     public static readonly REMOTEADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly REMOTENAME_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly MUTE_FALSE: YBluetoothLink_Mute = YBluetoothLink_Mute.FALSE;
-    public static readonly MUTE_TRUE: YBluetoothLink_Mute = YBluetoothLink_Mute.TRUE;
-    public static readonly MUTE_INVALID: YBluetoothLink_Mute = YBluetoothLink_Mute.INVALID;
+    public static readonly MUTE_FALSE: YBluetoothLink.MUTE = 0;
+    public static readonly MUTE_TRUE: YBluetoothLink.MUTE = 1;
+    public static readonly MUTE_INVALID: YBluetoothLink.MUTE = -1;
     public static readonly PREAMPLIFIER_INVALID: number = YAPI.INVALID_UINT;
     public static readonly VOLUME_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly LINKSTATE_DOWN: YBluetoothLink_LinkState = YBluetoothLink_LinkState.DOWN;
-    public static readonly LINKSTATE_FREE: YBluetoothLink_LinkState = YBluetoothLink_LinkState.FREE;
-    public static readonly LINKSTATE_SEARCH: YBluetoothLink_LinkState = YBluetoothLink_LinkState.SEARCH;
-    public static readonly LINKSTATE_EXISTS: YBluetoothLink_LinkState = YBluetoothLink_LinkState.EXISTS;
-    public static readonly LINKSTATE_LINKED: YBluetoothLink_LinkState = YBluetoothLink_LinkState.LINKED;
-    public static readonly LINKSTATE_PLAY: YBluetoothLink_LinkState = YBluetoothLink_LinkState.PLAY;
-    public static readonly LINKSTATE_INVALID: YBluetoothLink_LinkState = YBluetoothLink_LinkState.INVALID;
+    public static readonly LINKSTATE_DOWN: YBluetoothLink.LINKSTATE = 0;
+    public static readonly LINKSTATE_FREE: YBluetoothLink.LINKSTATE = 1;
+    public static readonly LINKSTATE_SEARCH: YBluetoothLink.LINKSTATE = 2;
+    public static readonly LINKSTATE_EXISTS: YBluetoothLink.LINKSTATE = 3;
+    public static readonly LINKSTATE_LINKED: YBluetoothLink.LINKSTATE = 4;
+    public static readonly LINKSTATE_PLAY: YBluetoothLink.LINKSTATE = 5;
+    public static readonly LINKSTATE_INVALID: YBluetoothLink.LINKSTATE = -1;
     public static readonly LINKQUALITY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YBluetoothLink attributes declaration)
-
-//--- (YBluetoothLink return codes)
-//--- (end of YBluetoothLink return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -152,7 +131,7 @@ export class YBluetoothLink extends YFunction
             this._remoteName = <string> <string> val;
             return 1;
         case 'mute':
-            this._mute = <YBluetoothLink_Mute> <number> val;
+            this._mute = <YBluetoothLink.MUTE> <number> val;
             return 1;
         case 'preAmplifier':
             this._preAmplifier = <number> <number> val;
@@ -161,7 +140,7 @@ export class YBluetoothLink extends YFunction
             this._volume = <number> <number> val;
             return 1;
         case 'linkState':
-            this._linkState = <YBluetoothLink_LinkState> <number> val;
+            this._linkState = <YBluetoothLink.LINKSTATE> <number> val;
             return 1;
         case 'linkQuality':
             this._linkQuality = <number> <number> val;
@@ -298,7 +277,7 @@ export class YBluetoothLink extends YFunction
      *
      * On failure, throws an exception or returns YBluetoothLink.MUTE_INVALID.
      */
-    async get_mute(): Promise<YBluetoothLink_Mute>
+    async get_mute(): Promise<YBluetoothLink.MUTE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -321,7 +300,7 @@ export class YBluetoothLink extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_mute(newval: YBluetoothLink_Mute): Promise<number>
+    async set_mute(newval: YBluetoothLink.MUTE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -409,7 +388,7 @@ export class YBluetoothLink extends YFunction
      *
      * On failure, throws an exception or returns YBluetoothLink.LINKSTATE_INVALID.
      */
-    async get_linkState(): Promise<YBluetoothLink_LinkState>
+    async get_linkState(): Promise<YBluetoothLink.LINKSTATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -546,7 +525,7 @@ export class YBluetoothLink extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YBluetoothLinkValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YBluetoothLink.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -657,5 +636,25 @@ export class YBluetoothLink extends YFunction
     }
 
     //--- (end of YBluetoothLink implementation)
+}
+
+export namespace YBluetoothLink {
+    //--- (YBluetoothLink definitions)
+    export const enum MUTE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export const enum LINKSTATE {
+        DOWN = 0,
+        FREE = 1,
+        SEARCH = 2,
+        EXISTS = 3,
+        LINKED = 4,
+        PLAY = 5,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YBluetoothLink, value: string): void }
+    //--- (end of YBluetoothLink definitions)
 }
 

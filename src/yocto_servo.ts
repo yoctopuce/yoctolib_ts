@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_servo.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_servo.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -39,27 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YServo definitions)
-export const enum YServo_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export const enum YServo_EnabledAtPowerOn {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-
-class YServoMove
-{
-    public target: number = YAPI.INVALID_INT;
-    public ms: number = YAPI.INVALID_INT;
-    public moving: number = YAPI.INVALID_UINT;
-}
-export interface YServoValueCallback { (func: YServo, value: string): void }
-//--- (end of YServo definitions)
-
 //--- (YServo class start)
 /**
  * YServo Class: RC servo motor control interface, available for instance in the Yocto-Servo
@@ -77,42 +56,39 @@ export class YServo extends YFunction
     //--- (YServo attributes declaration)
     _className: string;
     _position: number = YServo.POSITION_INVALID;
-    _enabled: YServo_Enabled = YServo.ENABLED_INVALID;
+    _enabled: YServo.ENABLED = YServo.ENABLED_INVALID;
     _range: number = YServo.RANGE_INVALID;
     _neutral: number = YServo.NEUTRAL_INVALID;
-    _move: YServoMove = new YServoMove();
+    _move: YServo.Move = {};
     _positionAtPowerOn: number = YServo.POSITIONATPOWERON_INVALID;
-    _enabledAtPowerOn: YServo_EnabledAtPowerOn = YServo.ENABLEDATPOWERON_INVALID;
-    _valueCallbackServo: YServoValueCallback | null = null;
+    _enabledAtPowerOn: YServo.ENABLEDATPOWERON = YServo.ENABLEDATPOWERON_INVALID;
+    _valueCallbackServo: YServo.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly POSITION_INVALID: number = YAPI.INVALID_INT;
-    public readonly ENABLED_FALSE: YServo_Enabled = YServo_Enabled.FALSE;
-    public readonly ENABLED_TRUE: YServo_Enabled = YServo_Enabled.TRUE;
-    public readonly ENABLED_INVALID: YServo_Enabled = YServo_Enabled.INVALID;
+    public readonly ENABLED_FALSE: YServo.ENABLED = 0;
+    public readonly ENABLED_TRUE: YServo.ENABLED = 1;
+    public readonly ENABLED_INVALID: YServo.ENABLED = -1;
     public readonly RANGE_INVALID: number = YAPI.INVALID_UINT;
     public readonly NEUTRAL_INVALID: number = YAPI.INVALID_UINT;
     public readonly POSITIONATPOWERON_INVALID: number = YAPI.INVALID_INT;
-    public readonly ENABLEDATPOWERON_FALSE: YServo_EnabledAtPowerOn = YServo_EnabledAtPowerOn.FALSE;
-    public readonly ENABLEDATPOWERON_TRUE: YServo_EnabledAtPowerOn = YServo_EnabledAtPowerOn.TRUE;
-    public readonly ENABLEDATPOWERON_INVALID: YServo_EnabledAtPowerOn = YServo_EnabledAtPowerOn.INVALID;
+    public readonly ENABLEDATPOWERON_FALSE: YServo.ENABLEDATPOWERON = 0;
+    public readonly ENABLEDATPOWERON_TRUE: YServo.ENABLEDATPOWERON = 1;
+    public readonly ENABLEDATPOWERON_INVALID: YServo.ENABLEDATPOWERON = -1;
 
     // API symbols as static members
-    public static readonly MOVE_INVALID: YServoMove = new YServoMove();
+    public static readonly MOVE_INVALID: YServo.Move = {};
     public static readonly POSITION_INVALID: number = YAPI.INVALID_INT;
-    public static readonly ENABLED_FALSE: YServo_Enabled = YServo_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: YServo_Enabled = YServo_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: YServo_Enabled = YServo_Enabled.INVALID;
+    public static readonly ENABLED_FALSE: YServo.ENABLED = 0;
+    public static readonly ENABLED_TRUE: YServo.ENABLED = 1;
+    public static readonly ENABLED_INVALID: YServo.ENABLED = -1;
     public static readonly RANGE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly NEUTRAL_INVALID: number = YAPI.INVALID_UINT;
     public static readonly POSITIONATPOWERON_INVALID: number = YAPI.INVALID_INT;
-    public static readonly ENABLEDATPOWERON_FALSE: YServo_EnabledAtPowerOn = YServo_EnabledAtPowerOn.FALSE;
-    public static readonly ENABLEDATPOWERON_TRUE: YServo_EnabledAtPowerOn = YServo_EnabledAtPowerOn.TRUE;
-    public static readonly ENABLEDATPOWERON_INVALID: YServo_EnabledAtPowerOn = YServo_EnabledAtPowerOn.INVALID;
+    public static readonly ENABLEDATPOWERON_FALSE: YServo.ENABLEDATPOWERON = 0;
+    public static readonly ENABLEDATPOWERON_TRUE: YServo.ENABLEDATPOWERON = 1;
+    public static readonly ENABLEDATPOWERON_INVALID: YServo.ENABLEDATPOWERON = -1;
     //--- (end of YServo attributes declaration)
-
-//--- (YServo return codes)
-//--- (end of YServo return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -131,7 +107,7 @@ export class YServo extends YFunction
             this._position = <number> <number> val;
             return 1;
         case 'enabled':
-            this._enabled = <YServo_Enabled> <number> val;
+            this._enabled = <YServo.ENABLED> <number> val;
             return 1;
         case 'range':
             this._range = <number> <number> val;
@@ -140,13 +116,13 @@ export class YServo extends YFunction
             this._neutral = <number> <number> val;
             return 1;
         case 'move':
-            this._move = <YServoMove> val;
+            this._move = <YServo.Move> val;
             return 1;
         case 'positionAtPowerOn':
             this._positionAtPowerOn = <number> <number> val;
             return 1;
         case 'enabledAtPowerOn':
-            this._enabledAtPowerOn = <YServo_EnabledAtPowerOn> <number> val;
+            this._enabledAtPowerOn = <YServo.ENABLEDATPOWERON> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -194,7 +170,7 @@ export class YServo extends YFunction
      *
      * On failure, throws an exception or returns YServo.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<YServo_Enabled>
+    async get_enabled(): Promise<YServo.ENABLED>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -215,7 +191,7 @@ export class YServo extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: YServo_Enabled): Promise<number>
+    async set_enabled(newval: YServo.ENABLED): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -304,9 +280,9 @@ export class YServo extends YFunction
         return await this._setAttr('neutral',rest_val);
     }
 
-    async get_move(): Promise<YServoMove>
+    async get_move(): Promise<YServo.Move>
     {
-        let res: YServoMove;
+        let res: YServo.Move;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YServo.MOVE_INVALID;
@@ -316,7 +292,7 @@ export class YServo extends YFunction
         return res;
     }
 
-    async set_move(newval: YServoMove): Promise<number>
+    async set_move(newval: YServo.Move): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
@@ -384,7 +360,7 @@ export class YServo extends YFunction
      *
      * On failure, throws an exception or returns YServo.ENABLEDATPOWERON_INVALID.
      */
-    async get_enabledAtPowerOn(): Promise<YServo_EnabledAtPowerOn>
+    async get_enabledAtPowerOn(): Promise<YServo.ENABLEDATPOWERON>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -406,7 +382,7 @@ export class YServo extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabledAtPowerOn(newval: YServo_EnabledAtPowerOn): Promise<number>
+    async set_enabledAtPowerOn(newval: YServo.ENABLEDATPOWERON): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -499,7 +475,7 @@ export class YServo extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YServoValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YServo.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -586,5 +562,22 @@ export class YServo extends YFunction
     }
 
     //--- (end of YServo implementation)
+}
+
+export namespace YServo {
+    //--- (YServo definitions)
+    export const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface Move { target?: number; ms?: number; moving?: number; }
+    export const enum ENABLEDATPOWERON {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YServo, value: string): void }
+    //--- (end of YServo definitions)
 }
 

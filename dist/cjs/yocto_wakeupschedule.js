@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YWakeUpSchedule = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YWakeUpSchedule definitions)
 //--- (YWakeUpSchedule class start)
 /**
  * YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YWakeUpSchedule class start)
 class YWakeUpSchedule extends yocto_api_js_1.YFunction {
     //--- (end of YWakeUpSchedule attributes declaration)
-    //--- (YWakeUpSchedule return codes)
-    //--- (end of YWakeUpSchedule return codes)
     constructor(yapi, func) {
         //--- (YWakeUpSchedule constructor)
         super(yapi, func);

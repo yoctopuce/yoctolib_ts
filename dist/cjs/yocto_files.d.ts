@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_files.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -67,8 +67,7 @@ export declare class YFileRecord {
      */
     get_crc(): Promise<number>;
 }
-export interface YFilesValueCallback {
-    (func: YFiles, value: string): void;
+export declare namespace YFileRecord {
 }
 /**
  * YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
@@ -84,7 +83,7 @@ export declare class YFiles extends YFunction {
     _className: string;
     _filesCount: number;
     _freeSpace: number;
-    _valueCallbackFiles: YFilesValueCallback | null;
+    _valueCallbackFiles: YFiles.ValueCallback | null;
     readonly FILESCOUNT_INVALID: number;
     readonly FREESPACE_INVALID: number;
     static readonly FILESCOUNT_INVALID: number;
@@ -173,7 +172,7 @@ export declare class YFiles extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YFilesValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YFiles.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(command: string): Promise<Uint8Array>;
     /**
@@ -279,4 +278,9 @@ export declare class YFiles extends YFunction {
      *         if there are none.
      */
     static FirstFilesInContext(yctx: YAPIContext): YFiles | null;
+}
+export declare namespace YFiles {
+    interface ValueCallback {
+        (func: YFiles, value: string): void;
+    }
 }

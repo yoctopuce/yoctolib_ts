@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_display.ts 43775 2021-02-09 10:35:51Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -37,24 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YDisplayLayer_Align {
-    TOP_LEFT = 0,
-    CENTER_LEFT = 1,
-    BASELINE_LEFT = 2,
-    BOTTOM_LEFT = 3,
-    TOP_CENTER = 4,
-    CENTER = 5,
-    BASELINE_CENTER = 6,
-    BOTTOM_CENTER = 7,
-    TOP_DECIMAL = 8,
-    CENTER_DECIMAL = 9,
-    BASELINE_DECIMAL = 10,
-    BOTTOM_DECIMAL = 11,
-    TOP_RIGHT = 12,
-    CENTER_RIGHT = 13,
-    BASELINE_RIGHT = 14,
-    BOTTOM_RIGHT = 15
-}
 /**
  * YDisplayLayer Class: Interface for drawing into display layers, obtained by calling display.get_displayLayer.
  *
@@ -69,38 +51,38 @@ export declare class YDisplayLayer {
     private _id;
     private _cmdbuff;
     private _hidden;
-    readonly ALIGN_TOP_LEFT: YDisplayLayer_Align;
-    readonly ALIGN_CENTER_LEFT: YDisplayLayer_Align;
-    readonly ALIGN_BASELINE_LEFT: YDisplayLayer_Align;
-    readonly ALIGN_BOTTOM_LEFT: YDisplayLayer_Align;
-    readonly ALIGN_TOP_CENTER: YDisplayLayer_Align;
-    readonly ALIGN_CENTER: YDisplayLayer_Align;
-    readonly ALIGN_BASELINE_CENTER: YDisplayLayer_Align;
-    readonly ALIGN_BOTTOM_CENTER: YDisplayLayer_Align;
-    readonly ALIGN_TOP_DECIMAL: YDisplayLayer_Align;
-    readonly ALIGN_CENTER_DECIMAL: YDisplayLayer_Align;
-    readonly ALIGN_BASELINE_DECIMAL: YDisplayLayer_Align;
-    readonly ALIGN_BOTTOM_DECIMAL: YDisplayLayer_Align;
-    readonly ALIGN_TOP_RIGHT: YDisplayLayer_Align;
-    readonly ALIGN_CENTER_RIGHT: YDisplayLayer_Align;
-    readonly ALIGN_BASELINE_RIGHT: YDisplayLayer_Align;
-    readonly ALIGN_BOTTOM_RIGHT: YDisplayLayer_Align;
-    static readonly ALIGN_TOP_LEFT: YDisplayLayer_Align;
-    static readonly ALIGN_CENTER_LEFT: YDisplayLayer_Align;
-    static readonly ALIGN_BASELINE_LEFT: YDisplayLayer_Align;
-    static readonly ALIGN_BOTTOM_LEFT: YDisplayLayer_Align;
-    static readonly ALIGN_TOP_CENTER: YDisplayLayer_Align;
-    static readonly ALIGN_CENTER: YDisplayLayer_Align;
-    static readonly ALIGN_BASELINE_CENTER: YDisplayLayer_Align;
-    static readonly ALIGN_BOTTOM_CENTER: YDisplayLayer_Align;
-    static readonly ALIGN_TOP_DECIMAL: YDisplayLayer_Align;
-    static readonly ALIGN_CENTER_DECIMAL: YDisplayLayer_Align;
-    static readonly ALIGN_BASELINE_DECIMAL: YDisplayLayer_Align;
-    static readonly ALIGN_BOTTOM_DECIMAL: YDisplayLayer_Align;
-    static readonly ALIGN_TOP_RIGHT: YDisplayLayer_Align;
-    static readonly ALIGN_CENTER_RIGHT: YDisplayLayer_Align;
-    static readonly ALIGN_BASELINE_RIGHT: YDisplayLayer_Align;
-    static readonly ALIGN_BOTTOM_RIGHT: YDisplayLayer_Align;
+    readonly ALIGN_TOP_LEFT: YDisplayLayer.ALIGN;
+    readonly ALIGN_CENTER_LEFT: YDisplayLayer.ALIGN;
+    readonly ALIGN_BASELINE_LEFT: YDisplayLayer.ALIGN;
+    readonly ALIGN_BOTTOM_LEFT: YDisplayLayer.ALIGN;
+    readonly ALIGN_TOP_CENTER: YDisplayLayer.ALIGN;
+    readonly ALIGN_CENTER: YDisplayLayer.ALIGN;
+    readonly ALIGN_BASELINE_CENTER: YDisplayLayer.ALIGN;
+    readonly ALIGN_BOTTOM_CENTER: YDisplayLayer.ALIGN;
+    readonly ALIGN_TOP_DECIMAL: YDisplayLayer.ALIGN;
+    readonly ALIGN_CENTER_DECIMAL: YDisplayLayer.ALIGN;
+    readonly ALIGN_BASELINE_DECIMAL: YDisplayLayer.ALIGN;
+    readonly ALIGN_BOTTOM_DECIMAL: YDisplayLayer.ALIGN;
+    readonly ALIGN_TOP_RIGHT: YDisplayLayer.ALIGN;
+    readonly ALIGN_CENTER_RIGHT: YDisplayLayer.ALIGN;
+    readonly ALIGN_BASELINE_RIGHT: YDisplayLayer.ALIGN;
+    readonly ALIGN_BOTTOM_RIGHT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_TOP_LEFT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_CENTER_LEFT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BASELINE_LEFT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BOTTOM_LEFT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_TOP_CENTER: YDisplayLayer.ALIGN;
+    static readonly ALIGN_CENTER: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BASELINE_CENTER: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BOTTOM_CENTER: YDisplayLayer.ALIGN;
+    static readonly ALIGN_TOP_DECIMAL: YDisplayLayer.ALIGN;
+    static readonly ALIGN_CENTER_DECIMAL: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BASELINE_DECIMAL: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BOTTOM_DECIMAL: YDisplayLayer.ALIGN;
+    static readonly ALIGN_TOP_RIGHT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_CENTER_RIGHT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BASELINE_RIGHT: YDisplayLayer.ALIGN;
+    static readonly ALIGN_BOTTOM_RIGHT: YDisplayLayer.ALIGN;
     constructor(obj_parent: YDisplay, int_id: number);
     imm_must_be_flushed(): boolean;
     imm_resetHiddenFlag(): number;
@@ -269,13 +251,13 @@ export declare class YDisplayLayer {
      * @param x : the distance from left of layer to the text anchor point, in pixels
      * @param y : the distance from top of layer to the text anchor point, in pixels
      * @param anchor : the text anchor point, chosen among the YDisplayLayer.ALIGN enumeration:
-     *         YDisplayLayer.ALIGN_TOP_LEFT,    YDisplayLayer.ALIGN_CENTER_LEFT,
+     *         YDisplayLayer.ALIGN_TOP_LEFT,         YDisplayLayer.ALIGN_CENTER_LEFT,
      *         YDisplayLayer.ALIGN_BASELINE_LEFT,    YDisplayLayer.ALIGN_BOTTOM_LEFT,
-     *         YDisplayLayer.ALIGN_TOP_CENTER,  YDisplayLayer.ALIGN_CENTER,
+     *         YDisplayLayer.ALIGN_TOP_CENTER,       YDisplayLayer.ALIGN_CENTER,
      *         YDisplayLayer.ALIGN_BASELINE_CENTER,  YDisplayLayer.ALIGN_BOTTOM_CENTER,
-     *         YDisplayLayer.ALIGN_TOP_DECIMAL, YDisplayLayer.ALIGN_CENTER_DECIMAL,
+     *         YDisplayLayer.ALIGN_TOP_DECIMAL,      YDisplayLayer.ALIGN_CENTER_DECIMAL,
      *         YDisplayLayer.ALIGN_BASELINE_DECIMAL, YDisplayLayer.ALIGN_BOTTOM_DECIMAL,
-     *         YDisplayLayer.ALIGN_TOP_RIGHT,   YDisplayLayer.ALIGN_CENTER_RIGHT,
+     *         YDisplayLayer.ALIGN_TOP_RIGHT,        YDisplayLayer.ALIGN_CENTER_RIGHT,
      *         YDisplayLayer.ALIGN_BASELINE_RIGHT,   YDisplayLayer.ALIGN_BOTTOM_RIGHT.
      * @param text : the text string to draw
      *
@@ -283,7 +265,7 @@ export declare class YDisplayLayer {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    drawText(x: number, y: number, anchor: YDisplayLayer_Align, text: string): Promise<number>;
+    drawText(x: number, y: number, anchor: YDisplayLayer.ALIGN, text: string): Promise<number>;
     /**
      * Draws a GIF image at the specified position. The GIF image must have been previously
      * uploaded to the device built-in memory. If you experience problems using an image
@@ -477,26 +459,25 @@ export declare class YDisplayLayer {
     get_layerHeight(): Promise<number>;
     resetHiddenFlag(): Promise<number>;
 }
-export declare const enum YDisplay_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YDisplay_Orientation {
-    LEFT = 0,
-    UP = 1,
-    RIGHT = 2,
-    DOWN = 3,
-    INVALID = -1
-}
-export declare const enum YDisplay_DisplayType {
-    MONO = 0,
-    GRAY = 1,
-    RGB = 2,
-    INVALID = -1
-}
-export interface YDisplayValueCallback {
-    (func: YDisplay, value: string): void;
+export declare namespace YDisplayLayer {
+    const enum ALIGN {
+        TOP_LEFT = 0,
+        CENTER_LEFT = 1,
+        BASELINE_LEFT = 2,
+        BOTTOM_LEFT = 3,
+        TOP_CENTER = 4,
+        CENTER = 5,
+        BASELINE_CENTER = 6,
+        BOTTOM_CENTER = 7,
+        TOP_DECIMAL = 8,
+        CENTER_DECIMAL = 9,
+        BASELINE_DECIMAL = 10,
+        BOTTOM_DECIMAL = 11,
+        TOP_RIGHT = 12,
+        CENTER_RIGHT = 13,
+        BASELINE_RIGHT = 14,
+        BOTTOM_RIGHT = 15
+    }
 }
 /**
  * YDisplay Class: display control interface, available for instance in the Yocto-Display, the
@@ -519,55 +500,55 @@ export declare class YDisplay extends YFunction {
     _sequence: string;
     _recording: boolean;
     _className: string;
-    _enabled: YDisplay_Enabled;
+    _enabled: YDisplay.ENABLED;
     _startupSeq: string;
     _brightness: number;
-    _orientation: YDisplay_Orientation;
+    _orientation: YDisplay.ORIENTATION;
     _displayWidth: number;
     _displayHeight: number;
-    _displayType: YDisplay_DisplayType;
+    _displayType: YDisplay.DISPLAYTYPE;
     _layerWidth: number;
     _layerHeight: number;
     _layerCount: number;
     _command: string;
-    _valueCallbackDisplay: YDisplayValueCallback | null;
+    _valueCallbackDisplay: YDisplay.ValueCallback | null;
     _allDisplayLayers: YDisplayLayer[];
-    readonly ENABLED_FALSE: YDisplay_Enabled;
-    readonly ENABLED_TRUE: YDisplay_Enabled;
-    readonly ENABLED_INVALID: YDisplay_Enabled;
+    readonly ENABLED_FALSE: YDisplay.ENABLED;
+    readonly ENABLED_TRUE: YDisplay.ENABLED;
+    readonly ENABLED_INVALID: YDisplay.ENABLED;
     readonly STARTUPSEQ_INVALID: string;
     readonly BRIGHTNESS_INVALID: number;
-    readonly ORIENTATION_LEFT: YDisplay_Orientation;
-    readonly ORIENTATION_UP: YDisplay_Orientation;
-    readonly ORIENTATION_RIGHT: YDisplay_Orientation;
-    readonly ORIENTATION_DOWN: YDisplay_Orientation;
-    readonly ORIENTATION_INVALID: YDisplay_Orientation;
+    readonly ORIENTATION_LEFT: YDisplay.ORIENTATION;
+    readonly ORIENTATION_UP: YDisplay.ORIENTATION;
+    readonly ORIENTATION_RIGHT: YDisplay.ORIENTATION;
+    readonly ORIENTATION_DOWN: YDisplay.ORIENTATION;
+    readonly ORIENTATION_INVALID: YDisplay.ORIENTATION;
     readonly DISPLAYWIDTH_INVALID: number;
     readonly DISPLAYHEIGHT_INVALID: number;
-    readonly DISPLAYTYPE_MONO: YDisplay_DisplayType;
-    readonly DISPLAYTYPE_GRAY: YDisplay_DisplayType;
-    readonly DISPLAYTYPE_RGB: YDisplay_DisplayType;
-    readonly DISPLAYTYPE_INVALID: YDisplay_DisplayType;
+    readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE;
+    readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE;
+    readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE;
+    readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE;
     readonly LAYERWIDTH_INVALID: number;
     readonly LAYERHEIGHT_INVALID: number;
     readonly LAYERCOUNT_INVALID: number;
     readonly COMMAND_INVALID: string;
-    static readonly ENABLED_FALSE: YDisplay_Enabled;
-    static readonly ENABLED_TRUE: YDisplay_Enabled;
-    static readonly ENABLED_INVALID: YDisplay_Enabled;
+    static readonly ENABLED_FALSE: YDisplay.ENABLED;
+    static readonly ENABLED_TRUE: YDisplay.ENABLED;
+    static readonly ENABLED_INVALID: YDisplay.ENABLED;
     static readonly STARTUPSEQ_INVALID: string;
     static readonly BRIGHTNESS_INVALID: number;
-    static readonly ORIENTATION_LEFT: YDisplay_Orientation;
-    static readonly ORIENTATION_UP: YDisplay_Orientation;
-    static readonly ORIENTATION_RIGHT: YDisplay_Orientation;
-    static readonly ORIENTATION_DOWN: YDisplay_Orientation;
-    static readonly ORIENTATION_INVALID: YDisplay_Orientation;
+    static readonly ORIENTATION_LEFT: YDisplay.ORIENTATION;
+    static readonly ORIENTATION_UP: YDisplay.ORIENTATION;
+    static readonly ORIENTATION_RIGHT: YDisplay.ORIENTATION;
+    static readonly ORIENTATION_DOWN: YDisplay.ORIENTATION;
+    static readonly ORIENTATION_INVALID: YDisplay.ORIENTATION;
     static readonly DISPLAYWIDTH_INVALID: number;
     static readonly DISPLAYHEIGHT_INVALID: number;
-    static readonly DISPLAYTYPE_MONO: YDisplay_DisplayType;
-    static readonly DISPLAYTYPE_GRAY: YDisplay_DisplayType;
-    static readonly DISPLAYTYPE_RGB: YDisplay_DisplayType;
-    static readonly DISPLAYTYPE_INVALID: YDisplay_DisplayType;
+    static readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE;
+    static readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE;
+    static readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE;
+    static readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE;
     static readonly LAYERWIDTH_INVALID: number;
     static readonly LAYERHEIGHT_INVALID: number;
     static readonly LAYERCOUNT_INVALID: number;
@@ -582,7 +563,7 @@ export declare class YDisplay extends YFunction {
      *
      * On failure, throws an exception or returns YDisplay.ENABLED_INVALID.
      */
-    get_enabled(): Promise<YDisplay_Enabled>;
+    get_enabled(): Promise<YDisplay.ENABLED>;
     /**
      * Changes the power state of the display.
      *
@@ -593,7 +574,7 @@ export declare class YDisplay extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: YDisplay_Enabled): Promise<number>;
+    set_enabled(newval: YDisplay.ENABLED): Promise<number>;
     /**
      * Returns the name of the sequence to play when the displayed is powered on.
      *
@@ -643,7 +624,7 @@ export declare class YDisplay extends YFunction {
      *
      * On failure, throws an exception or returns YDisplay.ORIENTATION_INVALID.
      */
-    get_orientation(): Promise<YDisplay_Orientation>;
+    get_orientation(): Promise<YDisplay.ORIENTATION>;
     /**
      * Changes the display orientation. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
@@ -655,7 +636,7 @@ export declare class YDisplay extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_orientation(newval: YDisplay_Orientation): Promise<number>;
+    set_orientation(newval: YDisplay.ORIENTATION): Promise<number>;
     /**
      * Returns the display width, in pixels.
      *
@@ -680,7 +661,7 @@ export declare class YDisplay extends YFunction {
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
-    get_displayType(): Promise<YDisplay_DisplayType>;
+    get_displayType(): Promise<YDisplay.DISPLAYTYPE>;
     /**
      * Returns the width of the layers to draw on, in pixels.
      *
@@ -773,7 +754,7 @@ export declare class YDisplay extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YDisplayValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YDisplay.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Clears the display screen and resets all display layers to their default state.
@@ -947,4 +928,27 @@ export declare class YDisplay extends YFunction {
     resetHiddenLayerFlags(): Promise<void>;
     imm_resetHiddenLayerFlags(): void;
     sendCommand(cmd: string): Promise<number>;
+}
+export declare namespace YDisplay {
+    const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum ORIENTATION {
+        LEFT = 0,
+        UP = 1,
+        RIGHT = 2,
+        DOWN = 3,
+        INVALID = -1
+    }
+    const enum DISPLAYTYPE {
+        MONO = 0,
+        GRAY = 1,
+        RGB = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YDisplay, value: string): void;
+    }
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pressure.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pressure.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPressure definitions)
-export interface YPressureValueCallback { (func: YPressure, value: string): void }
-export interface YPressureTimedReportCallback { (func: YPressure, measure: YMeasure): void }
-//--- (end of YPressure definitions)
-
 //--- (YPressure class start)
 /**
  * YPressure Class: pressure sensor control interface, available for instance in the
@@ -59,14 +54,11 @@ export class YPressure extends YSensor
 {
     //--- (YPressure attributes declaration)
     _className: string;
-    _valueCallbackPressure: YPressureValueCallback | null = null;
-    _timedReportCallbackPressure: YPressureTimedReportCallback | null = null;
+    _valueCallbackPressure: YPressure.ValueCallback | null = null;
+    _timedReportCallbackPressure: YPressure.TimedReportCallback | null = null;
 
     // API symbols as static members
     //--- (end of YPressure attributes declaration)
-
-//--- (YPressure return codes)
-//--- (end of YPressure return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -164,7 +156,7 @@ export class YPressure extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPressureValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPressure.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -208,7 +200,7 @@ export class YPressure extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YPressureTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YPressure.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -289,5 +281,11 @@ export class YPressure extends YSensor
     }
 
     //--- (end of YPressure implementation)
+}
+
+export namespace YPressure {
+    //--- (YPressure definitions)
+    export interface ValueCallback { (func: YPressure, value: string): void }    export interface TimedReportCallback { (func: YPressure, measure: YMeasure): void }
+    //--- (end of YPressure definitions)
 }
 

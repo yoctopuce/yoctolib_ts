@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_temperature.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YTemperature = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YTemperature definitions)
 //--- (YTemperature class start)
 /**
  * YTemperature Class: temperature sensor control interface, available for instance in the
@@ -55,8 +54,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YTemperature class start)
 class YTemperature extends yocto_api_js_1.YSensor {
     //--- (end of YTemperature attributes declaration)
-    //--- (YTemperature return codes)
-    //--- (end of YTemperature return codes)
     constructor(yapi, func) {
         //--- (YTemperature constructor)
         super(yapi, func);
@@ -67,25 +64,25 @@ class YTemperature extends yocto_api_js_1.YSensor {
         this._valueCallbackTemperature = null;
         this._timedReportCallbackTemperature = null;
         // API symbols as object properties
-        this.SENSORTYPE_DIGITAL = 0 /* DIGITAL */;
-        this.SENSORTYPE_TYPE_K = 1 /* TYPE_K */;
-        this.SENSORTYPE_TYPE_E = 2 /* TYPE_E */;
-        this.SENSORTYPE_TYPE_J = 3 /* TYPE_J */;
-        this.SENSORTYPE_TYPE_N = 4 /* TYPE_N */;
-        this.SENSORTYPE_TYPE_R = 5 /* TYPE_R */;
-        this.SENSORTYPE_TYPE_S = 6 /* TYPE_S */;
-        this.SENSORTYPE_TYPE_T = 7 /* TYPE_T */;
-        this.SENSORTYPE_PT100_4WIRES = 8 /* PT100_4WIRES */;
-        this.SENSORTYPE_PT100_3WIRES = 9 /* PT100_3WIRES */;
-        this.SENSORTYPE_PT100_2WIRES = 10 /* PT100_2WIRES */;
-        this.SENSORTYPE_RES_OHM = 11 /* RES_OHM */;
-        this.SENSORTYPE_RES_NTC = 12 /* RES_NTC */;
-        this.SENSORTYPE_RES_LINEAR = 13 /* RES_LINEAR */;
-        this.SENSORTYPE_RES_INTERNAL = 14 /* RES_INTERNAL */;
-        this.SENSORTYPE_IR = 15 /* IR */;
-        this.SENSORTYPE_RES_PT1000 = 16 /* RES_PT1000 */;
-        this.SENSORTYPE_CHANNEL_OFF = 17 /* CHANNEL_OFF */;
-        this.SENSORTYPE_INVALID = -1 /* INVALID */;
+        this.SENSORTYPE_DIGITAL = 0;
+        this.SENSORTYPE_TYPE_K = 1;
+        this.SENSORTYPE_TYPE_E = 2;
+        this.SENSORTYPE_TYPE_J = 3;
+        this.SENSORTYPE_TYPE_N = 4;
+        this.SENSORTYPE_TYPE_R = 5;
+        this.SENSORTYPE_TYPE_S = 6;
+        this.SENSORTYPE_TYPE_T = 7;
+        this.SENSORTYPE_PT100_4WIRES = 8;
+        this.SENSORTYPE_PT100_3WIRES = 9;
+        this.SENSORTYPE_PT100_2WIRES = 10;
+        this.SENSORTYPE_RES_OHM = 11;
+        this.SENSORTYPE_RES_NTC = 12;
+        this.SENSORTYPE_RES_LINEAR = 13;
+        this.SENSORTYPE_RES_INTERNAL = 14;
+        this.SENSORTYPE_IR = 15;
+        this.SENSORTYPE_RES_PT1000 = 16;
+        this.SENSORTYPE_CHANNEL_OFF = 17;
+        this.SENSORTYPE_INVALID = -1;
         this.SIGNALVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.SIGNALUNIT_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
@@ -604,25 +601,25 @@ class YTemperature extends yocto_api_js_1.YSensor {
 }
 exports.YTemperature = YTemperature;
 // API symbols as static members
-YTemperature.SENSORTYPE_DIGITAL = 0 /* DIGITAL */;
-YTemperature.SENSORTYPE_TYPE_K = 1 /* TYPE_K */;
-YTemperature.SENSORTYPE_TYPE_E = 2 /* TYPE_E */;
-YTemperature.SENSORTYPE_TYPE_J = 3 /* TYPE_J */;
-YTemperature.SENSORTYPE_TYPE_N = 4 /* TYPE_N */;
-YTemperature.SENSORTYPE_TYPE_R = 5 /* TYPE_R */;
-YTemperature.SENSORTYPE_TYPE_S = 6 /* TYPE_S */;
-YTemperature.SENSORTYPE_TYPE_T = 7 /* TYPE_T */;
-YTemperature.SENSORTYPE_PT100_4WIRES = 8 /* PT100_4WIRES */;
-YTemperature.SENSORTYPE_PT100_3WIRES = 9 /* PT100_3WIRES */;
-YTemperature.SENSORTYPE_PT100_2WIRES = 10 /* PT100_2WIRES */;
-YTemperature.SENSORTYPE_RES_OHM = 11 /* RES_OHM */;
-YTemperature.SENSORTYPE_RES_NTC = 12 /* RES_NTC */;
-YTemperature.SENSORTYPE_RES_LINEAR = 13 /* RES_LINEAR */;
-YTemperature.SENSORTYPE_RES_INTERNAL = 14 /* RES_INTERNAL */;
-YTemperature.SENSORTYPE_IR = 15 /* IR */;
-YTemperature.SENSORTYPE_RES_PT1000 = 16 /* RES_PT1000 */;
-YTemperature.SENSORTYPE_CHANNEL_OFF = 17 /* CHANNEL_OFF */;
-YTemperature.SENSORTYPE_INVALID = -1 /* INVALID */;
+YTemperature.SENSORTYPE_DIGITAL = 0;
+YTemperature.SENSORTYPE_TYPE_K = 1;
+YTemperature.SENSORTYPE_TYPE_E = 2;
+YTemperature.SENSORTYPE_TYPE_J = 3;
+YTemperature.SENSORTYPE_TYPE_N = 4;
+YTemperature.SENSORTYPE_TYPE_R = 5;
+YTemperature.SENSORTYPE_TYPE_S = 6;
+YTemperature.SENSORTYPE_TYPE_T = 7;
+YTemperature.SENSORTYPE_PT100_4WIRES = 8;
+YTemperature.SENSORTYPE_PT100_3WIRES = 9;
+YTemperature.SENSORTYPE_PT100_2WIRES = 10;
+YTemperature.SENSORTYPE_RES_OHM = 11;
+YTemperature.SENSORTYPE_RES_NTC = 12;
+YTemperature.SENSORTYPE_RES_LINEAR = 13;
+YTemperature.SENSORTYPE_RES_INTERNAL = 14;
+YTemperature.SENSORTYPE_IR = 15;
+YTemperature.SENSORTYPE_RES_PT1000 = 16;
+YTemperature.SENSORTYPE_CHANNEL_OFF = 17;
+YTemperature.SENSORTYPE_INVALID = -1;
 YTemperature.SIGNALVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YTemperature.SIGNALUNIT_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YTemperature.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;

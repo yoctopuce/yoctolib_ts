@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -37,8 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (generated code: YI2cSnoopingRecord definitions)
-//--- (end of generated code: YI2cSnoopingRecord definitions)
 //--- (generated code: YI2cSnoopingRecord class start)
 /**
  * YI2cSnoopingRecord Class: Intercepted I2C message description, returned by i2cPort.snoopMessages method
@@ -87,7 +85,6 @@ export class YI2cSnoopingRecord {
         return this._msg;
     }
 }
-//--- (end of generated code: YI2cPort definitions)
 //--- (generated code: YI2cPort class start)
 /**
  * YI2cPort Class: I2C port control interface, available for instance in the Yocto-I2C
@@ -136,10 +133,10 @@ export class YI2cPort extends YFunction {
         this.JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this.PROTOCOL_INVALID = YAPI.INVALID_STRING;
-        this.I2CVOLTAGELEVEL_OFF = 0 /* OFF */;
-        this.I2CVOLTAGELEVEL_3V3 = 1 /* _3V3 */;
-        this.I2CVOLTAGELEVEL_1V8 = 2 /* _1V8 */;
-        this.I2CVOLTAGELEVEL_INVALID = -1 /* INVALID */;
+        this.I2CVOLTAGELEVEL_OFF = 0;
+        this.I2CVOLTAGELEVEL_3V3 = 1;
+        this.I2CVOLTAGELEVEL_1V8 = 2;
+        this.I2CVOLTAGELEVEL_INVALID = -1;
         this.I2CMODE_INVALID = YAPI.INVALID_STRING;
         this._className = 'I2cPort';
         //--- (end of generated code: YI2cPort constructor)
@@ -1325,9 +1322,9 @@ YI2cPort.JOBMAXTASK_INVALID = YAPI.INVALID_UINT;
 YI2cPort.JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
 YI2cPort.COMMAND_INVALID = YAPI.INVALID_STRING;
 YI2cPort.PROTOCOL_INVALID = YAPI.INVALID_STRING;
-YI2cPort.I2CVOLTAGELEVEL_OFF = 0 /* OFF */;
-YI2cPort.I2CVOLTAGELEVEL_3V3 = 1 /* _3V3 */;
-YI2cPort.I2CVOLTAGELEVEL_1V8 = 2 /* _1V8 */;
-YI2cPort.I2CVOLTAGELEVEL_INVALID = -1 /* INVALID */;
+YI2cPort.I2CVOLTAGELEVEL_OFF = 0;
+YI2cPort.I2CVOLTAGELEVEL_3V3 = 1;
+YI2cPort.I2CVOLTAGELEVEL_1V8 = 2;
+YI2cPort.I2CVOLTAGELEVEL_INVALID = -1;
 YI2cPort.I2CMODE_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_i2cport.js.map

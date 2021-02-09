@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_led.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_led.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Led functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YLed = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YLed definitions)
 //--- (YLed class start)
 /**
  * YLed Class: monochrome LED control interface, available for instance in the Yocto-Buzzer, the
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YLed class start)
 class YLed extends yocto_api_js_1.YFunction {
     //--- (end of YLed attributes declaration)
-    //--- (YLed return codes)
-    //--- (end of YLed return codes)
     constructor(yapi, func) {
         //--- (YLed constructor)
         super(yapi, func);
@@ -63,17 +60,17 @@ class YLed extends yocto_api_js_1.YFunction {
         this._blinking = YLed.BLINKING_INVALID;
         this._valueCallbackLed = null;
         // API symbols as object properties
-        this.POWER_OFF = 0 /* OFF */;
-        this.POWER_ON = 1 /* ON */;
-        this.POWER_INVALID = -1 /* INVALID */;
+        this.POWER_OFF = 0;
+        this.POWER_ON = 1;
+        this.POWER_INVALID = -1;
         this.LUMINOSITY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.BLINKING_STILL = 0 /* STILL */;
-        this.BLINKING_RELAX = 1 /* RELAX */;
-        this.BLINKING_AWARE = 2 /* AWARE */;
-        this.BLINKING_RUN = 3 /* RUN */;
-        this.BLINKING_CALL = 4 /* CALL */;
-        this.BLINKING_PANIC = 5 /* PANIC */;
-        this.BLINKING_INVALID = -1 /* INVALID */;
+        this.BLINKING_STILL = 0;
+        this.BLINKING_RELAX = 1;
+        this.BLINKING_AWARE = 2;
+        this.BLINKING_RUN = 3;
+        this.BLINKING_CALL = 4;
+        this.BLINKING_PANIC = 5;
+        this.BLINKING_INVALID = -1;
         this._className = 'Led';
         //--- (end of YLed constructor)
     }
@@ -356,15 +353,15 @@ class YLed extends yocto_api_js_1.YFunction {
 }
 exports.YLed = YLed;
 // API symbols as static members
-YLed.POWER_OFF = 0 /* OFF */;
-YLed.POWER_ON = 1 /* ON */;
-YLed.POWER_INVALID = -1 /* INVALID */;
+YLed.POWER_OFF = 0;
+YLed.POWER_ON = 1;
+YLed.POWER_INVALID = -1;
 YLed.LUMINOSITY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YLed.BLINKING_STILL = 0 /* STILL */;
-YLed.BLINKING_RELAX = 1 /* RELAX */;
-YLed.BLINKING_AWARE = 2 /* AWARE */;
-YLed.BLINKING_RUN = 3 /* RUN */;
-YLed.BLINKING_CALL = 4 /* CALL */;
-YLed.BLINKING_PANIC = 5 /* PANIC */;
-YLed.BLINKING_INVALID = -1 /* INVALID */;
+YLed.BLINKING_STILL = 0;
+YLed.BLINKING_RELAX = 1;
+YLed.BLINKING_AWARE = 2;
+YLed.BLINKING_RUN = 3;
+YLed.BLINKING_CALL = 4;
+YLed.BLINKING_PANIC = 5;
+YLed.BLINKING_INVALID = -1;
 //# sourceMappingURL=yocto_led.js.map

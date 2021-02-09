@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_humidity.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YHumidity definitions)
-export interface YHumidityValueCallback { (func: YHumidity, value: string): void }
-export interface YHumidityTimedReportCallback { (func: YHumidity, measure: YMeasure): void }
-//--- (end of YHumidity definitions)
-
 //--- (YHumidity class start)
 /**
  * YHumidity Class: humidity sensor control interface, available for instance in the Yocto-CO2-V2, the
@@ -61,8 +56,8 @@ export class YHumidity extends YSensor
     _className: string;
     _relHum: number = YHumidity.RELHUM_INVALID;
     _absHum: number = YHumidity.ABSHUM_INVALID;
-    _valueCallbackHumidity: YHumidityValueCallback | null = null;
-    _timedReportCallbackHumidity: YHumidityTimedReportCallback | null = null;
+    _valueCallbackHumidity: YHumidity.ValueCallback | null = null;
+    _timedReportCallbackHumidity: YHumidity.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly RELHUM_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -72,9 +67,6 @@ export class YHumidity extends YSensor
     public static readonly RELHUM_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly ABSHUM_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YHumidity attributes declaration)
-
-//--- (YHumidity return codes)
-//--- (end of YHumidity return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -245,7 +237,7 @@ export class YHumidity extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YHumidityValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YHumidity.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -289,7 +281,7 @@ export class YHumidity extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YHumidityTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YHumidity.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -370,5 +362,11 @@ export class YHumidity extends YSensor
     }
 
     //--- (end of YHumidity implementation)
+}
+
+export namespace YHumidity {
+    //--- (YHumidity definitions)
+    export interface ValueCallback { (func: YHumidity, value: string): void }    export interface TimedReportCallback { (func: YHumidity, measure: YMeasure): void }
+    //--- (end of YHumidity definitions)
 }
 

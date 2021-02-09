@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_bluetoothlink.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YBluetoothLink definitions)
 //--- (YBluetoothLink class start)
 /**
  * YBluetoothLink Class: Bluetooth sound controller control interface
@@ -48,8 +47,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YBluetoothLink class start)
 export class YBluetoothLink extends YFunction {
     //--- (end of YBluetoothLink attributes declaration)
-    //--- (YBluetoothLink return codes)
-    //--- (end of YBluetoothLink return codes)
     constructor(yapi, func) {
         //--- (YBluetoothLink constructor)
         super(yapi, func);
@@ -69,18 +66,18 @@ export class YBluetoothLink extends YFunction {
         this.PAIRINGPIN_INVALID = YAPI.INVALID_STRING;
         this.REMOTEADDRESS_INVALID = YAPI.INVALID_STRING;
         this.REMOTENAME_INVALID = YAPI.INVALID_STRING;
-        this.MUTE_FALSE = 0 /* FALSE */;
-        this.MUTE_TRUE = 1 /* TRUE */;
-        this.MUTE_INVALID = -1 /* INVALID */;
+        this.MUTE_FALSE = 0;
+        this.MUTE_TRUE = 1;
+        this.MUTE_INVALID = -1;
         this.PREAMPLIFIER_INVALID = YAPI.INVALID_UINT;
         this.VOLUME_INVALID = YAPI.INVALID_UINT;
-        this.LINKSTATE_DOWN = 0 /* DOWN */;
-        this.LINKSTATE_FREE = 1 /* FREE */;
-        this.LINKSTATE_SEARCH = 2 /* SEARCH */;
-        this.LINKSTATE_EXISTS = 3 /* EXISTS */;
-        this.LINKSTATE_LINKED = 4 /* LINKED */;
-        this.LINKSTATE_PLAY = 5 /* PLAY */;
-        this.LINKSTATE_INVALID = -1 /* INVALID */;
+        this.LINKSTATE_DOWN = 0;
+        this.LINKSTATE_FREE = 1;
+        this.LINKSTATE_SEARCH = 2;
+        this.LINKSTATE_EXISTS = 3;
+        this.LINKSTATE_LINKED = 4;
+        this.LINKSTATE_PLAY = 5;
+        this.LINKSTATE_INVALID = -1;
         this.LINKQUALITY_INVALID = YAPI.INVALID_UINT;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this._className = 'BluetoothLink';
@@ -568,18 +565,18 @@ YBluetoothLink.OWNADDRESS_INVALID = YAPI.INVALID_STRING;
 YBluetoothLink.PAIRINGPIN_INVALID = YAPI.INVALID_STRING;
 YBluetoothLink.REMOTEADDRESS_INVALID = YAPI.INVALID_STRING;
 YBluetoothLink.REMOTENAME_INVALID = YAPI.INVALID_STRING;
-YBluetoothLink.MUTE_FALSE = 0 /* FALSE */;
-YBluetoothLink.MUTE_TRUE = 1 /* TRUE */;
-YBluetoothLink.MUTE_INVALID = -1 /* INVALID */;
+YBluetoothLink.MUTE_FALSE = 0;
+YBluetoothLink.MUTE_TRUE = 1;
+YBluetoothLink.MUTE_INVALID = -1;
 YBluetoothLink.PREAMPLIFIER_INVALID = YAPI.INVALID_UINT;
 YBluetoothLink.VOLUME_INVALID = YAPI.INVALID_UINT;
-YBluetoothLink.LINKSTATE_DOWN = 0 /* DOWN */;
-YBluetoothLink.LINKSTATE_FREE = 1 /* FREE */;
-YBluetoothLink.LINKSTATE_SEARCH = 2 /* SEARCH */;
-YBluetoothLink.LINKSTATE_EXISTS = 3 /* EXISTS */;
-YBluetoothLink.LINKSTATE_LINKED = 4 /* LINKED */;
-YBluetoothLink.LINKSTATE_PLAY = 5 /* PLAY */;
-YBluetoothLink.LINKSTATE_INVALID = -1 /* INVALID */;
+YBluetoothLink.LINKSTATE_DOWN = 0;
+YBluetoothLink.LINKSTATE_FREE = 1;
+YBluetoothLink.LINKSTATE_SEARCH = 2;
+YBluetoothLink.LINKSTATE_EXISTS = 3;
+YBluetoothLink.LINKSTATE_LINKED = 4;
+YBluetoothLink.LINKSTATE_PLAY = 5;
+YBluetoothLink.LINKSTATE_INVALID = -1;
 YBluetoothLink.LINKQUALITY_INVALID = YAPI.INVALID_UINT;
 YBluetoothLink.COMMAND_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_bluetoothlink.js.map

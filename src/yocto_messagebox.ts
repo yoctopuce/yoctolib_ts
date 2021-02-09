@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_messagebox.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -38,9 +38,6 @@
  *********************************************************************/
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
-
-//--- (generated code: YSms definitions)
-//--- (end of generated code: YSms definitions)
 
 //--- (generated code: YSms class start)
 /**
@@ -1302,9 +1299,10 @@ export class YSms
     //--- (end of generated code: YSms implementation)
 }
 
-//--- (generated code: YMessageBox definitions)
-export interface YMessageBoxValueCallback { (func: YMessageBox, value: string): void }
-//--- (end of generated code: YMessageBox definitions)
+export namespace YSms {
+//--- (generated code: YSms definitions)
+//--- (end of generated code: YSms definitions)
+}
 
 //--- (generated code: YMessageBox class start)
 /**
@@ -1326,7 +1324,7 @@ export class YMessageBox extends YFunction
     _pduSent: number = YMessageBox.PDUSENT_INVALID;
     _pduReceived: number = YMessageBox.PDURECEIVED_INVALID;
     _command: string = YMessageBox.COMMAND_INVALID;
-    _valueCallbackMessageBox: YMessageBoxValueCallback | null = null;
+    _valueCallbackMessageBox: YMessageBox.ValueCallback | null = null;
     _nextMsgRef: number = 0;
     _prevBitmapStr: string = '';
     _pdus: YSms[] = [];
@@ -1612,7 +1610,7 @@ export class YMessageBox extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YMessageBoxValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YMessageBox.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -2298,4 +2296,11 @@ export class YMessageBox extends YFunction
     }
 
     //--- (end of generated code: YMessageBox implementation)
+}
+
+export namespace YMessageBox
+{
+    //--- (generated code: YMessageBox definitions)
+    export interface ValueCallback { (func: YMessageBox, value: string): void }
+    //--- (end of generated code: YMessageBox definitions)
 }

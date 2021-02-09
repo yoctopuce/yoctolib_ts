@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Voc functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YVoc definitions)
-export interface YVocValueCallback { (func: YVoc, value: string): void }
-export interface YVocTimedReportCallback { (func: YVoc, measure: YMeasure): void }
-//--- (end of YVoc definitions)
-
 //--- (YVoc class start)
 /**
  * YVoc Class: Volatile Organic Compound sensor control interface, available for instance in the Yocto-VOC-V3
@@ -58,14 +53,11 @@ export class YVoc extends YSensor
 {
     //--- (YVoc attributes declaration)
     _className: string;
-    _valueCallbackVoc: YVocValueCallback | null = null;
-    _timedReportCallbackVoc: YVocTimedReportCallback | null = null;
+    _valueCallbackVoc: YVoc.ValueCallback | null = null;
+    _timedReportCallbackVoc: YVoc.TimedReportCallback | null = null;
 
     // API symbols as static members
     //--- (end of YVoc attributes declaration)
-
-//--- (YVoc return codes)
-//--- (end of YVoc return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -163,7 +155,7 @@ export class YVoc extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YVocValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YVoc.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -207,7 +199,7 @@ export class YVoc extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YVocTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YVoc.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -288,5 +280,11 @@ export class YVoc extends YSensor
     }
 
     //--- (end of YVoc implementation)
+}
+
+export namespace YVoc {
+    //--- (YVoc definitions)
+    export interface ValueCallback { (func: YVoc, value: string): void }    export interface TimedReportCallback { (func: YVoc, measure: YMeasure): void }
+    //--- (end of YVoc definitions)
 }
 

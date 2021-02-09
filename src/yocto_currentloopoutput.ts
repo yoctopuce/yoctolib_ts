@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -39,16 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YCurrentLoopOutput definitions)
-export const enum YCurrentLoopOutput_LoopPower {
-    NOPWR = 0,
-    LOWPWR = 1,
-    POWEROK = 2,
-    INVALID = -1
-}
-export interface YCurrentLoopOutputValueCallback { (func: YCurrentLoopOutput, value: string): void }
-//--- (end of YCurrentLoopOutput definitions)
-
 //--- (YCurrentLoopOutput class start)
 /**
  * YCurrentLoopOutput Class: 4-20mA output control interface, available for instance in the Yocto-4-20mA-Tx
@@ -66,30 +56,27 @@ export class YCurrentLoopOutput extends YFunction
     _current: number = YCurrentLoopOutput.CURRENT_INVALID;
     _currentTransition: string = YCurrentLoopOutput.CURRENTTRANSITION_INVALID;
     _currentAtStartUp: number = YCurrentLoopOutput.CURRENTATSTARTUP_INVALID;
-    _loopPower: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput.LOOPPOWER_INVALID;
-    _valueCallbackCurrentLoopOutput: YCurrentLoopOutputValueCallback | null = null;
+    _loopPower: YCurrentLoopOutput.LOOPPOWER = YCurrentLoopOutput.LOOPPOWER_INVALID;
+    _valueCallbackCurrentLoopOutput: YCurrentLoopOutput.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly CURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CURRENTTRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly LOOPPOWER_NOPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.NOPWR;
-    public readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.LOWPWR;
-    public readonly LOOPPOWER_POWEROK: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.POWEROK;
-    public readonly LOOPPOWER_INVALID: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.INVALID;
+    public readonly LOOPPOWER_NOPWR: YCurrentLoopOutput.LOOPPOWER = 0;
+    public readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput.LOOPPOWER = 1;
+    public readonly LOOPPOWER_POWEROK: YCurrentLoopOutput.LOOPPOWER = 2;
+    public readonly LOOPPOWER_INVALID: YCurrentLoopOutput.LOOPPOWER = -1;
 
     // API symbols as static members
     public static readonly CURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CURRENTTRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public static readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly LOOPPOWER_NOPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.NOPWR;
-    public static readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.LOWPWR;
-    public static readonly LOOPPOWER_POWEROK: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.POWEROK;
-    public static readonly LOOPPOWER_INVALID: YCurrentLoopOutput_LoopPower = YCurrentLoopOutput_LoopPower.INVALID;
+    public static readonly LOOPPOWER_NOPWR: YCurrentLoopOutput.LOOPPOWER = 0;
+    public static readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput.LOOPPOWER = 1;
+    public static readonly LOOPPOWER_POWEROK: YCurrentLoopOutput.LOOPPOWER = 2;
+    public static readonly LOOPPOWER_INVALID: YCurrentLoopOutput.LOOPPOWER = -1;
     //--- (end of YCurrentLoopOutput attributes declaration)
-
-//--- (YCurrentLoopOutput return codes)
-//--- (end of YCurrentLoopOutput return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -114,7 +101,7 @@ export class YCurrentLoopOutput extends YFunction
             this._currentAtStartUp = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'loopPower':
-            this._loopPower = <YCurrentLoopOutput_LoopPower> <number> val;
+            this._loopPower = <YCurrentLoopOutput.LOOPPOWER> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -222,7 +209,7 @@ export class YCurrentLoopOutput extends YFunction
      *
      * On failure, throws an exception or returns YCurrentLoopOutput.LOOPPOWER_INVALID.
      */
-    async get_loopPower(): Promise<YCurrentLoopOutput_LoopPower>
+    async get_loopPower(): Promise<YCurrentLoopOutput.LOOPPOWER>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -320,7 +307,7 @@ export class YCurrentLoopOutput extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YCurrentLoopOutputValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YCurrentLoopOutput.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -431,5 +418,17 @@ export class YCurrentLoopOutput extends YFunction
     }
 
     //--- (end of YCurrentLoopOutput implementation)
+}
+
+export namespace YCurrentLoopOutput {
+    //--- (YCurrentLoopOutput definitions)
+    export const enum LOOPPOWER {
+        NOPWR = 0,
+        LOWPWR = 1,
+        POWEROK = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YCurrentLoopOutput, value: string): void }
+    //--- (end of YCurrentLoopOutput definitions)
 }
 

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_display.ts 43775 2021-02-09 10:35:51Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YDisplay = exports.YDisplayLayer = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of generated code: YDisplayLayer definitions)
 //--- (generated code: YDisplayLayer class start)
 /**
  * YDisplayLayer Class: Interface for drawing into display layers, obtained by calling display.get_displayLayer.
@@ -52,29 +51,28 @@ const yocto_api_js_1 = require("./yocto_api.js");
  */
 //--- (end of generated code: YDisplayLayer class start)
 class YDisplayLayer {
+    //--- (end of generated code: YDisplayLayer attributes declaration)
     constructor(obj_parent, int_id) {
         this._cmdbuff = '';
         this._hidden = false;
         //--- (generated code: YDisplayLayer attributes declaration)
-        // API symbols as static members
-        //--- (end of generated code: YDisplayLayer attributes declaration)
-        // API symbols as readonly attributes
-        this.ALIGN_TOP_LEFT = 0 /* TOP_LEFT */;
-        this.ALIGN_CENTER_LEFT = 1 /* CENTER_LEFT */;
-        this.ALIGN_BASELINE_LEFT = 2 /* BASELINE_LEFT */;
-        this.ALIGN_BOTTOM_LEFT = 3 /* BOTTOM_LEFT */;
-        this.ALIGN_TOP_CENTER = 4 /* TOP_CENTER */;
-        this.ALIGN_CENTER = 5 /* CENTER */;
-        this.ALIGN_BASELINE_CENTER = 6 /* BASELINE_CENTER */;
-        this.ALIGN_BOTTOM_CENTER = 7 /* BOTTOM_CENTER */;
-        this.ALIGN_TOP_DECIMAL = 8 /* TOP_DECIMAL */;
-        this.ALIGN_CENTER_DECIMAL = 9 /* CENTER_DECIMAL */;
-        this.ALIGN_BASELINE_DECIMAL = 10 /* BASELINE_DECIMAL */;
-        this.ALIGN_BOTTOM_DECIMAL = 11 /* BOTTOM_DECIMAL */;
-        this.ALIGN_TOP_RIGHT = 12 /* TOP_RIGHT */;
-        this.ALIGN_CENTER_RIGHT = 13 /* CENTER_RIGHT */;
-        this.ALIGN_BASELINE_RIGHT = 14 /* BASELINE_RIGHT */;
-        this.ALIGN_BOTTOM_RIGHT = 15 /* BOTTOM_RIGHT */;
+        // API symbols as object properties
+        this.ALIGN_TOP_LEFT = 0;
+        this.ALIGN_CENTER_LEFT = 1;
+        this.ALIGN_BASELINE_LEFT = 2;
+        this.ALIGN_BOTTOM_LEFT = 3;
+        this.ALIGN_TOP_CENTER = 4;
+        this.ALIGN_CENTER = 5;
+        this.ALIGN_BASELINE_CENTER = 6;
+        this.ALIGN_BOTTOM_CENTER = 7;
+        this.ALIGN_TOP_DECIMAL = 8;
+        this.ALIGN_CENTER_DECIMAL = 9;
+        this.ALIGN_BASELINE_DECIMAL = 10;
+        this.ALIGN_BOTTOM_DECIMAL = 11;
+        this.ALIGN_TOP_RIGHT = 12;
+        this.ALIGN_CENTER_RIGHT = 13;
+        this.ALIGN_BASELINE_RIGHT = 14;
+        this.ALIGN_BOTTOM_RIGHT = 15;
         this._yapi = obj_parent._yapi;
         this._display = obj_parent;
         this._id = int_id >> 0;
@@ -308,13 +306,13 @@ class YDisplayLayer {
      * @param x : the distance from left of layer to the text anchor point, in pixels
      * @param y : the distance from top of layer to the text anchor point, in pixels
      * @param anchor : the text anchor point, chosen among the YDisplayLayer.ALIGN enumeration:
-     *         YDisplayLayer.ALIGN_TOP_LEFT,    YDisplayLayer.ALIGN_CENTER_LEFT,
+     *         YDisplayLayer.ALIGN_TOP_LEFT,         YDisplayLayer.ALIGN_CENTER_LEFT,
      *         YDisplayLayer.ALIGN_BASELINE_LEFT,    YDisplayLayer.ALIGN_BOTTOM_LEFT,
-     *         YDisplayLayer.ALIGN_TOP_CENTER,  YDisplayLayer.ALIGN_CENTER,
+     *         YDisplayLayer.ALIGN_TOP_CENTER,       YDisplayLayer.ALIGN_CENTER,
      *         YDisplayLayer.ALIGN_BASELINE_CENTER,  YDisplayLayer.ALIGN_BOTTOM_CENTER,
-     *         YDisplayLayer.ALIGN_TOP_DECIMAL, YDisplayLayer.ALIGN_CENTER_DECIMAL,
+     *         YDisplayLayer.ALIGN_TOP_DECIMAL,      YDisplayLayer.ALIGN_CENTER_DECIMAL,
      *         YDisplayLayer.ALIGN_BASELINE_DECIMAL, YDisplayLayer.ALIGN_BOTTOM_DECIMAL,
-     *         YDisplayLayer.ALIGN_TOP_RIGHT,   YDisplayLayer.ALIGN_CENTER_RIGHT,
+     *         YDisplayLayer.ALIGN_TOP_RIGHT,        YDisplayLayer.ALIGN_CENTER_RIGHT,
      *         YDisplayLayer.ALIGN_BASELINE_RIGHT,   YDisplayLayer.ALIGN_BOTTOM_RIGHT.
      * @param text : the text string to draw
      *
@@ -562,23 +560,22 @@ class YDisplayLayer {
 }
 exports.YDisplayLayer = YDisplayLayer;
 // API symbols as static members
-YDisplayLayer.ALIGN_TOP_LEFT = 0 /* TOP_LEFT */;
-YDisplayLayer.ALIGN_CENTER_LEFT = 1 /* CENTER_LEFT */;
-YDisplayLayer.ALIGN_BASELINE_LEFT = 2 /* BASELINE_LEFT */;
-YDisplayLayer.ALIGN_BOTTOM_LEFT = 3 /* BOTTOM_LEFT */;
-YDisplayLayer.ALIGN_TOP_CENTER = 4 /* TOP_CENTER */;
-YDisplayLayer.ALIGN_CENTER = 5 /* CENTER */;
-YDisplayLayer.ALIGN_BASELINE_CENTER = 6 /* BASELINE_CENTER */;
-YDisplayLayer.ALIGN_BOTTOM_CENTER = 7 /* BOTTOM_CENTER */;
-YDisplayLayer.ALIGN_TOP_DECIMAL = 8 /* TOP_DECIMAL */;
-YDisplayLayer.ALIGN_CENTER_DECIMAL = 9 /* CENTER_DECIMAL */;
-YDisplayLayer.ALIGN_BASELINE_DECIMAL = 10 /* BASELINE_DECIMAL */;
-YDisplayLayer.ALIGN_BOTTOM_DECIMAL = 11 /* BOTTOM_DECIMAL */;
-YDisplayLayer.ALIGN_TOP_RIGHT = 12 /* TOP_RIGHT */;
-YDisplayLayer.ALIGN_CENTER_RIGHT = 13 /* CENTER_RIGHT */;
-YDisplayLayer.ALIGN_BASELINE_RIGHT = 14 /* BASELINE_RIGHT */;
-YDisplayLayer.ALIGN_BOTTOM_RIGHT = 15 /* BOTTOM_RIGHT */;
-//--- (end of generated code: YDisplay definitions)
+YDisplayLayer.ALIGN_TOP_LEFT = 0;
+YDisplayLayer.ALIGN_CENTER_LEFT = 1;
+YDisplayLayer.ALIGN_BASELINE_LEFT = 2;
+YDisplayLayer.ALIGN_BOTTOM_LEFT = 3;
+YDisplayLayer.ALIGN_TOP_CENTER = 4;
+YDisplayLayer.ALIGN_CENTER = 5;
+YDisplayLayer.ALIGN_BASELINE_CENTER = 6;
+YDisplayLayer.ALIGN_BOTTOM_CENTER = 7;
+YDisplayLayer.ALIGN_TOP_DECIMAL = 8;
+YDisplayLayer.ALIGN_CENTER_DECIMAL = 9;
+YDisplayLayer.ALIGN_BASELINE_DECIMAL = 10;
+YDisplayLayer.ALIGN_BOTTOM_DECIMAL = 11;
+YDisplayLayer.ALIGN_TOP_RIGHT = 12;
+YDisplayLayer.ALIGN_CENTER_RIGHT = 13;
+YDisplayLayer.ALIGN_BASELINE_RIGHT = 14;
+YDisplayLayer.ALIGN_BOTTOM_RIGHT = 15;
 //--- (generated code: YDisplay class start)
 /**
  * YDisplay Class: display control interface, available for instance in the Yocto-Display, the
@@ -619,22 +616,22 @@ class YDisplay extends yocto_api_js_1.YFunction {
         this._valueCallbackDisplay = null;
         this._allDisplayLayers = [];
         // API symbols as object properties
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
         this.STARTUPSEQ_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.BRIGHTNESS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.ORIENTATION_LEFT = 0 /* LEFT */;
-        this.ORIENTATION_UP = 1 /* UP */;
-        this.ORIENTATION_RIGHT = 2 /* RIGHT */;
-        this.ORIENTATION_DOWN = 3 /* DOWN */;
-        this.ORIENTATION_INVALID = -1 /* INVALID */;
+        this.ORIENTATION_LEFT = 0;
+        this.ORIENTATION_UP = 1;
+        this.ORIENTATION_RIGHT = 2;
+        this.ORIENTATION_DOWN = 3;
+        this.ORIENTATION_INVALID = -1;
         this.DISPLAYWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.DISPLAYHEIGHT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.DISPLAYTYPE_MONO = 0 /* MONO */;
-        this.DISPLAYTYPE_GRAY = 1 /* GRAY */;
-        this.DISPLAYTYPE_RGB = 2 /* RGB */;
-        this.DISPLAYTYPE_INVALID = -1 /* INVALID */;
+        this.DISPLAYTYPE_MONO = 0;
+        this.DISPLAYTYPE_GRAY = 1;
+        this.DISPLAYTYPE_RGB = 2;
+        this.DISPLAYTYPE_INVALID = -1;
         this.LAYERWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.LAYERHEIGHT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.LAYERCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -1320,22 +1317,22 @@ class YDisplay extends yocto_api_js_1.YFunction {
 }
 exports.YDisplay = YDisplay;
 // API symbols as static members
-YDisplay.ENABLED_FALSE = 0 /* FALSE */;
-YDisplay.ENABLED_TRUE = 1 /* TRUE */;
-YDisplay.ENABLED_INVALID = -1 /* INVALID */;
+YDisplay.ENABLED_FALSE = 0;
+YDisplay.ENABLED_TRUE = 1;
+YDisplay.ENABLED_INVALID = -1;
 YDisplay.STARTUPSEQ_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YDisplay.BRIGHTNESS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YDisplay.ORIENTATION_LEFT = 0 /* LEFT */;
-YDisplay.ORIENTATION_UP = 1 /* UP */;
-YDisplay.ORIENTATION_RIGHT = 2 /* RIGHT */;
-YDisplay.ORIENTATION_DOWN = 3 /* DOWN */;
-YDisplay.ORIENTATION_INVALID = -1 /* INVALID */;
+YDisplay.ORIENTATION_LEFT = 0;
+YDisplay.ORIENTATION_UP = 1;
+YDisplay.ORIENTATION_RIGHT = 2;
+YDisplay.ORIENTATION_DOWN = 3;
+YDisplay.ORIENTATION_INVALID = -1;
 YDisplay.DISPLAYWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDisplay.DISPLAYHEIGHT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YDisplay.DISPLAYTYPE_MONO = 0 /* MONO */;
-YDisplay.DISPLAYTYPE_GRAY = 1 /* GRAY */;
-YDisplay.DISPLAYTYPE_RGB = 2 /* RGB */;
-YDisplay.DISPLAYTYPE_INVALID = -1 /* INVALID */;
+YDisplay.DISPLAYTYPE_MONO = 0;
+YDisplay.DISPLAYTYPE_GRAY = 1;
+YDisplay.DISPLAYTYPE_RGB = 2;
+YDisplay.DISPLAYTYPE_INVALID = -1;
 YDisplay.LAYERWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDisplay.LAYERHEIGHT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDisplay.LAYERCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;

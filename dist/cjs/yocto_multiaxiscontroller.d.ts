@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multiaxiscontroller.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_multiaxiscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for MultiAxisController functions
  *
@@ -37,18 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YMultiAxisController_GlobalState {
-    ABSENT = 0,
-    ALERT = 1,
-    HI_Z = 2,
-    STOP = 3,
-    RUN = 4,
-    BATCH = 5,
-    INVALID = -1
-}
-export interface YMultiAxisControllerValueCallback {
-    (func: YMultiAxisController, value: string): void;
-}
 /**
  * YMultiAxisController Class: MultiAxisController function interface
  *
@@ -58,26 +46,26 @@ export interface YMultiAxisControllerValueCallback {
 export declare class YMultiAxisController extends YFunction {
     _className: string;
     _nAxis: number;
-    _globalState: YMultiAxisController_GlobalState;
+    _globalState: YMultiAxisController.GLOBALSTATE;
     _command: string;
-    _valueCallbackMultiAxisController: YMultiAxisControllerValueCallback | null;
+    _valueCallbackMultiAxisController: YMultiAxisController.ValueCallback | null;
     readonly NAXIS_INVALID: number;
-    readonly GLOBALSTATE_ABSENT: YMultiAxisController_GlobalState;
-    readonly GLOBALSTATE_ALERT: YMultiAxisController_GlobalState;
-    readonly GLOBALSTATE_HI_Z: YMultiAxisController_GlobalState;
-    readonly GLOBALSTATE_STOP: YMultiAxisController_GlobalState;
-    readonly GLOBALSTATE_RUN: YMultiAxisController_GlobalState;
-    readonly GLOBALSTATE_BATCH: YMultiAxisController_GlobalState;
-    readonly GLOBALSTATE_INVALID: YMultiAxisController_GlobalState;
+    readonly GLOBALSTATE_ABSENT: YMultiAxisController.GLOBALSTATE;
+    readonly GLOBALSTATE_ALERT: YMultiAxisController.GLOBALSTATE;
+    readonly GLOBALSTATE_HI_Z: YMultiAxisController.GLOBALSTATE;
+    readonly GLOBALSTATE_STOP: YMultiAxisController.GLOBALSTATE;
+    readonly GLOBALSTATE_RUN: YMultiAxisController.GLOBALSTATE;
+    readonly GLOBALSTATE_BATCH: YMultiAxisController.GLOBALSTATE;
+    readonly GLOBALSTATE_INVALID: YMultiAxisController.GLOBALSTATE;
     readonly COMMAND_INVALID: string;
     static readonly NAXIS_INVALID: number;
-    static readonly GLOBALSTATE_ABSENT: YMultiAxisController_GlobalState;
-    static readonly GLOBALSTATE_ALERT: YMultiAxisController_GlobalState;
-    static readonly GLOBALSTATE_HI_Z: YMultiAxisController_GlobalState;
-    static readonly GLOBALSTATE_STOP: YMultiAxisController_GlobalState;
-    static readonly GLOBALSTATE_RUN: YMultiAxisController_GlobalState;
-    static readonly GLOBALSTATE_BATCH: YMultiAxisController_GlobalState;
-    static readonly GLOBALSTATE_INVALID: YMultiAxisController_GlobalState;
+    static readonly GLOBALSTATE_ABSENT: YMultiAxisController.GLOBALSTATE;
+    static readonly GLOBALSTATE_ALERT: YMultiAxisController.GLOBALSTATE;
+    static readonly GLOBALSTATE_HI_Z: YMultiAxisController.GLOBALSTATE;
+    static readonly GLOBALSTATE_STOP: YMultiAxisController.GLOBALSTATE;
+    static readonly GLOBALSTATE_RUN: YMultiAxisController.GLOBALSTATE;
+    static readonly GLOBALSTATE_BATCH: YMultiAxisController.GLOBALSTATE;
+    static readonly GLOBALSTATE_INVALID: YMultiAxisController.GLOBALSTATE;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -109,7 +97,7 @@ export declare class YMultiAxisController extends YFunction {
      *
      * On failure, throws an exception or returns YMultiAxisController.GLOBALSTATE_INVALID.
      */
-    get_globalState(): Promise<YMultiAxisController_GlobalState>;
+    get_globalState(): Promise<YMultiAxisController.GLOBALSTATE>;
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
@@ -178,7 +166,7 @@ export declare class YMultiAxisController extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YMultiAxisControllerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YMultiAxisController.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(command: string): Promise<number>;
     /**
@@ -284,4 +272,18 @@ export declare class YMultiAxisController extends YFunction {
      *         if there are none.
      */
     static FirstMultiAxisControllerInContext(yctx: YAPIContext): YMultiAxisController | null;
+}
+export declare namespace YMultiAxisController {
+    const enum GLOBALSTATE {
+        ABSENT = 0,
+        ALERT = 1,
+        HI_Z = 2,
+        STOP = 3,
+        RUN = 4,
+        BATCH = 5,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YMultiAxisController, value: string): void;
+    }
 }

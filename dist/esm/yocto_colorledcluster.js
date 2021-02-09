@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YColorLedCluster definitions)
 //--- (YColorLedCluster class start)
 /**
  * YColorLedCluster Class: RGB LED cluster control interface, available for instance in the
@@ -55,8 +54,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YColorLedCluster class start)
 export class YColorLedCluster extends YFunction {
     //--- (end of YColorLedCluster attributes declaration)
-    //--- (YColorLedCluster return codes)
-    //--- (end of YColorLedCluster return codes)
     constructor(yapi, func) {
         //--- (YColorLedCluster constructor)
         super(yapi, func);
@@ -69,9 +66,9 @@ export class YColorLedCluster extends YFunction {
         this._valueCallbackColorLedCluster = null;
         // API symbols as object properties
         this.ACTIVELEDCOUNT_INVALID = YAPI.INVALID_UINT;
-        this.LEDTYPE_RGB = 0 /* RGB */;
-        this.LEDTYPE_RGBW = 1 /* RGBW */;
-        this.LEDTYPE_INVALID = -1 /* INVALID */;
+        this.LEDTYPE_RGB = 0;
+        this.LEDTYPE_RGBW = 1;
+        this.LEDTYPE_INVALID = -1;
         this.MAXLEDCOUNT_INVALID = YAPI.INVALID_UINT;
         this.BLINKSEQMAXCOUNT_INVALID = YAPI.INVALID_UINT;
         this.BLINKSEQMAXSIZE_INVALID = YAPI.INVALID_UINT;
@@ -1225,9 +1222,9 @@ export class YColorLedCluster extends YFunction {
 }
 // API symbols as static members
 YColorLedCluster.ACTIVELEDCOUNT_INVALID = YAPI.INVALID_UINT;
-YColorLedCluster.LEDTYPE_RGB = 0 /* RGB */;
-YColorLedCluster.LEDTYPE_RGBW = 1 /* RGBW */;
-YColorLedCluster.LEDTYPE_INVALID = -1 /* INVALID */;
+YColorLedCluster.LEDTYPE_RGB = 0;
+YColorLedCluster.LEDTYPE_RGBW = 1;
+YColorLedCluster.LEDTYPE_INVALID = -1;
 YColorLedCluster.MAXLEDCOUNT_INVALID = YAPI.INVALID_UINT;
 YColorLedCluster.BLINKSEQMAXCOUNT_INVALID = YAPI.INVALID_UINT;
 YColorLedCluster.BLINKSEQMAXSIZE_INVALID = YAPI.INVALID_UINT;

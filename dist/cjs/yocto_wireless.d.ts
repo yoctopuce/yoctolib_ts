@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wireless.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -76,23 +76,7 @@ export declare class YWlanRecord {
      */
     get_linkQuality(): number;
 }
-export declare const enum YWireless_Security {
-    UNKNOWN = 0,
-    OPEN = 1,
-    WEP = 2,
-    WPA = 3,
-    WPA2 = 4,
-    INVALID = -1
-}
-export declare const enum YWireless_WlanState {
-    DOWN = 0,
-    SCANNING = 1,
-    CONNECTED = 2,
-    REJECTED = 3,
-    INVALID = -1
-}
-export interface YWirelessValueCallback {
-    (func: YWireless, value: string): void;
+export declare namespace YWlanRecord {
 }
 /**
  * YWireless Class: wireless LAN interface control interface, available for instance in the
@@ -108,43 +92,43 @@ export declare class YWireless extends YFunction {
     _linkQuality: number;
     _ssid: string;
     _channel: number;
-    _security: YWireless_Security;
+    _security: YWireless.SECURITY;
     _message: string;
     _wlanConfig: string;
-    _wlanState: YWireless_WlanState;
-    _valueCallbackWireless: YWirelessValueCallback | null;
+    _wlanState: YWireless.WLANSTATE;
+    _valueCallbackWireless: YWireless.ValueCallback | null;
     readonly LINKQUALITY_INVALID: number;
     readonly SSID_INVALID: string;
     readonly CHANNEL_INVALID: number;
-    readonly SECURITY_UNKNOWN: YWireless_Security;
-    readonly SECURITY_OPEN: YWireless_Security;
-    readonly SECURITY_WEP: YWireless_Security;
-    readonly SECURITY_WPA: YWireless_Security;
-    readonly SECURITY_WPA2: YWireless_Security;
-    readonly SECURITY_INVALID: YWireless_Security;
+    readonly SECURITY_UNKNOWN: YWireless.SECURITY;
+    readonly SECURITY_OPEN: YWireless.SECURITY;
+    readonly SECURITY_WEP: YWireless.SECURITY;
+    readonly SECURITY_WPA: YWireless.SECURITY;
+    readonly SECURITY_WPA2: YWireless.SECURITY;
+    readonly SECURITY_INVALID: YWireless.SECURITY;
     readonly MESSAGE_INVALID: string;
     readonly WLANCONFIG_INVALID: string;
-    readonly WLANSTATE_DOWN: YWireless_WlanState;
-    readonly WLANSTATE_SCANNING: YWireless_WlanState;
-    readonly WLANSTATE_CONNECTED: YWireless_WlanState;
-    readonly WLANSTATE_REJECTED: YWireless_WlanState;
-    readonly WLANSTATE_INVALID: YWireless_WlanState;
+    readonly WLANSTATE_DOWN: YWireless.WLANSTATE;
+    readonly WLANSTATE_SCANNING: YWireless.WLANSTATE;
+    readonly WLANSTATE_CONNECTED: YWireless.WLANSTATE;
+    readonly WLANSTATE_REJECTED: YWireless.WLANSTATE;
+    readonly WLANSTATE_INVALID: YWireless.WLANSTATE;
     static readonly LINKQUALITY_INVALID: number;
     static readonly SSID_INVALID: string;
     static readonly CHANNEL_INVALID: number;
-    static readonly SECURITY_UNKNOWN: YWireless_Security;
-    static readonly SECURITY_OPEN: YWireless_Security;
-    static readonly SECURITY_WEP: YWireless_Security;
-    static readonly SECURITY_WPA: YWireless_Security;
-    static readonly SECURITY_WPA2: YWireless_Security;
-    static readonly SECURITY_INVALID: YWireless_Security;
+    static readonly SECURITY_UNKNOWN: YWireless.SECURITY;
+    static readonly SECURITY_OPEN: YWireless.SECURITY;
+    static readonly SECURITY_WEP: YWireless.SECURITY;
+    static readonly SECURITY_WPA: YWireless.SECURITY;
+    static readonly SECURITY_WPA2: YWireless.SECURITY;
+    static readonly SECURITY_INVALID: YWireless.SECURITY;
     static readonly MESSAGE_INVALID: string;
     static readonly WLANCONFIG_INVALID: string;
-    static readonly WLANSTATE_DOWN: YWireless_WlanState;
-    static readonly WLANSTATE_SCANNING: YWireless_WlanState;
-    static readonly WLANSTATE_CONNECTED: YWireless_WlanState;
-    static readonly WLANSTATE_REJECTED: YWireless_WlanState;
-    static readonly WLANSTATE_INVALID: YWireless_WlanState;
+    static readonly WLANSTATE_DOWN: YWireless.WLANSTATE;
+    static readonly WLANSTATE_SCANNING: YWireless.WLANSTATE;
+    static readonly WLANSTATE_CONNECTED: YWireless.WLANSTATE;
+    static readonly WLANSTATE_REJECTED: YWireless.WLANSTATE;
+    static readonly WLANSTATE_INVALID: YWireless.WLANSTATE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -181,7 +165,7 @@ export declare class YWireless extends YFunction {
      *
      * On failure, throws an exception or returns YWireless.SECURITY_INVALID.
      */
-    get_security(): Promise<YWireless_Security>;
+    get_security(): Promise<YWireless.SECURITY>;
     /**
      * Returns the latest status message from the wireless interface.
      *
@@ -214,7 +198,7 @@ export declare class YWireless extends YFunction {
      *
      * On failure, throws an exception or returns YWireless.WLANSTATE_INVALID.
      */
-    get_wlanState(): Promise<YWireless_WlanState>;
+    get_wlanState(): Promise<YWireless.WLANSTATE>;
     /**
      * Retrieves a wireless LAN interface for a given identifier.
      * The identifier can be specified using several formats:
@@ -281,7 +265,7 @@ export declare class YWireless extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YWirelessValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YWireless.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Triggers a scan of the wireless frequency and builds the list of available networks.
@@ -397,4 +381,24 @@ export declare class YWireless extends YFunction {
      *         if there are none.
      */
     static FirstWirelessInContext(yctx: YAPIContext): YWireless | null;
+}
+export declare namespace YWireless {
+    const enum SECURITY {
+        UNKNOWN = 0,
+        OPEN = 1,
+        WEP = 2,
+        WPA = 3,
+        WPA2 = 4,
+        INVALID = -1
+    }
+    const enum WLANSTATE {
+        DOWN = 0,
+        SCANNING = 1,
+        CONNECTED = 2,
+        REJECTED = 3,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YWireless, value: string): void;
+    }
 }

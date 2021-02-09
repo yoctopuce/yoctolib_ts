@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_pwmpowersource.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwmpowersource.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YPwmPowerSource = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YPwmPowerSource definitions)
 //--- (YPwmPowerSource class start)
 /**
  * YPwmPowerSource Class: PWM generator power source control interface, available for instance in the Yocto-PWM-Tx
@@ -51,19 +50,17 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YPwmPowerSource class start)
 class YPwmPowerSource extends yocto_api_js_1.YFunction {
     //--- (end of YPwmPowerSource attributes declaration)
-    //--- (YPwmPowerSource return codes)
-    //--- (end of YPwmPowerSource return codes)
     constructor(yapi, func) {
         //--- (YPwmPowerSource constructor)
         super(yapi, func);
         this._powerMode = YPwmPowerSource.POWERMODE_INVALID;
         this._valueCallbackPwmPowerSource = null;
         // API symbols as object properties
-        this.POWERMODE_USB_5V = 0 /* USB_5V */;
-        this.POWERMODE_USB_3V = 1 /* USB_3V */;
-        this.POWERMODE_EXT_V = 2 /* EXT_V */;
-        this.POWERMODE_OPNDRN = 3 /* OPNDRN */;
-        this.POWERMODE_INVALID = -1 /* INVALID */;
+        this.POWERMODE_USB_5V = 0;
+        this.POWERMODE_USB_3V = 1;
+        this.POWERMODE_EXT_V = 2;
+        this.POWERMODE_OPNDRN = 3;
+        this.POWERMODE_INVALID = -1;
         this._className = 'PwmPowerSource';
         //--- (end of YPwmPowerSource constructor)
     }
@@ -284,9 +281,9 @@ class YPwmPowerSource extends yocto_api_js_1.YFunction {
 }
 exports.YPwmPowerSource = YPwmPowerSource;
 // API symbols as static members
-YPwmPowerSource.POWERMODE_USB_5V = 0 /* USB_5V */;
-YPwmPowerSource.POWERMODE_USB_3V = 1 /* USB_3V */;
-YPwmPowerSource.POWERMODE_EXT_V = 2 /* EXT_V */;
-YPwmPowerSource.POWERMODE_OPNDRN = 3 /* OPNDRN */;
-YPwmPowerSource.POWERMODE_INVALID = -1 /* INVALID */;
+YPwmPowerSource.POWERMODE_USB_5V = 0;
+YPwmPowerSource.POWERMODE_USB_3V = 1;
+YPwmPowerSource.POWERMODE_EXT_V = 2;
+YPwmPowerSource.POWERMODE_OPNDRN = 3;
+YPwmPowerSource.POWERMODE_INVALID = -1;
 //# sourceMappingURL=yocto_pwmpowersource.js.map

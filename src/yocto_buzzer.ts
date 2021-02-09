@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -39,10 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YBuzzer definitions)
-export interface YBuzzerValueCallback { (func: YBuzzer, value: string): void }
-//--- (end of YBuzzer definitions)
-
 //--- (YBuzzer class start)
 /**
  * YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer or the Yocto-MaxiBuzzer
@@ -63,7 +59,7 @@ export class YBuzzer extends YFunction
     _playSeqMaxSize: number = YBuzzer.PLAYSEQMAXSIZE_INVALID;
     _playSeqSignature: number = YBuzzer.PLAYSEQSIGNATURE_INVALID;
     _command: string = YBuzzer.COMMAND_INVALID;
-    _valueCallbackBuzzer: YBuzzerValueCallback | null = null;
+    _valueCallbackBuzzer: YBuzzer.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly FREQUENCY_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -81,9 +77,6 @@ export class YBuzzer extends YFunction
     public static readonly PLAYSEQSIGNATURE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YBuzzer attributes declaration)
-
-//--- (YBuzzer return codes)
-//--- (end of YBuzzer return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -356,7 +349,7 @@ export class YBuzzer extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YBuzzerValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YBuzzer.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -797,5 +790,11 @@ export class YBuzzer extends YFunction
     }
 
     //--- (end of YBuzzer implementation)
+}
+
+export namespace YBuzzer {
+    //--- (YBuzzer definitions)
+    export interface ValueCallback { (func: YBuzzer, value: string): void }
+    //--- (end of YBuzzer definitions)
 }
 

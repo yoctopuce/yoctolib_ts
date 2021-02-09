@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltage.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voltage.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YVoltage definitions)
 //--- (YVoltage class start)
 /**
  * YVoltage Class: voltage sensor control interface, available for instance in the Yocto-Motor-DC, the
@@ -50,8 +49,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YVoltage class start)
 export class YVoltage extends YSensor {
     //--- (end of YVoltage attributes declaration)
-    //--- (YVoltage return codes)
-    //--- (end of YVoltage return codes)
     constructor(yapi, func) {
         //--- (YVoltage constructor)
         super(yapi, func);
@@ -59,9 +56,9 @@ export class YVoltage extends YSensor {
         this._valueCallbackVoltage = null;
         this._timedReportCallbackVoltage = null;
         // API symbols as object properties
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
         this._className = 'Voltage';
         //--- (end of YVoltage constructor)
     }
@@ -315,7 +312,7 @@ export class YVoltage extends YSensor {
     }
 }
 // API symbols as static members
-YVoltage.ENABLED_FALSE = 0 /* FALSE */;
-YVoltage.ENABLED_TRUE = 1 /* TRUE */;
-YVoltage.ENABLED_INVALID = -1 /* INVALID */;
+YVoltage.ENABLED_FALSE = 0;
+YVoltage.ENABLED_TRUE = 1;
+YVoltage.ENABLED_INVALID = -1;
 //# sourceMappingURL=yocto_voltage.js.map

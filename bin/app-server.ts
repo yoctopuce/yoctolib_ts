@@ -53,6 +53,7 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse)
     let abspath: string = path.join(HTTP_ROOT, relpath);
     let extension: string = path.extname(relpath);
     let mimetype: string = MimeTypes[extension.toLowerCase()];
+    let headers: http.OutgoingHttpHeaders = { 'Content-Type': MimeTypes[extension] };
 
     // Redirect server root to our demo subdirectory
     if(!relpath) {
@@ -65,6 +66,15 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse)
     // Make sure we know about this file
     //console.log('Request for ['+abspath+']');
     let fileexists: boolean = fs.existsSync(abspath);
+    if(!fileexists) {
+        // fallback to gzip-encoded file, if available
+        let gzipname: string = abspath+'.gz';
+        fileexists = fs.existsSync(gzipname);
+        if(fileexists) {
+            headers['Content-Encoding'] = 'gzip';
+            abspath = gzipname;
+        }
+    }
     if(!fileexists || !mimetype) {
         response.writeHead(404, {'Content-Type': 'text/plain'});
         if(!fileexists) {
@@ -76,9 +86,10 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse)
         return;
     }
     // Output file to browser at once
-    response.writeHead(200, {'Content-Type': MimeTypes[extension]});
     fs.readFile(abspath, (err: any, data: Buffer) => {
         if (err) throw err;
+        headers['Content-Length'] = data.length;
+        response.writeHead(200, headers);
         response.write(data, 'utf8');
         response.end();
     });

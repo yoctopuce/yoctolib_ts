@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Voc functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YVoc definitions)
 //--- (YVoc class start)
 /**
  * YVoc Class: Volatile Organic Compound sensor control interface, available for instance in the Yocto-VOC-V3
@@ -50,8 +49,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 export class YVoc extends YSensor {
     // API symbols as static members
     //--- (end of YVoc attributes declaration)
-    //--- (YVoc return codes)
-    //--- (end of YVoc return codes)
     constructor(yapi, func) {
         //--- (YVoc constructor)
         super(yapi, func);

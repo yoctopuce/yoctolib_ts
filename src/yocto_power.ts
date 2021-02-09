@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_power.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPower definitions)
-export interface YPowerValueCallback { (func: YPower, value: string): void }
-export interface YPowerTimedReportCallback { (func: YPower, measure: YMeasure): void }
-//--- (end of YPower definitions)
-
 //--- (YPower class start)
 /**
  * YPower Class: electrical power sensor control interface, available for instance in the Yocto-Watt
@@ -64,8 +59,8 @@ export class YPower extends YSensor
     _deliveredEnergyMeter: number = YPower.DELIVEREDENERGYMETER_INVALID;
     _receivedEnergyMeter: number = YPower.RECEIVEDENERGYMETER_INVALID;
     _meterTimer: number = YPower.METERTIMER_INVALID;
-    _valueCallbackPower: YPowerValueCallback | null = null;
-    _timedReportCallbackPower: YPowerTimedReportCallback | null = null;
+    _valueCallbackPower: YPower.ValueCallback | null = null;
+    _timedReportCallbackPower: YPower.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly COSPHI_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -81,9 +76,6 @@ export class YPower extends YSensor
     public static readonly RECEIVEDENERGYMETER_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly METERTIMER_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YPower attributes declaration)
-
-//--- (YPower return codes)
-//--- (end of YPower return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -316,7 +308,7 @@ export class YPower extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPowerValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPower.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -360,7 +352,7 @@ export class YPower extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YPowerTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YPower.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -453,5 +445,11 @@ export class YPower extends YSensor
     }
 
     //--- (end of YPower implementation)
+}
+
+export namespace YPower {
+    //--- (YPower definitions)
+    export interface ValueCallback { (func: YPower, value: string): void }    export interface TimedReportCallback { (func: YPower, measure: YMeasure): void }
+    //--- (end of YPower definitions)
 }
 

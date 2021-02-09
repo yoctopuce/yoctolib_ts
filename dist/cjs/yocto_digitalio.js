@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_digitalio.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YDigitalIO = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YDigitalIO definitions)
 //--- (YDigitalIO class start)
 /**
  * YDigitalIO Class: digital IO port control interface, available for instance in the Yocto-IO or the
@@ -59,8 +58,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YDigitalIO class start)
 class YDigitalIO extends yocto_api_js_1.YFunction {
     //--- (end of YDigitalIO attributes declaration)
-    //--- (YDigitalIO return codes)
-    //--- (end of YDigitalIO return codes)
     constructor(yapi, func) {
         //--- (YDigitalIO constructor)
         super(yapi, func);
@@ -80,10 +77,10 @@ class YDigitalIO extends yocto_api_js_1.YFunction {
         this.PORTPOLARITY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.PORTDIAGS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.PORTSIZE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-        this.OUTPUTVOLTAGE_USB_5V = 0 /* USB_5V */;
-        this.OUTPUTVOLTAGE_USB_3V = 1 /* USB_3V */;
-        this.OUTPUTVOLTAGE_EXT_V = 2 /* EXT_V */;
-        this.OUTPUTVOLTAGE_INVALID = -1 /* INVALID */;
+        this.OUTPUTVOLTAGE_USB_5V = 0;
+        this.OUTPUTVOLTAGE_USB_3V = 1;
+        this.OUTPUTVOLTAGE_EXT_V = 2;
+        this.OUTPUTVOLTAGE_INVALID = -1;
         this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this._className = 'DigitalIO';
         //--- (end of YDigitalIO constructor)
@@ -715,9 +712,9 @@ YDigitalIO.PORTOPENDRAIN_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDigitalIO.PORTPOLARITY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDigitalIO.PORTDIAGS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YDigitalIO.PORTSIZE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
-YDigitalIO.OUTPUTVOLTAGE_USB_5V = 0 /* USB_5V */;
-YDigitalIO.OUTPUTVOLTAGE_USB_3V = 1 /* USB_3V */;
-YDigitalIO.OUTPUTVOLTAGE_EXT_V = 2 /* EXT_V */;
-YDigitalIO.OUTPUTVOLTAGE_INVALID = -1 /* INVALID */;
+YDigitalIO.OUTPUTVOLTAGE_USB_5V = 0;
+YDigitalIO.OUTPUTVOLTAGE_USB_3V = 1;
+YDigitalIO.OUTPUTVOLTAGE_EXT_V = 2;
+YDigitalIO.OUTPUTVOLTAGE_INVALID = -1;
 YDigitalIO.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_digitalio.js.map

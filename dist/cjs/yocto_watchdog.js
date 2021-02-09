@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -40,14 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YWatchdog = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-class YWatchdogDelayedPulse {
-    constructor() {
-        this.target = yocto_api_js_1.YAPI.INVALID_INT;
-        this.ms = yocto_api_js_1.YAPI.INVALID_INT;
-        this.moving = yocto_api_js_1.YAPI.INVALID_UINT;
-    }
-}
-//--- (end of YWatchdog definitions)
 //--- (YWatchdog class start)
 /**
  * YWatchdog Class: watchdog control interface, available for instance in the Yocto-WatchdogDC
@@ -64,8 +56,6 @@ class YWatchdogDelayedPulse {
 //--- (end of YWatchdog class start)
 class YWatchdog extends yocto_api_js_1.YFunction {
     //--- (end of YWatchdog attributes declaration)
-    //--- (YWatchdog return codes)
-    //--- (end of YWatchdog return codes)
     constructor(yapi, func) {
         //--- (YWatchdog constructor)
         super(yapi, func);
@@ -75,7 +65,7 @@ class YWatchdog extends yocto_api_js_1.YFunction {
         this._maxTimeOnStateB = YWatchdog.MAXTIMEONSTATEB_INVALID;
         this._output = YWatchdog.OUTPUT_INVALID;
         this._pulseTimer = YWatchdog.PULSETIMER_INVALID;
-        this._delayedPulseTimer = new YWatchdogDelayedPulse();
+        this._delayedPulseTimer = {};
         this._countdown = YWatchdog.COUNTDOWN_INVALID;
         this._autoStart = YWatchdog.AUTOSTART_INVALID;
         this._running = YWatchdog.RUNNING_INVALID;
@@ -84,26 +74,26 @@ class YWatchdog extends yocto_api_js_1.YFunction {
         this._valueCallbackWatchdog = null;
         this._firm = 0;
         // API symbols as object properties
-        this.STATE_A = 0 /* A */;
-        this.STATE_B = 1 /* B */;
-        this.STATE_INVALID = -1 /* INVALID */;
-        this.STATEATPOWERON_UNCHANGED = 0 /* UNCHANGED */;
-        this.STATEATPOWERON_A = 1 /* A */;
-        this.STATEATPOWERON_B = 2 /* B */;
-        this.STATEATPOWERON_INVALID = -1 /* INVALID */;
+        this.STATE_A = 0;
+        this.STATE_B = 1;
+        this.STATE_INVALID = -1;
+        this.STATEATPOWERON_UNCHANGED = 0;
+        this.STATEATPOWERON_A = 1;
+        this.STATEATPOWERON_B = 2;
+        this.STATEATPOWERON_INVALID = -1;
         this.MAXTIMEONSTATEA_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.MAXTIMEONSTATEB_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-        this.OUTPUT_OFF = 0 /* OFF */;
-        this.OUTPUT_ON = 1 /* ON */;
-        this.OUTPUT_INVALID = -1 /* INVALID */;
+        this.OUTPUT_OFF = 0;
+        this.OUTPUT_ON = 1;
+        this.OUTPUT_INVALID = -1;
         this.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.COUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-        this.AUTOSTART_OFF = 0 /* OFF */;
-        this.AUTOSTART_ON = 1 /* ON */;
-        this.AUTOSTART_INVALID = -1 /* INVALID */;
-        this.RUNNING_OFF = 0 /* OFF */;
-        this.RUNNING_ON = 1 /* ON */;
-        this.RUNNING_INVALID = -1 /* INVALID */;
+        this.AUTOSTART_OFF = 0;
+        this.AUTOSTART_ON = 1;
+        this.AUTOSTART_INVALID = -1;
+        this.RUNNING_OFF = 0;
+        this.RUNNING_ON = 1;
+        this.RUNNING_INVALID = -1;
         this.TRIGGERDELAY_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.TRIGGERDURATION_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this._className = 'Watchdog';
@@ -773,27 +763,27 @@ class YWatchdog extends yocto_api_js_1.YFunction {
 }
 exports.YWatchdog = YWatchdog;
 // API symbols as static members
-YWatchdog.DELAYEDPULSETIMER_INVALID = new YWatchdogDelayedPulse();
-YWatchdog.STATE_A = 0 /* A */;
-YWatchdog.STATE_B = 1 /* B */;
-YWatchdog.STATE_INVALID = -1 /* INVALID */;
-YWatchdog.STATEATPOWERON_UNCHANGED = 0 /* UNCHANGED */;
-YWatchdog.STATEATPOWERON_A = 1 /* A */;
-YWatchdog.STATEATPOWERON_B = 2 /* B */;
-YWatchdog.STATEATPOWERON_INVALID = -1 /* INVALID */;
+YWatchdog.DELAYEDPULSETIMER_INVALID = {};
+YWatchdog.STATE_A = 0;
+YWatchdog.STATE_B = 1;
+YWatchdog.STATE_INVALID = -1;
+YWatchdog.STATEATPOWERON_UNCHANGED = 0;
+YWatchdog.STATEATPOWERON_A = 1;
+YWatchdog.STATEATPOWERON_B = 2;
+YWatchdog.STATEATPOWERON_INVALID = -1;
 YWatchdog.MAXTIMEONSTATEA_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YWatchdog.MAXTIMEONSTATEB_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-YWatchdog.OUTPUT_OFF = 0 /* OFF */;
-YWatchdog.OUTPUT_ON = 1 /* ON */;
-YWatchdog.OUTPUT_INVALID = -1 /* INVALID */;
+YWatchdog.OUTPUT_OFF = 0;
+YWatchdog.OUTPUT_ON = 1;
+YWatchdog.OUTPUT_INVALID = -1;
 YWatchdog.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YWatchdog.COUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-YWatchdog.AUTOSTART_OFF = 0 /* OFF */;
-YWatchdog.AUTOSTART_ON = 1 /* ON */;
-YWatchdog.AUTOSTART_INVALID = -1 /* INVALID */;
-YWatchdog.RUNNING_OFF = 0 /* OFF */;
-YWatchdog.RUNNING_ON = 1 /* ON */;
-YWatchdog.RUNNING_INVALID = -1 /* INVALID */;
+YWatchdog.AUTOSTART_OFF = 0;
+YWatchdog.AUTOSTART_ON = 1;
+YWatchdog.AUTOSTART_INVALID = -1;
+YWatchdog.RUNNING_OFF = 0;
+YWatchdog.RUNNING_ON = 1;
+YWatchdog.RUNNING_INVALID = -1;
 YWatchdog.TRIGGERDELAY_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YWatchdog.TRIGGERDURATION_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 //# sourceMappingURL=yocto_watchdog.js.map

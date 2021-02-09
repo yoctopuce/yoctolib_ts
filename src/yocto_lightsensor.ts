@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -39,20 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YLightSensor definitions)
-export const enum YLightSensor_MeasureType {
-    HUMAN_EYE = 0,
-    WIDE_SPECTRUM = 1,
-    INFRARED = 2,
-    HIGH_RATE = 3,
-    HIGH_ENERGY = 4,
-    HIGH_RESOLUTION = 5,
-    INVALID = -1
-}
-export interface YLightSensorValueCallback { (func: YLightSensor, value: string): void }
-export interface YLightSensorTimedReportCallback { (func: YLightSensor, measure: YMeasure): void }
-//--- (end of YLightSensor definitions)
-
 //--- (YLightSensor class start)
 /**
  * YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V3,
@@ -72,31 +58,28 @@ export class YLightSensor extends YSensor
 {
     //--- (YLightSensor attributes declaration)
     _className: string;
-    _measureType: YLightSensor_MeasureType = YLightSensor.MEASURETYPE_INVALID;
-    _valueCallbackLightSensor: YLightSensorValueCallback | null = null;
-    _timedReportCallbackLightSensor: YLightSensorTimedReportCallback | null = null;
+    _measureType: YLightSensor.MEASURETYPE = YLightSensor.MEASURETYPE_INVALID;
+    _valueCallbackLightSensor: YLightSensor.ValueCallback | null = null;
+    _timedReportCallbackLightSensor: YLightSensor.TimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly MEASURETYPE_HUMAN_EYE: YLightSensor_MeasureType = YLightSensor_MeasureType.HUMAN_EYE;
-    public readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor_MeasureType = YLightSensor_MeasureType.WIDE_SPECTRUM;
-    public readonly MEASURETYPE_INFRARED: YLightSensor_MeasureType = YLightSensor_MeasureType.INFRARED;
-    public readonly MEASURETYPE_HIGH_RATE: YLightSensor_MeasureType = YLightSensor_MeasureType.HIGH_RATE;
-    public readonly MEASURETYPE_HIGH_ENERGY: YLightSensor_MeasureType = YLightSensor_MeasureType.HIGH_ENERGY;
-    public readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor_MeasureType = YLightSensor_MeasureType.HIGH_RESOLUTION;
-    public readonly MEASURETYPE_INVALID: YLightSensor_MeasureType = YLightSensor_MeasureType.INVALID;
+    public readonly MEASURETYPE_HUMAN_EYE: YLightSensor.MEASURETYPE = 0;
+    public readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor.MEASURETYPE = 1;
+    public readonly MEASURETYPE_INFRARED: YLightSensor.MEASURETYPE = 2;
+    public readonly MEASURETYPE_HIGH_RATE: YLightSensor.MEASURETYPE = 3;
+    public readonly MEASURETYPE_HIGH_ENERGY: YLightSensor.MEASURETYPE = 4;
+    public readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor.MEASURETYPE = 5;
+    public readonly MEASURETYPE_INVALID: YLightSensor.MEASURETYPE = -1;
 
     // API symbols as static members
-    public static readonly MEASURETYPE_HUMAN_EYE: YLightSensor_MeasureType = YLightSensor_MeasureType.HUMAN_EYE;
-    public static readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor_MeasureType = YLightSensor_MeasureType.WIDE_SPECTRUM;
-    public static readonly MEASURETYPE_INFRARED: YLightSensor_MeasureType = YLightSensor_MeasureType.INFRARED;
-    public static readonly MEASURETYPE_HIGH_RATE: YLightSensor_MeasureType = YLightSensor_MeasureType.HIGH_RATE;
-    public static readonly MEASURETYPE_HIGH_ENERGY: YLightSensor_MeasureType = YLightSensor_MeasureType.HIGH_ENERGY;
-    public static readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor_MeasureType = YLightSensor_MeasureType.HIGH_RESOLUTION;
-    public static readonly MEASURETYPE_INVALID: YLightSensor_MeasureType = YLightSensor_MeasureType.INVALID;
+    public static readonly MEASURETYPE_HUMAN_EYE: YLightSensor.MEASURETYPE = 0;
+    public static readonly MEASURETYPE_WIDE_SPECTRUM: YLightSensor.MEASURETYPE = 1;
+    public static readonly MEASURETYPE_INFRARED: YLightSensor.MEASURETYPE = 2;
+    public static readonly MEASURETYPE_HIGH_RATE: YLightSensor.MEASURETYPE = 3;
+    public static readonly MEASURETYPE_HIGH_ENERGY: YLightSensor.MEASURETYPE = 4;
+    public static readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor.MEASURETYPE = 5;
+    public static readonly MEASURETYPE_INVALID: YLightSensor.MEASURETYPE = -1;
     //--- (end of YLightSensor attributes declaration)
-
-//--- (YLightSensor return codes)
-//--- (end of YLightSensor return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -112,7 +95,7 @@ export class YLightSensor extends YSensor
     {
         switch(name) {
         case 'measureType':
-            this._measureType = <YLightSensor_MeasureType> <number> val;
+            this._measureType = <YLightSensor.MEASURETYPE> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -155,7 +138,7 @@ export class YLightSensor extends YSensor
      *
      * On failure, throws an exception or returns YLightSensor.MEASURETYPE_INVALID.
      */
-    async get_measureType(): Promise<YLightSensor_MeasureType>
+    async get_measureType(): Promise<YLightSensor.MEASURETYPE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -183,7 +166,7 @@ export class YLightSensor extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_measureType(newval: YLightSensor_MeasureType): Promise<number>
+    async set_measureType(newval: YLightSensor.MEASURETYPE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -276,7 +259,7 @@ export class YLightSensor extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YLightSensorValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YLightSensor.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -320,7 +303,7 @@ export class YLightSensor extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YLightSensorTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YLightSensor.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -401,5 +384,20 @@ export class YLightSensor extends YSensor
     }
 
     //--- (end of YLightSensor implementation)
+}
+
+export namespace YLightSensor {
+    //--- (YLightSensor definitions)
+    export const enum MEASURETYPE {
+        HUMAN_EYE = 0,
+        WIDE_SPECTRUM = 1,
+        INFRARED = 2,
+        HIGH_RATE = 3,
+        HIGH_ENERGY = 4,
+        HIGH_RESOLUTION = 5,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YLightSensor, value: string): void }    export interface TimedReportCallback { (func: YLightSensor, measure: YMeasure): void }
+    //--- (end of YLightSensor definitions)
 }
 

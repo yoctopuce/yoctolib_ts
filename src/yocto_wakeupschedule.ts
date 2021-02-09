@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -39,10 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YWakeUpSchedule definitions)
-export interface YWakeUpScheduleValueCallback { (func: YWakeUpSchedule, value: string): void }
-//--- (end of YWakeUpSchedule definitions)
-
 //--- (YWakeUpSchedule class start)
 /**
  * YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
@@ -65,7 +61,7 @@ export class YWakeUpSchedule extends YFunction
     _monthDays: number = YWakeUpSchedule.MONTHDAYS_INVALID;
     _months: number = YWakeUpSchedule.MONTHS_INVALID;
     _nextOccurence: number = YWakeUpSchedule.NEXTOCCURENCE_INVALID;
-    _valueCallbackWakeUpSchedule: YWakeUpScheduleValueCallback | null = null;
+    _valueCallbackWakeUpSchedule: YWakeUpSchedule.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly MINUTESA_INVALID: number = YAPI.INVALID_UINT;
@@ -85,9 +81,6 @@ export class YWakeUpSchedule extends YFunction
     public static readonly MONTHS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly NEXTOCCURENCE_INVALID: number = YAPI.INVALID_LONG;
     //--- (end of YWakeUpSchedule attributes declaration)
-
-//--- (YWakeUpSchedule return codes)
-//--- (end of YWakeUpSchedule return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -454,7 +447,7 @@ export class YWakeUpSchedule extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YWakeUpScheduleValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YWakeUpSchedule.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -570,5 +563,11 @@ export class YWakeUpSchedule extends YFunction
     }
 
     //--- (end of YWakeUpSchedule implementation)
+}
+
+export namespace YWakeUpSchedule {
+    //--- (YWakeUpSchedule definitions)
+    export interface ValueCallback { (func: YWakeUpSchedule, value: string): void }
+    //--- (end of YWakeUpSchedule definitions)
 }
 

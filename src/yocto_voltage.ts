@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltage.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voltage.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -39,16 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YVoltage definitions)
-export const enum YVoltage_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YVoltageValueCallback { (func: YVoltage, value: string): void }
-export interface YVoltageTimedReportCallback { (func: YVoltage, measure: YMeasure): void }
-//--- (end of YVoltage definitions)
-
 //--- (YVoltage class start)
 /**
  * YVoltage Class: voltage sensor control interface, available for instance in the Yocto-Motor-DC, the
@@ -64,23 +54,20 @@ export class YVoltage extends YSensor
 {
     //--- (YVoltage attributes declaration)
     _className: string;
-    _enabled: YVoltage_Enabled = YVoltage.ENABLED_INVALID;
-    _valueCallbackVoltage: YVoltageValueCallback | null = null;
-    _timedReportCallbackVoltage: YVoltageTimedReportCallback | null = null;
+    _enabled: YVoltage.ENABLED = YVoltage.ENABLED_INVALID;
+    _valueCallbackVoltage: YVoltage.ValueCallback | null = null;
+    _timedReportCallbackVoltage: YVoltage.TimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly ENABLED_FALSE: YVoltage_Enabled = YVoltage_Enabled.FALSE;
-    public readonly ENABLED_TRUE: YVoltage_Enabled = YVoltage_Enabled.TRUE;
-    public readonly ENABLED_INVALID: YVoltage_Enabled = YVoltage_Enabled.INVALID;
+    public readonly ENABLED_FALSE: YVoltage.ENABLED = 0;
+    public readonly ENABLED_TRUE: YVoltage.ENABLED = 1;
+    public readonly ENABLED_INVALID: YVoltage.ENABLED = -1;
 
     // API symbols as static members
-    public static readonly ENABLED_FALSE: YVoltage_Enabled = YVoltage_Enabled.FALSE;
-    public static readonly ENABLED_TRUE: YVoltage_Enabled = YVoltage_Enabled.TRUE;
-    public static readonly ENABLED_INVALID: YVoltage_Enabled = YVoltage_Enabled.INVALID;
+    public static readonly ENABLED_FALSE: YVoltage.ENABLED = 0;
+    public static readonly ENABLED_TRUE: YVoltage.ENABLED = 1;
+    public static readonly ENABLED_INVALID: YVoltage.ENABLED = -1;
     //--- (end of YVoltage attributes declaration)
-
-//--- (YVoltage return codes)
-//--- (end of YVoltage return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -96,7 +83,7 @@ export class YVoltage extends YSensor
     {
         switch(name) {
         case 'enabled':
-            this._enabled = <YVoltage_Enabled> <number> val;
+            this._enabled = <YVoltage.ENABLED> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -109,7 +96,7 @@ export class YVoltage extends YSensor
      *
      * On failure, throws an exception or returns YVoltage.ENABLED_INVALID.
      */
-    async get_enabled(): Promise<YVoltage_Enabled>
+    async get_enabled(): Promise<YVoltage.ENABLED>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -136,7 +123,7 @@ export class YVoltage extends YSensor
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_enabled(newval: YVoltage_Enabled): Promise<number>
+    async set_enabled(newval: YVoltage.ENABLED): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -229,7 +216,7 @@ export class YVoltage extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YVoltageValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YVoltage.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -273,7 +260,7 @@ export class YVoltage extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YVoltageTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YVoltage.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -354,5 +341,16 @@ export class YVoltage extends YSensor
     }
 
     //--- (end of YVoltage implementation)
+}
+
+export namespace YVoltage {
+    //--- (YVoltage definitions)
+    export const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YVoltage, value: string): void }    export interface TimedReportCallback { (func: YVoltage, measure: YMeasure): void }
+    //--- (end of YVoltage definitions)
 }
 

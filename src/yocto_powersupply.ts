@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -39,20 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPowerSupply definitions)
-export const enum YPowerSupply_PowerOutput {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export const enum YPowerSupply_VoltageSense {
-    INT = 0,
-    EXT = 1,
-    INVALID = -1
-}
-export interface YPowerSupplyValueCallback { (func: YPowerSupply, value: string): void }
-//--- (end of YPowerSupply definitions)
-
 //--- (YPowerSupply class start)
 /**
  * YPowerSupply Class: regulated power supply control interface
@@ -69,8 +55,8 @@ export class YPowerSupply extends YFunction
     _className: string;
     _voltageSetPoint: number = YPowerSupply.VOLTAGESETPOINT_INVALID;
     _currentLimit: number = YPowerSupply.CURRENTLIMIT_INVALID;
-    _powerOutput: YPowerSupply_PowerOutput = YPowerSupply.POWEROUTPUT_INVALID;
-    _voltageSense: YPowerSupply_VoltageSense = YPowerSupply.VOLTAGESENSE_INVALID;
+    _powerOutput: YPowerSupply.POWEROUTPUT = YPowerSupply.POWEROUTPUT_INVALID;
+    _voltageSense: YPowerSupply.VOLTAGESENSE = YPowerSupply.VOLTAGESENSE_INVALID;
     _measuredVoltage: number = YPowerSupply.MEASUREDVOLTAGE_INVALID;
     _measuredCurrent: number = YPowerSupply.MEASUREDCURRENT_INVALID;
     _inputVoltage: number = YPowerSupply.INPUTVOLTAGE_INVALID;
@@ -80,17 +66,17 @@ export class YPowerSupply extends YFunction
     _voltageAtStartUp: number = YPowerSupply.VOLTAGEATSTARTUP_INVALID;
     _currentAtStartUp: number = YPowerSupply.CURRENTATSTARTUP_INVALID;
     _command: string = YPowerSupply.COMMAND_INVALID;
-    _valueCallbackPowerSupply: YPowerSupplyValueCallback | null = null;
+    _valueCallbackPowerSupply: YPowerSupply.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly VOLTAGESETPOINT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CURRENTLIMIT_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly POWEROUTPUT_OFF: YPowerSupply_PowerOutput = YPowerSupply_PowerOutput.OFF;
-    public readonly POWEROUTPUT_ON: YPowerSupply_PowerOutput = YPowerSupply_PowerOutput.ON;
-    public readonly POWEROUTPUT_INVALID: YPowerSupply_PowerOutput = YPowerSupply_PowerOutput.INVALID;
-    public readonly VOLTAGESENSE_INT: YPowerSupply_VoltageSense = YPowerSupply_VoltageSense.INT;
-    public readonly VOLTAGESENSE_EXT: YPowerSupply_VoltageSense = YPowerSupply_VoltageSense.EXT;
-    public readonly VOLTAGESENSE_INVALID: YPowerSupply_VoltageSense = YPowerSupply_VoltageSense.INVALID;
+    public readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT = 0;
+    public readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT = 1;
+    public readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT = -1;
+    public readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE = 0;
+    public readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE = 1;
+    public readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE = -1;
     public readonly MEASUREDVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly MEASUREDCURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly INPUTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -104,12 +90,12 @@ export class YPowerSupply extends YFunction
     // API symbols as static members
     public static readonly VOLTAGESETPOINT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CURRENTLIMIT_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly POWEROUTPUT_OFF: YPowerSupply_PowerOutput = YPowerSupply_PowerOutput.OFF;
-    public static readonly POWEROUTPUT_ON: YPowerSupply_PowerOutput = YPowerSupply_PowerOutput.ON;
-    public static readonly POWEROUTPUT_INVALID: YPowerSupply_PowerOutput = YPowerSupply_PowerOutput.INVALID;
-    public static readonly VOLTAGESENSE_INT: YPowerSupply_VoltageSense = YPowerSupply_VoltageSense.INT;
-    public static readonly VOLTAGESENSE_EXT: YPowerSupply_VoltageSense = YPowerSupply_VoltageSense.EXT;
-    public static readonly VOLTAGESENSE_INVALID: YPowerSupply_VoltageSense = YPowerSupply_VoltageSense.INVALID;
+    public static readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT = 0;
+    public static readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT = 1;
+    public static readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT = -1;
+    public static readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE = 0;
+    public static readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE = 1;
+    public static readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE = -1;
     public static readonly MEASUREDVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly MEASUREDCURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly INPUTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -120,9 +106,6 @@ export class YPowerSupply extends YFunction
     public static readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YPowerSupply attributes declaration)
-
-//--- (YPowerSupply return codes)
-//--- (end of YPowerSupply return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -144,10 +127,10 @@ export class YPowerSupply extends YFunction
             this._currentLimit = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'powerOutput':
-            this._powerOutput = <YPowerSupply_PowerOutput> <number> val;
+            this._powerOutput = <YPowerSupply.POWEROUTPUT> <number> val;
             return 1;
         case 'voltageSense':
-            this._voltageSense = <YPowerSupply_VoltageSense> <number> val;
+            this._voltageSense = <YPowerSupply.VOLTAGESENSE> <number> val;
             return 1;
         case 'measuredVoltage':
             this._measuredVoltage = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -258,7 +241,7 @@ export class YPowerSupply extends YFunction
      *
      * On failure, throws an exception or returns YPowerSupply.POWEROUTPUT_INVALID.
      */
-    async get_powerOutput(): Promise<YPowerSupply_PowerOutput>
+    async get_powerOutput(): Promise<YPowerSupply.POWEROUTPUT>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -280,7 +263,7 @@ export class YPowerSupply extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_powerOutput(newval: YPowerSupply_PowerOutput): Promise<number>
+    async set_powerOutput(newval: YPowerSupply.POWEROUTPUT): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -295,7 +278,7 @@ export class YPowerSupply extends YFunction
      *
      * On failure, throws an exception or returns YPowerSupply.VOLTAGESENSE_INVALID.
      */
-    async get_voltageSense(): Promise<YPowerSupply_VoltageSense>
+    async get_voltageSense(): Promise<YPowerSupply.VOLTAGESENSE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -317,7 +300,7 @@ export class YPowerSupply extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_voltageSense(newval: YPowerSupply_VoltageSense): Promise<number>
+    async set_voltageSense(newval: YPowerSupply.VOLTAGESENSE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -615,7 +598,7 @@ export class YPowerSupply extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPowerSupplyValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPowerSupply.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -723,5 +706,21 @@ export class YPowerSupply extends YFunction
     }
 
     //--- (end of YPowerSupply implementation)
+}
+
+export namespace YPowerSupply {
+    //--- (YPowerSupply definitions)
+    export const enum POWEROUTPUT {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export const enum VOLTAGESENSE {
+        INT = 0,
+        EXT = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YPowerSupply, value: string): void }
+    //--- (end of YPowerSupply definitions)
 }
 

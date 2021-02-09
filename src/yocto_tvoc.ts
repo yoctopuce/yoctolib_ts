@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_tvoc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YTvoc definitions)
-export interface YTvocValueCallback { (func: YTvoc, value: string): void }
-export interface YTvocTimedReportCallback { (func: YTvoc, measure: YMeasure): void }
-//--- (end of YTvoc definitions)
-
 //--- (YTvoc class start)
 /**
  * YTvoc Class: Total Volatile Organic Compound sensor control interface, available for instance in
@@ -59,14 +54,11 @@ export class YTvoc extends YSensor
 {
     //--- (YTvoc attributes declaration)
     _className: string;
-    _valueCallbackTvoc: YTvocValueCallback | null = null;
-    _timedReportCallbackTvoc: YTvocTimedReportCallback | null = null;
+    _valueCallbackTvoc: YTvoc.ValueCallback | null = null;
+    _timedReportCallbackTvoc: YTvoc.TimedReportCallback | null = null;
 
     // API symbols as static members
     //--- (end of YTvoc attributes declaration)
-
-//--- (YTvoc return codes)
-//--- (end of YTvoc return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -164,7 +156,7 @@ export class YTvoc extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YTvocValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YTvoc.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -208,7 +200,7 @@ export class YTvoc extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YTvocTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YTvoc.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -289,5 +281,11 @@ export class YTvoc extends YSensor
     }
 
     //--- (end of YTvoc implementation)
+}
+
+export namespace YTvoc {
+    //--- (YTvoc definitions)
+    export interface ValueCallback { (func: YTvoc, value: string): void }    export interface TimedReportCallback { (func: YTvoc, measure: YMeasure): void }
+    //--- (end of YTvoc definitions)
 }
 

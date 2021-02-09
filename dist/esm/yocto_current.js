@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_current.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Current functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YCurrent definitions)
 //--- (YCurrent class start)
 /**
  * YCurrent Class: current sensor control interface, available for instance in the Yocto-Amp, the
@@ -50,8 +49,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YCurrent class start)
 export class YCurrent extends YSensor {
     //--- (end of YCurrent attributes declaration)
-    //--- (YCurrent return codes)
-    //--- (end of YCurrent return codes)
     constructor(yapi, func) {
         //--- (YCurrent constructor)
         super(yapi, func);
@@ -59,9 +56,9 @@ export class YCurrent extends YSensor {
         this._valueCallbackCurrent = null;
         this._timedReportCallbackCurrent = null;
         // API symbols as object properties
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
         this._className = 'Current';
         //--- (end of YCurrent constructor)
     }
@@ -315,7 +312,7 @@ export class YCurrent extends YSensor {
     }
 }
 // API symbols as static members
-YCurrent.ENABLED_FALSE = 0 /* FALSE */;
-YCurrent.ENABLED_TRUE = 1 /* TRUE */;
-YCurrent.ENABLED_INVALID = -1 /* INVALID */;
+YCurrent.ENABLED_FALSE = 0;
+YCurrent.ENABLED_TRUE = 1;
+YCurrent.ENABLED_INVALID = -1;
 //# sourceMappingURL=yocto_current.js.map

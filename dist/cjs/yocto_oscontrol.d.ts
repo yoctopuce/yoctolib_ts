@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -37,9 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export interface YOsControlValueCallback {
-    (func: YOsControl, value: string): void;
-}
 /**
  * YOsControl Class: Operating system control interface via the VirtualHub application
  *
@@ -50,7 +47,7 @@ export interface YOsControlValueCallback {
 export declare class YOsControl extends YFunction {
     _className: string;
     _shutdownCountdown: number;
-    _valueCallbackOsControl: YOsControlValueCallback | null;
+    _valueCallbackOsControl: YOsControl.ValueCallback | null;
     readonly SHUTDOWNCOUNTDOWN_INVALID: number;
     static readonly SHUTDOWNCOUNTDOWN_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
@@ -132,7 +129,7 @@ export declare class YOsControl extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YOsControlValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YOsControl.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Schedules an OS shutdown after a given number of seconds.
@@ -177,4 +174,9 @@ export declare class YOsControl extends YFunction {
      *         if there are none.
      */
     static FirstOsControlInContext(yctx: YAPIContext): YOsControl | null;
+}
+export declare namespace YOsControl {
+    interface ValueCallback {
+        (func: YOsControl, value: string): void;
+    }
 }

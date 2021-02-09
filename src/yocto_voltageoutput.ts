@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voltageoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -39,10 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YVoltageOutput definitions)
-export interface YVoltageOutputValueCallback { (func: YVoltageOutput, value: string): void }
-//--- (end of YVoltageOutput definitions)
-
 //--- (YVoltageOutput class start)
 /**
  * YVoltageOutput Class: voltage output control interface, available for instance in the Yocto-0-10V-Tx
@@ -58,7 +54,7 @@ export class YVoltageOutput extends YFunction
     _currentVoltage: number = YVoltageOutput.CURRENTVOLTAGE_INVALID;
     _voltageTransition: string = YVoltageOutput.VOLTAGETRANSITION_INVALID;
     _voltageAtStartUp: number = YVoltageOutput.VOLTAGEATSTARTUP_INVALID;
-    _valueCallbackVoltageOutput: YVoltageOutputValueCallback | null = null;
+    _valueCallbackVoltageOutput: YVoltageOutput.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly CURRENTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -70,9 +66,6 @@ export class YVoltageOutput extends YFunction
     public static readonly VOLTAGETRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public static readonly VOLTAGEATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YVoltageOutput attributes declaration)
-
-//--- (YVoltageOutput return codes)
-//--- (end of YVoltageOutput return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -276,7 +269,7 @@ export class YVoltageOutput extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YVoltageOutputValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YVoltageOutput.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -387,5 +380,11 @@ export class YVoltageOutput extends YFunction
     }
 
     //--- (end of YVoltageOutput implementation)
+}
+
+export namespace YVoltageOutput {
+    //--- (YVoltageOutput definitions)
+    export interface ValueCallback { (func: YVoltageOutput, value: string): void }
+    //--- (end of YVoltageOutput definitions)
 }
 

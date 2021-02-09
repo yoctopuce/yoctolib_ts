@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YBuzzer = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YBuzzer definitions)
 //--- (YBuzzer class start)
 /**
  * YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer or the Yocto-MaxiBuzzer
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YBuzzer class start)
 class YBuzzer extends yocto_api_js_1.YFunction {
     //--- (end of YBuzzer attributes declaration)
-    //--- (YBuzzer return codes)
-    //--- (end of YBuzzer return codes)
     constructor(yapi, func) {
         //--- (YBuzzer constructor)
         super(yapi, func);

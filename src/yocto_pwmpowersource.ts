@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmpowersource.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwmpowersource.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -39,17 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YPwmPowerSource definitions)
-export const enum YPwmPowerSource_PowerMode {
-    USB_5V = 0,
-    USB_3V = 1,
-    EXT_V = 2,
-    OPNDRN = 3,
-    INVALID = -1
-}
-export interface YPwmPowerSourceValueCallback { (func: YPwmPowerSource, value: string): void }
-//--- (end of YPwmPowerSource definitions)
-
 //--- (YPwmPowerSource class start)
 /**
  * YPwmPowerSource Class: PWM generator power source control interface, available for instance in the Yocto-PWM-Tx
@@ -63,26 +52,23 @@ export class YPwmPowerSource extends YFunction
 {
     //--- (YPwmPowerSource attributes declaration)
     _className: string;
-    _powerMode: YPwmPowerSource_PowerMode = YPwmPowerSource.POWERMODE_INVALID;
-    _valueCallbackPwmPowerSource: YPwmPowerSourceValueCallback | null = null;
+    _powerMode: YPwmPowerSource.POWERMODE = YPwmPowerSource.POWERMODE_INVALID;
+    _valueCallbackPwmPowerSource: YPwmPowerSource.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly POWERMODE_USB_5V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_5V;
-    public readonly POWERMODE_USB_3V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_3V;
-    public readonly POWERMODE_EXT_V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.EXT_V;
-    public readonly POWERMODE_OPNDRN: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.OPNDRN;
-    public readonly POWERMODE_INVALID: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.INVALID;
+    public readonly POWERMODE_USB_5V: YPwmPowerSource.POWERMODE = 0;
+    public readonly POWERMODE_USB_3V: YPwmPowerSource.POWERMODE = 1;
+    public readonly POWERMODE_EXT_V: YPwmPowerSource.POWERMODE = 2;
+    public readonly POWERMODE_OPNDRN: YPwmPowerSource.POWERMODE = 3;
+    public readonly POWERMODE_INVALID: YPwmPowerSource.POWERMODE = -1;
 
     // API symbols as static members
-    public static readonly POWERMODE_USB_5V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_5V;
-    public static readonly POWERMODE_USB_3V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.USB_3V;
-    public static readonly POWERMODE_EXT_V: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.EXT_V;
-    public static readonly POWERMODE_OPNDRN: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.OPNDRN;
-    public static readonly POWERMODE_INVALID: YPwmPowerSource_PowerMode = YPwmPowerSource_PowerMode.INVALID;
+    public static readonly POWERMODE_USB_5V: YPwmPowerSource.POWERMODE = 0;
+    public static readonly POWERMODE_USB_3V: YPwmPowerSource.POWERMODE = 1;
+    public static readonly POWERMODE_EXT_V: YPwmPowerSource.POWERMODE = 2;
+    public static readonly POWERMODE_OPNDRN: YPwmPowerSource.POWERMODE = 3;
+    public static readonly POWERMODE_INVALID: YPwmPowerSource.POWERMODE = -1;
     //--- (end of YPwmPowerSource attributes declaration)
-
-//--- (YPwmPowerSource return codes)
-//--- (end of YPwmPowerSource return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -98,7 +84,7 @@ export class YPwmPowerSource extends YFunction
     {
         switch(name) {
         case 'powerMode':
-            this._powerMode = <YPwmPowerSource_PowerMode> <number> val;
+            this._powerMode = <YPwmPowerSource.POWERMODE> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -113,7 +99,7 @@ export class YPwmPowerSource extends YFunction
      *
      * On failure, throws an exception or returns YPwmPowerSource.POWERMODE_INVALID.
      */
-    async get_powerMode(): Promise<YPwmPowerSource_PowerMode>
+    async get_powerMode(): Promise<YPwmPowerSource.POWERMODE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -141,7 +127,7 @@ export class YPwmPowerSource extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_powerMode(newval: YPwmPowerSource_PowerMode): Promise<number>
+    async set_powerMode(newval: YPwmPowerSource.POWERMODE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -234,7 +220,7 @@ export class YPwmPowerSource extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YPwmPowerSourceValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YPwmPowerSource.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -321,5 +307,18 @@ export class YPwmPowerSource extends YFunction
     }
 
     //--- (end of YPwmPowerSource implementation)
+}
+
+export namespace YPwmPowerSource {
+    //--- (YPwmPowerSource definitions)
+    export const enum POWERMODE {
+        USB_5V = 0,
+        USB_3V = 1,
+        EXT_V = 2,
+        OPNDRN = 3,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YPwmPowerSource, value: string): void }
+    //--- (end of YPwmPowerSource definitions)
 }
 

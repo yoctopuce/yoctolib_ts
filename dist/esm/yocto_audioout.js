@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_audioout.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YAudioOut definitions)
 //--- (YAudioOut class start)
 /**
  * YAudioOut Class: audio output control interface
@@ -47,8 +46,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YAudioOut class start)
 export class YAudioOut extends YFunction {
     //--- (end of YAudioOut attributes declaration)
-    //--- (YAudioOut return codes)
-    //--- (end of YAudioOut return codes)
     constructor(yapi, func) {
         //--- (YAudioOut constructor)
         super(yapi, func);
@@ -60,9 +57,9 @@ export class YAudioOut extends YFunction {
         this._valueCallbackAudioOut = null;
         // API symbols as object properties
         this.VOLUME_INVALID = YAPI.INVALID_UINT;
-        this.MUTE_FALSE = 0 /* FALSE */;
-        this.MUTE_TRUE = 1 /* TRUE */;
-        this.MUTE_INVALID = -1 /* INVALID */;
+        this.MUTE_FALSE = 0;
+        this.MUTE_TRUE = 1;
+        this.MUTE_INVALID = -1;
         this.VOLUMERANGE_INVALID = YAPI.INVALID_STRING;
         this.SIGNAL_INVALID = YAPI.INVALID_INT;
         this.NOSIGNALFOR_INVALID = YAPI.INVALID_INT;
@@ -377,9 +374,9 @@ export class YAudioOut extends YFunction {
 }
 // API symbols as static members
 YAudioOut.VOLUME_INVALID = YAPI.INVALID_UINT;
-YAudioOut.MUTE_FALSE = 0 /* FALSE */;
-YAudioOut.MUTE_TRUE = 1 /* TRUE */;
-YAudioOut.MUTE_INVALID = -1 /* INVALID */;
+YAudioOut.MUTE_FALSE = 0;
+YAudioOut.MUTE_TRUE = 1;
+YAudioOut.MUTE_INVALID = -1;
 YAudioOut.VOLUMERANGE_INVALID = YAPI.INVALID_STRING;
 YAudioOut.SIGNAL_INVALID = YAPI.INVALID_INT;
 YAudioOut.NOSIGNALFOR_INVALID = YAPI.INVALID_INT;

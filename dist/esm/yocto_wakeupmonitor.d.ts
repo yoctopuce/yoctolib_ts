@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupmonitor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -37,23 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YWakeUpMonitor_WakeUpReason {
-    USBPOWER = 0,
-    EXTPOWER = 1,
-    ENDOFSLEEP = 2,
-    EXTSIG1 = 3,
-    SCHEDULE1 = 4,
-    SCHEDULE2 = 5,
-    INVALID = -1
-}
-export declare const enum YWakeUpMonitor_WakeUpState {
-    SLEEPING = 0,
-    AWAKE = 1,
-    INVALID = -1
-}
-export interface YWakeUpMonitorValueCallback {
-    (func: YWakeUpMonitor, value: string): void;
-}
 /**
  * YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
  * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
@@ -66,38 +49,38 @@ export declare class YWakeUpMonitor extends YFunction {
     _powerDuration: number;
     _sleepCountdown: number;
     _nextWakeUp: number;
-    _wakeUpReason: YWakeUpMonitor_WakeUpReason;
-    _wakeUpState: YWakeUpMonitor_WakeUpState;
+    _wakeUpReason: YWakeUpMonitor.WAKEUPREASON;
+    _wakeUpState: YWakeUpMonitor.WAKEUPSTATE;
     _rtcTime: number;
     _endOfTime: number;
-    _valueCallbackWakeUpMonitor: YWakeUpMonitorValueCallback | null;
+    _valueCallbackWakeUpMonitor: YWakeUpMonitor.ValueCallback | null;
     readonly POWERDURATION_INVALID: number;
     readonly SLEEPCOUNTDOWN_INVALID: number;
     readonly NEXTWAKEUP_INVALID: number;
-    readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPREASON_INVALID: YWakeUpMonitor_WakeUpReason;
-    readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor_WakeUpState;
-    readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor_WakeUpState;
-    readonly WAKEUPSTATE_INVALID: YWakeUpMonitor_WakeUpState;
+    readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE;
+    readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE;
+    readonly WAKEUPSTATE_INVALID: YWakeUpMonitor.WAKEUPSTATE;
     readonly RTCTIME_INVALID: number;
     static readonly POWERDURATION_INVALID: number;
     static readonly SLEEPCOUNTDOWN_INVALID: number;
     static readonly NEXTWAKEUP_INVALID: number;
-    static readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPREASON_INVALID: YWakeUpMonitor_WakeUpReason;
-    static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor_WakeUpState;
-    static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor_WakeUpState;
-    static readonly WAKEUPSTATE_INVALID: YWakeUpMonitor_WakeUpState;
+    static readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE;
+    static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE;
+    static readonly WAKEUPSTATE_INVALID: YWakeUpMonitor.WAKEUPSTATE;
     static readonly RTCTIME_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -168,7 +151,7 @@ export declare class YWakeUpMonitor extends YFunction {
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
-    get_wakeUpReason(): Promise<YWakeUpMonitor_WakeUpReason>;
+    get_wakeUpReason(): Promise<YWakeUpMonitor.WAKEUPREASON>;
     /**
      * Returns  the current state of the monitor.
      *
@@ -177,8 +160,8 @@ export declare class YWakeUpMonitor extends YFunction {
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPSTATE_INVALID.
      */
-    get_wakeUpState(): Promise<YWakeUpMonitor_WakeUpState>;
-    set_wakeUpState(newval: YWakeUpMonitor_WakeUpState): Promise<number>;
+    get_wakeUpState(): Promise<YWakeUpMonitor.WAKEUPSTATE>;
+    set_wakeUpState(newval: YWakeUpMonitor.WAKEUPSTATE): Promise<number>;
     get_rtcTime(): Promise<number>;
     /**
      * Retrieves a wake-up monitor for a given identifier.
@@ -246,7 +229,7 @@ export declare class YWakeUpMonitor extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YWakeUpMonitorValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YWakeUpMonitor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Forces a wake up.
@@ -329,4 +312,23 @@ export declare class YWakeUpMonitor extends YFunction {
      *         if there are none.
      */
     static FirstWakeUpMonitorInContext(yctx: YAPIContext): YWakeUpMonitor | null;
+}
+export declare namespace YWakeUpMonitor {
+    const enum WAKEUPREASON {
+        USBPOWER = 0,
+        EXTPOWER = 1,
+        ENDOFSLEEP = 2,
+        EXTSIG1 = 3,
+        SCHEDULE1 = 4,
+        SCHEDULE2 = 5,
+        INVALID = -1
+    }
+    const enum WAKEUPSTATE {
+        SLEEPING = 0,
+        AWAKE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YWakeUpMonitor, value: string): void;
+    }
 }

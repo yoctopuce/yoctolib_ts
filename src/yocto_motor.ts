@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_motor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -39,21 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YMotor definitions)
-export const enum YMotor_MotorStatus {
-    IDLE = 0,
-    BRAKE = 1,
-    FORWD = 2,
-    BACKWD = 3,
-    LOVOLT = 4,
-    HICURR = 5,
-    HIHEAT = 6,
-    FAILSF = 7,
-    INVALID = -1
-}
-export interface YMotorValueCallback { (func: YMotor, value: string): void }
-//--- (end of YMotor definitions)
-
 //--- (YMotor class start)
 /**
  * YMotor Class: motor control interface, available for instance in the Yocto-Motor-DC
@@ -70,7 +55,7 @@ export class YMotor extends YFunction
 {
     //--- (YMotor attributes declaration)
     _className: string;
-    _motorStatus: YMotor_MotorStatus = YMotor.MOTORSTATUS_INVALID;
+    _motorStatus: YMotor.MOTORSTATUS = YMotor.MOTORSTATUS_INVALID;
     _drivingForce: number = YMotor.DRIVINGFORCE_INVALID;
     _brakingForce: number = YMotor.BRAKINGFORCE_INVALID;
     _cutOffVoltage: number = YMotor.CUTOFFVOLTAGE_INVALID;
@@ -79,18 +64,18 @@ export class YMotor extends YFunction
     _starterTime: number = YMotor.STARTERTIME_INVALID;
     _failSafeTimeout: number = YMotor.FAILSAFETIMEOUT_INVALID;
     _command: string = YMotor.COMMAND_INVALID;
-    _valueCallbackMotor: YMotorValueCallback | null = null;
+    _valueCallbackMotor: YMotor.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly MOTORSTATUS_IDLE: YMotor_MotorStatus = YMotor_MotorStatus.IDLE;
-    public readonly MOTORSTATUS_BRAKE: YMotor_MotorStatus = YMotor_MotorStatus.BRAKE;
-    public readonly MOTORSTATUS_FORWD: YMotor_MotorStatus = YMotor_MotorStatus.FORWD;
-    public readonly MOTORSTATUS_BACKWD: YMotor_MotorStatus = YMotor_MotorStatus.BACKWD;
-    public readonly MOTORSTATUS_LOVOLT: YMotor_MotorStatus = YMotor_MotorStatus.LOVOLT;
-    public readonly MOTORSTATUS_HICURR: YMotor_MotorStatus = YMotor_MotorStatus.HICURR;
-    public readonly MOTORSTATUS_HIHEAT: YMotor_MotorStatus = YMotor_MotorStatus.HIHEAT;
-    public readonly MOTORSTATUS_FAILSF: YMotor_MotorStatus = YMotor_MotorStatus.FAILSF;
-    public readonly MOTORSTATUS_INVALID: YMotor_MotorStatus = YMotor_MotorStatus.INVALID;
+    public readonly MOTORSTATUS_IDLE: YMotor.MOTORSTATUS = 0;
+    public readonly MOTORSTATUS_BRAKE: YMotor.MOTORSTATUS = 1;
+    public readonly MOTORSTATUS_FORWD: YMotor.MOTORSTATUS = 2;
+    public readonly MOTORSTATUS_BACKWD: YMotor.MOTORSTATUS = 3;
+    public readonly MOTORSTATUS_LOVOLT: YMotor.MOTORSTATUS = 4;
+    public readonly MOTORSTATUS_HICURR: YMotor.MOTORSTATUS = 5;
+    public readonly MOTORSTATUS_HIHEAT: YMotor.MOTORSTATUS = 6;
+    public readonly MOTORSTATUS_FAILSF: YMotor.MOTORSTATUS = 7;
+    public readonly MOTORSTATUS_INVALID: YMotor.MOTORSTATUS = -1;
     public readonly DRIVINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly BRAKINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CUTOFFVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -101,15 +86,15 @@ export class YMotor extends YFunction
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly MOTORSTATUS_IDLE: YMotor_MotorStatus = YMotor_MotorStatus.IDLE;
-    public static readonly MOTORSTATUS_BRAKE: YMotor_MotorStatus = YMotor_MotorStatus.BRAKE;
-    public static readonly MOTORSTATUS_FORWD: YMotor_MotorStatus = YMotor_MotorStatus.FORWD;
-    public static readonly MOTORSTATUS_BACKWD: YMotor_MotorStatus = YMotor_MotorStatus.BACKWD;
-    public static readonly MOTORSTATUS_LOVOLT: YMotor_MotorStatus = YMotor_MotorStatus.LOVOLT;
-    public static readonly MOTORSTATUS_HICURR: YMotor_MotorStatus = YMotor_MotorStatus.HICURR;
-    public static readonly MOTORSTATUS_HIHEAT: YMotor_MotorStatus = YMotor_MotorStatus.HIHEAT;
-    public static readonly MOTORSTATUS_FAILSF: YMotor_MotorStatus = YMotor_MotorStatus.FAILSF;
-    public static readonly MOTORSTATUS_INVALID: YMotor_MotorStatus = YMotor_MotorStatus.INVALID;
+    public static readonly MOTORSTATUS_IDLE: YMotor.MOTORSTATUS = 0;
+    public static readonly MOTORSTATUS_BRAKE: YMotor.MOTORSTATUS = 1;
+    public static readonly MOTORSTATUS_FORWD: YMotor.MOTORSTATUS = 2;
+    public static readonly MOTORSTATUS_BACKWD: YMotor.MOTORSTATUS = 3;
+    public static readonly MOTORSTATUS_LOVOLT: YMotor.MOTORSTATUS = 4;
+    public static readonly MOTORSTATUS_HICURR: YMotor.MOTORSTATUS = 5;
+    public static readonly MOTORSTATUS_HIHEAT: YMotor.MOTORSTATUS = 6;
+    public static readonly MOTORSTATUS_FAILSF: YMotor.MOTORSTATUS = 7;
+    public static readonly MOTORSTATUS_INVALID: YMotor.MOTORSTATUS = -1;
     public static readonly DRIVINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly BRAKINGFORCE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CUTOFFVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -119,9 +104,6 @@ export class YMotor extends YFunction
     public static readonly FAILSAFETIMEOUT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YMotor attributes declaration)
-
-//--- (YMotor return codes)
-//--- (end of YMotor return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -137,7 +119,7 @@ export class YMotor extends YFunction
     {
         switch(name) {
         case 'motorStatus':
-            this._motorStatus = <YMotor_MotorStatus> <number> val;
+            this._motorStatus = <YMotor.MOTORSTATUS> <number> val;
             return 1;
         case 'drivingForce':
             this._drivingForce = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
@@ -187,7 +169,7 @@ export class YMotor extends YFunction
      *
      * On failure, throws an exception or returns YMotor.MOTORSTATUS_INVALID.
      */
-    async get_motorStatus(): Promise<YMotor_MotorStatus>
+    async get_motorStatus(): Promise<YMotor.MOTORSTATUS>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -199,7 +181,7 @@ export class YMotor extends YFunction
         return res;
     }
 
-    async set_motorStatus(newval: YMotor_MotorStatus): Promise<number>
+    async set_motorStatus(newval: YMotor.MOTORSTATUS): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -608,7 +590,7 @@ export class YMotor extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YMotorValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YMotor.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -745,5 +727,22 @@ export class YMotor extends YFunction
     }
 
     //--- (end of YMotor implementation)
+}
+
+export namespace YMotor {
+    //--- (YMotor definitions)
+    export const enum MOTORSTATUS {
+        IDLE = 0,
+        BRAKE = 1,
+        FORWD = 2,
+        BACKWD = 3,
+        LOVOLT = 4,
+        HICURR = 5,
+        HIHEAT = 6,
+        FAILSF = 7,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YMotor, value: string): void }
+    //--- (end of YMotor definitions)
 }
 

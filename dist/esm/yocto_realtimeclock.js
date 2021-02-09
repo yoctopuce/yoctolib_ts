@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YRealTimeClock definitions)
 //--- (YRealTimeClock class start)
 /**
  * YRealTimeClock Class: real-time clock control interface, available for instance in the
@@ -52,8 +51,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YRealTimeClock class start)
 export class YRealTimeClock extends YFunction {
     //--- (end of YRealTimeClock attributes declaration)
-    //--- (YRealTimeClock return codes)
-    //--- (end of YRealTimeClock return codes)
     constructor(yapi, func) {
         //--- (YRealTimeClock constructor)
         super(yapi, func);
@@ -66,9 +63,9 @@ export class YRealTimeClock extends YFunction {
         this.UNIXTIME_INVALID = YAPI.INVALID_LONG;
         this.DATETIME_INVALID = YAPI.INVALID_STRING;
         this.UTCOFFSET_INVALID = YAPI.INVALID_INT;
-        this.TIMESET_FALSE = 0 /* FALSE */;
-        this.TIMESET_TRUE = 1 /* TRUE */;
-        this.TIMESET_INVALID = -1 /* INVALID */;
+        this.TIMESET_FALSE = 0;
+        this.TIMESET_TRUE = 1;
+        this.TIMESET_INVALID = -1;
         this._className = 'RealTimeClock';
         //--- (end of YRealTimeClock constructor)
     }
@@ -361,7 +358,7 @@ export class YRealTimeClock extends YFunction {
 YRealTimeClock.UNIXTIME_INVALID = YAPI.INVALID_LONG;
 YRealTimeClock.DATETIME_INVALID = YAPI.INVALID_STRING;
 YRealTimeClock.UTCOFFSET_INVALID = YAPI.INVALID_INT;
-YRealTimeClock.TIMESET_FALSE = 0 /* FALSE */;
-YRealTimeClock.TIMESET_TRUE = 1 /* TRUE */;
-YRealTimeClock.TIMESET_INVALID = -1 /* INVALID */;
+YRealTimeClock.TIMESET_FALSE = 0;
+YRealTimeClock.TIMESET_TRUE = 1;
+YRealTimeClock.TIMESET_INVALID = -1;
 //# sourceMappingURL=yocto_realtimeclock.js.map

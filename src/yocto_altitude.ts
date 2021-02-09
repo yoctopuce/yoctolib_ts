@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_altitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YAltitude definitions)
-export interface YAltitudeValueCallback { (func: YAltitude, value: string): void }
-export interface YAltitudeTimedReportCallback { (func: YAltitude, measure: YMeasure): void }
-//--- (end of YAltitude definitions)
-
 //--- (YAltitude class start)
 /**
  * YAltitude Class: altimeter control interface, available for instance in the Yocto-Altimeter-V2 or
@@ -63,8 +58,8 @@ export class YAltitude extends YSensor
     _className: string;
     _qnh: number = YAltitude.QNH_INVALID;
     _technology: string = YAltitude.TECHNOLOGY_INVALID;
-    _valueCallbackAltitude: YAltitudeValueCallback | null = null;
-    _timedReportCallbackAltitude: YAltitudeTimedReportCallback | null = null;
+    _valueCallbackAltitude: YAltitude.ValueCallback | null = null;
+    _timedReportCallbackAltitude: YAltitude.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly QNH_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -74,9 +69,6 @@ export class YAltitude extends YSensor
     public static readonly QNH_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly TECHNOLOGY_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YAltitude attributes declaration)
-
-//--- (YAltitude return codes)
-//--- (end of YAltitude return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -270,7 +262,7 @@ export class YAltitude extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YAltitudeValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YAltitude.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -314,7 +306,7 @@ export class YAltitude extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YAltitudeTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YAltitude.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -395,5 +387,11 @@ export class YAltitude extends YSensor
     }
 
     //--- (end of YAltitude implementation)
+}
+
+export namespace YAltitude {
+    //--- (YAltitude definitions)
+    export interface ValueCallback { (func: YAltitude, value: string): void }    export interface TimedReportCallback { (func: YAltitude, measure: YMeasure): void }
+    //--- (end of YAltitude definitions)
 }
 

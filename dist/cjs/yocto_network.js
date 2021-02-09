@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_network.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YNetwork = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YNetwork definitions)
 //--- (YNetwork class start)
 /**
  * YNetwork Class: network interface control interface, available for instance in the
@@ -52,8 +51,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YNetwork class start)
 class YNetwork extends yocto_api_js_1.YFunction {
     //--- (end of YNetwork attributes declaration)
-    //--- (YNetwork return codes)
-    //--- (end of YNetwork return codes)
     constructor(yapi, func) {
         //--- (YNetwork constructor)
         super(yapi, func);
@@ -83,12 +80,12 @@ class YNetwork extends yocto_api_js_1.YFunction {
         this._poeCurrent = YNetwork.POECURRENT_INVALID;
         this._valueCallbackNetwork = null;
         // API symbols as object properties
-        this.READINESS_DOWN = 0 /* DOWN */;
-        this.READINESS_EXISTS = 1 /* EXISTS */;
-        this.READINESS_LINKED = 2 /* LINKED */;
-        this.READINESS_LAN_OK = 3 /* LAN_OK */;
-        this.READINESS_WWW_OK = 4 /* WWW_OK */;
-        this.READINESS_INVALID = -1 /* INVALID */;
+        this.READINESS_DOWN = 0;
+        this.READINESS_EXISTS = 1;
+        this.READINESS_LINKED = 2;
+        this.READINESS_LAN_OK = 3;
+        this.READINESS_WWW_OK = 4;
+        this.READINESS_INVALID = -1;
         this.MACADDRESS_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.IPADDRESS_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.SUBNETMASK_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
@@ -101,29 +98,29 @@ class YNetwork extends yocto_api_js_1.YFunction {
         this.ADMINPASSWORD_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.HTTPPORT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.DEFAULTPAGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-        this.DISCOVERABLE_FALSE = 0 /* FALSE */;
-        this.DISCOVERABLE_TRUE = 1 /* TRUE */;
-        this.DISCOVERABLE_INVALID = -1 /* INVALID */;
+        this.DISCOVERABLE_FALSE = 0;
+        this.DISCOVERABLE_TRUE = 1;
+        this.DISCOVERABLE_INVALID = -1;
         this.WWWWATCHDOGDELAY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.CALLBACKURL_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-        this.CALLBACKMETHOD_POST = 0 /* POST */;
-        this.CALLBACKMETHOD_GET = 1 /* GET */;
-        this.CALLBACKMETHOD_PUT = 2 /* PUT */;
-        this.CALLBACKMETHOD_INVALID = -1 /* INVALID */;
-        this.CALLBACKENCODING_FORM = 0 /* FORM */;
-        this.CALLBACKENCODING_JSON = 1 /* JSON */;
-        this.CALLBACKENCODING_JSON_ARRAY = 2 /* JSON_ARRAY */;
-        this.CALLBACKENCODING_CSV = 3 /* CSV */;
-        this.CALLBACKENCODING_YOCTO_API = 4 /* YOCTO_API */;
-        this.CALLBACKENCODING_JSON_NUM = 5 /* JSON_NUM */;
-        this.CALLBACKENCODING_EMONCMS = 6 /* EMONCMS */;
-        this.CALLBACKENCODING_AZURE = 7 /* AZURE */;
-        this.CALLBACKENCODING_INFLUXDB = 8 /* INFLUXDB */;
-        this.CALLBACKENCODING_MQTT = 9 /* MQTT */;
-        this.CALLBACKENCODING_YOCTO_API_JZON = 10 /* YOCTO_API_JZON */;
-        this.CALLBACKENCODING_PRTG = 11 /* PRTG */;
-        this.CALLBACKENCODING_INFLUXDB_V2 = 12 /* INFLUXDB_V2 */;
-        this.CALLBACKENCODING_INVALID = -1 /* INVALID */;
+        this.CALLBACKMETHOD_POST = 0;
+        this.CALLBACKMETHOD_GET = 1;
+        this.CALLBACKMETHOD_PUT = 2;
+        this.CALLBACKMETHOD_INVALID = -1;
+        this.CALLBACKENCODING_FORM = 0;
+        this.CALLBACKENCODING_JSON = 1;
+        this.CALLBACKENCODING_JSON_ARRAY = 2;
+        this.CALLBACKENCODING_CSV = 3;
+        this.CALLBACKENCODING_YOCTO_API = 4;
+        this.CALLBACKENCODING_JSON_NUM = 5;
+        this.CALLBACKENCODING_EMONCMS = 6;
+        this.CALLBACKENCODING_AZURE = 7;
+        this.CALLBACKENCODING_INFLUXDB = 8;
+        this.CALLBACKENCODING_MQTT = 9;
+        this.CALLBACKENCODING_YOCTO_API_JZON = 10;
+        this.CALLBACKENCODING_PRTG = 11;
+        this.CALLBACKENCODING_INFLUXDB_V2 = 12;
+        this.CALLBACKENCODING_INVALID = -1;
         this.CALLBACKCREDENTIALS_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.CALLBACKINITIALDELAY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.CALLBACKSCHEDULE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
@@ -480,8 +477,8 @@ class YNetwork extends yocto_api_js_1.YFunction {
      */
     async set_userPassword(newval) {
         let rest_val;
-        if (newval.length > this._yapi.HASH_BUF_SIZE) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Password too long :' + newval, this._yapi.INVALID_ARGUMENT);
+        if (newval.length > yocto_api_js_1.YAPI.HASH_BUF_SIZE) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         rest_val = String(newval);
         return await this._setAttr('userPassword', rest_val);
@@ -520,8 +517,8 @@ class YNetwork extends yocto_api_js_1.YFunction {
      */
     async set_adminPassword(newval) {
         let rest_val;
-        if (newval.length > this._yapi.HASH_BUF_SIZE) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Password too long :' + newval, this._yapi.INVALID_ARGUMENT);
+        if (newval.length > yocto_api_js_1.YAPI.HASH_BUF_SIZE) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         rest_val = String(newval);
         return await this._setAttr('adminPassword', rest_val);
@@ -1259,12 +1256,12 @@ class YNetwork extends yocto_api_js_1.YFunction {
 }
 exports.YNetwork = YNetwork;
 // API symbols as static members
-YNetwork.READINESS_DOWN = 0 /* DOWN */;
-YNetwork.READINESS_EXISTS = 1 /* EXISTS */;
-YNetwork.READINESS_LINKED = 2 /* LINKED */;
-YNetwork.READINESS_LAN_OK = 3 /* LAN_OK */;
-YNetwork.READINESS_WWW_OK = 4 /* WWW_OK */;
-YNetwork.READINESS_INVALID = -1 /* INVALID */;
+YNetwork.READINESS_DOWN = 0;
+YNetwork.READINESS_EXISTS = 1;
+YNetwork.READINESS_LINKED = 2;
+YNetwork.READINESS_LAN_OK = 3;
+YNetwork.READINESS_WWW_OK = 4;
+YNetwork.READINESS_INVALID = -1;
 YNetwork.MACADDRESS_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YNetwork.IPADDRESS_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YNetwork.SUBNETMASK_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
@@ -1277,29 +1274,29 @@ YNetwork.USERPASSWORD_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YNetwork.ADMINPASSWORD_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YNetwork.HTTPPORT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YNetwork.DEFAULTPAGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-YNetwork.DISCOVERABLE_FALSE = 0 /* FALSE */;
-YNetwork.DISCOVERABLE_TRUE = 1 /* TRUE */;
-YNetwork.DISCOVERABLE_INVALID = -1 /* INVALID */;
+YNetwork.DISCOVERABLE_FALSE = 0;
+YNetwork.DISCOVERABLE_TRUE = 1;
+YNetwork.DISCOVERABLE_INVALID = -1;
 YNetwork.WWWWATCHDOGDELAY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YNetwork.CALLBACKURL_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
-YNetwork.CALLBACKMETHOD_POST = 0 /* POST */;
-YNetwork.CALLBACKMETHOD_GET = 1 /* GET */;
-YNetwork.CALLBACKMETHOD_PUT = 2 /* PUT */;
-YNetwork.CALLBACKMETHOD_INVALID = -1 /* INVALID */;
-YNetwork.CALLBACKENCODING_FORM = 0 /* FORM */;
-YNetwork.CALLBACKENCODING_JSON = 1 /* JSON */;
-YNetwork.CALLBACKENCODING_JSON_ARRAY = 2 /* JSON_ARRAY */;
-YNetwork.CALLBACKENCODING_CSV = 3 /* CSV */;
-YNetwork.CALLBACKENCODING_YOCTO_API = 4 /* YOCTO_API */;
-YNetwork.CALLBACKENCODING_JSON_NUM = 5 /* JSON_NUM */;
-YNetwork.CALLBACKENCODING_EMONCMS = 6 /* EMONCMS */;
-YNetwork.CALLBACKENCODING_AZURE = 7 /* AZURE */;
-YNetwork.CALLBACKENCODING_INFLUXDB = 8 /* INFLUXDB */;
-YNetwork.CALLBACKENCODING_MQTT = 9 /* MQTT */;
-YNetwork.CALLBACKENCODING_YOCTO_API_JZON = 10 /* YOCTO_API_JZON */;
-YNetwork.CALLBACKENCODING_PRTG = 11 /* PRTG */;
-YNetwork.CALLBACKENCODING_INFLUXDB_V2 = 12 /* INFLUXDB_V2 */;
-YNetwork.CALLBACKENCODING_INVALID = -1 /* INVALID */;
+YNetwork.CALLBACKMETHOD_POST = 0;
+YNetwork.CALLBACKMETHOD_GET = 1;
+YNetwork.CALLBACKMETHOD_PUT = 2;
+YNetwork.CALLBACKMETHOD_INVALID = -1;
+YNetwork.CALLBACKENCODING_FORM = 0;
+YNetwork.CALLBACKENCODING_JSON = 1;
+YNetwork.CALLBACKENCODING_JSON_ARRAY = 2;
+YNetwork.CALLBACKENCODING_CSV = 3;
+YNetwork.CALLBACKENCODING_YOCTO_API = 4;
+YNetwork.CALLBACKENCODING_JSON_NUM = 5;
+YNetwork.CALLBACKENCODING_EMONCMS = 6;
+YNetwork.CALLBACKENCODING_AZURE = 7;
+YNetwork.CALLBACKENCODING_INFLUXDB = 8;
+YNetwork.CALLBACKENCODING_MQTT = 9;
+YNetwork.CALLBACKENCODING_YOCTO_API_JZON = 10;
+YNetwork.CALLBACKENCODING_PRTG = 11;
+YNetwork.CALLBACKENCODING_INFLUXDB_V2 = 12;
+YNetwork.CALLBACKENCODING_INVALID = -1;
 YNetwork.CALLBACKCREDENTIALS_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YNetwork.CALLBACKINITIALDELAY_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YNetwork.CALLBACKSCHEDULE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;

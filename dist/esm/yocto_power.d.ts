@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_power.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YPowerValueCallback {
-    (func: YPower, value: string): void;
-}
-export interface YPowerTimedReportCallback {
-    (func: YPower, measure: YMeasure): void;
-}
 /**
  * YPower Class: electrical power sensor control interface, available for instance in the Yocto-Watt
  *
@@ -58,8 +52,8 @@ export declare class YPower extends YSensor {
     _deliveredEnergyMeter: number;
     _receivedEnergyMeter: number;
     _meterTimer: number;
-    _valueCallbackPower: YPowerValueCallback | null;
-    _timedReportCallbackPower: YPowerTimedReportCallback | null;
+    _valueCallbackPower: YPower.ValueCallback | null;
+    _timedReportCallbackPower: YPower.TimedReportCallback | null;
     readonly COSPHI_INVALID: number;
     readonly METER_INVALID: number;
     readonly DELIVEREDENERGYMETER_INVALID: number;
@@ -190,7 +184,7 @@ export declare class YPower extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YPowerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YPower.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -203,7 +197,7 @@ export declare class YPower extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YPowerTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YPower.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Resets the energy counters.
@@ -246,4 +240,12 @@ export declare class YPower extends YSensor {
      *         if there are none.
      */
     static FirstPowerInContext(yctx: YAPIContext): YPower | null;
+}
+export declare namespace YPower {
+    interface ValueCallback {
+        (func: YPower, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YPower, measure: YMeasure): void;
+    }
 }

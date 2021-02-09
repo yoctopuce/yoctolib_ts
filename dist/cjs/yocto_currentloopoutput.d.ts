@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -37,15 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YCurrentLoopOutput_LoopPower {
-    NOPWR = 0,
-    LOWPWR = 1,
-    POWEROK = 2,
-    INVALID = -1
-}
-export interface YCurrentLoopOutputValueCallback {
-    (func: YCurrentLoopOutput, value: string): void;
-}
 /**
  * YCurrentLoopOutput Class: 4-20mA output control interface, available for instance in the Yocto-4-20mA-Tx
  *
@@ -58,22 +49,22 @@ export declare class YCurrentLoopOutput extends YFunction {
     _current: number;
     _currentTransition: string;
     _currentAtStartUp: number;
-    _loopPower: YCurrentLoopOutput_LoopPower;
-    _valueCallbackCurrentLoopOutput: YCurrentLoopOutputValueCallback | null;
+    _loopPower: YCurrentLoopOutput.LOOPPOWER;
+    _valueCallbackCurrentLoopOutput: YCurrentLoopOutput.ValueCallback | null;
     readonly CURRENT_INVALID: number;
     readonly CURRENTTRANSITION_INVALID: string;
     readonly CURRENTATSTARTUP_INVALID: number;
-    readonly LOOPPOWER_NOPWR: YCurrentLoopOutput_LoopPower;
-    readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput_LoopPower;
-    readonly LOOPPOWER_POWEROK: YCurrentLoopOutput_LoopPower;
-    readonly LOOPPOWER_INVALID: YCurrentLoopOutput_LoopPower;
+    readonly LOOPPOWER_NOPWR: YCurrentLoopOutput.LOOPPOWER;
+    readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput.LOOPPOWER;
+    readonly LOOPPOWER_POWEROK: YCurrentLoopOutput.LOOPPOWER;
+    readonly LOOPPOWER_INVALID: YCurrentLoopOutput.LOOPPOWER;
     static readonly CURRENT_INVALID: number;
     static readonly CURRENTTRANSITION_INVALID: string;
     static readonly CURRENTATSTARTUP_INVALID: number;
-    static readonly LOOPPOWER_NOPWR: YCurrentLoopOutput_LoopPower;
-    static readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput_LoopPower;
-    static readonly LOOPPOWER_POWEROK: YCurrentLoopOutput_LoopPower;
-    static readonly LOOPPOWER_INVALID: YCurrentLoopOutput_LoopPower;
+    static readonly LOOPPOWER_NOPWR: YCurrentLoopOutput.LOOPPOWER;
+    static readonly LOOPPOWER_LOWPWR: YCurrentLoopOutput.LOOPPOWER;
+    static readonly LOOPPOWER_POWEROK: YCurrentLoopOutput.LOOPPOWER;
+    static readonly LOOPPOWER_INVALID: YCurrentLoopOutput.LOOPPOWER;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -127,7 +118,7 @@ export declare class YCurrentLoopOutput extends YFunction {
      *
      * On failure, throws an exception or returns YCurrentLoopOutput.LOOPPOWER_INVALID.
      */
-    get_loopPower(): Promise<YCurrentLoopOutput_LoopPower>;
+    get_loopPower(): Promise<YCurrentLoopOutput.LOOPPOWER>;
     /**
      * Retrieves a 4-20mA output for a given identifier.
      * The identifier can be specified using several formats:
@@ -194,7 +185,7 @@ export declare class YCurrentLoopOutput extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YCurrentLoopOutputValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YCurrentLoopOutput.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Performs a smooth transition of current flowing in the loop. Any current explicit
@@ -240,4 +231,15 @@ export declare class YCurrentLoopOutput extends YFunction {
      *         if there are none.
      */
     static FirstCurrentLoopOutputInContext(yctx: YAPIContext): YCurrentLoopOutput | null;
+}
+export declare namespace YCurrentLoopOutput {
+    const enum LOOPPOWER {
+        NOPWR = 0,
+        LOWPWR = 1,
+        POWEROK = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YCurrentLoopOutput, value: string): void;
+    }
 }

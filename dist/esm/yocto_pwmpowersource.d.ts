@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmpowersource.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwmpowersource.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -37,16 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YPwmPowerSource_PowerMode {
-    USB_5V = 0,
-    USB_3V = 1,
-    EXT_V = 2,
-    OPNDRN = 3,
-    INVALID = -1
-}
-export interface YPwmPowerSourceValueCallback {
-    (func: YPwmPowerSource, value: string): void;
-}
 /**
  * YPwmPowerSource Class: PWM generator power source control interface, available for instance in the Yocto-PWM-Tx
  *
@@ -55,18 +45,18 @@ export interface YPwmPowerSourceValueCallback {
  */
 export declare class YPwmPowerSource extends YFunction {
     _className: string;
-    _powerMode: YPwmPowerSource_PowerMode;
-    _valueCallbackPwmPowerSource: YPwmPowerSourceValueCallback | null;
-    readonly POWERMODE_USB_5V: YPwmPowerSource_PowerMode;
-    readonly POWERMODE_USB_3V: YPwmPowerSource_PowerMode;
-    readonly POWERMODE_EXT_V: YPwmPowerSource_PowerMode;
-    readonly POWERMODE_OPNDRN: YPwmPowerSource_PowerMode;
-    readonly POWERMODE_INVALID: YPwmPowerSource_PowerMode;
-    static readonly POWERMODE_USB_5V: YPwmPowerSource_PowerMode;
-    static readonly POWERMODE_USB_3V: YPwmPowerSource_PowerMode;
-    static readonly POWERMODE_EXT_V: YPwmPowerSource_PowerMode;
-    static readonly POWERMODE_OPNDRN: YPwmPowerSource_PowerMode;
-    static readonly POWERMODE_INVALID: YPwmPowerSource_PowerMode;
+    _powerMode: YPwmPowerSource.POWERMODE;
+    _valueCallbackPwmPowerSource: YPwmPowerSource.ValueCallback | null;
+    readonly POWERMODE_USB_5V: YPwmPowerSource.POWERMODE;
+    readonly POWERMODE_USB_3V: YPwmPowerSource.POWERMODE;
+    readonly POWERMODE_EXT_V: YPwmPowerSource.POWERMODE;
+    readonly POWERMODE_OPNDRN: YPwmPowerSource.POWERMODE;
+    readonly POWERMODE_INVALID: YPwmPowerSource.POWERMODE;
+    static readonly POWERMODE_USB_5V: YPwmPowerSource.POWERMODE;
+    static readonly POWERMODE_USB_3V: YPwmPowerSource.POWERMODE;
+    static readonly POWERMODE_EXT_V: YPwmPowerSource.POWERMODE;
+    static readonly POWERMODE_OPNDRN: YPwmPowerSource.POWERMODE;
+    static readonly POWERMODE_INVALID: YPwmPowerSource.POWERMODE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -78,7 +68,7 @@ export declare class YPwmPowerSource extends YFunction {
      *
      * On failure, throws an exception or returns YPwmPowerSource.POWERMODE_INVALID.
      */
-    get_powerMode(): Promise<YPwmPowerSource_PowerMode>;
+    get_powerMode(): Promise<YPwmPowerSource.POWERMODE>;
     /**
      * Changes  the PWM power source. PWM can use isolated 5V from USB, isolated 3V from USB or
      * voltage from an external power source. The PWM can also work in open drain  mode. In that
@@ -95,7 +85,7 @@ export declare class YPwmPowerSource extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_powerMode(newval: YPwmPowerSource_PowerMode): Promise<number>;
+    set_powerMode(newval: YPwmPowerSource.POWERMODE): Promise<number>;
     /**
      * Retrieves a PWM generator power source for a given identifier.
      * The identifier can be specified using several formats:
@@ -162,7 +152,7 @@ export declare class YPwmPowerSource extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YPwmPowerSourceValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YPwmPowerSource.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of PWM generator power sources started using yFirstPwmPowerSource().
@@ -197,4 +187,16 @@ export declare class YPwmPowerSource extends YFunction {
      *         if there are none.
      */
     static FirstPwmPowerSourceInContext(yctx: YAPIContext): YPwmPowerSource | null;
+}
+export declare namespace YPwmPowerSource {
+    const enum POWERMODE {
+        USB_5V = 0,
+        USB_3V = 1,
+        EXT_V = 2,
+        OPNDRN = 3,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YPwmPowerSource, value: string): void;
+    }
 }

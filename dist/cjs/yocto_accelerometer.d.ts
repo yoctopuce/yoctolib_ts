@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_accelerometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -37,17 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YAccelerometer_GravityCancellation {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YAccelerometerValueCallback {
-    (func: YAccelerometer, value: string): void;
-}
-export interface YAccelerometerTimedReportCallback {
-    (func: YAccelerometer, measure: YMeasure): void;
-}
 /**
  * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2 or
  * the Yocto-Inclinometer
@@ -64,23 +53,23 @@ export declare class YAccelerometer extends YSensor {
     _xValue: number;
     _yValue: number;
     _zValue: number;
-    _gravityCancellation: YAccelerometer_GravityCancellation;
-    _valueCallbackAccelerometer: YAccelerometerValueCallback | null;
-    _timedReportCallbackAccelerometer: YAccelerometerTimedReportCallback | null;
+    _gravityCancellation: YAccelerometer.GRAVITYCANCELLATION;
+    _valueCallbackAccelerometer: YAccelerometer.ValueCallback | null;
+    _timedReportCallbackAccelerometer: YAccelerometer.TimedReportCallback | null;
     readonly BANDWIDTH_INVALID: number;
     readonly XVALUE_INVALID: number;
     readonly YVALUE_INVALID: number;
     readonly ZVALUE_INVALID: number;
-    readonly GRAVITYCANCELLATION_OFF: YAccelerometer_GravityCancellation;
-    readonly GRAVITYCANCELLATION_ON: YAccelerometer_GravityCancellation;
-    readonly GRAVITYCANCELLATION_INVALID: YAccelerometer_GravityCancellation;
+    readonly GRAVITYCANCELLATION_OFF: YAccelerometer.GRAVITYCANCELLATION;
+    readonly GRAVITYCANCELLATION_ON: YAccelerometer.GRAVITYCANCELLATION;
+    readonly GRAVITYCANCELLATION_INVALID: YAccelerometer.GRAVITYCANCELLATION;
     static readonly BANDWIDTH_INVALID: number;
     static readonly XVALUE_INVALID: number;
     static readonly YVALUE_INVALID: number;
     static readonly ZVALUE_INVALID: number;
-    static readonly GRAVITYCANCELLATION_OFF: YAccelerometer_GravityCancellation;
-    static readonly GRAVITYCANCELLATION_ON: YAccelerometer_GravityCancellation;
-    static readonly GRAVITYCANCELLATION_INVALID: YAccelerometer_GravityCancellation;
+    static readonly GRAVITYCANCELLATION_OFF: YAccelerometer.GRAVITYCANCELLATION;
+    static readonly GRAVITYCANCELLATION_ON: YAccelerometer.GRAVITYCANCELLATION;
+    static readonly GRAVITYCANCELLATION_INVALID: YAccelerometer.GRAVITYCANCELLATION;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -128,8 +117,8 @@ export declare class YAccelerometer extends YSensor {
      * On failure, throws an exception or returns YAccelerometer.ZVALUE_INVALID.
      */
     get_zValue(): Promise<number>;
-    get_gravityCancellation(): Promise<YAccelerometer_GravityCancellation>;
-    set_gravityCancellation(newval: YAccelerometer_GravityCancellation): Promise<number>;
+    get_gravityCancellation(): Promise<YAccelerometer.GRAVITYCANCELLATION>;
+    set_gravityCancellation(newval: YAccelerometer.GRAVITYCANCELLATION): Promise<number>;
     /**
      * Retrieves an accelerometer for a given identifier.
      * The identifier can be specified using several formats:
@@ -196,7 +185,7 @@ export declare class YAccelerometer extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YAccelerometerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YAccelerometer.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -209,7 +198,7 @@ export declare class YAccelerometer extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YAccelerometerTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YAccelerometer.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of accelerometers started using yFirstAccelerometer().
@@ -244,4 +233,17 @@ export declare class YAccelerometer extends YSensor {
      *         if there are none.
      */
     static FirstAccelerometerInContext(yctx: YAPIContext): YAccelerometer | null;
+}
+export declare namespace YAccelerometer {
+    const enum GRAVITYCANCELLATION {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YAccelerometer, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YAccelerometer, measure: YMeasure): void;
+    }
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -38,9 +38,6 @@
  *********************************************************************/
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
-
-//--- (generated code: YI2cSnoopingRecord definitions)
-//--- (end of generated code: YI2cSnoopingRecord definitions)
 
 //--- (generated code: YI2cSnoopingRecord class start)
 /**
@@ -105,15 +102,10 @@ export class YI2cSnoopingRecord
     //--- (end of generated code: YI2cSnoopingRecord implementation)
 }
 
-//--- (generated code: YI2cPort definitions)
-export const enum YI2cPort_I2cVoltageLevel {
-    OFF = 0,
-    _3V3 = 1,
-    _1V8 = 2,
-    INVALID = -1
+export namespace YI2cSnoopingRecord {
+//--- (generated code: YI2cSnoopingRecord definitions)
+//--- (end of generated code: YI2cSnoopingRecord definitions)
 }
-export interface YI2cPortValueCallback { (func: YI2cPort, value: string): void }
-//--- (end of generated code: YI2cPort definitions)
 
 //--- (generated code: YI2cPort class start)
 /**
@@ -143,9 +135,9 @@ export class YI2cPort extends YFunction
     _jobMaxSize: number = YI2cPort.JOBMAXSIZE_INVALID;
     _command: string = YI2cPort.COMMAND_INVALID;
     _protocol: string = YI2cPort.PROTOCOL_INVALID;
-    _i2cVoltageLevel: YI2cPort_I2cVoltageLevel = YI2cPort.I2CVOLTAGELEVEL_INVALID;
+    _i2cVoltageLevel: YI2cPort.I2CVOLTAGELEVEL = YI2cPort.I2CVOLTAGELEVEL_INVALID;
     _i2cMode: string = YI2cPort.I2CMODE_INVALID;
-    _valueCallbackI2cPort: YI2cPortValueCallback | null = null;
+    _valueCallbackI2cPort: YI2cPort.ValueCallback | null = null;
     _rxptr: number = 0;
     _rxbuff: Uint8Array = new Uint8Array(0);
     _rxbuffptr: number = 0;
@@ -163,10 +155,10 @@ export class YI2cPort extends YFunction
     public readonly JOBMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public readonly PROTOCOL_INVALID: string = YAPI.INVALID_STRING;
-    public readonly I2CVOLTAGELEVEL_OFF: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.OFF;
-    public readonly I2CVOLTAGELEVEL_3V3: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._3V3;
-    public readonly I2CVOLTAGELEVEL_1V8: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._1V8;
-    public readonly I2CVOLTAGELEVEL_INVALID: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.INVALID;
+    public readonly I2CVOLTAGELEVEL_OFF: YI2cPort.I2CVOLTAGELEVEL = 0;
+    public readonly I2CVOLTAGELEVEL_3V3: YI2cPort.I2CVOLTAGELEVEL = 1;
+    public readonly I2CVOLTAGELEVEL_1V8: YI2cPort.I2CVOLTAGELEVEL = 2;
+    public readonly I2CVOLTAGELEVEL_INVALID: YI2cPort.I2CVOLTAGELEVEL = -1;
     public readonly I2CMODE_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
@@ -182,10 +174,10 @@ export class YI2cPort extends YFunction
     public static readonly JOBMAXSIZE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public static readonly PROTOCOL_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly I2CVOLTAGELEVEL_OFF: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.OFF;
-    public static readonly I2CVOLTAGELEVEL_3V3: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._3V3;
-    public static readonly I2CVOLTAGELEVEL_1V8: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel._1V8;
-    public static readonly I2CVOLTAGELEVEL_INVALID: YI2cPort_I2cVoltageLevel = YI2cPort_I2cVoltageLevel.INVALID;
+    public static readonly I2CVOLTAGELEVEL_OFF: YI2cPort.I2CVOLTAGELEVEL = 0;
+    public static readonly I2CVOLTAGELEVEL_3V3: YI2cPort.I2CVOLTAGELEVEL = 1;
+    public static readonly I2CVOLTAGELEVEL_1V8: YI2cPort.I2CVOLTAGELEVEL = 2;
+    public static readonly I2CVOLTAGELEVEL_INVALID: YI2cPort.I2CVOLTAGELEVEL = -1;
     public static readonly I2CMODE_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of generated code: YI2cPort attributes declaration)
 
@@ -239,7 +231,7 @@ export class YI2cPort extends YFunction
             this._protocol = <string> <string> val;
             return 1;
         case 'i2cVoltageLevel':
-            this._i2cVoltageLevel = <YI2cPort_I2cVoltageLevel> <number> val;
+            this._i2cVoltageLevel = <YI2cPort.I2CVOLTAGELEVEL> <number> val;
             return 1;
         case 'i2cMode':
             this._i2cMode = <string> <string> val;
@@ -545,7 +537,7 @@ export class YI2cPort extends YFunction
      *
      * On failure, throws an exception or returns YI2cPort.I2CVOLTAGELEVEL_INVALID.
      */
-    async get_i2cVoltageLevel(): Promise<YI2cPort_I2cVoltageLevel>
+    async get_i2cVoltageLevel(): Promise<YI2cPort.I2CVOLTAGELEVEL>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -569,7 +561,7 @@ export class YI2cPort extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_i2cVoltageLevel(newval: YI2cPort_I2cVoltageLevel): Promise<number>
+    async set_i2cVoltageLevel(newval: YI2cPort.I2CVOLTAGELEVEL): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -709,7 +701,7 @@ export class YI2cPort extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YI2cPortValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YI2cPort.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -1472,4 +1464,17 @@ export class YI2cPort extends YFunction
     }
 
     //--- (end of generated code: YI2cPort implementation)
+}
+
+export namespace YI2cPort
+{
+    //--- (generated code: YI2cPort definitions)
+    export const enum I2CVOLTAGELEVEL {
+        OFF = 0,
+        _3V3 = 1,
+        _1V8 = 2,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YI2cPort, value: string): void }
+    //--- (end of generated code: YI2cPort definitions)
 }

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_files.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -40,8 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YFiles = exports.YFileRecord = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (generated code: YFileRecord definitions)
-//--- (end of generated code: YFileRecord definitions)
 //--- (generated code: YFileRecord class start)
 /**
  * YFileRecord Class: Description of a file on the device filesystem, returned by files.get_list
@@ -92,8 +90,6 @@ class YFileRecord {
     }
 }
 exports.YFileRecord = YFileRecord;
-//--- (end of generated code: YFiles definitions)
-//--- (generated code: YFiles class start)
 /**
  * YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
  * Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-Wireless-n

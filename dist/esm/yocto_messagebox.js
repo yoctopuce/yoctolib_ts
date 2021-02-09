@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_messagebox.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -37,8 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (generated code: YSms definitions)
-//--- (end of generated code: YSms definitions)
 //--- (generated code: YSms class start)
 /**
  * YSms Class: SMS message sent or received, returned by messageBox.get_messages or messageBox.newMessage
@@ -1213,7 +1211,6 @@ export class YSms {
         return retcode;
     }
 }
-//--- (end of generated code: YMessageBox definitions)
 //--- (generated code: YMessageBox class start)
 /**
  * YMessageBox Class: SMS message box interface control interface, available for instance in the

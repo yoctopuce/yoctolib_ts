@@ -1,0 +1,11 @@
+{
+  "name": "doc-gettingstarted-prog-vanillanodejs",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-VanillaNodeJs",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-cjs": "file:../../dist/cjs"
+  }
+}

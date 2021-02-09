@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_led.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_led.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Led functions
  *
@@ -39,24 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YLed definitions)
-export const enum YLed_Power {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export const enum YLed_Blinking {
-    STILL = 0,
-    RELAX = 1,
-    AWARE = 2,
-    RUN = 3,
-    CALL = 4,
-    PANIC = 5,
-    INVALID = -1
-}
-export interface YLedValueCallback { (func: YLed, value: string): void }
-//--- (end of YLed definitions)
-
 //--- (YLed class start)
 /**
  * YLed Class: monochrome LED control interface, available for instance in the Yocto-Buzzer, the
@@ -72,40 +54,37 @@ export class YLed extends YFunction
 {
     //--- (YLed attributes declaration)
     _className: string;
-    _power: YLed_Power = YLed.POWER_INVALID;
+    _power: YLed.POWER = YLed.POWER_INVALID;
     _luminosity: number = YLed.LUMINOSITY_INVALID;
-    _blinking: YLed_Blinking = YLed.BLINKING_INVALID;
-    _valueCallbackLed: YLedValueCallback | null = null;
+    _blinking: YLed.BLINKING = YLed.BLINKING_INVALID;
+    _valueCallbackLed: YLed.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly POWER_OFF: YLed_Power = YLed_Power.OFF;
-    public readonly POWER_ON: YLed_Power = YLed_Power.ON;
-    public readonly POWER_INVALID: YLed_Power = YLed_Power.INVALID;
+    public readonly POWER_OFF: YLed.POWER = 0;
+    public readonly POWER_ON: YLed.POWER = 1;
+    public readonly POWER_INVALID: YLed.POWER = -1;
     public readonly LUMINOSITY_INVALID: number = YAPI.INVALID_UINT;
-    public readonly BLINKING_STILL: YLed_Blinking = YLed_Blinking.STILL;
-    public readonly BLINKING_RELAX: YLed_Blinking = YLed_Blinking.RELAX;
-    public readonly BLINKING_AWARE: YLed_Blinking = YLed_Blinking.AWARE;
-    public readonly BLINKING_RUN: YLed_Blinking = YLed_Blinking.RUN;
-    public readonly BLINKING_CALL: YLed_Blinking = YLed_Blinking.CALL;
-    public readonly BLINKING_PANIC: YLed_Blinking = YLed_Blinking.PANIC;
-    public readonly BLINKING_INVALID: YLed_Blinking = YLed_Blinking.INVALID;
+    public readonly BLINKING_STILL: YLed.BLINKING = 0;
+    public readonly BLINKING_RELAX: YLed.BLINKING = 1;
+    public readonly BLINKING_AWARE: YLed.BLINKING = 2;
+    public readonly BLINKING_RUN: YLed.BLINKING = 3;
+    public readonly BLINKING_CALL: YLed.BLINKING = 4;
+    public readonly BLINKING_PANIC: YLed.BLINKING = 5;
+    public readonly BLINKING_INVALID: YLed.BLINKING = -1;
 
     // API symbols as static members
-    public static readonly POWER_OFF: YLed_Power = YLed_Power.OFF;
-    public static readonly POWER_ON: YLed_Power = YLed_Power.ON;
-    public static readonly POWER_INVALID: YLed_Power = YLed_Power.INVALID;
+    public static readonly POWER_OFF: YLed.POWER = 0;
+    public static readonly POWER_ON: YLed.POWER = 1;
+    public static readonly POWER_INVALID: YLed.POWER = -1;
     public static readonly LUMINOSITY_INVALID: number = YAPI.INVALID_UINT;
-    public static readonly BLINKING_STILL: YLed_Blinking = YLed_Blinking.STILL;
-    public static readonly BLINKING_RELAX: YLed_Blinking = YLed_Blinking.RELAX;
-    public static readonly BLINKING_AWARE: YLed_Blinking = YLed_Blinking.AWARE;
-    public static readonly BLINKING_RUN: YLed_Blinking = YLed_Blinking.RUN;
-    public static readonly BLINKING_CALL: YLed_Blinking = YLed_Blinking.CALL;
-    public static readonly BLINKING_PANIC: YLed_Blinking = YLed_Blinking.PANIC;
-    public static readonly BLINKING_INVALID: YLed_Blinking = YLed_Blinking.INVALID;
+    public static readonly BLINKING_STILL: YLed.BLINKING = 0;
+    public static readonly BLINKING_RELAX: YLed.BLINKING = 1;
+    public static readonly BLINKING_AWARE: YLed.BLINKING = 2;
+    public static readonly BLINKING_RUN: YLed.BLINKING = 3;
+    public static readonly BLINKING_CALL: YLed.BLINKING = 4;
+    public static readonly BLINKING_PANIC: YLed.BLINKING = 5;
+    public static readonly BLINKING_INVALID: YLed.BLINKING = -1;
     //--- (end of YLed attributes declaration)
-
-//--- (YLed return codes)
-//--- (end of YLed return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -121,13 +100,13 @@ export class YLed extends YFunction
     {
         switch(name) {
         case 'power':
-            this._power = <YLed_Power> <number> val;
+            this._power = <YLed.POWER> <number> val;
             return 1;
         case 'luminosity':
             this._luminosity = <number> <number> val;
             return 1;
         case 'blinking':
-            this._blinking = <YLed_Blinking> <number> val;
+            this._blinking = <YLed.BLINKING> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -140,7 +119,7 @@ export class YLed extends YFunction
      *
      * On failure, throws an exception or returns YLed.POWER_INVALID.
      */
-    async get_power(): Promise<YLed_Power>
+    async get_power(): Promise<YLed.POWER>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -161,7 +140,7 @@ export class YLed extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_power(newval: YLed_Power): Promise<number>
+    async set_power(newval: YLed.POWER): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -212,7 +191,7 @@ export class YLed extends YFunction
      *
      * On failure, throws an exception or returns YLed.BLINKING_INVALID.
      */
-    async get_blinking(): Promise<YLed_Blinking>
+    async get_blinking(): Promise<YLed.BLINKING>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -234,7 +213,7 @@ export class YLed extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_blinking(newval: YLed_Blinking): Promise<number>
+    async set_blinking(newval: YLed.BLINKING): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -327,7 +306,7 @@ export class YLed extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YLedValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YLed.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -414,5 +393,25 @@ export class YLed extends YFunction
     }
 
     //--- (end of YLed implementation)
+}
+
+export namespace YLed {
+    //--- (YLed definitions)
+    export const enum POWER {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export const enum BLINKING {
+        STILL = 0,
+        RELAX = 1,
+        AWARE = 2,
+        RUN = 3,
+        CALL = 4,
+        PANIC = 5,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YLed, value: string): void }
+    //--- (end of YLed definitions)
 }
 

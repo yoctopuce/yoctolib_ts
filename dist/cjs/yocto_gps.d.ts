@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_gps.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -37,30 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YGps_IsFixed {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YGps_CoordSystem {
-    GPS_DMS = 0,
-    GPS_DM = 1,
-    GPS_D = 2,
-    INVALID = -1
-}
-export declare const enum YGps_Constellation {
-    GNSS = 0,
-    GPS = 1,
-    GLONASS = 2,
-    GALILEO = 3,
-    GPS_GLONASS = 4,
-    GPS_GALILEO = 5,
-    GLONASS_GALILEO = 6,
-    INVALID = -1
-}
-export interface YGpsValueCallback {
-    (func: YGps, value: string): void;
-}
 /**
  * YGps Class: Geolocalization control interface (GPS, GNSS, ...), available for instance in the Yocto-GPS-V2
  *
@@ -73,12 +49,12 @@ export interface YGpsValueCallback {
  */
 export declare class YGps extends YFunction {
     _className: string;
-    _isFixed: YGps_IsFixed;
+    _isFixed: YGps.ISFIXED;
     _satCount: number;
     _satPerConst: number;
     _gpsRefreshRate: number;
-    _coordSystem: YGps_CoordSystem;
-    _constellation: YGps_Constellation;
+    _coordSystem: YGps.COORDSYSTEM;
+    _constellation: YGps.CONSTELLATION;
     _latitude: string;
     _longitude: string;
     _dilution: number;
@@ -89,25 +65,25 @@ export declare class YGps extends YFunction {
     _dateTime: string;
     _utcOffset: number;
     _command: string;
-    _valueCallbackGps: YGpsValueCallback | null;
-    readonly ISFIXED_FALSE: YGps_IsFixed;
-    readonly ISFIXED_TRUE: YGps_IsFixed;
-    readonly ISFIXED_INVALID: YGps_IsFixed;
+    _valueCallbackGps: YGps.ValueCallback | null;
+    readonly ISFIXED_FALSE: YGps.ISFIXED;
+    readonly ISFIXED_TRUE: YGps.ISFIXED;
+    readonly ISFIXED_INVALID: YGps.ISFIXED;
     readonly SATCOUNT_INVALID: number;
     readonly SATPERCONST_INVALID: number;
     readonly GPSREFRESHRATE_INVALID: number;
-    readonly COORDSYSTEM_GPS_DMS: YGps_CoordSystem;
-    readonly COORDSYSTEM_GPS_DM: YGps_CoordSystem;
-    readonly COORDSYSTEM_GPS_D: YGps_CoordSystem;
-    readonly COORDSYSTEM_INVALID: YGps_CoordSystem;
-    readonly CONSTELLATION_GNSS: YGps_Constellation;
-    readonly CONSTELLATION_GPS: YGps_Constellation;
-    readonly CONSTELLATION_GLONASS: YGps_Constellation;
-    readonly CONSTELLATION_GALILEO: YGps_Constellation;
-    readonly CONSTELLATION_GPS_GLONASS: YGps_Constellation;
-    readonly CONSTELLATION_GPS_GALILEO: YGps_Constellation;
-    readonly CONSTELLATION_GLONASS_GALILEO: YGps_Constellation;
-    readonly CONSTELLATION_INVALID: YGps_Constellation;
+    readonly COORDSYSTEM_GPS_DMS: YGps.COORDSYSTEM;
+    readonly COORDSYSTEM_GPS_DM: YGps.COORDSYSTEM;
+    readonly COORDSYSTEM_GPS_D: YGps.COORDSYSTEM;
+    readonly COORDSYSTEM_INVALID: YGps.COORDSYSTEM;
+    readonly CONSTELLATION_GNSS: YGps.CONSTELLATION;
+    readonly CONSTELLATION_GPS: YGps.CONSTELLATION;
+    readonly CONSTELLATION_GLONASS: YGps.CONSTELLATION;
+    readonly CONSTELLATION_GALILEO: YGps.CONSTELLATION;
+    readonly CONSTELLATION_GPS_GLONASS: YGps.CONSTELLATION;
+    readonly CONSTELLATION_GPS_GALILEO: YGps.CONSTELLATION;
+    readonly CONSTELLATION_GLONASS_GALILEO: YGps.CONSTELLATION;
+    readonly CONSTELLATION_INVALID: YGps.CONSTELLATION;
     readonly LATITUDE_INVALID: string;
     readonly LONGITUDE_INVALID: string;
     readonly DILUTION_INVALID: number;
@@ -118,24 +94,24 @@ export declare class YGps extends YFunction {
     readonly DATETIME_INVALID: string;
     readonly UTCOFFSET_INVALID: number;
     readonly COMMAND_INVALID: string;
-    static readonly ISFIXED_FALSE: YGps_IsFixed;
-    static readonly ISFIXED_TRUE: YGps_IsFixed;
-    static readonly ISFIXED_INVALID: YGps_IsFixed;
+    static readonly ISFIXED_FALSE: YGps.ISFIXED;
+    static readonly ISFIXED_TRUE: YGps.ISFIXED;
+    static readonly ISFIXED_INVALID: YGps.ISFIXED;
     static readonly SATCOUNT_INVALID: number;
     static readonly SATPERCONST_INVALID: number;
     static readonly GPSREFRESHRATE_INVALID: number;
-    static readonly COORDSYSTEM_GPS_DMS: YGps_CoordSystem;
-    static readonly COORDSYSTEM_GPS_DM: YGps_CoordSystem;
-    static readonly COORDSYSTEM_GPS_D: YGps_CoordSystem;
-    static readonly COORDSYSTEM_INVALID: YGps_CoordSystem;
-    static readonly CONSTELLATION_GNSS: YGps_Constellation;
-    static readonly CONSTELLATION_GPS: YGps_Constellation;
-    static readonly CONSTELLATION_GLONASS: YGps_Constellation;
-    static readonly CONSTELLATION_GALILEO: YGps_Constellation;
-    static readonly CONSTELLATION_GPS_GLONASS: YGps_Constellation;
-    static readonly CONSTELLATION_GPS_GALILEO: YGps_Constellation;
-    static readonly CONSTELLATION_GLONASS_GALILEO: YGps_Constellation;
-    static readonly CONSTELLATION_INVALID: YGps_Constellation;
+    static readonly COORDSYSTEM_GPS_DMS: YGps.COORDSYSTEM;
+    static readonly COORDSYSTEM_GPS_DM: YGps.COORDSYSTEM;
+    static readonly COORDSYSTEM_GPS_D: YGps.COORDSYSTEM;
+    static readonly COORDSYSTEM_INVALID: YGps.COORDSYSTEM;
+    static readonly CONSTELLATION_GNSS: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_GPS: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_GLONASS: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_GALILEO: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_GPS_GLONASS: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_GPS_GALILEO: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_GLONASS_GALILEO: YGps.CONSTELLATION;
+    static readonly CONSTELLATION_INVALID: YGps.CONSTELLATION;
     static readonly LATITUDE_INVALID: string;
     static readonly LONGITUDE_INVALID: string;
     static readonly DILUTION_INVALID: number;
@@ -156,7 +132,7 @@ export declare class YGps extends YFunction {
      *
      * On failure, throws an exception or returns YGps.ISFIXED_INVALID.
      */
-    get_isFixed(): Promise<YGps_IsFixed>;
+    get_isFixed(): Promise<YGps.ISFIXED>;
     /**
      * Returns the total count of satellites used to compute GPS position.
      *
@@ -193,7 +169,7 @@ export declare class YGps extends YFunction {
      *
      * On failure, throws an exception or returns YGps.COORDSYSTEM_INVALID.
      */
-    get_coordSystem(): Promise<YGps_CoordSystem>;
+    get_coordSystem(): Promise<YGps.COORDSYSTEM>;
     /**
      * Changes the representation system used for positioning data.
      * Remember to call the saveToFlash() method of the module if the
@@ -206,7 +182,7 @@ export declare class YGps extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_coordSystem(newval: YGps_CoordSystem): Promise<number>;
+    set_coordSystem(newval: YGps.COORDSYSTEM): Promise<number>;
     /**
      * Returns the the satellites constellation used to compute
      * positioning data.
@@ -218,7 +194,7 @@ export declare class YGps extends YFunction {
      *
      * On failure, throws an exception or returns YGps.CONSTELLATION_INVALID.
      */
-    get_constellation(): Promise<YGps_Constellation>;
+    get_constellation(): Promise<YGps.CONSTELLATION>;
     /**
      * Changes the satellites constellation used to compute
      * positioning data. Possible  constellations are GNSS ( = all supported constellations),
@@ -234,7 +210,7 @@ export declare class YGps extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_constellation(newval: YGps_Constellation): Promise<number>;
+    set_constellation(newval: YGps.CONSTELLATION): Promise<number>;
     /**
      * Returns the current latitude.
      *
@@ -396,7 +372,7 @@ export declare class YGps extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YGpsValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YGps.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of geolocalization modules started using yFirstGps().
@@ -431,4 +407,30 @@ export declare class YGps extends YFunction {
      *         if there are none.
      */
     static FirstGpsInContext(yctx: YAPIContext): YGps | null;
+}
+export declare namespace YGps {
+    const enum ISFIXED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum COORDSYSTEM {
+        GPS_DMS = 0,
+        GPS_DM = 1,
+        GPS_D = 2,
+        INVALID = -1
+    }
+    const enum CONSTELLATION {
+        GNSS = 0,
+        GPS = 1,
+        GLONASS = 2,
+        GALILEO = 3,
+        GPS_GLONASS = 4,
+        GPS_GALILEO = 5,
+        GLONASS_GALILEO = 6,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YGps, value: string): void;
+    }
 }

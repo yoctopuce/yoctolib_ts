@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_messagebox.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -40,8 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YMessageBox = exports.YSms = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (generated code: YSms definitions)
-//--- (end of generated code: YSms definitions)
 //--- (generated code: YSms class start)
 /**
  * YSms Class: SMS message sent or received, returned by messageBox.get_messages or messageBox.newMessage
@@ -1217,7 +1215,6 @@ class YSms {
     }
 }
 exports.YSms = YSms;
-//--- (end of generated code: YMessageBox definitions)
 //--- (generated code: YMessageBox class start)
 /**
  * YMessageBox Class: SMS message box interface control interface, available for instance in the

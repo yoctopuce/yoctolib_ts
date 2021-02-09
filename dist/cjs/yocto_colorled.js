@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_colorled.ts 43533 2021-01-25 16:33:41Z mvuilleu $
+ *  $Id: yocto_colorled.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -40,15 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YColorLed = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (YColorLed definitions)
-class YColorLedMove {
-    constructor() {
-        this.target = yocto_api_js_1.YAPI.INVALID_INT;
-        this.ms = yocto_api_js_1.YAPI.INVALID_INT;
-        this.moving = yocto_api_js_1.YAPI.INVALID_UINT;
-    }
-}
-//--- (end of YColorLed definitions)
 //--- (YColorLed class start)
 /**
  * YColorLed Class: RGB LED control interface, available for instance in the Yocto-Color-V2, the
@@ -64,15 +55,13 @@ class YColorLedMove {
 //--- (end of YColorLed class start)
 class YColorLed extends yocto_api_js_1.YFunction {
     //--- (end of YColorLed attributes declaration)
-    //--- (YColorLed return codes)
-    //--- (end of YColorLed return codes)
     constructor(yapi, func) {
         //--- (YColorLed constructor)
         super(yapi, func);
         this._rgbColor = YColorLed.RGBCOLOR_INVALID;
         this._hslColor = YColorLed.HSLCOLOR_INVALID;
-        this._rgbMove = new YColorLedMove();
-        this._hslMove = new YColorLedMove();
+        this._rgbMove = {};
+        this._hslMove = {};
         this._rgbColorAtPowerOn = YColorLed.RGBCOLORATPOWERON_INVALID;
         this._blinkSeqSize = YColorLed.BLINKSEQSIZE_INVALID;
         this._blinkSeqMaxSize = YColorLed.BLINKSEQMAXSIZE_INVALID;
@@ -574,8 +563,8 @@ class YColorLed extends yocto_api_js_1.YFunction {
 }
 exports.YColorLed = YColorLed;
 // API symbols as static members
-YColorLed.RGBMOVE_INVALID = new YColorLedMove();
-YColorLed.HSLMOVE_INVALID = new YColorLedMove();
+YColorLed.RGBMOVE_INVALID = {};
+YColorLed.HSLMOVE_INVALID = {};
 YColorLed.RGBCOLOR_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YColorLed.HSLCOLOR_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YColorLed.RGBCOLORATPOWERON_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;

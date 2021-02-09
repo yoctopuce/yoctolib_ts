@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_audioout.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -37,14 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YAudioOut_Mute {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YAudioOutValueCallback {
-    (func: YAudioOut, value: string): void;
-}
 /**
  * YAudioOut Class: audio output control interface
  *
@@ -53,22 +45,22 @@ export interface YAudioOutValueCallback {
 export declare class YAudioOut extends YFunction {
     _className: string;
     _volume: number;
-    _mute: YAudioOut_Mute;
+    _mute: YAudioOut.MUTE;
     _volumeRange: string;
     _signal: number;
     _noSignalFor: number;
-    _valueCallbackAudioOut: YAudioOutValueCallback | null;
+    _valueCallbackAudioOut: YAudioOut.ValueCallback | null;
     readonly VOLUME_INVALID: number;
-    readonly MUTE_FALSE: YAudioOut_Mute;
-    readonly MUTE_TRUE: YAudioOut_Mute;
-    readonly MUTE_INVALID: YAudioOut_Mute;
+    readonly MUTE_FALSE: YAudioOut.MUTE;
+    readonly MUTE_TRUE: YAudioOut.MUTE;
+    readonly MUTE_INVALID: YAudioOut.MUTE;
     readonly VOLUMERANGE_INVALID: string;
     readonly SIGNAL_INVALID: number;
     readonly NOSIGNALFOR_INVALID: number;
     static readonly VOLUME_INVALID: number;
-    static readonly MUTE_FALSE: YAudioOut_Mute;
-    static readonly MUTE_TRUE: YAudioOut_Mute;
-    static readonly MUTE_INVALID: YAudioOut_Mute;
+    static readonly MUTE_FALSE: YAudioOut.MUTE;
+    static readonly MUTE_TRUE: YAudioOut.MUTE;
+    static readonly MUTE_INVALID: YAudioOut.MUTE;
     static readonly VOLUMERANGE_INVALID: string;
     static readonly SIGNAL_INVALID: number;
     static readonly NOSIGNALFOR_INVALID: number;
@@ -101,7 +93,7 @@ export declare class YAudioOut extends YFunction {
      *
      * On failure, throws an exception or returns YAudioOut.MUTE_INVALID.
      */
-    get_mute(): Promise<YAudioOut_Mute>;
+    get_mute(): Promise<YAudioOut.MUTE>;
     /**
      * Changes the state of the mute function. Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
@@ -112,7 +104,7 @@ export declare class YAudioOut extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_mute(newval: YAudioOut_Mute): Promise<number>;
+    set_mute(newval: YAudioOut.MUTE): Promise<number>;
     /**
      * Returns the supported volume range. The low value of the
      * range corresponds to the minimal audible value. To
@@ -206,7 +198,7 @@ export declare class YAudioOut extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YAudioOutValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YAudioOut.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of audio outputs started using yFirstAudioOut().
@@ -241,4 +233,14 @@ export declare class YAudioOut extends YFunction {
      *         if there are none.
      */
     static FirstAudioOutInContext(yctx: YAPIContext): YAudioOut | null;
+}
+export declare namespace YAudioOut {
+    const enum MUTE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YAudioOut, value: string): void;
+    }
 }

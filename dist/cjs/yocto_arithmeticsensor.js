@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_arithmeticsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YArithmeticSensor = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YArithmeticSensor definitions)
 //--- (YArithmeticSensor class start)
 /**
  * YArithmeticSensor Class: arithmetic sensor control interface, available for instance in the
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YArithmeticSensor class start)
 class YArithmeticSensor extends yocto_api_js_1.YSensor {
     //--- (end of YArithmeticSensor attributes declaration)
-    //--- (YArithmeticSensor return codes)
-    //--- (end of YArithmeticSensor return codes)
     constructor(yapi, func) {
         //--- (YArithmeticSensor constructor)
         super(yapi, func);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_network.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -37,44 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YNetwork_Readiness {
-    DOWN = 0,
-    EXISTS = 1,
-    LINKED = 2,
-    LAN_OK = 3,
-    WWW_OK = 4,
-    INVALID = -1
-}
-export declare const enum YNetwork_Discoverable {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YNetwork_CallbackMethod {
-    POST = 0,
-    GET = 1,
-    PUT = 2,
-    INVALID = -1
-}
-export declare const enum YNetwork_CallbackEncoding {
-    FORM = 0,
-    JSON = 1,
-    JSON_ARRAY = 2,
-    CSV = 3,
-    YOCTO_API = 4,
-    JSON_NUM = 5,
-    EMONCMS = 6,
-    AZURE = 7,
-    INFLUXDB = 8,
-    MQTT = 9,
-    YOCTO_API_JZON = 10,
-    PRTG = 11,
-    INFLUXDB_V2 = 12,
-    INVALID = -1
-}
-export interface YNetworkValueCallback {
-    (func: YNetwork, value: string): void;
-}
 /**
  * YNetwork Class: network interface control interface, available for instance in the
  * YoctoHub-Ethernet, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
@@ -84,7 +46,7 @@ export interface YNetworkValueCallback {
  */
 export declare class YNetwork extends YFunction {
     _className: string;
-    _readiness: YNetwork_Readiness;
+    _readiness: YNetwork.READINESS;
     _macAddress: string;
     _ipAddress: string;
     _subnetMask: string;
@@ -97,24 +59,24 @@ export declare class YNetwork extends YFunction {
     _adminPassword: string;
     _httpPort: number;
     _defaultPage: string;
-    _discoverable: YNetwork_Discoverable;
+    _discoverable: YNetwork.DISCOVERABLE;
     _wwwWatchdogDelay: number;
     _callbackUrl: string;
-    _callbackMethod: YNetwork_CallbackMethod;
-    _callbackEncoding: YNetwork_CallbackEncoding;
+    _callbackMethod: YNetwork.CALLBACKMETHOD;
+    _callbackEncoding: YNetwork.CALLBACKENCODING;
     _callbackCredentials: string;
     _callbackInitialDelay: number;
     _callbackSchedule: string;
     _callbackMinDelay: number;
     _callbackMaxDelay: number;
     _poeCurrent: number;
-    _valueCallbackNetwork: YNetworkValueCallback | null;
-    readonly READINESS_DOWN: YNetwork_Readiness;
-    readonly READINESS_EXISTS: YNetwork_Readiness;
-    readonly READINESS_LINKED: YNetwork_Readiness;
-    readonly READINESS_LAN_OK: YNetwork_Readiness;
-    readonly READINESS_WWW_OK: YNetwork_Readiness;
-    readonly READINESS_INVALID: YNetwork_Readiness;
+    _valueCallbackNetwork: YNetwork.ValueCallback | null;
+    readonly READINESS_DOWN: YNetwork.READINESS;
+    readonly READINESS_EXISTS: YNetwork.READINESS;
+    readonly READINESS_LINKED: YNetwork.READINESS;
+    readonly READINESS_LAN_OK: YNetwork.READINESS;
+    readonly READINESS_WWW_OK: YNetwork.READINESS;
+    readonly READINESS_INVALID: YNetwork.READINESS;
     readonly MACADDRESS_INVALID: string;
     readonly IPADDRESS_INVALID: string;
     readonly SUBNETMASK_INVALID: string;
@@ -127,41 +89,41 @@ export declare class YNetwork extends YFunction {
     readonly ADMINPASSWORD_INVALID: string;
     readonly HTTPPORT_INVALID: number;
     readonly DEFAULTPAGE_INVALID: string;
-    readonly DISCOVERABLE_FALSE: YNetwork_Discoverable;
-    readonly DISCOVERABLE_TRUE: YNetwork_Discoverable;
-    readonly DISCOVERABLE_INVALID: YNetwork_Discoverable;
+    readonly DISCOVERABLE_FALSE: YNetwork.DISCOVERABLE;
+    readonly DISCOVERABLE_TRUE: YNetwork.DISCOVERABLE;
+    readonly DISCOVERABLE_INVALID: YNetwork.DISCOVERABLE;
     readonly WWWWATCHDOGDELAY_INVALID: number;
     readonly CALLBACKURL_INVALID: string;
-    readonly CALLBACKMETHOD_POST: YNetwork_CallbackMethod;
-    readonly CALLBACKMETHOD_GET: YNetwork_CallbackMethod;
-    readonly CALLBACKMETHOD_PUT: YNetwork_CallbackMethod;
-    readonly CALLBACKMETHOD_INVALID: YNetwork_CallbackMethod;
-    readonly CALLBACKENCODING_FORM: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_JSON: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_JSON_ARRAY: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_CSV: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_YOCTO_API: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_JSON_NUM: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_EMONCMS: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_AZURE: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_INFLUXDB: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_MQTT: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_YOCTO_API_JZON: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_PRTG: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork_CallbackEncoding;
-    readonly CALLBACKENCODING_INVALID: YNetwork_CallbackEncoding;
+    readonly CALLBACKMETHOD_POST: YNetwork.CALLBACKMETHOD;
+    readonly CALLBACKMETHOD_GET: YNetwork.CALLBACKMETHOD;
+    readonly CALLBACKMETHOD_PUT: YNetwork.CALLBACKMETHOD;
+    readonly CALLBACKMETHOD_INVALID: YNetwork.CALLBACKMETHOD;
+    readonly CALLBACKENCODING_FORM: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_JSON: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_JSON_ARRAY: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_CSV: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_YOCTO_API: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_JSON_NUM: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_EMONCMS: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_AZURE: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_INFLUXDB: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_MQTT: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_YOCTO_API_JZON: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_PRTG: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKENCODING_INVALID: YNetwork.CALLBACKENCODING;
     readonly CALLBACKCREDENTIALS_INVALID: string;
     readonly CALLBACKINITIALDELAY_INVALID: number;
     readonly CALLBACKSCHEDULE_INVALID: string;
     readonly CALLBACKMINDELAY_INVALID: number;
     readonly CALLBACKMAXDELAY_INVALID: number;
     readonly POECURRENT_INVALID: number;
-    static readonly READINESS_DOWN: YNetwork_Readiness;
-    static readonly READINESS_EXISTS: YNetwork_Readiness;
-    static readonly READINESS_LINKED: YNetwork_Readiness;
-    static readonly READINESS_LAN_OK: YNetwork_Readiness;
-    static readonly READINESS_WWW_OK: YNetwork_Readiness;
-    static readonly READINESS_INVALID: YNetwork_Readiness;
+    static readonly READINESS_DOWN: YNetwork.READINESS;
+    static readonly READINESS_EXISTS: YNetwork.READINESS;
+    static readonly READINESS_LINKED: YNetwork.READINESS;
+    static readonly READINESS_LAN_OK: YNetwork.READINESS;
+    static readonly READINESS_WWW_OK: YNetwork.READINESS;
+    static readonly READINESS_INVALID: YNetwork.READINESS;
     static readonly MACADDRESS_INVALID: string;
     static readonly IPADDRESS_INVALID: string;
     static readonly SUBNETMASK_INVALID: string;
@@ -174,29 +136,29 @@ export declare class YNetwork extends YFunction {
     static readonly ADMINPASSWORD_INVALID: string;
     static readonly HTTPPORT_INVALID: number;
     static readonly DEFAULTPAGE_INVALID: string;
-    static readonly DISCOVERABLE_FALSE: YNetwork_Discoverable;
-    static readonly DISCOVERABLE_TRUE: YNetwork_Discoverable;
-    static readonly DISCOVERABLE_INVALID: YNetwork_Discoverable;
+    static readonly DISCOVERABLE_FALSE: YNetwork.DISCOVERABLE;
+    static readonly DISCOVERABLE_TRUE: YNetwork.DISCOVERABLE;
+    static readonly DISCOVERABLE_INVALID: YNetwork.DISCOVERABLE;
     static readonly WWWWATCHDOGDELAY_INVALID: number;
     static readonly CALLBACKURL_INVALID: string;
-    static readonly CALLBACKMETHOD_POST: YNetwork_CallbackMethod;
-    static readonly CALLBACKMETHOD_GET: YNetwork_CallbackMethod;
-    static readonly CALLBACKMETHOD_PUT: YNetwork_CallbackMethod;
-    static readonly CALLBACKMETHOD_INVALID: YNetwork_CallbackMethod;
-    static readonly CALLBACKENCODING_FORM: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_JSON: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_JSON_ARRAY: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_CSV: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_YOCTO_API: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_JSON_NUM: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_EMONCMS: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_AZURE: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_INFLUXDB: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_MQTT: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_YOCTO_API_JZON: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_PRTG: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork_CallbackEncoding;
-    static readonly CALLBACKENCODING_INVALID: YNetwork_CallbackEncoding;
+    static readonly CALLBACKMETHOD_POST: YNetwork.CALLBACKMETHOD;
+    static readonly CALLBACKMETHOD_GET: YNetwork.CALLBACKMETHOD;
+    static readonly CALLBACKMETHOD_PUT: YNetwork.CALLBACKMETHOD;
+    static readonly CALLBACKMETHOD_INVALID: YNetwork.CALLBACKMETHOD;
+    static readonly CALLBACKENCODING_FORM: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_JSON: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_JSON_ARRAY: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_CSV: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_YOCTO_API: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_JSON_NUM: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_EMONCMS: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_AZURE: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_INFLUXDB: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_MQTT: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_YOCTO_API_JZON: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_PRTG: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKENCODING_INVALID: YNetwork.CALLBACKENCODING;
     static readonly CALLBACKCREDENTIALS_INVALID: string;
     static readonly CALLBACKINITIALDELAY_INVALID: number;
     static readonly CALLBACKSCHEDULE_INVALID: string;
@@ -227,7 +189,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns YNetwork.READINESS_INVALID.
      */
-    get_readiness(): Promise<YNetwork_Readiness>;
+    get_readiness(): Promise<YNetwork.READINESS>;
     /**
      * Returns the MAC address of the network interface. The MAC address is also available on a sticker
      * on the module, in both numeric and barcode forms.
@@ -445,7 +407,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns YNetwork.DISCOVERABLE_INVALID.
      */
-    get_discoverable(): Promise<YNetwork_Discoverable>;
+    get_discoverable(): Promise<YNetwork.DISCOVERABLE>;
     /**
      * Changes the activation state of the multicast announce protocols to allow easy
      * discovery of the module in the network neighborhood (uPnP/Bonjour protocol).
@@ -460,7 +422,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_discoverable(newval: YNetwork_Discoverable): Promise<number>;
+    set_discoverable(newval: YNetwork.DISCOVERABLE): Promise<number>;
     /**
      * Returns the allowed downtime of the WWW link (in seconds) before triggering an automated
      * reboot to try to recover Internet connectivity. A zero value disables automated reboot
@@ -517,7 +479,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns YNetwork.CALLBACKMETHOD_INVALID.
      */
-    get_callbackMethod(): Promise<YNetwork_CallbackMethod>;
+    get_callbackMethod(): Promise<YNetwork.CALLBACKMETHOD>;
     /**
      * Changes the HTTP method used to notify callbacks for significant state changes.
      * Remember to call the saveToFlash() method of the module if the
@@ -531,7 +493,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_callbackMethod(newval: YNetwork_CallbackMethod): Promise<number>;
+    set_callbackMethod(newval: YNetwork.CALLBACKMETHOD): Promise<number>;
     /**
      * Returns the encoding standard to use for representing notification values.
      *
@@ -546,7 +508,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns YNetwork.CALLBACKENCODING_INVALID.
      */
-    get_callbackEncoding(): Promise<YNetwork_CallbackEncoding>;
+    get_callbackEncoding(): Promise<YNetwork.CALLBACKENCODING>;
     /**
      * Changes the encoding standard to use for representing notification values.
      * Remember to call the saveToFlash() method of the module if the
@@ -565,7 +527,7 @@ export declare class YNetwork extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_callbackEncoding(newval: YNetwork_CallbackEncoding): Promise<number>;
+    set_callbackEncoding(newval: YNetwork.CALLBACKENCODING): Promise<number>;
     /**
      * Returns a hashed version of the notification callback credentials if set,
      * or an empty string otherwise.
@@ -764,7 +726,7 @@ export declare class YNetwork extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YNetworkValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YNetwork.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Changes the configuration of the network interface to enable the use of an
@@ -874,4 +836,44 @@ export declare class YNetwork extends YFunction {
      *         if there are none.
      */
     static FirstNetworkInContext(yctx: YAPIContext): YNetwork | null;
+}
+export declare namespace YNetwork {
+    const enum READINESS {
+        DOWN = 0,
+        EXISTS = 1,
+        LINKED = 2,
+        LAN_OK = 3,
+        WWW_OK = 4,
+        INVALID = -1
+    }
+    const enum DISCOVERABLE {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum CALLBACKMETHOD {
+        POST = 0,
+        GET = 1,
+        PUT = 2,
+        INVALID = -1
+    }
+    const enum CALLBACKENCODING {
+        FORM = 0,
+        JSON = 1,
+        JSON_ARRAY = 2,
+        CSV = 3,
+        YOCTO_API = 4,
+        JSON_NUM = 5,
+        EMONCMS = 6,
+        AZURE = 7,
+        INFLUXDB = 8,
+        MQTT = 9,
+        YOCTO_API_JZON = 10,
+        PRTG = 11,
+        INFLUXDB_V2 = 12,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YNetwork, value: string): void;
+    }
 }

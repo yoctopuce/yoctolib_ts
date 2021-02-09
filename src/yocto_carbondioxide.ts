@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_carbondioxide.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -39,11 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YCarbonDioxide definitions)
-export interface YCarbonDioxideValueCallback { (func: YCarbonDioxide, value: string): void }
-export interface YCarbonDioxideTimedReportCallback { (func: YCarbonDioxide, measure: YMeasure): void }
-//--- (end of YCarbonDioxide definitions)
-
 //--- (YCarbonDioxide class start)
 /**
  * YCarbonDioxide Class: CO2 sensor control interface, available for instance in the Yocto-CO2-V2
@@ -61,8 +56,8 @@ export class YCarbonDioxide extends YSensor
     _className: string;
     _abcPeriod: number = YCarbonDioxide.ABCPERIOD_INVALID;
     _command: string = YCarbonDioxide.COMMAND_INVALID;
-    _valueCallbackCarbonDioxide: YCarbonDioxideValueCallback | null = null;
-    _timedReportCallbackCarbonDioxide: YCarbonDioxideTimedReportCallback | null = null;
+    _valueCallbackCarbonDioxide: YCarbonDioxide.ValueCallback | null = null;
+    _timedReportCallbackCarbonDioxide: YCarbonDioxide.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly ABCPERIOD_INVALID: number = YAPI.INVALID_UINT;
@@ -72,9 +67,6 @@ export class YCarbonDioxide extends YSensor
     public static readonly ABCPERIOD_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YCarbonDioxide attributes declaration)
-
-//--- (YCarbonDioxide return codes)
-//--- (end of YCarbonDioxide return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -244,7 +236,7 @@ export class YCarbonDioxide extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YCarbonDioxideValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YCarbonDioxide.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -288,7 +280,7 @@ export class YCarbonDioxide extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YCarbonDioxideTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YCarbonDioxide.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -419,5 +411,11 @@ export class YCarbonDioxide extends YSensor
     }
 
     //--- (end of YCarbonDioxide implementation)
+}
+
+export namespace YCarbonDioxide {
+    //--- (YCarbonDioxide definitions)
+    export interface ValueCallback { (func: YCarbonDioxide, value: string): void }    export interface TimedReportCallback { (func: YCarbonDioxide, measure: YMeasure): void }
+    //--- (end of YCarbonDioxide definitions)
 }
 

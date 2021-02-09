@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_refframe.ts 43775 2021-02-09 10:35:51Z mvuilleu $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YRefFrame definitions)
 //--- (YRefFrame class start)
 /**
  * YRefFrame Class: 3D reference frame configuration interface, available for instance in the
@@ -52,8 +51,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YRefFrame class start)
 export class YRefFrame extends YFunction {
     //--- (end of YRefFrame attributes declaration)
-    //--- (YRefFrame return codes)
-    //--- (end of YRefFrame return codes)
     constructor(yapi, func) {
         //--- (YRefFrame constructor)
         super(yapi, func);
@@ -87,15 +84,27 @@ export class YRefFrame extends YFunction {
         this.MOUNTPOS_INVALID = YAPI.INVALID_UINT;
         this.BEARING_INVALID = YAPI.INVALID_DOUBLE;
         this.CALIBRATIONPARAM_INVALID = YAPI.INVALID_STRING;
-        this.FUSIONMODE_NDOF = 0 /* NDOF */;
-        this.FUSIONMODE_NDOF_FMC_OFF = 1 /* NDOF_FMC_OFF */;
-        this.FUSIONMODE_M4G = 2 /* M4G */;
-        this.FUSIONMODE_COMPASS = 3 /* COMPASS */;
-        this.FUSIONMODE_IMU = 4 /* IMU */;
-        this.FUSIONMODE_INCLIN_90DEG_1G8 = 5 /* INCLIN_90DEG_1G8 */;
-        this.FUSIONMODE_INCLIN_90DEG_3G6 = 6 /* INCLIN_90DEG_3G6 */;
-        this.FUSIONMODE_INCLIN_10DEG = 7 /* INCLIN_10DEG */;
-        this.FUSIONMODE_INVALID = -1 /* INVALID */;
+        this.FUSIONMODE_NDOF = 0;
+        this.FUSIONMODE_NDOF_FMC_OFF = 1;
+        this.FUSIONMODE_M4G = 2;
+        this.FUSIONMODE_COMPASS = 3;
+        this.FUSIONMODE_IMU = 4;
+        this.FUSIONMODE_INCLIN_90DEG_1G8 = 5;
+        this.FUSIONMODE_INCLIN_90DEG_3G6 = 6;
+        this.FUSIONMODE_INCLIN_10DEG = 7;
+        this.FUSIONMODE_INVALID = -1;
+        this.MOUNTPOSITION_BOTTOM = 0;
+        this.MOUNTPOSITION_TOP = 1;
+        this.MOUNTPOSITION_FRONT = 2;
+        this.MOUNTPOSITION_REAR = 3;
+        this.MOUNTPOSITION_RIGHT = 4;
+        this.MOUNTPOSITION_LEFT = 5;
+        this.MOUNTPOSITION_INVALID = 6;
+        this.MOUNTORIENTATION_TWELVE = 0;
+        this.MOUNTORIENTATION_THREE = 1;
+        this.MOUNTORIENTATION_SIX = 2;
+        this.MOUNTORIENTATION_NINE = 3;
+        this.MOUNTORIENTATION_INVALID = 4;
         this._className = 'RefFrame';
         //--- (end of YRefFrame constructor)
     }
@@ -351,7 +360,7 @@ export class YRefFrame extends YFunction {
      * pitch/roll tilt sensors.
      *
      * @return a value among the YRefFrame.MOUNTPOSITION enumeration
-     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,  YRefFrame.MOUNTPOSITION_TOP,
      *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
      *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
@@ -362,7 +371,7 @@ export class YRefFrame extends YFunction {
         let position;
         position = await this.get_mountPos();
         if (position < 0) {
-            return 6 /* INVALID */;
+            return YRefFrame.MOUNTPOSITION_INVALID;
         }
         return ((position) >> (2));
     }
@@ -385,7 +394,7 @@ export class YRefFrame extends YFunction {
         let position;
         position = await this.get_mountPos();
         if (position < 0) {
-            return 4 /* INVALID */;
+            return YRefFrame.MOUNTORIENTATION_INVALID;
         }
         return ((position) & (3));
     }
@@ -397,7 +406,7 @@ export class YRefFrame extends YFunction {
      * the earth surface) so that the measures are made relative to this position.
      *
      * @param position : a value among the YRefFrame.MOUNTPOSITION enumeration
-     *         (YRefFrame.MOUNTPOSITION_BOTTOM,   YRefFrame.MOUNTPOSITION_TOP,
+     *         (YRefFrame.MOUNTPOSITION_BOTTOM,  YRefFrame.MOUNTPOSITION_TOP,
      *         YRefFrame.MOUNTPOSITION_FRONT,    YRefFrame.MOUNTPOSITION_RIGHT,
      *         YRefFrame.MOUNTPOSITION_REAR,     YRefFrame.MOUNTPOSITION_LEFT),
      *         corresponding to the installation in a box, on one of the six faces.
@@ -1029,13 +1038,25 @@ export class YRefFrame extends YFunction {
 YRefFrame.MOUNTPOS_INVALID = YAPI.INVALID_UINT;
 YRefFrame.BEARING_INVALID = YAPI.INVALID_DOUBLE;
 YRefFrame.CALIBRATIONPARAM_INVALID = YAPI.INVALID_STRING;
-YRefFrame.FUSIONMODE_NDOF = 0 /* NDOF */;
-YRefFrame.FUSIONMODE_NDOF_FMC_OFF = 1 /* NDOF_FMC_OFF */;
-YRefFrame.FUSIONMODE_M4G = 2 /* M4G */;
-YRefFrame.FUSIONMODE_COMPASS = 3 /* COMPASS */;
-YRefFrame.FUSIONMODE_IMU = 4 /* IMU */;
-YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8 = 5 /* INCLIN_90DEG_1G8 */;
-YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6 = 6 /* INCLIN_90DEG_3G6 */;
-YRefFrame.FUSIONMODE_INCLIN_10DEG = 7 /* INCLIN_10DEG */;
-YRefFrame.FUSIONMODE_INVALID = -1 /* INVALID */;
+YRefFrame.FUSIONMODE_NDOF = 0;
+YRefFrame.FUSIONMODE_NDOF_FMC_OFF = 1;
+YRefFrame.FUSIONMODE_M4G = 2;
+YRefFrame.FUSIONMODE_COMPASS = 3;
+YRefFrame.FUSIONMODE_IMU = 4;
+YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8 = 5;
+YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6 = 6;
+YRefFrame.FUSIONMODE_INCLIN_10DEG = 7;
+YRefFrame.FUSIONMODE_INVALID = -1;
+YRefFrame.MOUNTPOSITION_BOTTOM = 0;
+YRefFrame.MOUNTPOSITION_TOP = 1;
+YRefFrame.MOUNTPOSITION_FRONT = 2;
+YRefFrame.MOUNTPOSITION_REAR = 3;
+YRefFrame.MOUNTPOSITION_RIGHT = 4;
+YRefFrame.MOUNTPOSITION_LEFT = 5;
+YRefFrame.MOUNTPOSITION_INVALID = 6;
+YRefFrame.MOUNTORIENTATION_TWELVE = 0;
+YRefFrame.MOUNTORIENTATION_THREE = 1;
+YRefFrame.MOUNTORIENTATION_SIX = 2;
+YRefFrame.MOUNTORIENTATION_NINE = 3;
+YRefFrame.MOUNTORIENTATION_INVALID = 4;
 //# sourceMappingURL=yocto_refframe.js.map

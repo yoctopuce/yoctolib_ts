@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_dualpower.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_dualpower.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YDualPower = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YDualPower definitions)
 //--- (YDualPower class start)
 /**
  * YDualPower Class: dual power switch control interface, available for instance in the Yocto-Servo
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YDualPower class start)
 class YDualPower extends yocto_api_js_1.YFunction {
     //--- (end of YDualPower attributes declaration)
-    //--- (YDualPower return codes)
-    //--- (end of YDualPower return codes)
     constructor(yapi, func) {
         //--- (YDualPower constructor)
         super(yapi, func);
@@ -64,15 +61,15 @@ class YDualPower extends yocto_api_js_1.YFunction {
         this._extVoltage = YDualPower.EXTVOLTAGE_INVALID;
         this._valueCallbackDualPower = null;
         // API symbols as object properties
-        this.POWERSTATE_OFF = 0 /* OFF */;
-        this.POWERSTATE_FROM_USB = 1 /* FROM_USB */;
-        this.POWERSTATE_FROM_EXT = 2 /* FROM_EXT */;
-        this.POWERSTATE_INVALID = -1 /* INVALID */;
-        this.POWERCONTROL_AUTO = 0 /* AUTO */;
-        this.POWERCONTROL_FROM_USB = 1 /* FROM_USB */;
-        this.POWERCONTROL_FROM_EXT = 2 /* FROM_EXT */;
-        this.POWERCONTROL_OFF = 3 /* OFF */;
-        this.POWERCONTROL_INVALID = -1 /* INVALID */;
+        this.POWERSTATE_OFF = 0;
+        this.POWERSTATE_FROM_USB = 1;
+        this.POWERSTATE_FROM_EXT = 2;
+        this.POWERSTATE_INVALID = -1;
+        this.POWERCONTROL_AUTO = 0;
+        this.POWERCONTROL_FROM_USB = 1;
+        this.POWERCONTROL_FROM_EXT = 2;
+        this.POWERCONTROL_OFF = 3;
+        this.POWERCONTROL_INVALID = -1;
         this.EXTVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this._className = 'DualPower';
         //--- (end of YDualPower constructor)
@@ -332,14 +329,14 @@ class YDualPower extends yocto_api_js_1.YFunction {
 }
 exports.YDualPower = YDualPower;
 // API symbols as static members
-YDualPower.POWERSTATE_OFF = 0 /* OFF */;
-YDualPower.POWERSTATE_FROM_USB = 1 /* FROM_USB */;
-YDualPower.POWERSTATE_FROM_EXT = 2 /* FROM_EXT */;
-YDualPower.POWERSTATE_INVALID = -1 /* INVALID */;
-YDualPower.POWERCONTROL_AUTO = 0 /* AUTO */;
-YDualPower.POWERCONTROL_FROM_USB = 1 /* FROM_USB */;
-YDualPower.POWERCONTROL_FROM_EXT = 2 /* FROM_EXT */;
-YDualPower.POWERCONTROL_OFF = 3 /* OFF */;
-YDualPower.POWERCONTROL_INVALID = -1 /* INVALID */;
+YDualPower.POWERSTATE_OFF = 0;
+YDualPower.POWERSTATE_FROM_USB = 1;
+YDualPower.POWERSTATE_FROM_EXT = 2;
+YDualPower.POWERSTATE_INVALID = -1;
+YDualPower.POWERCONTROL_AUTO = 0;
+YDualPower.POWERCONTROL_FROM_USB = 1;
+YDualPower.POWERCONTROL_FROM_EXT = 2;
+YDualPower.POWERCONTROL_OFF = 3;
+YDualPower.POWERCONTROL_INVALID = -1;
 YDualPower.EXTVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 //# sourceMappingURL=yocto_dualpower.js.map

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voltageoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YVoltageOutput = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YVoltageOutput definitions)
 //--- (YVoltageOutput class start)
 /**
  * YVoltageOutput Class: voltage output control interface, available for instance in the Yocto-0-10V-Tx
@@ -50,8 +49,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YVoltageOutput class start)
 class YVoltageOutput extends yocto_api_js_1.YFunction {
     //--- (end of YVoltageOutput attributes declaration)
-    //--- (YVoltageOutput return codes)
-    //--- (end of YVoltageOutput return codes)
     constructor(yapi, func) {
         //--- (YVoltageOutput constructor)
         super(yapi, func);

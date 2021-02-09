@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ * $Id: yocto_api.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -56,9 +56,6 @@ export declare const YAPI_INVALID_UINT: number;
 export declare const YAPI_INVALID_LONG: number;
 export declare const YAPI_INVALID_DOUBLE: number;
 export declare const YAPI_INVALID_STRING: string;
-export interface YFunctionValueCallback {
-    (func: YFunction, value: string): void;
-}
 export declare const YAPI_MIN_DOUBLE: number;
 export declare const YAPI_MAX_DOUBLE: number;
 export declare const Y_FUNCTIONDESCRIPTOR_INVALID: string;
@@ -81,15 +78,6 @@ export interface YLogCallback {
 export interface YProgressCallback {
     (progress: number, msg: string): void;
 }
-export interface YModuleLogCallback {
-    (module: YModule, msg: string): void;
-}
-export interface YModuleConfigChangeCallback {
-    (module: YModule): void;
-}
-export interface YModuleBeaconCallback {
-    (module: YModule, beacon: number): void;
-}
 export interface yCalibrationHandler {
     (rawValue: number, calibType: number, parameters: number[], rawValues: number[], refValues: number[]): number;
 }
@@ -98,57 +86,6 @@ export interface YHubDiscoveryCallback {
 }
 export interface YDeviceUpdateCallback {
     (module: YModule): void;
-}
-export declare const enum YModule_PersistentSettings {
-    LOADED = 0,
-    SAVED = 1,
-    MODIFIED = 2,
-    INVALID = -1
-}
-export declare const enum YModule_Beacon {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YModuleValueCallback {
-    (func: YModule, value: string): void;
-}
-export declare const enum YDataLogger_Recording {
-    OFF = 0,
-    ON = 1,
-    PENDING = 2,
-    INVALID = -1
-}
-export declare const enum YDataLogger_AutoStart {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YDataLogger_BeaconDriven {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export declare const enum YDataLogger_ClearHistory {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YDataLoggerValueCallback {
-    (func: YDataLogger, value: string): void;
-}
-export declare const enum YSensor_AdvMode {
-    IMMEDIATE = 0,
-    PERIOD_AVG = 1,
-    PERIOD_MIN = 2,
-    PERIOD_MAX = 3,
-    INVALID = -1
-}
-export interface YSensorValueCallback {
-    (func: YSensor, value: string): void;
-}
-export interface YSensorTimedReportCallback {
-    (func: YSensor, measure: YMeasure): void;
 }
 export interface YUnhandledPromiseRejectionCallback {
     (reason: object, promise: PromiseLike<any>): void;
@@ -913,7 +850,7 @@ declare class YDevice {
     imm_getLastTimeRef(): number;
     imm_getLastDuration(): number;
     imm_triggerLogPull(): void;
-    imm_registerLogCallback(callback: YModuleLogCallback | null): void;
+    imm_registerLogCallback(callback: YModule.LogCallback | null): void;
     /** Return the value of the last timestamp sent by the device, if any
      *
      * @param float_timestamp {number}
@@ -1166,21 +1103,13 @@ export declare class YFunction {
     _dataStreams: YDataStreamDict;
     _logicalName: string;
     _advertisedValue: string;
-    _valueCallbackFunction: YFunctionValueCallback | null;
+    _valueCallbackFunction: YFunction.ValueCallback | null;
     _cacheExpiration: number;
     _serial: string;
     _funId: string;
     _hwId: string;
-    readonly FUNCTIONDESCRIPTOR_INVALID: string;
-    readonly HARDWAREID_INVALID: string;
-    readonly FUNCTIONID_INVALID: string;
-    readonly FRIENDLYNAME_INVALID: string;
     readonly LOGICALNAME_INVALID: string;
     readonly ADVERTISEDVALUE_INVALID: string;
-    static readonly FUNCTIONDESCRIPTOR_INVALID: string;
-    static readonly HARDWAREID_INVALID: string;
-    static readonly FUNCTIONID_INVALID: string;
-    static readonly FRIENDLYNAME_INVALID: string;
     static readonly LOGICALNAME_INVALID: string;
     static readonly ADVERTISEDVALUE_INVALID: string;
     constructor(obj_yapi: YAPIContext, str_func: string);
@@ -1283,7 +1212,7 @@ export declare class YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YFunctionValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YFunction.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Disables the propagation of every new advertised value to the parent hub.
@@ -1331,7 +1260,7 @@ export declare class YFunction {
      *
      * @return a string corresponding to the serial number of the module, as set by the factory.
      *
-     * On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
+     * On failure, throws an exception or returns YFunction.SERIALNUMBER_INVALID.
      */
     get_serialNumber(): Promise<string>;
     _parserHelper(): Promise<number>;
@@ -1716,7 +1645,7 @@ export declare class YFunction {
      *
      * @return an identifier of type YFUN_DESCR.
      *
-     * If the function has never been contacted, the returned value is YFunction.FUNCTIONDESCRIPTOR_INVALID.
+     * If the function has never been contacted, the returned value is Y$CLASSNAME$.FUNCTIONDESCRIPTOR_INVALID.
      */
     get_functionDescriptor(): Promise<string>;
     /**
@@ -1737,6 +1666,15 @@ export declare class YFunction {
      */
     set_userData(data: object | null): Promise<void>;
 }
+export declare namespace YFunction {
+    const FUNCTIONDESCRIPTOR_INVALID: string;
+    const HARDWAREID_INVALID: string;
+    const FUNCTIONID_INVALID: string;
+    const FRIENDLYNAME_INVALID: string;
+    interface ValueCallback {
+        (func: YFunction, value: string): void;
+    }
+}
 /**
  * YModule Class: Global parameters control interface for all Yoctopuce devices
  *
@@ -1744,7 +1682,6 @@ export declare class YFunction {
  * It can be used to control the module global parameters, and
  * to enumerate the functions provided by each module.
  */
-/** @extends {YFunction} **/
 export declare class YModule extends YFunction {
     _className: string;
     _productName: string;
@@ -1752,30 +1689,30 @@ export declare class YModule extends YFunction {
     _productId: number;
     _productRelease: number;
     _firmwareRelease: string;
-    _persistentSettings: YModule_PersistentSettings;
+    _persistentSettings: YModule.PERSISTENTSETTINGS;
     _luminosity: number;
-    _beacon: YModule_Beacon;
+    _beacon: YModule.BEACON;
     _upTime: number;
     _usbCurrent: number;
     _rebootCountdown: number;
     _userVar: number;
-    _valueCallbackModule: YModuleValueCallback | null;
-    _logCallback: YModuleLogCallback | null;
-    _confChangeCallback: YModuleConfigChangeCallback | null;
-    _beaconCallback: YModuleBeaconCallback | null;
+    _valueCallbackModule: YModule.ValueCallback | null;
+    _logCallback: YModule.LogCallback | null;
+    _confChangeCallback: YModule.ConfigChangeCallback | null;
+    _beaconCallback: YModule.BeaconCallback | null;
     readonly PRODUCTNAME_INVALID: string;
     readonly SERIALNUMBER_INVALID: string;
     readonly PRODUCTID_INVALID: number;
     readonly PRODUCTRELEASE_INVALID: number;
     readonly FIRMWARERELEASE_INVALID: string;
-    readonly PERSISTENTSETTINGS_LOADED: YModule_PersistentSettings;
-    readonly PERSISTENTSETTINGS_SAVED: YModule_PersistentSettings;
-    readonly PERSISTENTSETTINGS_MODIFIED: YModule_PersistentSettings;
-    readonly PERSISTENTSETTINGS_INVALID: YModule_PersistentSettings;
+    readonly PERSISTENTSETTINGS_LOADED: YModule.PERSISTENTSETTINGS;
+    readonly PERSISTENTSETTINGS_SAVED: YModule.PERSISTENTSETTINGS;
+    readonly PERSISTENTSETTINGS_MODIFIED: YModule.PERSISTENTSETTINGS;
+    readonly PERSISTENTSETTINGS_INVALID: YModule.PERSISTENTSETTINGS;
     readonly LUMINOSITY_INVALID: number;
-    readonly BEACON_OFF: YModule_Beacon;
-    readonly BEACON_ON: YModule_Beacon;
-    readonly BEACON_INVALID: YModule_Beacon;
+    readonly BEACON_OFF: YModule.BEACON;
+    readonly BEACON_ON: YModule.BEACON;
+    readonly BEACON_INVALID: YModule.BEACON;
     readonly UPTIME_INVALID: number;
     readonly USBCURRENT_INVALID: number;
     readonly REBOOTCOUNTDOWN_INVALID: number;
@@ -1785,14 +1722,14 @@ export declare class YModule extends YFunction {
     static readonly PRODUCTID_INVALID: number;
     static readonly PRODUCTRELEASE_INVALID: number;
     static readonly FIRMWARERELEASE_INVALID: string;
-    static readonly PERSISTENTSETTINGS_LOADED: YModule_PersistentSettings;
-    static readonly PERSISTENTSETTINGS_SAVED: YModule_PersistentSettings;
-    static readonly PERSISTENTSETTINGS_MODIFIED: YModule_PersistentSettings;
-    static readonly PERSISTENTSETTINGS_INVALID: YModule_PersistentSettings;
+    static readonly PERSISTENTSETTINGS_LOADED: YModule.PERSISTENTSETTINGS;
+    static readonly PERSISTENTSETTINGS_SAVED: YModule.PERSISTENTSETTINGS;
+    static readonly PERSISTENTSETTINGS_MODIFIED: YModule.PERSISTENTSETTINGS;
+    static readonly PERSISTENTSETTINGS_INVALID: YModule.PERSISTENTSETTINGS;
     static readonly LUMINOSITY_INVALID: number;
-    static readonly BEACON_OFF: YModule_Beacon;
-    static readonly BEACON_ON: YModule_Beacon;
-    static readonly BEACON_INVALID: YModule_Beacon;
+    static readonly BEACON_OFF: YModule.BEACON;
+    static readonly BEACON_ON: YModule.BEACON;
+    static readonly BEACON_INVALID: YModule.BEACON;
     static readonly UPTIME_INVALID: number;
     static readonly USBCURRENT_INVALID: number;
     static readonly REBOOTCOUNTDOWN_INVALID: number;
@@ -1942,8 +1879,8 @@ export declare class YModule extends YFunction {
      *
      * On failure, throws an exception or returns YModule.PERSISTENTSETTINGS_INVALID.
      */
-    get_persistentSettings(): Promise<YModule_PersistentSettings>;
-    set_persistentSettings(newval: YModule_PersistentSettings): Promise<number>;
+    get_persistentSettings(): Promise<YModule.PERSISTENTSETTINGS>;
+    set_persistentSettings(newval: YModule.PERSISTENTSETTINGS): Promise<number>;
     /**
      * Returns the luminosity of the  module informative LEDs (from 0 to 100).
      *
@@ -1972,7 +1909,7 @@ export declare class YModule extends YFunction {
      *
      * On failure, throws an exception or returns YModule.BEACON_INVALID.
      */
-    get_beacon(): Promise<YModule_Beacon>;
+    get_beacon(): Promise<YModule.BEACON>;
     /**
      * Turns on or off the module localization beacon.
      *
@@ -1982,7 +1919,7 @@ export declare class YModule extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_beacon(newval: YModule_Beacon): Promise<number>;
+    set_beacon(newval: YModule.BEACON): Promise<number>;
     /**
      * Returns the number of milliseconds spent since the module was powered on.
      *
@@ -2091,7 +2028,7 @@ export declare class YModule extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YModuleValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YModule.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     get_productNameAndRevision(): Promise<string>;
     /**
@@ -2142,8 +2079,8 @@ export declare class YModule extends YFunction {
      *         arguments: the module object that emitted the log message, and the character string containing the log.
      *         On failure, throws an exception or returns a negative error code.
      */
-    registerLogCallback(callback: YModuleLogCallback | null): Promise<number>;
-    get_logCallback(): Promise<YModuleLogCallback | null>;
+    registerLogCallback(callback: YModule.LogCallback | null): Promise<number>;
+    get_logCallback(): Promise<YModule.LogCallback | null>;
     /**
      * Register a callback function, to be called when a persistent settings in
      * a device configuration has been changed (e.g. change of unit, etc).
@@ -2151,7 +2088,7 @@ export declare class YModule extends YFunction {
      * @param callback : a procedure taking a YModule parameter, or null
      *         to unregister a previously registered  callback.
      */
-    registerConfigChangeCallback(callback: YModuleConfigChangeCallback | null): Promise<number>;
+    registerConfigChangeCallback(callback: YModule.ConfigChangeCallback | null): Promise<number>;
     _invokeConfigChangeCallback(): Promise<number>;
     /**
      * Register a callback function, to be called when the localization beacon of the module
@@ -2161,7 +2098,7 @@ export declare class YModule extends YFunction {
      * @param callback : The callback function to call, or null to unregister a
      *         previously registered callback.
      */
-    registerBeaconCallback(callback: YModuleBeaconCallback | null): Promise<number>;
+    registerBeaconCallback(callback: YModule.BeaconCallback | null): Promise<number>;
     _invokeBeaconCallback(beaconState: number): Promise<number>;
     /**
      * Triggers a configuration change callback, to check if they are supported or not.
@@ -2361,6 +2298,31 @@ export declare class YModule extends YFunction {
      */
     static FirstModuleInContext(yctx: YAPIContext): YModule | null;
 }
+export declare namespace YModule {
+    interface LogCallback {
+        (module: YModule, msg: string): void;
+    }
+    interface ConfigChangeCallback {
+        (module: YModule): void;
+    }
+    interface BeaconCallback {
+        (module: YModule, beacon: number): void;
+    }
+    const enum PERSISTENTSETTINGS {
+        LOADED = 0,
+        SAVED = 1,
+        MODIFIED = 2,
+        INVALID = -1
+    }
+    const enum BEACON {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YModule, value: string): void;
+    }
+}
 /**
  * YSensor Class: Sensor function interface.
  *
@@ -2374,7 +2336,6 @@ export declare class YModule extends YFunction {
  * Note: The YAnButton class is the only analog input which does not inherit
  * from YSensor.
  */
-/** @extends {YFunction} **/
 export declare class YSensor extends YFunction {
     _className: string;
     _unit: string;
@@ -2384,12 +2345,12 @@ export declare class YSensor extends YFunction {
     _currentRawValue: number;
     _logFrequency: string;
     _reportFrequency: string;
-    _advMode: YSensor_AdvMode;
+    _advMode: YSensor.ADVMODE;
     _calibrationParam: string;
     _resolution: number;
     _sensorState: number;
-    _valueCallbackSensor: YSensorValueCallback | null;
-    _timedReportCallbackSensor: YSensorTimedReportCallback | null;
+    _valueCallbackSensor: YSensor.ValueCallback | null;
+    _timedReportCallbackSensor: YSensor.TimedReportCallback | null;
     _prevTimedReport: number;
     _iresol: number;
     _offset: number;
@@ -2407,11 +2368,11 @@ export declare class YSensor extends YFunction {
     readonly CURRENTRAWVALUE_INVALID: number;
     readonly LOGFREQUENCY_INVALID: string;
     readonly REPORTFREQUENCY_INVALID: string;
-    readonly ADVMODE_IMMEDIATE: YSensor_AdvMode;
-    readonly ADVMODE_PERIOD_AVG: YSensor_AdvMode;
-    readonly ADVMODE_PERIOD_MIN: YSensor_AdvMode;
-    readonly ADVMODE_PERIOD_MAX: YSensor_AdvMode;
-    readonly ADVMODE_INVALID: YSensor_AdvMode;
+    readonly ADVMODE_IMMEDIATE: YSensor.ADVMODE;
+    readonly ADVMODE_PERIOD_AVG: YSensor.ADVMODE;
+    readonly ADVMODE_PERIOD_MIN: YSensor.ADVMODE;
+    readonly ADVMODE_PERIOD_MAX: YSensor.ADVMODE;
+    readonly ADVMODE_INVALID: YSensor.ADVMODE;
     readonly CALIBRATIONPARAM_INVALID: string;
     readonly RESOLUTION_INVALID: number;
     readonly SENSORSTATE_INVALID: number;
@@ -2422,11 +2383,11 @@ export declare class YSensor extends YFunction {
     static readonly CURRENTRAWVALUE_INVALID: number;
     static readonly LOGFREQUENCY_INVALID: string;
     static readonly REPORTFREQUENCY_INVALID: string;
-    static readonly ADVMODE_IMMEDIATE: YSensor_AdvMode;
-    static readonly ADVMODE_PERIOD_AVG: YSensor_AdvMode;
-    static readonly ADVMODE_PERIOD_MIN: YSensor_AdvMode;
-    static readonly ADVMODE_PERIOD_MAX: YSensor_AdvMode;
-    static readonly ADVMODE_INVALID: YSensor_AdvMode;
+    static readonly ADVMODE_IMMEDIATE: YSensor.ADVMODE;
+    static readonly ADVMODE_PERIOD_AVG: YSensor.ADVMODE;
+    static readonly ADVMODE_PERIOD_MIN: YSensor.ADVMODE;
+    static readonly ADVMODE_PERIOD_MAX: YSensor.ADVMODE;
+    static readonly ADVMODE_INVALID: YSensor.ADVMODE;
     static readonly CALIBRATIONPARAM_INVALID: string;
     static readonly RESOLUTION_INVALID: number;
     static readonly SENSORSTATE_INVALID: number;
@@ -2572,7 +2533,7 @@ export declare class YSensor extends YFunction {
      *
      * On failure, throws an exception or returns YSensor.ADVMODE_INVALID.
      */
-    get_advMode(): Promise<YSensor_AdvMode>;
+    get_advMode(): Promise<YSensor.ADVMODE>;
     /**
      * Changes the measuring mode used for the advertised value pushed to the parent hub.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
@@ -2585,7 +2546,7 @@ export declare class YSensor extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_advMode(newval: YSensor_AdvMode): Promise<number>;
+    set_advMode(newval: YSensor.ADVMODE): Promise<number>;
     get_calibrationParam(): Promise<string>;
     set_calibrationParam(newval: string): Promise<number>;
     /**
@@ -2687,7 +2648,7 @@ export declare class YSensor extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YSensorValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YSensor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     _parserHelper(): Promise<number>;
     /**
@@ -2759,7 +2720,7 @@ export declare class YSensor extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YSensorTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YSensor.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Configures error correction data points, in particular to compensate for
@@ -2836,6 +2797,21 @@ export declare class YSensor extends YFunction {
      */
     static FirstSensorInContext(yctx: YAPIContext): YSensor | null;
 }
+export declare namespace YSensor {
+    const enum ADVMODE {
+        IMMEDIATE = 0,
+        PERIOD_AVG = 1,
+        PERIOD_MIN = 2,
+        PERIOD_MAX = 3,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YSensor, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YSensor, measure: YMeasure): void;
+    }
+}
 /**
  * YMeasure Class: Measured value, returned in particular by the methods of the YDataSet class.
  *
@@ -2904,6 +2880,8 @@ export declare class YMeasure {
      */
     get_endTimeUTC_asDate(): Date;
 }
+export declare namespace YMeasure {
+}
 /**
  * YDataLogger Class: DataLogger control interface, available on most Yoctopuce sensors.
  *
@@ -2918,44 +2896,44 @@ export declare class YDataLogger extends YFunction {
     _className: string;
     _currentRunIndex: number;
     _timeUTC: number;
-    _recording: YDataLogger_Recording;
-    _autoStart: YDataLogger_AutoStart;
-    _beaconDriven: YDataLogger_BeaconDriven;
+    _recording: YDataLogger.RECORDING;
+    _autoStart: YDataLogger.AUTOSTART;
+    _beaconDriven: YDataLogger.BEACONDRIVEN;
     _usage: number;
-    _clearHistory: YDataLogger_ClearHistory;
-    _valueCallbackDataLogger: YDataLoggerValueCallback | null;
+    _clearHistory: YDataLogger.CLEARHISTORY;
+    _valueCallbackDataLogger: YDataLogger.ValueCallback | null;
     readonly CURRENTRUNINDEX_INVALID: number;
     readonly TIMEUTC_INVALID: number;
-    readonly RECORDING_OFF: YDataLogger_Recording;
-    readonly RECORDING_ON: YDataLogger_Recording;
-    readonly RECORDING_PENDING: YDataLogger_Recording;
-    readonly RECORDING_INVALID: YDataLogger_Recording;
-    readonly AUTOSTART_OFF: YDataLogger_AutoStart;
-    readonly AUTOSTART_ON: YDataLogger_AutoStart;
-    readonly AUTOSTART_INVALID: YDataLogger_AutoStart;
-    readonly BEACONDRIVEN_OFF: YDataLogger_BeaconDriven;
-    readonly BEACONDRIVEN_ON: YDataLogger_BeaconDriven;
-    readonly BEACONDRIVEN_INVALID: YDataLogger_BeaconDriven;
+    readonly RECORDING_OFF: YDataLogger.RECORDING;
+    readonly RECORDING_ON: YDataLogger.RECORDING;
+    readonly RECORDING_PENDING: YDataLogger.RECORDING;
+    readonly RECORDING_INVALID: YDataLogger.RECORDING;
+    readonly AUTOSTART_OFF: YDataLogger.AUTOSTART;
+    readonly AUTOSTART_ON: YDataLogger.AUTOSTART;
+    readonly AUTOSTART_INVALID: YDataLogger.AUTOSTART;
+    readonly BEACONDRIVEN_OFF: YDataLogger.BEACONDRIVEN;
+    readonly BEACONDRIVEN_ON: YDataLogger.BEACONDRIVEN;
+    readonly BEACONDRIVEN_INVALID: YDataLogger.BEACONDRIVEN;
     readonly USAGE_INVALID: number;
-    readonly CLEARHISTORY_FALSE: YDataLogger_ClearHistory;
-    readonly CLEARHISTORY_TRUE: YDataLogger_ClearHistory;
-    readonly CLEARHISTORY_INVALID: YDataLogger_ClearHistory;
+    readonly CLEARHISTORY_FALSE: YDataLogger.CLEARHISTORY;
+    readonly CLEARHISTORY_TRUE: YDataLogger.CLEARHISTORY;
+    readonly CLEARHISTORY_INVALID: YDataLogger.CLEARHISTORY;
     static readonly CURRENTRUNINDEX_INVALID: number;
     static readonly TIMEUTC_INVALID: number;
-    static readonly RECORDING_OFF: YDataLogger_Recording;
-    static readonly RECORDING_ON: YDataLogger_Recording;
-    static readonly RECORDING_PENDING: YDataLogger_Recording;
-    static readonly RECORDING_INVALID: YDataLogger_Recording;
-    static readonly AUTOSTART_OFF: YDataLogger_AutoStart;
-    static readonly AUTOSTART_ON: YDataLogger_AutoStart;
-    static readonly AUTOSTART_INVALID: YDataLogger_AutoStart;
-    static readonly BEACONDRIVEN_OFF: YDataLogger_BeaconDriven;
-    static readonly BEACONDRIVEN_ON: YDataLogger_BeaconDriven;
-    static readonly BEACONDRIVEN_INVALID: YDataLogger_BeaconDriven;
+    static readonly RECORDING_OFF: YDataLogger.RECORDING;
+    static readonly RECORDING_ON: YDataLogger.RECORDING;
+    static readonly RECORDING_PENDING: YDataLogger.RECORDING;
+    static readonly RECORDING_INVALID: YDataLogger.RECORDING;
+    static readonly AUTOSTART_OFF: YDataLogger.AUTOSTART;
+    static readonly AUTOSTART_ON: YDataLogger.AUTOSTART;
+    static readonly AUTOSTART_INVALID: YDataLogger.AUTOSTART;
+    static readonly BEACONDRIVEN_OFF: YDataLogger.BEACONDRIVEN;
+    static readonly BEACONDRIVEN_ON: YDataLogger.BEACONDRIVEN;
+    static readonly BEACONDRIVEN_INVALID: YDataLogger.BEACONDRIVEN;
     static readonly USAGE_INVALID: number;
-    static readonly CLEARHISTORY_FALSE: YDataLogger_ClearHistory;
-    static readonly CLEARHISTORY_TRUE: YDataLogger_ClearHistory;
-    static readonly CLEARHISTORY_INVALID: YDataLogger_ClearHistory;
+    static readonly CLEARHISTORY_FALSE: YDataLogger.CLEARHISTORY;
+    static readonly CLEARHISTORY_TRUE: YDataLogger.CLEARHISTORY;
+    static readonly CLEARHISTORY_INVALID: YDataLogger.CLEARHISTORY;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -2994,7 +2972,7 @@ export declare class YDataLogger extends YFunction {
      *
      * On failure, throws an exception or returns YDataLogger.RECORDING_INVALID.
      */
-    get_recording(): Promise<YDataLogger_Recording>;
+    get_recording(): Promise<YDataLogger.RECORDING>;
     /**
      * Changes the activation state of the data logger to start/stop recording data.
      *
@@ -3006,7 +2984,7 @@ export declare class YDataLogger extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_recording(newval: YDataLogger_Recording): Promise<number>;
+    set_recording(newval: YDataLogger.RECORDING): Promise<number>;
     /**
      * Returns the default activation state of the data logger on power up.
      *
@@ -3015,7 +2993,7 @@ export declare class YDataLogger extends YFunction {
      *
      * On failure, throws an exception or returns YDataLogger.AUTOSTART_INVALID.
      */
-    get_autoStart(): Promise<YDataLogger_AutoStart>;
+    get_autoStart(): Promise<YDataLogger.AUTOSTART>;
     /**
      * Changes the default activation state of the data logger on power up.
      * Do not forget to call the saveToFlash() method of the module to save the
@@ -3030,7 +3008,7 @@ export declare class YDataLogger extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_autoStart(newval: YDataLogger_AutoStart): Promise<number>;
+    set_autoStart(newval: YDataLogger.AUTOSTART): Promise<number>;
     /**
      * Returns true if the data logger is synchronised with the localization beacon.
      *
@@ -3039,7 +3017,7 @@ export declare class YDataLogger extends YFunction {
      *
      * On failure, throws an exception or returns YDataLogger.BEACONDRIVEN_INVALID.
      */
-    get_beaconDriven(): Promise<YDataLogger_BeaconDriven>;
+    get_beaconDriven(): Promise<YDataLogger.BEACONDRIVEN>;
     /**
      * Changes the type of synchronisation of the data logger.
      * Remember to call the saveToFlash() method of the module if the
@@ -3052,7 +3030,7 @@ export declare class YDataLogger extends YFunction {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_beaconDriven(newval: YDataLogger_BeaconDriven): Promise<number>;
+    set_beaconDriven(newval: YDataLogger.BEACONDRIVEN): Promise<number>;
     /**
      * Returns the percentage of datalogger memory in use.
      *
@@ -3061,8 +3039,8 @@ export declare class YDataLogger extends YFunction {
      * On failure, throws an exception or returns YDataLogger.USAGE_INVALID.
      */
     get_usage(): Promise<number>;
-    get_clearHistory(): Promise<YDataLogger_ClearHistory>;
-    set_clearHistory(newval: YDataLogger_ClearHistory): Promise<number>;
+    get_clearHistory(): Promise<YDataLogger.CLEARHISTORY>;
+    set_clearHistory(newval: YDataLogger.CLEARHISTORY): Promise<number>;
     /**
      * Retrieves a data logger for a given identifier.
      * The identifier can be specified using several formats:
@@ -3129,7 +3107,7 @@ export declare class YDataLogger extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YDataLoggerValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YDataLogger.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Clears the data logger memory and discards all recorded data streams.
@@ -3187,6 +3165,32 @@ export declare class YDataLogger extends YFunction {
      *         if there are none.
      */
     static FirstDataLoggerInContext(yctx: YAPIContext): YDataLogger | null;
+}
+export declare namespace YDataLogger {
+    const enum RECORDING {
+        OFF = 0,
+        ON = 1,
+        PENDING = 2,
+        INVALID = -1
+    }
+    const enum AUTOSTART {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    const enum BEACONDRIVEN {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    const enum CLEARHISTORY {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YDataLogger, value: string): void;
+    }
 }
 export declare class YSystemEnv {
     isNodeJS: boolean;
@@ -3338,24 +3342,19 @@ export interface _YY_WebSocket {
     pong?: (data?: any, mask?: boolean, cb?: (err: Error) => void) => void;
     terminate?: () => void;
 }
+declare const enum WSConnState {
+    DEAD = 0,
+    DISCONNECTED = 1,
+    CONNECTING = 2,
+    AUTHENTICATING = 3,
+    CONNECTED = 4
+}
 export declare abstract class YWebSocketHub extends YGenericHub {
     _DEFAULT_TCP_ROUND_TRIP_TIME: number;
     _DEFAULT_TCP_MAX_WINDOW_SIZE: number;
     _YIO_DEFAULT_TCP_TIMEOUT: number;
     _YIO_1_MINUTE_TCP_TIMEOUT: number;
     _YIO_10_MINUTES_TCP_TIMEOUT: number;
-    _YSTREAM_TCP: number;
-    _YSTREAM_TCP_CLOSE: number;
-    _YSTREAM_META: number;
-    _YSTREAM_TCP_NOTIF: number;
-    _YSTREAM_TCP_ASYNCCLOSE: number;
-    _USB_META_UTCTIME: number;
-    _USB_META_DLFLUSH: number;
-    _USB_META_ACK_D2H_PACKET: number;
-    _USB_META_WS_ANNOUNCE: number;
-    _USB_META_WS_AUTHENTICATION: number;
-    _USB_META_WS_ERROR: number;
-    _USB_META_ACK_UPLOAD: number;
     _USB_META_UTCTIME_SIZE: number;
     _USB_META_DLFLUSH_SIZE: number;
     _USB_META_ACK_D2H_PACKET_SIZE: number;
@@ -3365,11 +3364,6 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     _USB_META_ACK_UPLOAD_SIZE: number;
     _USB_META_WS_VALID_SHA1: number;
     _USB_META_WS_RW: number;
-    _WS_DEAD: number;
-    _WS_DISCONNECTED: number;
-    _WS_CONNECTING: number;
-    _WS_AUTHENTICATING: number;
-    _WS_CONNECTED: number;
     websocket: _YY_WebSocket | null;
     notbynOpenPromise: Promise<YConditionalResult> | null;
     notbynOpenTimeout: any;
@@ -3378,7 +3372,7 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     nextAsyncId: number;
     _reconnectionTimer: null;
     _connectionTime: number;
-    _connectionState: number;
+    _connectionState: WSConnState;
     _remoteVersion: number;
     _remoteSerial: string;
     _remoteNonce: number;
@@ -3539,34 +3533,49 @@ export declare class YAPIContext {
     _deviceListValidityMs: number;
     defaultEncoding: string;
     exceptionsDisabled: boolean;
+    readonly SUCCESS: number;
+    readonly NOT_INITIALIZED: number;
+    readonly INVALID_ARGUMENT: number;
+    readonly NOT_SUPPORTED: number;
+    readonly DEVICE_NOT_FOUND: number;
+    readonly VERSION_MISMATCH: number;
+    readonly DEVICE_BUSY: number;
+    readonly TIMEOUT: number;
+    readonly IO_ERROR: number;
+    readonly NO_MORE_DATA: number;
+    readonly EXHAUSTED: number;
+    readonly DOUBLE_ACCES: number;
+    readonly UNAUTHORIZED: number;
+    readonly RTC_NOT_READY: number;
+    readonly FILE_NOT_FOUND: number;
     defaultCacheValidity: number;
-    INVALID_INT: number;
-    INVALID_UINT: number;
-    INVALID_LONG: number;
-    INVALID_DOUBLE: number;
-    MIN_DOUBLE: number;
-    MAX_DOUBLE: number;
-    INVALID_STRING: string;
-    HASH_BUF_SIZE: number;
-    SUCCESS: number;
-    NOT_INITIALIZED: number;
-    INVALID_ARGUMENT: number;
-    NOT_SUPPORTED: number;
-    DEVICE_NOT_FOUND: number;
-    VERSION_MISMATCH: number;
-    DEVICE_BUSY: number;
-    TIMEOUT: number;
-    IO_ERROR: number;
-    NO_MORE_DATA: number;
-    EXHAUSTED: number;
-    DOUBLE_ACCES: number;
-    UNAUTHORIZED: number;
-    RTC_NOT_READY: number;
-    FILE_NOT_FOUND: number;
-    DETECT_NONE: number;
-    DETECT_USB: number;
-    DETECT_NET: number;
-    DETECT_ALL: number;
+    static readonly SUCCESS: number;
+    static readonly NOT_INITIALIZED: number;
+    static readonly INVALID_ARGUMENT: number;
+    static readonly NOT_SUPPORTED: number;
+    static readonly DEVICE_NOT_FOUND: number;
+    static readonly VERSION_MISMATCH: number;
+    static readonly DEVICE_BUSY: number;
+    static readonly TIMEOUT: number;
+    static readonly IO_ERROR: number;
+    static readonly NO_MORE_DATA: number;
+    static readonly EXHAUSTED: number;
+    static readonly DOUBLE_ACCES: number;
+    static readonly UNAUTHORIZED: number;
+    static readonly RTC_NOT_READY: number;
+    static readonly FILE_NOT_FOUND: number;
+    readonly INVALID_INT: number;
+    readonly INVALID_UINT: number;
+    readonly INVALID_LONG: number;
+    readonly INVALID_DOUBLE: number;
+    readonly MIN_DOUBLE: number;
+    readonly MAX_DOUBLE: number;
+    readonly INVALID_STRING: string;
+    readonly HASH_BUF_SIZE: number;
+    readonly DETECT_NONE: number;
+    readonly DETECT_USB: number;
+    readonly DETECT_NET: number;
+    readonly DETECT_ALL: number;
     constructor(system_env?: YSystemEnv);
     imm_ResetToDefaults(): void;
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_humidity.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YHumidity definitions)
 //--- (YHumidity class start)
 /**
  * YHumidity Class: humidity sensor control interface, available for instance in the Yocto-CO2-V2, the
@@ -50,8 +49,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YHumidity class start)
 export class YHumidity extends YSensor {
     //--- (end of YHumidity attributes declaration)
-    //--- (YHumidity return codes)
-    //--- (end of YHumidity return codes)
     constructor(yapi, func) {
         //--- (YHumidity constructor)
         super(yapi, func);

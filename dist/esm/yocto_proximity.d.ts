@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_proximity.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -37,23 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YProximity_IsPresent {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export declare const enum YProximity_ProximityReportMode {
-    NUMERIC = 0,
-    PRESENCE = 1,
-    PULSECOUNT = 2,
-    INVALID = -1
-}
-export interface YProximityValueCallback {
-    (func: YProximity, value: string): void;
-}
-export interface YProximityTimedReportCallback {
-    (func: YProximity, measure: YMeasure): void;
-}
 /**
  * YProximity Class: proximity sensor control interface, available for instance in the Yocto-Proximity
  *
@@ -70,46 +53,46 @@ export declare class YProximity extends YSensor {
     _detectionHysteresis: number;
     _presenceMinTime: number;
     _removalMinTime: number;
-    _isPresent: YProximity_IsPresent;
+    _isPresent: YProximity.ISPRESENT;
     _lastTimeApproached: number;
     _lastTimeRemoved: number;
     _pulseCounter: number;
     _pulseTimer: number;
-    _proximityReportMode: YProximity_ProximityReportMode;
-    _valueCallbackProximity: YProximityValueCallback | null;
-    _timedReportCallbackProximity: YProximityTimedReportCallback | null;
+    _proximityReportMode: YProximity.PROXIMITYREPORTMODE;
+    _valueCallbackProximity: YProximity.ValueCallback | null;
+    _timedReportCallbackProximity: YProximity.TimedReportCallback | null;
     readonly SIGNALVALUE_INVALID: number;
     readonly DETECTIONTHRESHOLD_INVALID: number;
     readonly DETECTIONHYSTERESIS_INVALID: number;
     readonly PRESENCEMINTIME_INVALID: number;
     readonly REMOVALMINTIME_INVALID: number;
-    readonly ISPRESENT_FALSE: YProximity_IsPresent;
-    readonly ISPRESENT_TRUE: YProximity_IsPresent;
-    readonly ISPRESENT_INVALID: YProximity_IsPresent;
+    readonly ISPRESENT_FALSE: YProximity.ISPRESENT;
+    readonly ISPRESENT_TRUE: YProximity.ISPRESENT;
+    readonly ISPRESENT_INVALID: YProximity.ISPRESENT;
     readonly LASTTIMEAPPROACHED_INVALID: number;
     readonly LASTTIMEREMOVED_INVALID: number;
     readonly PULSECOUNTER_INVALID: number;
     readonly PULSETIMER_INVALID: number;
-    readonly PROXIMITYREPORTMODE_NUMERIC: YProximity_ProximityReportMode;
-    readonly PROXIMITYREPORTMODE_PRESENCE: YProximity_ProximityReportMode;
-    readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity_ProximityReportMode;
-    readonly PROXIMITYREPORTMODE_INVALID: YProximity_ProximityReportMode;
+    readonly PROXIMITYREPORTMODE_NUMERIC: YProximity.PROXIMITYREPORTMODE;
+    readonly PROXIMITYREPORTMODE_PRESENCE: YProximity.PROXIMITYREPORTMODE;
+    readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity.PROXIMITYREPORTMODE;
+    readonly PROXIMITYREPORTMODE_INVALID: YProximity.PROXIMITYREPORTMODE;
     static readonly SIGNALVALUE_INVALID: number;
     static readonly DETECTIONTHRESHOLD_INVALID: number;
     static readonly DETECTIONHYSTERESIS_INVALID: number;
     static readonly PRESENCEMINTIME_INVALID: number;
     static readonly REMOVALMINTIME_INVALID: number;
-    static readonly ISPRESENT_FALSE: YProximity_IsPresent;
-    static readonly ISPRESENT_TRUE: YProximity_IsPresent;
-    static readonly ISPRESENT_INVALID: YProximity_IsPresent;
+    static readonly ISPRESENT_FALSE: YProximity.ISPRESENT;
+    static readonly ISPRESENT_TRUE: YProximity.ISPRESENT;
+    static readonly ISPRESENT_INVALID: YProximity.ISPRESENT;
     static readonly LASTTIMEAPPROACHED_INVALID: number;
     static readonly LASTTIMEREMOVED_INVALID: number;
     static readonly PULSECOUNTER_INVALID: number;
     static readonly PULSETIMER_INVALID: number;
-    static readonly PROXIMITYREPORTMODE_NUMERIC: YProximity_ProximityReportMode;
-    static readonly PROXIMITYREPORTMODE_PRESENCE: YProximity_ProximityReportMode;
-    static readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity_ProximityReportMode;
-    static readonly PROXIMITYREPORTMODE_INVALID: YProximity_ProximityReportMode;
+    static readonly PROXIMITYREPORTMODE_NUMERIC: YProximity.PROXIMITYREPORTMODE;
+    static readonly PROXIMITYREPORTMODE_PRESENCE: YProximity.PROXIMITYREPORTMODE;
+    static readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity.PROXIMITYREPORTMODE;
+    static readonly PROXIMITYREPORTMODE_INVALID: YProximity.PROXIMITYREPORTMODE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -222,7 +205,7 @@ export declare class YProximity extends YSensor {
      *
      * On failure, throws an exception or returns YProximity.ISPRESENT_INVALID.
      */
-    get_isPresent(): Promise<YProximity_IsPresent>;
+    get_isPresent(): Promise<YProximity.ISPRESENT>;
     /**
      * Returns the number of elapsed milliseconds between the module power on and the last observed
      * detection (the input contact transitioned from absent to present).
@@ -274,7 +257,7 @@ export declare class YProximity extends YSensor {
      *
      * On failure, throws an exception or returns YProximity.PROXIMITYREPORTMODE_INVALID.
      */
-    get_proximityReportMode(): Promise<YProximity_ProximityReportMode>;
+    get_proximityReportMode(): Promise<YProximity.PROXIMITYREPORTMODE>;
     /**
      * Changes the  parameter  type (sensor value, presence or pulse count) returned by the
      * get_currentValue function and callbacks.
@@ -291,7 +274,7 @@ export declare class YProximity extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_proximityReportMode(newval: YProximity_ProximityReportMode): Promise<number>;
+    set_proximityReportMode(newval: YProximity.PROXIMITYREPORTMODE): Promise<number>;
     /**
      * Retrieves a proximity sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -358,7 +341,7 @@ export declare class YProximity extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YProximityValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YProximity.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -371,7 +354,7 @@ export declare class YProximity extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YProximityTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YProximity.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Resets the pulse counter value as well as its timer.
@@ -414,4 +397,23 @@ export declare class YProximity extends YSensor {
      *         if there are none.
      */
     static FirstProximityInContext(yctx: YAPIContext): YProximity | null;
+}
+export declare namespace YProximity {
+    const enum ISPRESENT {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    const enum PROXIMITYREPORTMODE {
+        NUMERIC = 0,
+        PRESENCE = 1,
+        PULSECOUNT = 2,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YProximity, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YProximity, measure: YMeasure): void;
+    }
 }

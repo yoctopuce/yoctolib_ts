@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_daisychain.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_daisychain.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -37,17 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export declare const enum YDaisyChain_DaisyState {
-    READY = 0,
-    IS_CHILD = 1,
-    FIRMWARE_MISMATCH = 2,
-    CHILD_MISSING = 3,
-    CHILD_LOST = 4,
-    INVALID = -1
-}
-export interface YDaisyChainValueCallback {
-    (func: YDaisyChain, value: string): void;
-}
 /**
  * YDaisyChain Class: Module chain configuration interface
  *
@@ -57,24 +46,24 @@ export interface YDaisyChainValueCallback {
  */
 export declare class YDaisyChain extends YFunction {
     _className: string;
-    _daisyState: YDaisyChain_DaisyState;
+    _daisyState: YDaisyChain.DAISYSTATE;
     _childCount: number;
     _requiredChildCount: number;
-    _valueCallbackDaisyChain: YDaisyChainValueCallback | null;
-    readonly DAISYSTATE_READY: YDaisyChain_DaisyState;
-    readonly DAISYSTATE_IS_CHILD: YDaisyChain_DaisyState;
-    readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain_DaisyState;
-    readonly DAISYSTATE_CHILD_MISSING: YDaisyChain_DaisyState;
-    readonly DAISYSTATE_CHILD_LOST: YDaisyChain_DaisyState;
-    readonly DAISYSTATE_INVALID: YDaisyChain_DaisyState;
+    _valueCallbackDaisyChain: YDaisyChain.ValueCallback | null;
+    readonly DAISYSTATE_READY: YDaisyChain.DAISYSTATE;
+    readonly DAISYSTATE_IS_CHILD: YDaisyChain.DAISYSTATE;
+    readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain.DAISYSTATE;
+    readonly DAISYSTATE_CHILD_MISSING: YDaisyChain.DAISYSTATE;
+    readonly DAISYSTATE_CHILD_LOST: YDaisyChain.DAISYSTATE;
+    readonly DAISYSTATE_INVALID: YDaisyChain.DAISYSTATE;
     readonly CHILDCOUNT_INVALID: number;
     readonly REQUIREDCHILDCOUNT_INVALID: number;
-    static readonly DAISYSTATE_READY: YDaisyChain_DaisyState;
-    static readonly DAISYSTATE_IS_CHILD: YDaisyChain_DaisyState;
-    static readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain_DaisyState;
-    static readonly DAISYSTATE_CHILD_MISSING: YDaisyChain_DaisyState;
-    static readonly DAISYSTATE_CHILD_LOST: YDaisyChain_DaisyState;
-    static readonly DAISYSTATE_INVALID: YDaisyChain_DaisyState;
+    static readonly DAISYSTATE_READY: YDaisyChain.DAISYSTATE;
+    static readonly DAISYSTATE_IS_CHILD: YDaisyChain.DAISYSTATE;
+    static readonly DAISYSTATE_FIRMWARE_MISMATCH: YDaisyChain.DAISYSTATE;
+    static readonly DAISYSTATE_CHILD_MISSING: YDaisyChain.DAISYSTATE;
+    static readonly DAISYSTATE_CHILD_LOST: YDaisyChain.DAISYSTATE;
+    static readonly DAISYSTATE_INVALID: YDaisyChain.DAISYSTATE;
     static readonly CHILDCOUNT_INVALID: number;
     static readonly REQUIREDCHILDCOUNT_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
@@ -88,7 +77,7 @@ export declare class YDaisyChain extends YFunction {
      *
      * On failure, throws an exception or returns YDaisyChain.DAISYSTATE_INVALID.
      */
-    get_daisyState(): Promise<YDaisyChain_DaisyState>;
+    get_daisyState(): Promise<YDaisyChain.DAISYSTATE>;
     /**
      * Returns the number of child nodes currently detected.
      *
@@ -185,7 +174,7 @@ export declare class YDaisyChain extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YDaisyChainValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YDaisyChain.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Continues the enumeration of module chains started using yFirstDaisyChain().
@@ -220,4 +209,17 @@ export declare class YDaisyChain extends YFunction {
      *         if there are none.
      */
     static FirstDaisyChainInContext(yctx: YAPIContext): YDaisyChain | null;
+}
+export declare namespace YDaisyChain {
+    const enum DAISYSTATE {
+        READY = 0,
+        IS_CHILD = 1,
+        FIRMWARE_MISMATCH = 2,
+        CHILD_MISSING = 3,
+        CHILD_LOST = 4,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YDaisyChain, value: string): void;
+    }
 }

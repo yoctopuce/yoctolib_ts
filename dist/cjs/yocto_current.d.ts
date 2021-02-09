@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_current.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Current functions
  *
@@ -37,17 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export declare const enum YCurrent_Enabled {
-    FALSE = 0,
-    TRUE = 1,
-    INVALID = -1
-}
-export interface YCurrentValueCallback {
-    (func: YCurrent, value: string): void;
-}
-export interface YCurrentTimedReportCallback {
-    (func: YCurrent, measure: YMeasure): void;
-}
 /**
  * YCurrent Class: current sensor control interface, available for instance in the Yocto-Amp, the
  * Yocto-Motor-DC or the Yocto-Watt
@@ -58,15 +47,15 @@ export interface YCurrentTimedReportCallback {
  */
 export declare class YCurrent extends YSensor {
     _className: string;
-    _enabled: YCurrent_Enabled;
-    _valueCallbackCurrent: YCurrentValueCallback | null;
-    _timedReportCallbackCurrent: YCurrentTimedReportCallback | null;
-    readonly ENABLED_FALSE: YCurrent_Enabled;
-    readonly ENABLED_TRUE: YCurrent_Enabled;
-    readonly ENABLED_INVALID: YCurrent_Enabled;
-    static readonly ENABLED_FALSE: YCurrent_Enabled;
-    static readonly ENABLED_TRUE: YCurrent_Enabled;
-    static readonly ENABLED_INVALID: YCurrent_Enabled;
+    _enabled: YCurrent.ENABLED;
+    _valueCallbackCurrent: YCurrent.ValueCallback | null;
+    _timedReportCallbackCurrent: YCurrent.TimedReportCallback | null;
+    readonly ENABLED_FALSE: YCurrent.ENABLED;
+    readonly ENABLED_TRUE: YCurrent.ENABLED;
+    readonly ENABLED_INVALID: YCurrent.ENABLED;
+    static readonly ENABLED_FALSE: YCurrent.ENABLED;
+    static readonly ENABLED_TRUE: YCurrent.ENABLED;
+    static readonly ENABLED_INVALID: YCurrent.ENABLED;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -76,7 +65,7 @@ export declare class YCurrent extends YSensor {
      *
      * On failure, throws an exception or returns YCurrent.ENABLED_INVALID.
      */
-    get_enabled(): Promise<YCurrent_Enabled>;
+    get_enabled(): Promise<YCurrent.ENABLED>;
     /**
      * Changes the activation state of this voltage input. When AC measurements are disabled,
      * the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
@@ -92,7 +81,7 @@ export declare class YCurrent extends YSensor {
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    set_enabled(newval: YCurrent_Enabled): Promise<number>;
+    set_enabled(newval: YCurrent.ENABLED): Promise<number>;
     /**
      * Retrieves a current sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -159,7 +148,7 @@ export declare class YCurrent extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YCurrentValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YCurrent.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -172,7 +161,7 @@ export declare class YCurrent extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YCurrentTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YCurrent.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Continues the enumeration of current sensors started using yFirstCurrent().
@@ -207,4 +196,17 @@ export declare class YCurrent extends YSensor {
      *         if there are none.
      */
     static FirstCurrentInContext(yctx: YAPIContext): YCurrent | null;
+}
+export declare namespace YCurrent {
+    const enum ENABLED {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+    interface ValueCallback {
+        (func: YCurrent, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YCurrent, measure: YMeasure): void;
+    }
 }

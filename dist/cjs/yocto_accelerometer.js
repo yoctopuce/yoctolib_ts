@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_accelerometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YAccelerometer = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YAccelerometer definitions)
 //--- (YAccelerometer class start)
 /**
  * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2 or
@@ -55,8 +54,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YAccelerometer class start)
 class YAccelerometer extends yocto_api_js_1.YSensor {
     //--- (end of YAccelerometer attributes declaration)
-    //--- (YAccelerometer return codes)
-    //--- (end of YAccelerometer return codes)
     constructor(yapi, func) {
         //--- (YAccelerometer constructor)
         super(yapi, func);
@@ -72,9 +69,9 @@ class YAccelerometer extends yocto_api_js_1.YSensor {
         this.XVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.YVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.ZVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-        this.GRAVITYCANCELLATION_OFF = 0 /* OFF */;
-        this.GRAVITYCANCELLATION_ON = 1 /* ON */;
-        this.GRAVITYCANCELLATION_INVALID = -1 /* INVALID */;
+        this.GRAVITYCANCELLATION_OFF = 0;
+        this.GRAVITYCANCELLATION_ON = 1;
+        this.GRAVITYCANCELLATION_INVALID = -1;
         this._className = 'Accelerometer';
         //--- (end of YAccelerometer constructor)
     }
@@ -408,7 +405,7 @@ YAccelerometer.BANDWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YAccelerometer.XVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YAccelerometer.YVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YAccelerometer.ZVALUE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-YAccelerometer.GRAVITYCANCELLATION_OFF = 0 /* OFF */;
-YAccelerometer.GRAVITYCANCELLATION_ON = 1 /* ON */;
-YAccelerometer.GRAVITYCANCELLATION_INVALID = -1 /* INVALID */;
+YAccelerometer.GRAVITYCANCELLATION_OFF = 0;
+YAccelerometer.GRAVITYCANCELLATION_ON = 1;
+YAccelerometer.GRAVITYCANCELLATION_INVALID = -1;
 //# sourceMappingURL=yocto_accelerometer.js.map

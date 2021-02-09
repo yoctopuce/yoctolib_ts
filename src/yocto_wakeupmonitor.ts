@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_wakeupmonitor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -39,24 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YWakeUpMonitor definitions)
-export const enum YWakeUpMonitor_WakeUpReason {
-    USBPOWER = 0,
-    EXTPOWER = 1,
-    ENDOFSLEEP = 2,
-    EXTSIG1 = 3,
-    SCHEDULE1 = 4,
-    SCHEDULE2 = 5,
-    INVALID = -1
-}
-export const enum YWakeUpMonitor_WakeUpState {
-    SLEEPING = 0,
-    AWAKE = 1,
-    INVALID = -1
-}
-export interface YWakeUpMonitorValueCallback { (func: YWakeUpMonitor, value: string): void }
-//--- (end of YWakeUpMonitor definitions)
-
 //--- (YWakeUpMonitor class start)
 /**
  * YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
@@ -74,47 +56,44 @@ export class YWakeUpMonitor extends YFunction
     _powerDuration: number = YWakeUpMonitor.POWERDURATION_INVALID;
     _sleepCountdown: number = YWakeUpMonitor.SLEEPCOUNTDOWN_INVALID;
     _nextWakeUp: number = YWakeUpMonitor.NEXTWAKEUP_INVALID;
-    _wakeUpReason: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor.WAKEUPREASON_INVALID;
-    _wakeUpState: YWakeUpMonitor_WakeUpState = YWakeUpMonitor.WAKEUPSTATE_INVALID;
+    _wakeUpReason: YWakeUpMonitor.WAKEUPREASON = YWakeUpMonitor.WAKEUPREASON_INVALID;
+    _wakeUpState: YWakeUpMonitor.WAKEUPSTATE = YWakeUpMonitor.WAKEUPSTATE_INVALID;
     _rtcTime: number = YWakeUpMonitor.RTCTIME_INVALID;
     _endOfTime: number = 2145960000;
-    _valueCallbackWakeUpMonitor: YWakeUpMonitorValueCallback | null = null;
+    _valueCallbackWakeUpMonitor: YWakeUpMonitor.ValueCallback | null = null;
 
     // API symbols as object properties
     public readonly POWERDURATION_INVALID: number = YAPI.INVALID_UINT;
     public readonly SLEEPCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
     public readonly NEXTWAKEUP_INVALID: number = YAPI.INVALID_LONG;
-    public readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.USBPOWER;
-    public readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTPOWER;
-    public readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.ENDOFSLEEP;
-    public readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTSIG1;
-    public readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE1;
-    public readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE2;
-    public readonly WAKEUPREASON_INVALID: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.INVALID;
-    public readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.SLEEPING;
-    public readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.AWAKE;
-    public readonly WAKEUPSTATE_INVALID: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.INVALID;
+    public readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor.WAKEUPREASON = 0;
+    public readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor.WAKEUPREASON = 1;
+    public readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor.WAKEUPREASON = 2;
+    public readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON = 3;
+    public readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON = 4;
+    public readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON = 5;
+    public readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON = -1;
+    public readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE = 0;
+    public readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE = 1;
+    public readonly WAKEUPSTATE_INVALID: YWakeUpMonitor.WAKEUPSTATE = -1;
     public readonly RTCTIME_INVALID: number = YAPI.INVALID_LONG;
 
     // API symbols as static members
     public static readonly POWERDURATION_INVALID: number = YAPI.INVALID_UINT;
     public static readonly SLEEPCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
     public static readonly NEXTWAKEUP_INVALID: number = YAPI.INVALID_LONG;
-    public static readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.USBPOWER;
-    public static readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTPOWER;
-    public static readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.ENDOFSLEEP;
-    public static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.EXTSIG1;
-    public static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE1;
-    public static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.SCHEDULE2;
-    public static readonly WAKEUPREASON_INVALID: YWakeUpMonitor_WakeUpReason = YWakeUpMonitor_WakeUpReason.INVALID;
-    public static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.SLEEPING;
-    public static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.AWAKE;
-    public static readonly WAKEUPSTATE_INVALID: YWakeUpMonitor_WakeUpState = YWakeUpMonitor_WakeUpState.INVALID;
+    public static readonly WAKEUPREASON_USBPOWER: YWakeUpMonitor.WAKEUPREASON = 0;
+    public static readonly WAKEUPREASON_EXTPOWER: YWakeUpMonitor.WAKEUPREASON = 1;
+    public static readonly WAKEUPREASON_ENDOFSLEEP: YWakeUpMonitor.WAKEUPREASON = 2;
+    public static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON = 3;
+    public static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON = 4;
+    public static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON = 5;
+    public static readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON = -1;
+    public static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE = 0;
+    public static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE = 1;
+    public static readonly WAKEUPSTATE_INVALID: YWakeUpMonitor.WAKEUPSTATE = -1;
     public static readonly RTCTIME_INVALID: number = YAPI.INVALID_LONG;
     //--- (end of YWakeUpMonitor attributes declaration)
-
-//--- (YWakeUpMonitor return codes)
-//--- (end of YWakeUpMonitor return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -139,10 +118,10 @@ export class YWakeUpMonitor extends YFunction
             this._nextWakeUp = <number> <number> val;
             return 1;
         case 'wakeUpReason':
-            this._wakeUpReason = <YWakeUpMonitor_WakeUpReason> <number> val;
+            this._wakeUpReason = <YWakeUpMonitor.WAKEUPREASON> <number> val;
             return 1;
         case 'wakeUpState':
-            this._wakeUpState = <YWakeUpMonitor_WakeUpState> <number> val;
+            this._wakeUpState = <YWakeUpMonitor.WAKEUPSTATE> <number> val;
             return 1;
         case 'rtcTime':
             this._rtcTime = <number> <number> val;
@@ -269,7 +248,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
-    async get_wakeUpReason(): Promise<YWakeUpMonitor_WakeUpReason>
+    async get_wakeUpReason(): Promise<YWakeUpMonitor.WAKEUPREASON>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -289,7 +268,7 @@ export class YWakeUpMonitor extends YFunction
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPSTATE_INVALID.
      */
-    async get_wakeUpState(): Promise<YWakeUpMonitor_WakeUpState>
+    async get_wakeUpState(): Promise<YWakeUpMonitor.WAKEUPSTATE>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -301,7 +280,7 @@ export class YWakeUpMonitor extends YFunction
         return res;
     }
 
-    async set_wakeUpState(newval: YWakeUpMonitor_WakeUpState): Promise<number>
+    async set_wakeUpState(newval: YWakeUpMonitor.WAKEUPSTATE): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -406,7 +385,7 @@ export class YWakeUpMonitor extends YFunction
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YWakeUpMonitorValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YWakeUpMonitor.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -584,5 +563,25 @@ export class YWakeUpMonitor extends YFunction
     }
 
     //--- (end of YWakeUpMonitor implementation)
+}
+
+export namespace YWakeUpMonitor {
+    //--- (YWakeUpMonitor definitions)
+    export const enum WAKEUPREASON {
+        USBPOWER = 0,
+        EXTPOWER = 1,
+        ENDOFSLEEP = 2,
+        EXTSIG1 = 3,
+        SCHEDULE1 = 4,
+        SCHEDULE2 = 5,
+        INVALID = -1
+    }
+    export const enum WAKEUPSTATE {
+        SLEEPING = 0,
+        AWAKE = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YWakeUpMonitor, value: string): void }
+    //--- (end of YWakeUpMonitor definitions)
 }
 

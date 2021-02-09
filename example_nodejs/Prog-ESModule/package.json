@@ -1,0 +1,12 @@
+{
+  "name": "doc-gettingstarted-prog-esmodule",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-ESModule",
+  "type": "module",
+  "scripts": {
+    "demo": "tsc && node --enable-source-maps demo.js"
+  },
+  "dependencies": {
+    "yoctolib-esm": "file:../../dist/esm"
+  }
+}

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YCurrentLoopOutput definitions)
 //--- (YCurrentLoopOutput class start)
 /**
  * YCurrentLoopOutput Class: 4-20mA output control interface, available for instance in the Yocto-4-20mA-Tx
@@ -49,8 +48,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YCurrentLoopOutput class start)
 export class YCurrentLoopOutput extends YFunction {
     //--- (end of YCurrentLoopOutput attributes declaration)
-    //--- (YCurrentLoopOutput return codes)
-    //--- (end of YCurrentLoopOutput return codes)
     constructor(yapi, func) {
         //--- (YCurrentLoopOutput constructor)
         super(yapi, func);
@@ -63,10 +60,10 @@ export class YCurrentLoopOutput extends YFunction {
         this.CURRENT_INVALID = YAPI.INVALID_DOUBLE;
         this.CURRENTTRANSITION_INVALID = YAPI.INVALID_STRING;
         this.CURRENTATSTARTUP_INVALID = YAPI.INVALID_DOUBLE;
-        this.LOOPPOWER_NOPWR = 0 /* NOPWR */;
-        this.LOOPPOWER_LOWPWR = 1 /* LOWPWR */;
-        this.LOOPPOWER_POWEROK = 2 /* POWEROK */;
-        this.LOOPPOWER_INVALID = -1 /* INVALID */;
+        this.LOOPPOWER_NOPWR = 0;
+        this.LOOPPOWER_LOWPWR = 1;
+        this.LOOPPOWER_POWEROK = 2;
+        this.LOOPPOWER_INVALID = -1;
         this._className = 'CurrentLoopOutput';
         //--- (end of YCurrentLoopOutput constructor)
     }
@@ -379,8 +376,8 @@ export class YCurrentLoopOutput extends YFunction {
 YCurrentLoopOutput.CURRENT_INVALID = YAPI.INVALID_DOUBLE;
 YCurrentLoopOutput.CURRENTTRANSITION_INVALID = YAPI.INVALID_STRING;
 YCurrentLoopOutput.CURRENTATSTARTUP_INVALID = YAPI.INVALID_DOUBLE;
-YCurrentLoopOutput.LOOPPOWER_NOPWR = 0 /* NOPWR */;
-YCurrentLoopOutput.LOOPPOWER_LOWPWR = 1 /* LOWPWR */;
-YCurrentLoopOutput.LOOPPOWER_POWEROK = 2 /* POWEROK */;
-YCurrentLoopOutput.LOOPPOWER_INVALID = -1 /* INVALID */;
+YCurrentLoopOutput.LOOPPOWER_NOPWR = 0;
+YCurrentLoopOutput.LOOPPOWER_LOWPWR = 1;
+YCurrentLoopOutput.LOOPPOWER_POWEROK = 2;
+YCurrentLoopOutput.LOOPPOWER_INVALID = -1;
 //# sourceMappingURL=yocto_currentloopoutput.js.map

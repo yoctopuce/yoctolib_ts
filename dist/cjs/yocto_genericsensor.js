@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YGenericSensor = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YGenericSensor definitions)
 //--- (YGenericSensor class start)
 /**
  * YGenericSensor Class: GenericSensor control interface, available for instance in the
@@ -55,8 +54,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YGenericSensor class start)
 class YGenericSensor extends yocto_api_js_1.YSensor {
     //--- (end of YGenericSensor attributes declaration)
-    //--- (YGenericSensor return codes)
-    //--- (end of YGenericSensor return codes)
     constructor(yapi, func) {
         //--- (YGenericSensor constructor)
         super(yapi, func);
@@ -75,15 +72,15 @@ class YGenericSensor extends yocto_api_js_1.YSensor {
         this.SIGNALRANGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.VALUERANGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.SIGNALBIAS_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-        this.SIGNALSAMPLING_HIGH_RATE = 0 /* HIGH_RATE */;
-        this.SIGNALSAMPLING_HIGH_RATE_FILTERED = 1 /* HIGH_RATE_FILTERED */;
-        this.SIGNALSAMPLING_LOW_NOISE = 2 /* LOW_NOISE */;
-        this.SIGNALSAMPLING_LOW_NOISE_FILTERED = 3 /* LOW_NOISE_FILTERED */;
-        this.SIGNALSAMPLING_HIGHEST_RATE = 4 /* HIGHEST_RATE */;
-        this.SIGNALSAMPLING_INVALID = -1 /* INVALID */;
-        this.ENABLED_FALSE = 0 /* FALSE */;
-        this.ENABLED_TRUE = 1 /* TRUE */;
-        this.ENABLED_INVALID = -1 /* INVALID */;
+        this.SIGNALSAMPLING_HIGH_RATE = 0;
+        this.SIGNALSAMPLING_HIGH_RATE_FILTERED = 1;
+        this.SIGNALSAMPLING_LOW_NOISE = 2;
+        this.SIGNALSAMPLING_LOW_NOISE_FILTERED = 3;
+        this.SIGNALSAMPLING_HIGHEST_RATE = 4;
+        this.SIGNALSAMPLING_INVALID = -1;
+        this.ENABLED_FALSE = 0;
+        this.ENABLED_TRUE = 1;
+        this.ENABLED_INVALID = -1;
         this._className = 'GenericSensor';
         //--- (end of YGenericSensor constructor)
     }
@@ -595,13 +592,13 @@ YGenericSensor.SIGNALUNIT_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YGenericSensor.SIGNALRANGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YGenericSensor.VALUERANGE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YGenericSensor.SIGNALBIAS_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-YGenericSensor.SIGNALSAMPLING_HIGH_RATE = 0 /* HIGH_RATE */;
-YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED = 1 /* HIGH_RATE_FILTERED */;
-YGenericSensor.SIGNALSAMPLING_LOW_NOISE = 2 /* LOW_NOISE */;
-YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED = 3 /* LOW_NOISE_FILTERED */;
-YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE = 4 /* HIGHEST_RATE */;
-YGenericSensor.SIGNALSAMPLING_INVALID = -1 /* INVALID */;
-YGenericSensor.ENABLED_FALSE = 0 /* FALSE */;
-YGenericSensor.ENABLED_TRUE = 1 /* TRUE */;
-YGenericSensor.ENABLED_INVALID = -1 /* INVALID */;
+YGenericSensor.SIGNALSAMPLING_HIGH_RATE = 0;
+YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED = 1;
+YGenericSensor.SIGNALSAMPLING_LOW_NOISE = 2;
+YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED = 3;
+YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE = 4;
+YGenericSensor.SIGNALSAMPLING_INVALID = -1;
+YGenericSensor.ENABLED_FALSE = 0;
+YGenericSensor.ENABLED_TRUE = 1;
+YGenericSensor.ENABLED_INVALID = -1;
 //# sourceMappingURL=yocto_genericsensor.js.map

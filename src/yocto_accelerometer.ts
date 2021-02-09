@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_accelerometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -39,16 +39,6 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YAccelerometer definitions)
-export const enum YAccelerometer_GravityCancellation {
-    OFF = 0,
-    ON = 1,
-    INVALID = -1
-}
-export interface YAccelerometerValueCallback { (func: YAccelerometer, value: string): void }
-export interface YAccelerometerTimedReportCallback { (func: YAccelerometer, measure: YMeasure): void }
-//--- (end of YAccelerometer definitions)
-
 //--- (YAccelerometer class start)
 /**
  * YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2 or
@@ -70,31 +60,28 @@ export class YAccelerometer extends YSensor
     _xValue: number = YAccelerometer.XVALUE_INVALID;
     _yValue: number = YAccelerometer.YVALUE_INVALID;
     _zValue: number = YAccelerometer.ZVALUE_INVALID;
-    _gravityCancellation: YAccelerometer_GravityCancellation = YAccelerometer.GRAVITYCANCELLATION_INVALID;
-    _valueCallbackAccelerometer: YAccelerometerValueCallback | null = null;
-    _timedReportCallbackAccelerometer: YAccelerometerTimedReportCallback | null = null;
+    _gravityCancellation: YAccelerometer.GRAVITYCANCELLATION = YAccelerometer.GRAVITYCANCELLATION_INVALID;
+    _valueCallbackAccelerometer: YAccelerometer.ValueCallback | null = null;
+    _timedReportCallbackAccelerometer: YAccelerometer.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly XVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly YVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly ZVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly GRAVITYCANCELLATION_OFF: YAccelerometer_GravityCancellation = YAccelerometer_GravityCancellation.OFF;
-    public readonly GRAVITYCANCELLATION_ON: YAccelerometer_GravityCancellation = YAccelerometer_GravityCancellation.ON;
-    public readonly GRAVITYCANCELLATION_INVALID: YAccelerometer_GravityCancellation = YAccelerometer_GravityCancellation.INVALID;
+    public readonly GRAVITYCANCELLATION_OFF: YAccelerometer.GRAVITYCANCELLATION = 0;
+    public readonly GRAVITYCANCELLATION_ON: YAccelerometer.GRAVITYCANCELLATION = 1;
+    public readonly GRAVITYCANCELLATION_INVALID: YAccelerometer.GRAVITYCANCELLATION = -1;
 
     // API symbols as static members
     public static readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly XVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly YVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly ZVALUE_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly GRAVITYCANCELLATION_OFF: YAccelerometer_GravityCancellation = YAccelerometer_GravityCancellation.OFF;
-    public static readonly GRAVITYCANCELLATION_ON: YAccelerometer_GravityCancellation = YAccelerometer_GravityCancellation.ON;
-    public static readonly GRAVITYCANCELLATION_INVALID: YAccelerometer_GravityCancellation = YAccelerometer_GravityCancellation.INVALID;
+    public static readonly GRAVITYCANCELLATION_OFF: YAccelerometer.GRAVITYCANCELLATION = 0;
+    public static readonly GRAVITYCANCELLATION_ON: YAccelerometer.GRAVITYCANCELLATION = 1;
+    public static readonly GRAVITYCANCELLATION_INVALID: YAccelerometer.GRAVITYCANCELLATION = -1;
     //--- (end of YAccelerometer attributes declaration)
-
-//--- (YAccelerometer return codes)
-//--- (end of YAccelerometer return codes)
 
     constructor(yapi: YAPIContext, func: string)
     {
@@ -122,7 +109,7 @@ export class YAccelerometer extends YSensor
             this._zValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
             return 1;
         case 'gravityCancellation':
-            this._gravityCancellation = <YAccelerometer_GravityCancellation> <number> val;
+            this._gravityCancellation = <YAccelerometer.GRAVITYCANCELLATION> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -223,7 +210,7 @@ export class YAccelerometer extends YSensor
         return res;
     }
 
-    async get_gravityCancellation(): Promise<YAccelerometer_GravityCancellation>
+    async get_gravityCancellation(): Promise<YAccelerometer.GRAVITYCANCELLATION>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
@@ -235,7 +222,7 @@ export class YAccelerometer extends YSensor
         return res;
     }
 
-    async set_gravityCancellation(newval: YAccelerometer_GravityCancellation): Promise<number>
+    async set_gravityCancellation(newval: YAccelerometer.GRAVITYCANCELLATION): Promise<number>
     {
         let rest_val: string;
         rest_val = String(newval);
@@ -328,7 +315,7 @@ export class YAccelerometer extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerValueCallback(callback: YAccelerometerValueCallback | null): Promise<number>
+    async registerValueCallback(callback: YAccelerometer.ValueCallback | null): Promise<number>
     {
         let val: string;
         if (callback != null) {
@@ -372,7 +359,7 @@ export class YAccelerometer extends YSensor
      *         the new advertised value.
      * @noreturn
      */
-    async registerTimedReportCallback(callback: YAccelerometerTimedReportCallback | null): Promise<number>
+    async registerTimedReportCallback(callback: YAccelerometer.TimedReportCallback | null): Promise<number>
     {
         let sensor: YSensor;
         sensor = this;
@@ -453,5 +440,16 @@ export class YAccelerometer extends YSensor
     }
 
     //--- (end of YAccelerometer implementation)
+}
+
+export namespace YAccelerometer {
+    //--- (YAccelerometer definitions)
+    export const enum GRAVITYCANCELLATION {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+    export interface ValueCallback { (func: YAccelerometer, value: string): void }    export interface TimedReportCallback { (func: YAccelerometer, measure: YMeasure): void }
+    //--- (end of YAccelerometer definitions)
 }
 

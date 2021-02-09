@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_voltageoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -37,9 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YFunction } from './yocto_api.js';
-export interface YVoltageOutputValueCallback {
-    (func: YVoltageOutput, value: string): void;
-}
 /**
  * YVoltageOutput Class: voltage output control interface, available for instance in the Yocto-0-10V-Tx
  *
@@ -50,7 +47,7 @@ export declare class YVoltageOutput extends YFunction {
     _currentVoltage: number;
     _voltageTransition: string;
     _voltageAtStartUp: number;
-    _valueCallbackVoltageOutput: YVoltageOutputValueCallback | null;
+    _valueCallbackVoltageOutput: YVoltageOutput.ValueCallback | null;
     readonly CURRENTVOLTAGE_INVALID: number;
     readonly VOLTAGETRANSITION_INVALID: string;
     readonly VOLTAGEATSTARTUP_INVALID: number;
@@ -164,7 +161,7 @@ export declare class YVoltageOutput extends YFunction {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YVoltageOutputValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YVoltageOutput.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Performs a smooth transition of output voltage. Any explicit voltage
@@ -210,4 +207,9 @@ export declare class YVoltageOutput extends YFunction {
      *         if there are none.
      */
     static FirstVoltageOutputInContext(yctx: YAPIContext): YVoltageOutput | null;
+}
+export declare namespace YVoltageOutput {
+    interface ValueCallback {
+        (func: YVoltageOutput, value: string): void;
+    }
 }

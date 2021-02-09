@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_power.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction, YSensor } from './yocto_api.js';
-//--- (end of YPower definitions)
 //--- (YPower class start)
 /**
  * YPower Class: electrical power sensor control interface, available for instance in the Yocto-Watt
@@ -50,8 +49,6 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
 //--- (end of YPower class start)
 export class YPower extends YSensor {
     //--- (end of YPower attributes declaration)
-    //--- (YPower return codes)
-    //--- (end of YPower return codes)
     constructor(yapi, func) {
         //--- (YPower constructor)
         super(yapi, func);

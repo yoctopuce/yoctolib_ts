@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_anbutton.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -37,7 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-//--- (end of YAnButton definitions)
 //--- (YAnButton class start)
 /**
  * YAnButton Class: analog input control interface, available for instance in the Yocto-Buzzer, the
@@ -54,8 +53,6 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (end of YAnButton class start)
 export class YAnButton extends YFunction {
     //--- (end of YAnButton attributes declaration)
-    //--- (YAnButton return codes)
-    //--- (end of YAnButton return codes)
     constructor(yapi, func) {
         //--- (YAnButton constructor)
         super(yapi, func);
@@ -75,23 +72,23 @@ export class YAnButton extends YFunction {
         // API symbols as object properties
         this.CALIBRATEDVALUE_INVALID = YAPI.INVALID_UINT;
         this.RAWVALUE_INVALID = YAPI.INVALID_UINT;
-        this.ANALOGCALIBRATION_OFF = 0 /* OFF */;
-        this.ANALOGCALIBRATION_ON = 1 /* ON */;
-        this.ANALOGCALIBRATION_INVALID = -1 /* INVALID */;
+        this.ANALOGCALIBRATION_OFF = 0;
+        this.ANALOGCALIBRATION_ON = 1;
+        this.ANALOGCALIBRATION_INVALID = -1;
         this.CALIBRATIONMAX_INVALID = YAPI.INVALID_UINT;
         this.CALIBRATIONMIN_INVALID = YAPI.INVALID_UINT;
         this.SENSITIVITY_INVALID = YAPI.INVALID_UINT;
-        this.ISPRESSED_FALSE = 0 /* FALSE */;
-        this.ISPRESSED_TRUE = 1 /* TRUE */;
-        this.ISPRESSED_INVALID = -1 /* INVALID */;
+        this.ISPRESSED_FALSE = 0;
+        this.ISPRESSED_TRUE = 1;
+        this.ISPRESSED_INVALID = -1;
         this.LASTTIMEPRESSED_INVALID = YAPI.INVALID_LONG;
         this.LASTTIMERELEASED_INVALID = YAPI.INVALID_LONG;
         this.PULSECOUNTER_INVALID = YAPI.INVALID_LONG;
         this.PULSETIMER_INVALID = YAPI.INVALID_LONG;
-        this.INPUTTYPE_ANALOG_FAST = 0 /* ANALOG_FAST */;
-        this.INPUTTYPE_DIGITAL4 = 1 /* DIGITAL4 */;
-        this.INPUTTYPE_ANALOG_SMOOTH = 2 /* ANALOG_SMOOTH */;
-        this.INPUTTYPE_INVALID = -1 /* INVALID */;
+        this.INPUTTYPE_ANALOG_FAST = 0;
+        this.INPUTTYPE_DIGITAL4 = 1;
+        this.INPUTTYPE_ANALOG_SMOOTH = 2;
+        this.INPUTTYPE_INVALID = -1;
         this._className = 'AnButton';
         //--- (end of YAnButton constructor)
     }
@@ -627,21 +624,21 @@ export class YAnButton extends YFunction {
 // API symbols as static members
 YAnButton.CALIBRATEDVALUE_INVALID = YAPI.INVALID_UINT;
 YAnButton.RAWVALUE_INVALID = YAPI.INVALID_UINT;
-YAnButton.ANALOGCALIBRATION_OFF = 0 /* OFF */;
-YAnButton.ANALOGCALIBRATION_ON = 1 /* ON */;
-YAnButton.ANALOGCALIBRATION_INVALID = -1 /* INVALID */;
+YAnButton.ANALOGCALIBRATION_OFF = 0;
+YAnButton.ANALOGCALIBRATION_ON = 1;
+YAnButton.ANALOGCALIBRATION_INVALID = -1;
 YAnButton.CALIBRATIONMAX_INVALID = YAPI.INVALID_UINT;
 YAnButton.CALIBRATIONMIN_INVALID = YAPI.INVALID_UINT;
 YAnButton.SENSITIVITY_INVALID = YAPI.INVALID_UINT;
-YAnButton.ISPRESSED_FALSE = 0 /* FALSE */;
-YAnButton.ISPRESSED_TRUE = 1 /* TRUE */;
-YAnButton.ISPRESSED_INVALID = -1 /* INVALID */;
+YAnButton.ISPRESSED_FALSE = 0;
+YAnButton.ISPRESSED_TRUE = 1;
+YAnButton.ISPRESSED_INVALID = -1;
 YAnButton.LASTTIMEPRESSED_INVALID = YAPI.INVALID_LONG;
 YAnButton.LASTTIMERELEASED_INVALID = YAPI.INVALID_LONG;
 YAnButton.PULSECOUNTER_INVALID = YAPI.INVALID_LONG;
 YAnButton.PULSETIMER_INVALID = YAPI.INVALID_LONG;
-YAnButton.INPUTTYPE_ANALOG_FAST = 0 /* ANALOG_FAST */;
-YAnButton.INPUTTYPE_DIGITAL4 = 1 /* DIGITAL4 */;
-YAnButton.INPUTTYPE_ANALOG_SMOOTH = 2 /* ANALOG_SMOOTH */;
-YAnButton.INPUTTYPE_INVALID = -1 /* INVALID */;
+YAnButton.INPUTTYPE_ANALOG_FAST = 0;
+YAnButton.INPUTTYPE_DIGITAL4 = 1;
+YAnButton.INPUTTYPE_ANALOG_SMOOTH = 2;
+YAnButton.INPUTTYPE_INVALID = -1;
 //# sourceMappingURL=yocto_anbutton.js.map

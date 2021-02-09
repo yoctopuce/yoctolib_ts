@@ -1,0 +1,16 @@
+{
+  "name": "prog-bundle",
+  "author": "Yoctopuce",
+  "description": "Yoctopuce Prog-Bundle example",
+  "scripts": {
+    "build": "tsc && npx esbuild app.js --bundle --sourcemap --minify --outfile=app.min.js",
+    "app-server": "node ../../bin/app-server.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "yoctolib-esm": "file:../../dist/esm"
+  },
+  "dev-dependencies": {
+    "esbuild": "^0.8.39"
+  }
+}

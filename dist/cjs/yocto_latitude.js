@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_latitude.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_latitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Latitude functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YLatitude = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YLatitude definitions)
 //--- (YLatitude class start)
 /**
  * YLatitude Class: latitude sensor control interface, available for instance in the Yocto-GPS-V2
@@ -53,8 +52,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 class YLatitude extends yocto_api_js_1.YSensor {
     // API symbols as static members
     //--- (end of YLatitude attributes declaration)
-    //--- (YLatitude return codes)
-    //--- (end of YLatitude return codes)
     constructor(yapi, func) {
         //--- (YLatitude constructor)
         super(yapi, func);

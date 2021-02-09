@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ * $Id: yocto_api.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -39,7 +39,7 @@
  *********************************************************************/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YAPI = exports.YAPIContext = exports.YGenericSSDPManager = exports.YWebSocketHub = exports.YGenericHub = exports.YSystemEnv = exports.YDataLogger = exports.YMeasure = exports.YSensor = exports.YModule = exports.YFunction = exports.YFirmwareUpdate = exports.YFirmwareFile = exports.YConsolidatedDataSet = exports.YDataSet = exports.YDataStream = exports.YHTTPRequest = exports.YHTTPBody = exports.YoctoError = exports.YErrorMsg = exports.Y_DETECT_ALL = exports.Y_DETECT_NET = exports.Y_DETECT_USB = exports.Y_DETECT_NONE = exports.Y_FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_MAX_DOUBLE = exports.YAPI_MIN_DOUBLE = exports.YAPI_INVALID_STRING = exports.YAPI_INVALID_DOUBLE = exports.YAPI_INVALID_LONG = exports.YAPI_INVALID_UINT = exports.YAPI_INVALID_INT = exports.YAPI_FILE_NOT_FOUND = exports.YAPI_RTC_NOT_READY = exports.YAPI_UNAUTHORIZED = exports.YAPI_DOUBLE_ACCES = exports.YAPI_EXHAUSTED = exports.YAPI_NO_MORE_DATA = exports.YAPI_IO_ERROR = exports.YAPI_TIMEOUT = exports.YAPI_DEVICE_BUSY = exports.YAPI_VERSION_MISMATCH = exports.YAPI_DEVICE_NOT_FOUND = exports.YAPI_NOT_SUPPORTED = exports.YAPI_INVALID_ARGUMENT = exports.YAPI_NOT_INITIALIZED = exports.YAPI_SUCCESS = void 0;
-//--- (generated code: YFunction definitions)
+//--- (generated code: YFunction return codes)
 // Yoctopuce error codes, also used by default as function return value
 exports.YAPI_SUCCESS = 0; // everything worked all right
 exports.YAPI_NOT_INITIALIZED = -1; // call yInitAPI() first !
@@ -61,7 +61,7 @@ exports.YAPI_INVALID_UINT = -1;
 exports.YAPI_INVALID_LONG = 0x7fffffffffffffff;
 exports.YAPI_INVALID_DOUBLE = -Number.MAX_VALUE;
 exports.YAPI_INVALID_STRING = '!INVALID!';
-//--- (end of generated code: YFunction definitions)
+//--- (end of generated code: YFunction return codes)
 exports.YAPI_MIN_DOUBLE = -Number.MAX_VALUE;
 exports.YAPI_MAX_DOUBLE = Number.MAX_VALUE;
 exports.Y_FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_INVALID_STRING;
@@ -3019,10 +3019,6 @@ class YFunction {
         this._funId = '';
         this._hwId = '';
         // API symbols as object properties
-        this.FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_INVALID_STRING;
-        this.HARDWAREID_INVALID = exports.YAPI_INVALID_STRING;
-        this.FUNCTIONID_INVALID = exports.YAPI_INVALID_STRING;
-        this.FRIENDLYNAME_INVALID = exports.YAPI_INVALID_STRING;
         this.LOGICALNAME_INVALID = exports.YAPI_INVALID_STRING;
         this.ADVERTISEDVALUE_INVALID = exports.YAPI_INVALID_STRING;
         this._yapi = obj_yapi;
@@ -3097,8 +3093,8 @@ class YFunction {
      */
     async set_logicalName(newval) {
         let rest_val;
-        if (!await this._yapi.CheckLogicalName(newval)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid name :' + newval, this._yapi.INVALID_ARGUMENT);
+        if (!await exports.YAPI.CheckLogicalName(newval)) {
+            return this._throw(exports.YAPI.INVALID_ARGUMENT, 'Invalid name :' + newval, exports.YAPI.INVALID_ARGUMENT);
         }
         rest_val = String(newval);
         return await this._setAttr('logicalName', rest_val);
@@ -3296,7 +3292,7 @@ class YFunction {
      *
      * @return a string corresponding to the serial number of the module, as set by the factory.
      *
-     * On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
+     * On failure, throws an exception or returns YFunction.SERIALNUMBER_INVALID.
      */
     async get_serialNumber() {
         let m;
@@ -4046,7 +4042,7 @@ class YFunction {
      *
      * @return an identifier of type YFUN_DESCR.
      *
-     * If the function has never been contacted, the returned value is YFunction.FUNCTIONDESCRIPTOR_INVALID.
+     * If the function has never been contacted, the returned value is Y$CLASSNAME$.FUNCTIONDESCRIPTOR_INVALID.
      */
     async get_functionDescriptor() {
         // try to resolve the function name to a device id without query
@@ -4089,12 +4085,16 @@ class YFunction {
 }
 exports.YFunction = YFunction;
 // API symbols as static members
-YFunction.FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_INVALID_STRING;
-YFunction.HARDWAREID_INVALID = exports.YAPI_INVALID_STRING;
-YFunction.FUNCTIONID_INVALID = exports.YAPI_INVALID_STRING;
-YFunction.FRIENDLYNAME_INVALID = exports.YAPI_INVALID_STRING;
 YFunction.LOGICALNAME_INVALID = exports.YAPI_INVALID_STRING;
 YFunction.ADVERTISEDVALUE_INVALID = exports.YAPI_INVALID_STRING;
+(function (YFunction) {
+    //--- (generated code: YFunction definitions)
+    YFunction.FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_INVALID_STRING;
+    YFunction.HARDWAREID_INVALID = exports.YAPI_INVALID_STRING;
+    YFunction.FUNCTIONID_INVALID = exports.YAPI_INVALID_STRING;
+    YFunction.FRIENDLYNAME_INVALID = exports.YAPI_INVALID_STRING;
+    //--- (end of generated code: YFunction definitions)
+})(YFunction = exports.YFunction || (exports.YFunction = {}));
 //--- (generated code: YModule class start)
 /**
  * YModule Class: Global parameters control interface for all Yoctopuce devices
@@ -4104,7 +4104,6 @@ YFunction.ADVERTISEDVALUE_INVALID = exports.YAPI_INVALID_STRING;
  * to enumerate the functions provided by each module.
  */
 //--- (end of generated code: YModule class start)
-/** @extends {YFunction} **/
 class YModule extends YFunction {
     //--- (end of generated code: YModule attributes declaration)
     constructor(yapi, func) {
@@ -4132,14 +4131,14 @@ class YModule extends YFunction {
         this.PRODUCTID_INVALID = exports.YAPI_INVALID_UINT;
         this.PRODUCTRELEASE_INVALID = exports.YAPI_INVALID_UINT;
         this.FIRMWARERELEASE_INVALID = exports.YAPI_INVALID_STRING;
-        this.PERSISTENTSETTINGS_LOADED = 0 /* LOADED */;
-        this.PERSISTENTSETTINGS_SAVED = 1 /* SAVED */;
-        this.PERSISTENTSETTINGS_MODIFIED = 2 /* MODIFIED */;
-        this.PERSISTENTSETTINGS_INVALID = -1 /* INVALID */;
+        this.PERSISTENTSETTINGS_LOADED = 0;
+        this.PERSISTENTSETTINGS_SAVED = 1;
+        this.PERSISTENTSETTINGS_MODIFIED = 2;
+        this.PERSISTENTSETTINGS_INVALID = -1;
         this.LUMINOSITY_INVALID = exports.YAPI_INVALID_UINT;
-        this.BEACON_OFF = 0 /* OFF */;
-        this.BEACON_ON = 1 /* ON */;
-        this.BEACON_INVALID = -1 /* INVALID */;
+        this.BEACON_OFF = 0;
+        this.BEACON_ON = 1;
+        this.BEACON_INVALID = -1;
         this.UPTIME_INVALID = exports.YAPI_INVALID_LONG;
         this.USBCURRENT_INVALID = exports.YAPI_INVALID_UINT;
         this.REBOOTCOUNTDOWN_INVALID = exports.YAPI_INVALID_INT;
@@ -4849,7 +4848,7 @@ class YModule extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async saveToFlash() {
-        return await this.set_persistentSettings(YModule.PERSISTENTSETTINGS_SAVED);
+        return await this.set_persistentSettings(1 /* SAVED */);
     }
     /**
      * Reloads the settings stored in the nonvolatile memory, as
@@ -4860,7 +4859,7 @@ class YModule extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async revertFromFlash() {
-        return await this.set_persistentSettings(YModule.PERSISTENTSETTINGS_LOADED);
+        return await this.set_persistentSettings(0 /* LOADED */);
     }
     /**
      * Schedules a simple module reboot after the given number of seconds.
@@ -5974,14 +5973,14 @@ YModule.SERIALNUMBER_INVALID = exports.YAPI_INVALID_STRING;
 YModule.PRODUCTID_INVALID = exports.YAPI_INVALID_UINT;
 YModule.PRODUCTRELEASE_INVALID = exports.YAPI_INVALID_UINT;
 YModule.FIRMWARERELEASE_INVALID = exports.YAPI_INVALID_STRING;
-YModule.PERSISTENTSETTINGS_LOADED = 0 /* LOADED */;
-YModule.PERSISTENTSETTINGS_SAVED = 1 /* SAVED */;
-YModule.PERSISTENTSETTINGS_MODIFIED = 2 /* MODIFIED */;
-YModule.PERSISTENTSETTINGS_INVALID = -1 /* INVALID */;
+YModule.PERSISTENTSETTINGS_LOADED = 0;
+YModule.PERSISTENTSETTINGS_SAVED = 1;
+YModule.PERSISTENTSETTINGS_MODIFIED = 2;
+YModule.PERSISTENTSETTINGS_INVALID = -1;
 YModule.LUMINOSITY_INVALID = exports.YAPI_INVALID_UINT;
-YModule.BEACON_OFF = 0 /* OFF */;
-YModule.BEACON_ON = 1 /* ON */;
-YModule.BEACON_INVALID = -1 /* INVALID */;
+YModule.BEACON_OFF = 0;
+YModule.BEACON_ON = 1;
+YModule.BEACON_INVALID = -1;
 YModule.UPTIME_INVALID = exports.YAPI_INVALID_LONG;
 YModule.USBCURRENT_INVALID = exports.YAPI_INVALID_UINT;
 YModule.REBOOTCOUNTDOWN_INVALID = exports.YAPI_INVALID_INT;
@@ -6001,7 +6000,6 @@ YModule.USERVAR_INVALID = exports.YAPI_INVALID_INT;
  * from YSensor.
  */
 //--- (end of generated code: YSensor class start)
-/** @extends {YFunction} **/
 class YSensor extends YFunction {
     //--- (end of generated code: YSensor attributes declaration)
     constructor(yapi, func) {
@@ -6038,11 +6036,11 @@ class YSensor extends YFunction {
         this.CURRENTRAWVALUE_INVALID = exports.YAPI_INVALID_DOUBLE;
         this.LOGFREQUENCY_INVALID = exports.YAPI_INVALID_STRING;
         this.REPORTFREQUENCY_INVALID = exports.YAPI_INVALID_STRING;
-        this.ADVMODE_IMMEDIATE = 0 /* IMMEDIATE */;
-        this.ADVMODE_PERIOD_AVG = 1 /* PERIOD_AVG */;
-        this.ADVMODE_PERIOD_MIN = 2 /* PERIOD_MIN */;
-        this.ADVMODE_PERIOD_MAX = 3 /* PERIOD_MAX */;
-        this.ADVMODE_INVALID = -1 /* INVALID */;
+        this.ADVMODE_IMMEDIATE = 0;
+        this.ADVMODE_PERIOD_AVG = 1;
+        this.ADVMODE_PERIOD_MIN = 2;
+        this.ADVMODE_PERIOD_MAX = 3;
+        this.ADVMODE_INVALID = -1;
         this.CALIBRATIONPARAM_INVALID = exports.YAPI_INVALID_STRING;
         this.RESOLUTION_INVALID = exports.YAPI_INVALID_DOUBLE;
         this.SENSORSTATE_INVALID = exports.YAPI_INVALID_INT;
@@ -7077,16 +7075,14 @@ YSensor.HIGHESTVALUE_INVALID = exports.YAPI_INVALID_DOUBLE;
 YSensor.CURRENTRAWVALUE_INVALID = exports.YAPI_INVALID_DOUBLE;
 YSensor.LOGFREQUENCY_INVALID = exports.YAPI_INVALID_STRING;
 YSensor.REPORTFREQUENCY_INVALID = exports.YAPI_INVALID_STRING;
-YSensor.ADVMODE_IMMEDIATE = 0 /* IMMEDIATE */;
-YSensor.ADVMODE_PERIOD_AVG = 1 /* PERIOD_AVG */;
-YSensor.ADVMODE_PERIOD_MIN = 2 /* PERIOD_MIN */;
-YSensor.ADVMODE_PERIOD_MAX = 3 /* PERIOD_MAX */;
-YSensor.ADVMODE_INVALID = -1 /* INVALID */;
+YSensor.ADVMODE_IMMEDIATE = 0;
+YSensor.ADVMODE_PERIOD_AVG = 1;
+YSensor.ADVMODE_PERIOD_MIN = 2;
+YSensor.ADVMODE_PERIOD_MAX = 3;
+YSensor.ADVMODE_INVALID = -1;
 YSensor.CALIBRATIONPARAM_INVALID = exports.YAPI_INVALID_STRING;
 YSensor.RESOLUTION_INVALID = exports.YAPI_INVALID_DOUBLE;
 YSensor.SENSORSTATE_INVALID = exports.YAPI_INVALID_INT;
-//--- (generated code: YMeasure definitions)
-//--- (end of generated code: YMeasure definitions)
 //--- (generated code: YMeasure class start)
 /**
  * YMeasure Class: Measured value, returned in particular by the methods of the YDataSet class.
@@ -7213,20 +7209,20 @@ class YDataLogger extends YFunction {
         // API symbols as object properties
         this.CURRENTRUNINDEX_INVALID = exports.YAPI_INVALID_UINT;
         this.TIMEUTC_INVALID = exports.YAPI_INVALID_LONG;
-        this.RECORDING_OFF = 0 /* OFF */;
-        this.RECORDING_ON = 1 /* ON */;
-        this.RECORDING_PENDING = 2 /* PENDING */;
-        this.RECORDING_INVALID = -1 /* INVALID */;
-        this.AUTOSTART_OFF = 0 /* OFF */;
-        this.AUTOSTART_ON = 1 /* ON */;
-        this.AUTOSTART_INVALID = -1 /* INVALID */;
-        this.BEACONDRIVEN_OFF = 0 /* OFF */;
-        this.BEACONDRIVEN_ON = 1 /* ON */;
-        this.BEACONDRIVEN_INVALID = -1 /* INVALID */;
+        this.RECORDING_OFF = 0;
+        this.RECORDING_ON = 1;
+        this.RECORDING_PENDING = 2;
+        this.RECORDING_INVALID = -1;
+        this.AUTOSTART_OFF = 0;
+        this.AUTOSTART_ON = 1;
+        this.AUTOSTART_INVALID = -1;
+        this.BEACONDRIVEN_OFF = 0;
+        this.BEACONDRIVEN_ON = 1;
+        this.BEACONDRIVEN_INVALID = -1;
         this.USAGE_INVALID = exports.YAPI_INVALID_UINT;
-        this.CLEARHISTORY_FALSE = 0 /* FALSE */;
-        this.CLEARHISTORY_TRUE = 1 /* TRUE */;
-        this.CLEARHISTORY_INVALID = -1 /* INVALID */;
+        this.CLEARHISTORY_FALSE = 0;
+        this.CLEARHISTORY_TRUE = 1;
+        this.CLEARHISTORY_INVALID = -1;
         this._className = 'DataLogger';
         //--- (end of generated code: YDataLogger constructor)
     }
@@ -7568,7 +7564,7 @@ class YDataLogger extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async forgetAllDataStreams() {
-        return await this.set_clearHistory(YDataLogger.CLEARHISTORY_TRUE);
+        return await this.set_clearHistory(1 /* TRUE */);
     }
     /**
      * Returns a list of YDataSet objects that can be used to retrieve
@@ -7654,20 +7650,20 @@ exports.YDataLogger = YDataLogger;
 // API symbols as static members
 YDataLogger.CURRENTRUNINDEX_INVALID = exports.YAPI_INVALID_UINT;
 YDataLogger.TIMEUTC_INVALID = exports.YAPI_INVALID_LONG;
-YDataLogger.RECORDING_OFF = 0 /* OFF */;
-YDataLogger.RECORDING_ON = 1 /* ON */;
-YDataLogger.RECORDING_PENDING = 2 /* PENDING */;
-YDataLogger.RECORDING_INVALID = -1 /* INVALID */;
-YDataLogger.AUTOSTART_OFF = 0 /* OFF */;
-YDataLogger.AUTOSTART_ON = 1 /* ON */;
-YDataLogger.AUTOSTART_INVALID = -1 /* INVALID */;
-YDataLogger.BEACONDRIVEN_OFF = 0 /* OFF */;
-YDataLogger.BEACONDRIVEN_ON = 1 /* ON */;
-YDataLogger.BEACONDRIVEN_INVALID = -1 /* INVALID */;
+YDataLogger.RECORDING_OFF = 0;
+YDataLogger.RECORDING_ON = 1;
+YDataLogger.RECORDING_PENDING = 2;
+YDataLogger.RECORDING_INVALID = -1;
+YDataLogger.AUTOSTART_OFF = 0;
+YDataLogger.AUTOSTART_ON = 1;
+YDataLogger.AUTOSTART_INVALID = -1;
+YDataLogger.BEACONDRIVEN_OFF = 0;
+YDataLogger.BEACONDRIVEN_ON = 1;
+YDataLogger.BEACONDRIVEN_INVALID = -1;
 YDataLogger.USAGE_INVALID = exports.YAPI_INVALID_UINT;
-YDataLogger.CLEARHISTORY_FALSE = 0 /* FALSE */;
-YDataLogger.CLEARHISTORY_TRUE = 1 /* TRUE */;
-YDataLogger.CLEARHISTORY_INVALID = -1 /* INVALID */;
+YDataLogger.CLEARHISTORY_FALSE = 0;
+YDataLogger.CLEARHISTORY_TRUE = 1;
+YDataLogger.CLEARHISTORY_INVALID = -1;
 //
 // YSystemEnv
 //
@@ -8134,19 +8130,6 @@ class YWebSocketHub extends YGenericHub {
         this._YIO_DEFAULT_TCP_TIMEOUT = 20000;
         this._YIO_1_MINUTE_TCP_TIMEOUT = 60000;
         this._YIO_10_MINUTES_TCP_TIMEOUT = 600000;
-        // websocket protocol encoding constants
-        this._YSTREAM_TCP = 1;
-        this._YSTREAM_TCP_CLOSE = 2;
-        this._YSTREAM_META = 5;
-        this._YSTREAM_TCP_NOTIF = 8;
-        this._YSTREAM_TCP_ASYNCCLOSE = 9;
-        this._USB_META_UTCTIME = 1;
-        this._USB_META_DLFLUSH = 2;
-        this._USB_META_ACK_D2H_PACKET = 3;
-        this._USB_META_WS_ANNOUNCE = 4;
-        this._USB_META_WS_AUTHENTICATION = 5;
-        this._USB_META_WS_ERROR = 6;
-        this._USB_META_ACK_UPLOAD = 7;
         this._USB_META_UTCTIME_SIZE = 5;
         this._USB_META_DLFLUSH_SIZE = 1;
         this._USB_META_ACK_D2H_PACKET_SIZE = 2;
@@ -8156,11 +8139,6 @@ class YWebSocketHub extends YGenericHub {
         this._USB_META_ACK_UPLOAD_SIZE = 6;
         this._USB_META_WS_VALID_SHA1 = 1;
         this._USB_META_WS_RW = 2;
-        this._WS_DEAD = 0;
-        this._WS_DISCONNECTED = 1;
-        this._WS_CONNECTING = 2;
-        this._WS_AUTHENTICATING = 3;
-        this._WS_CONNECTED = 4;
         // connection state members
         this.websocket = null;
         this.notbynOpenPromise = null;
@@ -8188,10 +8166,10 @@ class YWebSocketHub extends YGenericHub {
         this.fwd_credentials = [];
         this.fwd_closeCallback = null;
         // setup defaults states
-        this._connectionState = this._WS_CONNECTING;
+        this._connectionState = 2 /* CONNECTING */;
         this._tcpRoundTripTime = this._DEFAULT_TCP_ROUND_TRIP_TIME;
         this._tcpMaxWindowSize = this._DEFAULT_TCP_MAX_WINDOW_SIZE;
-        this.fwd_connectionState = this._WS_DISCONNECTED;
+        this.fwd_connectionState = 1 /* DISCONNECTED */;
     }
     /** Report a low-level asynchronous websocket error
      *
@@ -8216,7 +8194,7 @@ class YWebSocketHub extends YGenericHub {
             return exports.YAPI_IO_ERROR;
         }
         // Open WebSocket connection
-        this._connectionState = this._WS_CONNECTING;
+        this._connectionState = 2 /* CONNECTING */;
         if (!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             if (mstimeout) {
@@ -8244,7 +8222,7 @@ class YWebSocketHub extends YGenericHub {
                         else {
                             this.websocket.onmessage = ((evt) => {
                                 this._webSocketMsg(new Uint8Array(evt.data));
-                                if (this._connectionState == this._WS_CONNECTED) {
+                                if (this._connectionState == 4 /* CONNECTED */) {
                                     if (!this._hubAdded) {
                                         // registration is now complete
                                         this.notbynOpenTimeout = null;
@@ -8257,7 +8235,7 @@ class YWebSocketHub extends YGenericHub {
                                         });
                                     }
                                 }
-                                else if (this._connectionState == this._WS_DEAD) {
+                                else if (this._connectionState == 0 /* DEAD */) {
                                     if (errmsg) {
                                         errmsg.msg = this._session_error;
                                     }
@@ -8272,7 +8250,7 @@ class YWebSocketHub extends YGenericHub {
                                 }
                             });
                             this.websocket.onclose = ((evt) => {
-                                this._connectionState = this._WS_DISCONNECTED;
+                                this._connectionState = 1 /* DISCONNECTED */;
                                 this.websocket = null;
                                 if (this.timeoutId) {
                                     clearTimeout(this.timeoutId);
@@ -8295,7 +8273,7 @@ class YWebSocketHub extends YGenericHub {
                                 if (this.websocket && this.websocket.terminate) {
                                     this.websocket.terminate();
                                 }
-                                this._connectionState = this._WS_DISCONNECTED;
+                                this._connectionState = 1 /* DISCONNECTED */;
                                 this.websocket = null;
                                 if (this.retryDelay < 0) {
                                     this.disconnecting = true;
@@ -8342,7 +8320,7 @@ class YWebSocketHub extends YGenericHub {
      * @return {boolean}
      */
     imm_isForwarded() {
-        return (this.fwd_connectionState == this._WS_CONNECTED) && (this.fwd_websocket !== null);
+        return (this.fwd_connectionState == 4 /* CONNECTED */) && (this.fwd_websocket !== null);
     }
     /** Handle an incoming packet
      *
@@ -8358,7 +8336,7 @@ class YWebSocketHub extends YGenericHub {
             let reltime = (this._yapi.GetTickCount() - this._connectionTime) / 1000.0;
             let ystream = arr_bytes[0] >>> 3;
             let text = '';
-            if (ystream == this._YSTREAM_TCP_NOTIF) {
+            if (ystream == 8 /* TCP_NOTIF */) {
                 //this._yapi.imm_log(reltime+': TCP_NOTIF len='+arr_bytes.length);
                 for (let i = 1; i < arr_bytes.length; i++) {
                     text += String.fromCharCode(arr_bytes[i]);
@@ -8369,7 +8347,7 @@ class YWebSocketHub extends YGenericHub {
             // Other types of messages
             let ws = this.websocket;
             let tcpchan = arr_bytes[0] & 7;
-            if (ystream == this._YSTREAM_TCP || ystream == this._YSTREAM_TCP_CLOSE || ystream == this._YSTREAM_TCP_ASYNCCLOSE) {
+            if (ystream == 1 /* TCP */ || ystream == 2 /* TCP_CLOSE */ || ystream == 9 /* TCP_ASYNCCLOSE */) {
                 if (tcpchan > 3) {
                     this.imm_asyncWebSocketError(exports.YAPI_IO_ERROR, 'Unexpected frame for tcpChan ' + tcpchan + ' (' + ystream + ')');
                     return;
@@ -8381,7 +8359,7 @@ class YWebSocketHub extends YGenericHub {
                     this.imm_asyncWebSocketError(exports.YAPI_IO_ERROR, 'Drop frame for closed tcpChan ' + tcpchan + ' (' + ystream + ')');
                     return;
                 }
-                if (ystream == this._YSTREAM_TCP_ASYNCCLOSE) {
+                if (ystream == 9 /* TCP_ASYNCCLOSE */) {
                     // async close packet, check async signature byte
                     tcp_end--;
                     let rcvId = arr_bytes[tcp_end];
@@ -8409,11 +8387,11 @@ class YWebSocketHub extends YGenericHub {
                 newArr.set(arr_bytes.subarray(1, tcp_end), oldArr.length);
                 yreq.bin_result = newArr;
                 // when the request is closed, post result to caller
-                if (ystream == this._YSTREAM_TCP_CLOSE || ystream == this._YSTREAM_TCP_ASYNCCLOSE) {
+                if (ystream == 2 /* TCP_CLOSE */ || ystream == 9 /* TCP_ASYNCCLOSE */) {
                     // Pop request from tcp channel
                     this.tcpChan[tcpchan] = yreq.next;
                     // Handle synchronous close
-                    if (ystream == this._YSTREAM_TCP_CLOSE) {
+                    if (ystream == 2 /* TCP_CLOSE */) {
                         // synchronous close
                         if (yreq.asyncId != 0) {
                             if (this._yapi._logLevel >= 4) {
@@ -8448,7 +8426,7 @@ class YWebSocketHub extends YGenericHub {
                             if (yreq.timeoutId) {
                                 // request was not aborted, ack synchronous close by sending YSTREAM_TCP_CLOSE
                                 let frame = new Uint8Array(1);
-                                frame[0] = (this._YSTREAM_TCP_CLOSE << 3) + tcpchan;
+                                frame[0] = (2 /* TCP_CLOSE */ << 3) + tcpchan;
                                 this.websocket.send(frame);
                             }
                         }
@@ -8511,11 +8489,11 @@ class YWebSocketHub extends YGenericHub {
             if (!this.websocket) {
                 return;
             }
-            if (ystream == this._YSTREAM_META) {
+            if (ystream == 5 /* META */) {
                 let metatype = arr_bytes[1];
                 //this._yapi.imm_log(reltime+': META type='+metatype+' len='+arr_bytes.length);
                 switch (metatype) {
-                    case this._USB_META_WS_ANNOUNCE:
+                    case 4 /* WS_ANNOUNCE */:
                         if (arr_bytes.length < 1 + this._USB_META_WS_ANNOUNCE_SIZE) {
                             return;
                         }
@@ -8538,13 +8516,13 @@ class YWebSocketHub extends YGenericHub {
                         this.imm_getRandomValues(nonce);
                         this._nonce = nonce[0] + (nonce[1] << 8) + (nonce[2] << 16) + (nonce[3] << 24);
                         this._connectionTime = this._yapi.GetTickCount();
-                        this._connectionState = this._WS_AUTHENTICATING;
+                        this._connectionState = 3 /* AUTHENTICATING */;
                         // send our authentication packet
                         let frame = new Uint8Array(1 + this._USB_META_WS_AUTHENTICATION_SIZE);
                         let version = (this._remoteVersion < 2 ? this._remoteVersion : 2);
                         let flags = 0;
-                        frame[0] = (this._YSTREAM_META << 3);
-                        frame[1] = this._USB_META_WS_AUTHENTICATION;
+                        frame[0] = (5 /* META */ << 3);
+                        frame[1] = 5 /* WS_AUTHENTICATION */;
                         frame[2] = version;
                         if (this.urlInfo.pass != '') {
                             flags = this._USB_META_WS_VALID_SHA1;
@@ -8561,8 +8539,8 @@ class YWebSocketHub extends YGenericHub {
                         frame[8] = (this._nonce >>> 24) & 0xff;
                         this.websocket.send(frame);
                         break;
-                    case this._USB_META_WS_AUTHENTICATION:
-                        if (this._connectionState != this._WS_AUTHENTICATING) {
+                    case 5 /* WS_AUTHENTICATION */:
+                        if (this._connectionState != 3 /* AUTHENTICATING */) {
                             return;
                         }
                         if (arr_bytes.length < 1 + this._USB_META_WS_AUTHENTICATION_SIZE) {
@@ -8593,17 +8571,17 @@ class YWebSocketHub extends YGenericHub {
                                     // bad signature
                                     this._session_errno = 401;
                                     this._session_error = 'Authentication failed';
-                                    this._connectionState = this._WS_DEAD;
+                                    this._connectionState = 0 /* DEAD */;
                                     return;
                                 }
                             }
                             // Password verified OK
-                            this._connectionState = this._WS_CONNECTED;
+                            this._connectionState = 4 /* CONNECTED */;
                         }
                         else {
                             if (this.urlInfo.pass == '') {
                                 // No password required, connection OK
-                                this._connectionState = this._WS_CONNECTED;
+                                this._connectionState = 4 /* CONNECTED */;
                             }
                             else {
                                 // Hub did not sign password, unauthorized
@@ -8614,12 +8592,12 @@ class YWebSocketHub extends YGenericHub {
                                 else {
                                     this._session_error = 'Password not set on remote hub';
                                 }
-                                this._connectionState = this._WS_DEAD;
+                                this._connectionState = 0 /* DEAD */;
                                 return;
                             }
                         }
                         break;
-                    case this._USB_META_WS_ERROR:
+                    case 6 /* WS_ERROR */:
                         this._session_errno = arr_bytes[3] + (arr_bytes[4] << 8);
                         if (this._session_errno == 401) {
                             this._session_error = 'Authentication failed';
@@ -8627,9 +8605,9 @@ class YWebSocketHub extends YGenericHub {
                         else {
                             this._session_error = 'Remote hub closed connection with error ' + this._session_errno;
                         }
-                        this._connectionState = this._WS_DEAD;
+                        this._connectionState = 0 /* DEAD */;
                         break;
-                    case this._USB_META_ACK_UPLOAD:
+                    case 7 /* ACK_UPLOAD */:
                         tcpchan = arr_bytes[2];
                         if (this.tcpChan[tcpchan]) {
                             let yreq = this.tcpChan[tcpchan];
@@ -8739,7 +8717,7 @@ class YWebSocketHub extends YGenericHub {
                 catch (e) { }
                 return;
             }
-            if (!ws || this.disconnecting || this._connectionState != this._WS_CONNECTED) {
+            if (!ws || this.disconnecting || this._connectionState != 4 /* CONNECTED */) {
                 if (this._yapi._logLevel >= 4) {
                     this._yapi.imm_log('request @' + yreq._creat + ' failed, websocket is down');
                 }
@@ -8781,7 +8759,7 @@ class YWebSocketHub extends YGenericHub {
     imm_sendPendingRequest(tcpchan) {
         let yreq = this.tcpChan[tcpchan];
         while (yreq) {
-            if (!this.websocket || this.disconnecting || this._connectionState != this._WS_CONNECTED) {
+            if (!this.websocket || this.disconnecting || this._connectionState != 4 /* CONNECTED */) {
                 if (this._yapi._logLevel >= 4) {
                     this._yapi.imm_log('request @' + yreq._creat + ' failed, websocket is down');
                 }
@@ -8871,13 +8849,13 @@ class YWebSocketHub extends YGenericHub {
                 let datalen = framelen - 1;
                 if (isAsync && pos + datalen == yreq.toBeSent.length && framelen < 125) {
                     frame = new Uint8Array(framelen + 1);
-                    frame[0] = 8 * this._YSTREAM_TCP_ASYNCCLOSE + tcpchan;
+                    frame[0] = 8 * 9 /* TCP_ASYNCCLOSE */ + tcpchan;
                     frame[framelen] = yreq.asyncId;
                     asyncCloseSet = true;
                 }
                 else {
                     frame = new Uint8Array(framelen);
-                    frame[0] = 8 * this._YSTREAM_TCP + tcpchan;
+                    frame[0] = 8 * 1 /* TCP */ + tcpchan;
                 }
                 frame.set(yreq.toBeSent.subarray(pos, pos + datalen), 1);
                 pos += datalen;
@@ -8898,7 +8876,7 @@ class YWebSocketHub extends YGenericHub {
             }
             if (isAsync && !asyncCloseSet) {
                 frame = new Uint8Array(2);
-                frame[0] = 8 * this._YSTREAM_TCP_ASYNCCLOSE + tcpchan;
+                frame[0] = 8 * 9 /* TCP_ASYNCCLOSE */ + tcpchan;
                 frame[1] = yreq.asyncId;
                 this.imm_webSocketSend(frame);
             }
@@ -8966,7 +8944,7 @@ class YWebSocketHub extends YGenericHub {
         if (yreq.asyncId == 0) {
             // send a close to abort synchronous request
             let frame = new Uint8Array(1);
-            frame[0] = 8 * this._YSTREAM_TCP_CLOSE + tcpchan;
+            frame[0] = 8 * 2 /* TCP_CLOSE */ + tcpchan;
             this.imm_webSocketSend(frame);
             if (this._yapi._logLevel >= 4) {
                 let pendingCount = 1;
@@ -9005,8 +8983,8 @@ class YWebSocketHub extends YGenericHub {
     // Drop all pending requests from queues, as well as forwarded connection, when a hub connection is dropped
     //
     imm_dropAllPendingConnection() {
-        if (this.fwd_connectionState != this._WS_DISCONNECTED && this.fwd_websocket) {
-            this.fwd_connectionState = this._WS_DISCONNECTED;
+        if (this.fwd_connectionState != 1 /* DISCONNECTED */ && this.fwd_websocket) {
+            this.fwd_connectionState = 1 /* DISCONNECTED */;
             this.fwd_websocket.close();
             this.fwd_websocket = null;
         }
@@ -9037,7 +9015,7 @@ class YWebSocketHub extends YGenericHub {
         }
     }
     async websocketJoin(ws, arr_credentials, close_callback) {
-        if (this._connectionState != this._WS_CONNECTED) {
+        if (this._connectionState != 4 /* CONNECTED */) {
             this.imm_asyncWebSocketError(exports.YAPI_IO_ERROR, 'Hub is disconnected, cannot join');
             return false;
         }
@@ -9045,11 +9023,11 @@ class YWebSocketHub extends YGenericHub {
         this.fwd_websocket = ws;
         this.fwd_credentials = arr_credentials;
         this.fwd_closeCallback = close_callback;
-        this.fwd_connectionState = this._WS_CONNECTING;
+        this.fwd_connectionState = 2 /* CONNECTING */;
         ws.onmessage = ((evt) => {
-            if (this.fwd_connectionState == this._WS_CONNECTED) {
+            if (this.fwd_connectionState == 4 /* CONNECTED */) {
                 // forward to remote hub
-                if (this._connectionState == this._WS_CONNECTED) {
+                if (this._connectionState == 4 /* CONNECTED */) {
                     this.imm_webSocketSend(evt.data);
                 }
                 else {
@@ -9057,7 +9035,7 @@ class YWebSocketHub extends YGenericHub {
                     this._yapi.imm_log('WS: drop packet from fwd API (state=' + this._connectionState + ')');
                 }
             }
-            else if (this.fwd_connectionState == this._WS_AUTHENTICATING) {
+            else if (this.fwd_connectionState == 3 /* AUTHENTICATING */) {
                 // handle authentication packet
                 this.imm_handleAPIAuthPkt(evt.data);
             }
@@ -9067,7 +9045,7 @@ class YWebSocketHub extends YGenericHub {
             }
         });
         ws.onclose = ((evt) => {
-            this.fwd_connectionState = this._WS_DISCONNECTED;
+            this.fwd_connectionState = 1 /* DISCONNECTED */;
             this.fwd_websocket = null;
             if (this.fwd_closeCallback) {
                 this.fwd_closeCallback();
@@ -9082,8 +9060,8 @@ class YWebSocketHub extends YGenericHub {
         let frame = new Uint8Array(1 + this._USB_META_WS_ANNOUNCE_SIZE);
         let nonce = new Uint8Array(4);
         this.imm_getRandomValues(nonce);
-        frame[0] = (this._YSTREAM_META << 3);
-        frame[1] = this._USB_META_WS_ANNOUNCE;
+        frame[0] = (5 /* META */ << 3);
+        frame[1] = 4 /* WS_ANNOUNCE */;
         frame[2] = 2; // protocol version
         frame[3] = (this._tcpMaxWindowSize >> 4) & 0xff; // TCP window size, in para
         frame[4] = (this._tcpMaxWindowSize >> 12) & 0xff;
@@ -9094,19 +9072,19 @@ class YWebSocketHub extends YGenericHub {
             frame[9 + i] = this._remoteSerial.charCodeAt(i);
         }
         this.fwd_nonce = frame[5] + (frame[6] << 8) + (frame[7] << 16) + (frame[8] << 24);
-        this.fwd_connectionState = this._WS_AUTHENTICATING;
+        this.fwd_connectionState = 3 /* AUTHENTICATING */;
         this.fwd_websocket.send(frame);
         return true;
     }
     imm_handleAPIAuthPkt(msg) {
-        if (msg.length < 1 + this._USB_META_WS_AUTHENTICATION_SIZE || msg[0] != (this._YSTREAM_META << 3)) {
+        if (msg.length < 1 + this._USB_META_WS_AUTHENTICATION_SIZE || msg[0] != (5 /* META */ << 3)) {
             this._yapi.imm_log("bad-apiauth1\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = 0 /* DEAD */;
             return;
         }
-        if (msg[1] != this._USB_META_WS_AUTHENTICATION || msg[2] > 2) {
+        if (msg[1] != 5 /* WS_AUTHENTICATION */ || msg[2] > 2) {
             this._yapi.imm_log("bad-apiauth2\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = 0 /* DEAD */;
             return;
         }
         this._remoteVersion = msg[2];
@@ -9114,12 +9092,12 @@ class YWebSocketHub extends YGenericHub {
         let flags = msg[3] + (msg[4] << 8);
         if ((flags & this._USB_META_WS_VALID_SHA1) == 0) {
             this._yapi.imm_log("bad-apiauth3\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = 0 /* DEAD */;
             return;
         }
         if (!this.fwd_websocket) {
             this._yapi.imm_log("no-fwd-ws\n");
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = 0 /* DEAD */;
             return;
         }
         let credIdx, remote_sha1 = msg.subarray(9, 29);
@@ -9138,7 +9116,7 @@ class YWebSocketHub extends YGenericHub {
             this._yapi.imm_log("bad-apiauth4\n");
             msg.fill(0, 3);
             this.fwd_websocket.send(msg);
-            this.fwd_connectionState = this._WS_DEAD;
+            this.fwd_connectionState = 0 /* DEAD */;
             return;
         }
         // Return auth packet with new nonce and new signature to confirm connection
@@ -9149,7 +9127,7 @@ class YWebSocketHub extends YGenericHub {
             msg[9 + i] = sha1[i];
         }
         this.fwd_websocket.send(msg);
-        this.fwd_connectionState = this._WS_CONNECTED;
+        this.fwd_connectionState = 4 /* CONNECTED */;
     }
     async disconnect() {
         let tcpchan_busy;
@@ -9180,7 +9158,7 @@ class YWebSocketHub extends YGenericHub {
     // abort communication to trigget an automatic reconnection
     async reconnect() {
         if (this.websocket) {
-            this._connectionState = this._WS_DISCONNECTED;
+            this._connectionState = 1 /* DISCONNECTED */;
             try {
                 if (this.websocket.terminate) {
                     this.websocket.terminate();
@@ -9195,7 +9173,7 @@ class YWebSocketHub extends YGenericHub {
         }
     }
     imm_isOnline() {
-        if (this._connectionState != this._WS_CONNECTED) {
+        if (this._connectionState != 4 /* CONNECTED */) {
             return false;
         }
         return super.imm_isOnline();
@@ -9414,8 +9392,22 @@ class YAPIContext {
         this.exceptionsDisabled = false;
         /* make sure to add code to reset any new property in imm_ResetToDefaults() */
         //--- (generated code: YAPIContext attributes declaration)
+        this.SUCCESS = 0;
+        this.NOT_INITIALIZED = -1;
+        this.INVALID_ARGUMENT = -2;
+        this.NOT_SUPPORTED = -3;
+        this.DEVICE_NOT_FOUND = -4;
+        this.VERSION_MISMATCH = -5;
+        this.DEVICE_BUSY = -6;
+        this.TIMEOUT = -7;
+        this.IO_ERROR = -8;
+        this.NO_MORE_DATA = -9;
+        this.EXHAUSTED = -10;
+        this.DOUBLE_ACCES = -11;
+        this.UNAUTHORIZED = -12;
+        this.RTC_NOT_READY = -13;
+        this.FILE_NOT_FOUND = -14;
         this.defaultCacheValidity = 5;
-        // API symbols as static members
         //--- (end of generated code: YAPIContext attributes declaration)
         // API symbols
         this.INVALID_INT = exports.YAPI_INVALID_INT;
@@ -9426,23 +9418,6 @@ class YAPIContext {
         this.MAX_DOUBLE = exports.YAPI_MAX_DOUBLE;
         this.INVALID_STRING = exports.YAPI_INVALID_STRING;
         this.HASH_BUF_SIZE = YOCTO_HASH_BUF_SIZE;
-        //--- (generated code: YFunction return codes)
-        this.SUCCESS = exports.YAPI_SUCCESS; // everything worked all right
-        this.NOT_INITIALIZED = exports.YAPI_NOT_INITIALIZED; // call yInitAPI() first !
-        this.INVALID_ARGUMENT = exports.YAPI_INVALID_ARGUMENT; // one of the arguments passed to the function is invalid
-        this.NOT_SUPPORTED = exports.YAPI_NOT_SUPPORTED; // the operation attempted is (currently) not supported
-        this.DEVICE_NOT_FOUND = exports.YAPI_DEVICE_NOT_FOUND; // the requested device is not reachable
-        this.VERSION_MISMATCH = exports.YAPI_VERSION_MISMATCH; // the device firmware is incompatible with this API version
-        this.DEVICE_BUSY = exports.YAPI_DEVICE_BUSY; // the device is busy with another task and cannot answer
-        this.TIMEOUT = exports.YAPI_TIMEOUT; // the device took too long to provide an answer
-        this.IO_ERROR = exports.YAPI_IO_ERROR; // there was an I/O problem while talking to the device
-        this.NO_MORE_DATA = exports.YAPI_NO_MORE_DATA; // there is no more data to read from
-        this.EXHAUSTED = exports.YAPI_EXHAUSTED; // you have run out of a limited resource, check the documentation
-        this.DOUBLE_ACCES = exports.YAPI_DOUBLE_ACCES; // you have two process that try to access to the same device
-        this.UNAUTHORIZED = exports.YAPI_UNAUTHORIZED; // unauthorized access to password-protected device
-        this.RTC_NOT_READY = exports.YAPI_RTC_NOT_READY; // real-time clock has not been initialized (or time was lost)
-        this.FILE_NOT_FOUND = exports.YAPI_FILE_NOT_FOUND; // the file is not found
-        //--- (end of generated code: YFunction return codes)
         // yInitAPI constants
         this.DETECT_NONE = exports.Y_DETECT_NONE;
         this.DETECT_USB = exports.Y_DETECT_USB;
@@ -10956,7 +10931,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.43583';
+        return /* version number patched automatically */ '1.10.43781';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -11898,5 +11873,21 @@ class YAPIContext {
     }
 }
 exports.YAPIContext = YAPIContext;
+// API symbols as static members
+YAPIContext.SUCCESS = 0;
+YAPIContext.NOT_INITIALIZED = -1;
+YAPIContext.INVALID_ARGUMENT = -2;
+YAPIContext.NOT_SUPPORTED = -3;
+YAPIContext.DEVICE_NOT_FOUND = -4;
+YAPIContext.VERSION_MISMATCH = -5;
+YAPIContext.DEVICE_BUSY = -6;
+YAPIContext.TIMEOUT = -7;
+YAPIContext.IO_ERROR = -8;
+YAPIContext.NO_MORE_DATA = -9;
+YAPIContext.EXHAUSTED = -10;
+YAPIContext.DOUBLE_ACCES = -11;
+YAPIContext.UNAUTHORIZED = -12;
+YAPIContext.RTC_NOT_READY = -13;
+YAPIContext.FILE_NOT_FOUND = -14;
 exports.YAPI = new YAPIContext();
 //# sourceMappingURL=yocto_api.js.map

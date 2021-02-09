@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_gps.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YGps = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YGps definitions)
 //--- (YGps class start)
 /**
  * YGps Class: Geolocalization control interface (GPS, GNSS, ...), available for instance in the Yocto-GPS-V2
@@ -55,8 +54,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YGps class start)
 class YGps extends yocto_api_js_1.YFunction {
     //--- (end of YGps attributes declaration)
-    //--- (YGps return codes)
-    //--- (end of YGps return codes)
     constructor(yapi, func) {
         //--- (YGps constructor)
         super(yapi, func);
@@ -78,24 +75,24 @@ class YGps extends yocto_api_js_1.YFunction {
         this._command = YGps.COMMAND_INVALID;
         this._valueCallbackGps = null;
         // API symbols as object properties
-        this.ISFIXED_FALSE = 0 /* FALSE */;
-        this.ISFIXED_TRUE = 1 /* TRUE */;
-        this.ISFIXED_INVALID = -1 /* INVALID */;
+        this.ISFIXED_FALSE = 0;
+        this.ISFIXED_TRUE = 1;
+        this.ISFIXED_INVALID = -1;
         this.SATCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.SATPERCONST_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.GPSREFRESHRATE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-        this.COORDSYSTEM_GPS_DMS = 0 /* GPS_DMS */;
-        this.COORDSYSTEM_GPS_DM = 1 /* GPS_DM */;
-        this.COORDSYSTEM_GPS_D = 2 /* GPS_D */;
-        this.COORDSYSTEM_INVALID = -1 /* INVALID */;
-        this.CONSTELLATION_GNSS = 0 /* GNSS */;
-        this.CONSTELLATION_GPS = 1 /* GPS */;
-        this.CONSTELLATION_GLONASS = 2 /* GLONASS */;
-        this.CONSTELLATION_GALILEO = 3 /* GALILEO */;
-        this.CONSTELLATION_GPS_GLONASS = 4 /* GPS_GLONASS */;
-        this.CONSTELLATION_GPS_GALILEO = 5 /* GPS_GALILEO */;
-        this.CONSTELLATION_GLONASS_GALILEO = 6 /* GLONASS_GALILEO */;
-        this.CONSTELLATION_INVALID = -1 /* INVALID */;
+        this.COORDSYSTEM_GPS_DMS = 0;
+        this.COORDSYSTEM_GPS_DM = 1;
+        this.COORDSYSTEM_GPS_D = 2;
+        this.COORDSYSTEM_INVALID = -1;
+        this.CONSTELLATION_GNSS = 0;
+        this.CONSTELLATION_GPS = 1;
+        this.CONSTELLATION_GLONASS = 2;
+        this.CONSTELLATION_GALILEO = 3;
+        this.CONSTELLATION_GPS_GLONASS = 4;
+        this.CONSTELLATION_GPS_GALILEO = 5;
+        this.CONSTELLATION_GLONASS_GALILEO = 6;
+        this.CONSTELLATION_INVALID = -1;
         this.LATITUDE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.LONGITUDE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.DILUTION_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
@@ -673,24 +670,24 @@ class YGps extends yocto_api_js_1.YFunction {
 }
 exports.YGps = YGps;
 // API symbols as static members
-YGps.ISFIXED_FALSE = 0 /* FALSE */;
-YGps.ISFIXED_TRUE = 1 /* TRUE */;
-YGps.ISFIXED_INVALID = -1 /* INVALID */;
+YGps.ISFIXED_FALSE = 0;
+YGps.ISFIXED_TRUE = 1;
+YGps.ISFIXED_INVALID = -1;
 YGps.SATCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YGps.SATPERCONST_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YGps.GPSREFRESHRATE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-YGps.COORDSYSTEM_GPS_DMS = 0 /* GPS_DMS */;
-YGps.COORDSYSTEM_GPS_DM = 1 /* GPS_DM */;
-YGps.COORDSYSTEM_GPS_D = 2 /* GPS_D */;
-YGps.COORDSYSTEM_INVALID = -1 /* INVALID */;
-YGps.CONSTELLATION_GNSS = 0 /* GNSS */;
-YGps.CONSTELLATION_GPS = 1 /* GPS */;
-YGps.CONSTELLATION_GLONASS = 2 /* GLONASS */;
-YGps.CONSTELLATION_GALILEO = 3 /* GALILEO */;
-YGps.CONSTELLATION_GPS_GLONASS = 4 /* GPS_GLONASS */;
-YGps.CONSTELLATION_GPS_GALILEO = 5 /* GPS_GALILEO */;
-YGps.CONSTELLATION_GLONASS_GALILEO = 6 /* GLONASS_GALILEO */;
-YGps.CONSTELLATION_INVALID = -1 /* INVALID */;
+YGps.COORDSYSTEM_GPS_DMS = 0;
+YGps.COORDSYSTEM_GPS_DM = 1;
+YGps.COORDSYSTEM_GPS_D = 2;
+YGps.COORDSYSTEM_INVALID = -1;
+YGps.CONSTELLATION_GNSS = 0;
+YGps.CONSTELLATION_GPS = 1;
+YGps.CONSTELLATION_GLONASS = 2;
+YGps.CONSTELLATION_GALILEO = 3;
+YGps.CONSTELLATION_GPS_GLONASS = 4;
+YGps.CONSTELLATION_GPS_GALILEO = 5;
+YGps.CONSTELLATION_GLONASS_GALILEO = 6;
+YGps.CONSTELLATION_INVALID = -1;
 YGps.LATITUDE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YGps.LONGITUDE_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YGps.DILUTION_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;

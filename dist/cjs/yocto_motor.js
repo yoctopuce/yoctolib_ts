@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_motor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YMotor = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YMotor definitions)
 //--- (YMotor class start)
 /**
  * YMotor Class: motor control interface, available for instance in the Yocto-Motor-DC
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YMotor class start)
 class YMotor extends yocto_api_js_1.YFunction {
     //--- (end of YMotor attributes declaration)
-    //--- (YMotor return codes)
-    //--- (end of YMotor return codes)
     constructor(yapi, func) {
         //--- (YMotor constructor)
         super(yapi, func);
@@ -70,15 +67,15 @@ class YMotor extends yocto_api_js_1.YFunction {
         this._command = YMotor.COMMAND_INVALID;
         this._valueCallbackMotor = null;
         // API symbols as object properties
-        this.MOTORSTATUS_IDLE = 0 /* IDLE */;
-        this.MOTORSTATUS_BRAKE = 1 /* BRAKE */;
-        this.MOTORSTATUS_FORWD = 2 /* FORWD */;
-        this.MOTORSTATUS_BACKWD = 3 /* BACKWD */;
-        this.MOTORSTATUS_LOVOLT = 4 /* LOVOLT */;
-        this.MOTORSTATUS_HICURR = 5 /* HICURR */;
-        this.MOTORSTATUS_HIHEAT = 6 /* HIHEAT */;
-        this.MOTORSTATUS_FAILSF = 7 /* FAILSF */;
-        this.MOTORSTATUS_INVALID = -1 /* INVALID */;
+        this.MOTORSTATUS_IDLE = 0;
+        this.MOTORSTATUS_BRAKE = 1;
+        this.MOTORSTATUS_FORWD = 2;
+        this.MOTORSTATUS_BACKWD = 3;
+        this.MOTORSTATUS_LOVOLT = 4;
+        this.MOTORSTATUS_HICURR = 5;
+        this.MOTORSTATUS_HIHEAT = 6;
+        this.MOTORSTATUS_FAILSF = 7;
+        this.MOTORSTATUS_INVALID = -1;
         this.DRIVINGFORCE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.BRAKINGFORCE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.CUTOFFVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
@@ -652,15 +649,15 @@ class YMotor extends yocto_api_js_1.YFunction {
 }
 exports.YMotor = YMotor;
 // API symbols as static members
-YMotor.MOTORSTATUS_IDLE = 0 /* IDLE */;
-YMotor.MOTORSTATUS_BRAKE = 1 /* BRAKE */;
-YMotor.MOTORSTATUS_FORWD = 2 /* FORWD */;
-YMotor.MOTORSTATUS_BACKWD = 3 /* BACKWD */;
-YMotor.MOTORSTATUS_LOVOLT = 4 /* LOVOLT */;
-YMotor.MOTORSTATUS_HICURR = 5 /* HICURR */;
-YMotor.MOTORSTATUS_HIHEAT = 6 /* HIHEAT */;
-YMotor.MOTORSTATUS_FAILSF = 7 /* FAILSF */;
-YMotor.MOTORSTATUS_INVALID = -1 /* INVALID */;
+YMotor.MOTORSTATUS_IDLE = 0;
+YMotor.MOTORSTATUS_BRAKE = 1;
+YMotor.MOTORSTATUS_FORWD = 2;
+YMotor.MOTORSTATUS_BACKWD = 3;
+YMotor.MOTORSTATUS_LOVOLT = 4;
+YMotor.MOTORSTATUS_HICURR = 5;
+YMotor.MOTORSTATUS_HIHEAT = 6;
+YMotor.MOTORSTATUS_FAILSF = 7;
+YMotor.MOTORSTATUS_INVALID = -1;
 YMotor.DRIVINGFORCE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YMotor.BRAKINGFORCE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YMotor.CUTOFFVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;

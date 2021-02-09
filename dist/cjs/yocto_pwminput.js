@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_pwminput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -40,7 +40,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.YPwmInput = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
-//--- (end of YPwmInput definitions)
 //--- (YPwmInput class start)
 /**
  * YPwmInput Class: PWM input control interface, available for instance in the Yocto-PWM-Rx
@@ -54,8 +53,6 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (end of YPwmInput class start)
 class YPwmInput extends yocto_api_js_1.YSensor {
     //--- (end of YPwmInput attributes declaration)
-    //--- (YPwmInput return codes)
-    //--- (end of YPwmInput return codes)
     constructor(yapi, func) {
         //--- (YPwmInput constructor)
         super(yapi, func);
@@ -78,18 +75,18 @@ class YPwmInput extends yocto_api_js_1.YSensor {
         this.PERIOD_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.PULSECOUNTER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
         this.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-        this.PWMREPORTMODE_PWM_DUTYCYCLE = 0 /* PWM_DUTYCYCLE */;
-        this.PWMREPORTMODE_PWM_FREQUENCY = 1 /* PWM_FREQUENCY */;
-        this.PWMREPORTMODE_PWM_PULSEDURATION = 2 /* PWM_PULSEDURATION */;
-        this.PWMREPORTMODE_PWM_EDGECOUNT = 3 /* PWM_EDGECOUNT */;
-        this.PWMREPORTMODE_PWM_PULSECOUNT = 4 /* PWM_PULSECOUNT */;
-        this.PWMREPORTMODE_PWM_CPS = 5 /* PWM_CPS */;
-        this.PWMREPORTMODE_PWM_CPM = 6 /* PWM_CPM */;
-        this.PWMREPORTMODE_PWM_STATE = 7 /* PWM_STATE */;
-        this.PWMREPORTMODE_PWM_FREQ_CPS = 8 /* PWM_FREQ_CPS */;
-        this.PWMREPORTMODE_PWM_FREQ_CPM = 9 /* PWM_FREQ_CPM */;
-        this.PWMREPORTMODE_PWM_PERIODCOUNT = 10 /* PWM_PERIODCOUNT */;
-        this.PWMREPORTMODE_INVALID = -1 /* INVALID */;
+        this.PWMREPORTMODE_PWM_DUTYCYCLE = 0;
+        this.PWMREPORTMODE_PWM_FREQUENCY = 1;
+        this.PWMREPORTMODE_PWM_PULSEDURATION = 2;
+        this.PWMREPORTMODE_PWM_EDGECOUNT = 3;
+        this.PWMREPORTMODE_PWM_PULSECOUNT = 4;
+        this.PWMREPORTMODE_PWM_CPS = 5;
+        this.PWMREPORTMODE_PWM_CPM = 6;
+        this.PWMREPORTMODE_PWM_STATE = 7;
+        this.PWMREPORTMODE_PWM_FREQ_CPS = 8;
+        this.PWMREPORTMODE_PWM_FREQ_CPM = 9;
+        this.PWMREPORTMODE_PWM_PERIODCOUNT = 10;
+        this.PWMREPORTMODE_INVALID = -1;
         this.DEBOUNCEPERIOD_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.BANDWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.EDGESPERPERIOD_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -615,18 +612,18 @@ YPwmInput.FREQUENCY_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPwmInput.PERIOD_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPwmInput.PULSECOUNTER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YPwmInput.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
-YPwmInput.PWMREPORTMODE_PWM_DUTYCYCLE = 0 /* PWM_DUTYCYCLE */;
-YPwmInput.PWMREPORTMODE_PWM_FREQUENCY = 1 /* PWM_FREQUENCY */;
-YPwmInput.PWMREPORTMODE_PWM_PULSEDURATION = 2 /* PWM_PULSEDURATION */;
-YPwmInput.PWMREPORTMODE_PWM_EDGECOUNT = 3 /* PWM_EDGECOUNT */;
-YPwmInput.PWMREPORTMODE_PWM_PULSECOUNT = 4 /* PWM_PULSECOUNT */;
-YPwmInput.PWMREPORTMODE_PWM_CPS = 5 /* PWM_CPS */;
-YPwmInput.PWMREPORTMODE_PWM_CPM = 6 /* PWM_CPM */;
-YPwmInput.PWMREPORTMODE_PWM_STATE = 7 /* PWM_STATE */;
-YPwmInput.PWMREPORTMODE_PWM_FREQ_CPS = 8 /* PWM_FREQ_CPS */;
-YPwmInput.PWMREPORTMODE_PWM_FREQ_CPM = 9 /* PWM_FREQ_CPM */;
-YPwmInput.PWMREPORTMODE_PWM_PERIODCOUNT = 10 /* PWM_PERIODCOUNT */;
-YPwmInput.PWMREPORTMODE_INVALID = -1 /* INVALID */;
+YPwmInput.PWMREPORTMODE_PWM_DUTYCYCLE = 0;
+YPwmInput.PWMREPORTMODE_PWM_FREQUENCY = 1;
+YPwmInput.PWMREPORTMODE_PWM_PULSEDURATION = 2;
+YPwmInput.PWMREPORTMODE_PWM_EDGECOUNT = 3;
+YPwmInput.PWMREPORTMODE_PWM_PULSECOUNT = 4;
+YPwmInput.PWMREPORTMODE_PWM_CPS = 5;
+YPwmInput.PWMREPORTMODE_PWM_CPM = 6;
+YPwmInput.PWMREPORTMODE_PWM_STATE = 7;
+YPwmInput.PWMREPORTMODE_PWM_FREQ_CPS = 8;
+YPwmInput.PWMREPORTMODE_PWM_FREQ_CPM = 9;
+YPwmInput.PWMREPORTMODE_PWM_PERIODCOUNT = 10;
+YPwmInput.PWMREPORTMODE_INVALID = -1;
 YPwmInput.DEBOUNCEPERIOD_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YPwmInput.BANDWIDTH_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YPwmInput.EDGESPERPERIOD_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;

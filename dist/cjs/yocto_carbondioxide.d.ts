@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 43483 2021-01-21 15:47:50Z mvuilleu $
+ *  $Id: yocto_carbondioxide.ts 43760 2021-02-08 14:33:45Z mvuilleu $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -37,12 +37,6 @@
  *
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
-export interface YCarbonDioxideValueCallback {
-    (func: YCarbonDioxide, value: string): void;
-}
-export interface YCarbonDioxideTimedReportCallback {
-    (func: YCarbonDioxide, measure: YMeasure): void;
-}
 /**
  * YCarbonDioxide Class: CO2 sensor control interface, available for instance in the Yocto-CO2-V2
  *
@@ -55,8 +49,8 @@ export declare class YCarbonDioxide extends YSensor {
     _className: string;
     _abcPeriod: number;
     _command: string;
-    _valueCallbackCarbonDioxide: YCarbonDioxideValueCallback | null;
-    _timedReportCallbackCarbonDioxide: YCarbonDioxideTimedReportCallback | null;
+    _valueCallbackCarbonDioxide: YCarbonDioxide.ValueCallback | null;
+    _timedReportCallbackCarbonDioxide: YCarbonDioxide.TimedReportCallback | null;
     readonly ABCPERIOD_INVALID: number;
     readonly COMMAND_INVALID: string;
     static readonly ABCPERIOD_INVALID: number;
@@ -154,7 +148,7 @@ export declare class YCarbonDioxide extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerValueCallback(callback: YCarbonDioxideValueCallback | null): Promise<number>;
+    registerValueCallback(callback: YCarbonDioxide.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Registers the callback function that is invoked on every periodic timed notification.
@@ -167,7 +161,7 @@ export declare class YCarbonDioxide extends YSensor {
      *         the new advertised value.
      * @noreturn
      */
-    registerTimedReportCallback(callback: YCarbonDioxideTimedReportCallback | null): Promise<number>;
+    registerTimedReportCallback(callback: YCarbonDioxide.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
      * Triggers a baseline calibration at standard CO2 ambiant level (400ppm).
@@ -236,4 +230,12 @@ export declare class YCarbonDioxide extends YSensor {
      *         if there are none.
      */
     static FirstCarbonDioxideInContext(yctx: YAPIContext): YCarbonDioxide | null;
+}
+export declare namespace YCarbonDioxide {
+    interface ValueCallback {
+        (func: YCarbonDioxide, value: string): void;
+    }
+    interface TimedReportCallback {
+        (func: YCarbonDioxide, measure: YMeasure): void;
+    }
 }
