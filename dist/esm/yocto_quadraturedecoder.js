@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 44023 2021-02-25 09:23:38Z web $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -59,6 +59,8 @@ export class YQuadratureDecoder extends YSensor {
         this.SPEED_INVALID = YAPI.INVALID_DOUBLE;
         this.DECODING_OFF = 0;
         this.DECODING_ON = 1;
+        this.DECODING_DIV2 = 2;
+        this.DECODING_DIV4 = 3;
         this.DECODING_INVALID = -1;
         this._className = 'QuadratureDecoder';
         //--- (end of YQuadratureDecoder constructor)
@@ -110,8 +112,9 @@ export class YQuadratureDecoder extends YSensor {
     /**
      * Returns the current activation state of the quadrature decoder.
      *
-     * @return either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according to the
-     * current activation state of the quadrature decoder
+     * @return a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
+     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the current
+     * activation state of the quadrature decoder
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
@@ -130,8 +133,9 @@ export class YQuadratureDecoder extends YSensor {
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according
-     * to the activation state of the quadrature decoder
+     * @param newval : a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
+     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the
+     * activation state of the quadrature decoder
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -349,5 +353,7 @@ export class YQuadratureDecoder extends YSensor {
 YQuadratureDecoder.SPEED_INVALID = YAPI.INVALID_DOUBLE;
 YQuadratureDecoder.DECODING_OFF = 0;
 YQuadratureDecoder.DECODING_ON = 1;
+YQuadratureDecoder.DECODING_DIV2 = 2;
+YQuadratureDecoder.DECODING_DIV4 = 3;
 YQuadratureDecoder.DECODING_INVALID = -1;
 //# sourceMappingURL=yocto_quadraturedecoder.js.map

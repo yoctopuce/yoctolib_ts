@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 44023 2021-02-25 09:23:38Z web $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -62,12 +62,16 @@ export class YQuadratureDecoder extends YSensor
     public readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly DECODING_OFF: YQuadratureDecoder.DECODING = 0;
     public readonly DECODING_ON: YQuadratureDecoder.DECODING = 1;
+    public readonly DECODING_DIV2: YQuadratureDecoder.DECODING = 2;
+    public readonly DECODING_DIV4: YQuadratureDecoder.DECODING = 3;
     public readonly DECODING_INVALID: YQuadratureDecoder.DECODING = -1;
 
     // API symbols as static members
     public static readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly DECODING_OFF: YQuadratureDecoder.DECODING = 0;
     public static readonly DECODING_ON: YQuadratureDecoder.DECODING = 1;
+    public static readonly DECODING_DIV2: YQuadratureDecoder.DECODING = 2;
+    public static readonly DECODING_DIV4: YQuadratureDecoder.DECODING = 3;
     public static readonly DECODING_INVALID: YQuadratureDecoder.DECODING = -1;
     //--- (end of YQuadratureDecoder attributes declaration)
 
@@ -133,8 +137,9 @@ export class YQuadratureDecoder extends YSensor
     /**
      * Returns the current activation state of the quadrature decoder.
      *
-     * @return either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according to the
-     * current activation state of the quadrature decoder
+     * @return a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
+     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the current
+     * activation state of the quadrature decoder
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
@@ -155,8 +160,9 @@ export class YQuadratureDecoder extends YSensor
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according
-     * to the activation state of the quadrature decoder
+     * @param newval : a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
+     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the
+     * activation state of the quadrature decoder
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -387,6 +393,8 @@ export namespace YQuadratureDecoder {
     export const enum DECODING {
         OFF = 0,
         ON = 1,
+        DIV2 = 2,
+        DIV4 = 3,
         INVALID = -1
     }
     export interface ValueCallback { (func: YQuadratureDecoder, value: string): void }    export interface TimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }

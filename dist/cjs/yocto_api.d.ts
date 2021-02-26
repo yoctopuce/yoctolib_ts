@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ * $Id: yocto_api.ts 44026 2021-02-25 09:48:41Z web $
  *
  * High-level programming interface, common to all modules
  *
@@ -914,6 +914,12 @@ declare class YDevice {
      * @returns {string}
      */
     imm_functionValue(int_idx: number): string;
+    /** Retrieve the Id of a function given its funydx (internal function identifier index)
+     *
+     * @param int_funydx {number}
+     * @returns {string}
+     */
+    imm_functionIdByFunYdx(int_funydx: number): string;
     /** Map an optimized JZON reply to a previously known JSON structure
      *
      * @param jzon {object}
@@ -3735,6 +3741,7 @@ export declare class YAPIContext {
     GetDeviceListValidity_internal(): Promise<number>;
     SetNetworkTimeout_internal(networkMsTimeout: number): Promise<void>;
     GetNetworkTimeout_internal(): Promise<number>;
+    AddUdevRule_internal(force: boolean): Promise<string>;
     /**
      * Modifies the delay between each forced enumeration of the used YoctoHubs.
      * By default, the library performs a full enumeration every 10 seconds.
@@ -3755,6 +3762,18 @@ export declare class YAPIContext {
      * @return the number of seconds between each enumeration.
      */
     GetDeviceListValidity(): Promise<number>;
+    /**
+     * Adds a UDEV rule which authorizes all users to access Yoctopuce modules
+     * connected to the USB ports. This function works only under Linux. The process that
+     * calls this method must have root privileges because this method changes the Linux configuration.
+     *
+     * @param force : if true, overwrites any existing rule.
+     *
+     * @return an empty string if the rule has been added.
+     *
+     * On failure, returns a string that starts with "error:".
+     */
+    AddUdevRule(force: boolean): Promise<string>;
     /**
      * Modifies the network connection delay for yRegisterHub() and yUpdateDeviceList().
      * This delay impacts only the YoctoHubs and VirtualHub

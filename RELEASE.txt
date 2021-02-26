@@ -1,5 +1,5 @@
-TypeScript v1.10.43781
+TypeScript v1.10.44029
 
-use api version 1.0
-- move class-specific interfaces to a namespace identical to the class name, for easier import
-- improve documentation
+- Add YAPI.AddUdevRule() method
+- Fix I2C example code
+- Fix handling of notifications for Yocto-Temperature-IR

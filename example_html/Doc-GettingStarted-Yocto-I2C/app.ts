@@ -54,7 +54,7 @@ async function refresh(): Promise<void>
         html += 'sample code reading MCP9804 temperature sensor at I2C address 0x1F'
         html += 'Using ' + (await module.get_serialNumber()) + ' (' + (await module.get_productName()) + ')<br><br>';
         // sample code reading MCP9804 temperature sensor (I2C address 0x1F)
-        i2cPort.set_i2cMode("400kbps")
+        i2cPort.set_i2cMode("100kbps,1000ms,NoRestart")
         i2cPort.set_i2cVoltageLevel(YI2cPort.I2CVOLTAGELEVEL_3V3)
         i2cPort.reset()
         // do not forget to configure the powerOutput and

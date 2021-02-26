@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ * $Id: yocto_api.ts 44026 2021-02-25 09:48:41Z web $
  *
  * High-level programming interface, common to all modules
  *
@@ -2302,6 +2302,17 @@ class YDevice {
         let funid = this.imm_functionId(int_idx);
         if (funid !== '') {
             return this._yapi.imm_getFunctionValue(this._serialNumber + '.' + funid);
+        }
+        return '';
+    }
+    /** Retrieve the Id of a function given its funydx (internal function identifier index)
+     *
+     * @param int_funydx {number}
+     * @returns {string}
+     */
+    imm_functionIdByFunYdx(int_funydx) {
+        if (this._functions[int_funydx]) {
+            return this._functions[int_funydx][0];
         }
         return '';
     }
@@ -9759,7 +9770,7 @@ export class YAPIContext {
                 }
                 let serial = hub.serialByYdx[devydx];
                 if (serial && this._devs[serial]) {
-                    let funcid = (funydx == 0xf ? 'time' : this._devs[serial].imm_functionId(funydx));
+                    let funcid = (funydx == 0xf ? 'time' : this._devs[serial].imm_functionIdByFunYdx(funydx));
                     if (funcid != '') {
                         let dev;
                         value = ev.slice(3);
@@ -10811,6 +10822,9 @@ export class YAPIContext {
     async GetNetworkTimeout_internal() {
         return this._networkTimeoutMs;
     }
+    async AddUdevRule_internal(force) {
+        return "error: Not supported in TypeScript";
+    }
     //--- (generated code: YAPIContext implementation)
     /**
      * Modifies the delay between each forced enumeration of the used YoctoHubs.
@@ -10835,6 +10849,20 @@ export class YAPIContext {
      */
     async GetDeviceListValidity() {
         return await this.GetDeviceListValidity_internal();
+    }
+    /**
+     * Adds a UDEV rule which authorizes all users to access Yoctopuce modules
+     * connected to the USB ports. This function works only under Linux. The process that
+     * calls this method must have root privileges because this method changes the Linux configuration.
+     *
+     * @param force : if true, overwrites any existing rule.
+     *
+     * @return an empty string if the rule has been added.
+     *
+     * On failure, returns a string that starts with "error:".
+     */
+    async AddUdevRule(force) {
+        return await this.AddUdevRule_internal(force);
     }
     /**
      * Modifies the network connection delay for yRegisterHub() and yUpdateDeviceList().
@@ -10910,7 +10938,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.43781';
+        return /* version number patched automatically */ '1.10.44029';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

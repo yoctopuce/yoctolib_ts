@@ -44,7 +44,7 @@ async function startDemo(args: string[]): Promise<void>
 
     if(await i2cPort.isOnline()) {
         // sample code reading MCP9804 temperature sensor
-        await i2cPort.set_i2cMode("400kbps");
+        await i2cPort.set_i2cMode("100kbps,1000ms,NoRestart");
         await i2cPort.set_i2cVoltageLevel(YI2cPort.I2CVOLTAGELEVEL_3V3);
         await i2cPort.reset();
         // do not forget to configure the powerOutput of the Yocto-I2C
