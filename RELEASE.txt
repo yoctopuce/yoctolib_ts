@@ -1,5 +1,4 @@
-TypeScript v1.10.44029
+TypeScript v1.10.44175
 
-- Add YAPI.AddUdevRule() method
-- Fix I2C example code
-- Fix handling of notifications for Yocto-Temperature-IR
+- Add Yocto-CO2-V2 forced calibration method
+- Fix possible course condition in case of multiple async RegisterHub of the same hub

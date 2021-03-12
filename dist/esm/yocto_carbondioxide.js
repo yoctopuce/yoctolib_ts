@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_carbondioxide.ts 44175 2021-03-11 11:27:12Z mvuilleu $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -96,7 +96,8 @@ export class YCarbonDioxide extends YSensor {
      * Changes Automatic Baseline Calibration period, in hours. If you need
      * to disable automatic baseline calibration (for instance when using the
      * sensor in an environment that is constantly above 400 ppm CO2), set the
-     * period to -1. Remember to call the saveToFlash() method of the
+     * period to -1. For the Yocto-CO2-V2, the only possible values are 24 and -1.
+     * Remember to call the saveToFlash() method of the
      * module if the modification must be kept.
      *
      * @param newval : an integer corresponding to Automatic Baseline Calibration period, in hours
@@ -277,14 +278,30 @@ export class YCarbonDioxide extends YSensor {
         return 0;
     }
     /**
+     * Triggers a forced calibration of the sensor at a given CO2 level, specified
+     * between 400ppm and 2000ppm. Before invoking this command, the sensor must
+     * have been maintained within the specified CO2 density during at least two
+     * minutes.
+     *
+     * @param refVal : reference CO2 density for the calibration
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async triggerForcedCalibration(refVal) {
+        return await this.set_command('F' + String(Math.round(Math.round(1000 * refVal))) + 'C');
+    }
+    /**
      * Triggers a baseline calibration at standard CO2 ambiant level (400ppm).
      * It is normally not necessary to manually calibrate the sensor, because
      * the built-in automatic baseline calibration procedure will automatically
      * fix any long-term drift based on the lowest level of CO2 observed over the
-     * automatic calibration period. However, if you disable automatic baseline
-     * calibration, you may want to manually trigger a calibration from time to
+     * automatic calibration period. However, if automatic baseline calibration
+     * is disabled, you may want to manually trigger a calibration from time to
      * time. Before starting a baseline calibration, make sure to put the sensor
-     * in a standard environment (e.g. outside in fresh air) at around 400 ppm.
+     * in a standard environment (e.g. outside in fresh air) at around 400 ppm
+     * for at least two minutes.
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -297,7 +314,8 @@ export class YCarbonDioxide extends YSensor {
         return await this.triggerBaselineCalibration();
     }
     /**
-     * Triggers a zero calibration of the sensor on carbon dioxide-free air.
+     * Triggers a zero calibration of the sensor on carbon dioxide-free air -
+     * for use with first generation Yocto-CO2 only.
      * It is normally not necessary to manually calibrate the sensor, because
      * the built-in automatic baseline calibration procedure will automatically
      * fix any long-term drift based on the lowest level of CO2 observed over the

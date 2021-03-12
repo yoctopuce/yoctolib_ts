@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 44026 2021-02-25 09:48:41Z web $
+ * $Id: yocto_api.ts 44114 2021-03-03 17:47:55Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -7460,7 +7460,7 @@ export class YDataLogger extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK3.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -7494,7 +7494,7 @@ export class YDataLogger extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK3.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -7764,8 +7764,8 @@ export class YGenericHub {
      */
     async signalHubConnected() {
         if (this._connectionType != 2 /* HUB_TESTONLY */) {
-            await this._yapi._addHub(this);
             this._hubAdded = true;
+            await this._yapi._addHub(this);
             if (this._yapi._pendingHubs[this.urlInfo.url]) {
                 delete this._yapi._pendingHubs[this.urlInfo.url];
             }
@@ -9568,7 +9568,7 @@ export class YAPIContext {
                 let rootUrl = hub.urlInfo.url;
                 let hubDev = this.imm_getDevice(rootUrl);
                 if (!hubDev) {
-                    console.log('getDevice failed for hub ' + hub.urlInfo.url);
+                    this.imm_log('getDevice failed for hub ' + hub.urlInfo.url);
                     continue;
                 }
                 if (hub.devListExpires <= this.GetTickCount()) {
@@ -10938,7 +10938,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.44029';
+        return /* version number patched automatically */ '1.10.44175';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -11213,13 +11213,14 @@ export class YAPIContext {
         }
         let urlInfo = this.imm_parseRegisteredUrl(url);
         let newhub = this.imm_getHub(urlInfo);
-        if (newhub) {
+        if (newhub || this._pendingHubs[urlInfo.url]) {
             return YAPI_SUCCESS;
         }
         newhub = this.imm_registerHub_internal(urlInfo);
         if (!newhub) {
             return this._throw(YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, YAPI_NOT_SUPPORTED);
         }
+        this._pendingHubs[urlInfo.url] = newhub;
         let sub_errmsg = new YErrorMsg();
         let retcode = await newhub.testHub(this._networkTimeoutMs, sub_errmsg);
         if (retcode != YAPI_SUCCESS) {
@@ -11256,7 +11257,7 @@ export class YAPIContext {
     async PreregisterHub(url, errmsg) {
         let urlInfo = this.imm_parseRegisteredUrl(url);
         let newhub = this.imm_getHub(urlInfo);
-        if (newhub) {
+        if (newhub || this._pendingHubs[urlInfo.url]) {
             // hub already active
             return YAPI_SUCCESS;
         }
@@ -11290,7 +11291,7 @@ export class YAPIContext {
     async RegisterHubHttpCallback(incomingMessage, serverResponse, errmsg) {
         let urlInfo = this.imm_parseRegisteredUrl('http://callback:4444');
         let newhub = this.imm_getHub(urlInfo);
-        if (newhub) {
+        if (newhub || this._pendingHubs[urlInfo.url]) {
             return YAPI_SUCCESS;
         }
         newhub = this.system_env.getHttpCallbackHub(this, urlInfo, incomingMessage, serverResponse);
@@ -11329,7 +11330,7 @@ export class YAPIContext {
         let authstr = (authpwd ? 'ws:' + authpwd + '@' : '');
         let urlInfo = this.imm_parseRegisteredUrl('http://' + authstr + 'callback:4444');
         let newhub = this.imm_getHub(urlInfo);
-        if (newhub) {
+        if (newhub || this._pendingHubs[urlInfo.url]) {
             return YAPI_SUCCESS;
         }
         newhub = this.system_env.getWebSocketCallbackHub(this, urlInfo, ws);
@@ -11395,6 +11396,9 @@ export class YAPIContext {
         let newhub = this.imm_getHub(urlInfo);
         if (newhub) {
             return (newhub.imm_isOnline() ? YAPI_SUCCESS : YAPI_IO_ERROR);
+        }
+        if (this._pendingHubs[urlInfo.url]) {
+            return YAPI_IO_ERROR;
         }
         newhub = this.imm_registerHub_internal(urlInfo);
         if (!newhub) {
