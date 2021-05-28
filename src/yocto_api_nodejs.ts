@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 43403 2021-01-19 11:58:02Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 44526 2021-04-12 14:34:33Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -297,6 +297,7 @@ class YHttpNodeHub extends YGenericHub
     agent: http.Agent;
     notbynRequest: http.ClientRequest | null              = null;
     notbynOpenPromise: Promise<YConditionalResult> | null = null;
+    notbynOpenTimeoutObj: any = null;   /* actually a number | NodeJS.Timeout */
 
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo)
     {
@@ -332,6 +333,12 @@ class YHttpNodeHub extends YGenericHub
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             this.notbynOpenPromise = new Promise(
                 (resolve, reject) => {
+                    if (mstimeout) {
+                        this.notbynOpenTimeoutObj = setTimeout(() => {
+                            resolve({errorType: YAPI.TIMEOUT, errorMsg: "Timeout on HTTP connection"});
+                            this.disconnect();
+                        }, mstimeout);
+                    }
                     this.notbynTryOpen = () => {
                         this.notbynRequest = http.request(options, (res: http.IncomingMessage) => {
                             this._firstArrivalCallback = true;
@@ -358,6 +365,11 @@ class YHttpNodeHub extends YGenericHub
                                     this.testHub(0, errmsg);
                                 });
                                 if(!this._hubAdded) {
+                                    // registration is now complete
+                                    if (this.notbynOpenTimeoutObj) {
+                                        clearTimeout(this.notbynOpenTimeoutObj);
+                                        this.notbynOpenTimeoutObj = null;
+                                    }
                                     this.signalHubConnected().then(() => {
                                         resolve({ errorType: YAPI_SUCCESS, errorMsg: "" });
                                     });
@@ -448,7 +460,7 @@ class YHttpNodeHub extends YGenericHub
     {
         this.imm_commonDisconnect();
         if(this.notbynRequest) {
-            this.notbynRequest.abort();
+            this.notbynRequest.destroy();
         }
     }
 }

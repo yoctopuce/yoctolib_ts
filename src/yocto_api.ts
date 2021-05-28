@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 44114 2021-03-03 17:47:55Z mvuilleu $
+ * $Id: yocto_api.ts 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -8411,7 +8411,7 @@ export class YDataLogger extends YFunction
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         LIGHTMK3.dataLogger.
+     *         RX420MA1.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -8447,7 +8447,7 @@ export class YDataLogger extends YFunction
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         LIGHTMK3.dataLogger.
+     *         RX420MA1.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -8784,6 +8784,7 @@ export abstract class YGenericHub
      */
     async signalHubConnected(): Promise<void>
     {
+        this.notbynOpenTimeout = null;
         if(this._connectionType != Y_YHubType.HUB_TESTONLY){
             this._hubAdded = true;
             await this._yapi._addHub(this);
@@ -9260,7 +9261,6 @@ export abstract class YWebSocketHub extends YGenericHub
     // connection state members
     websocket: _YY_WebSocket | null = null;
     notbynOpenPromise: Promise<YConditionalResult> | null = null;
-    notbynOpenTimeout: any = null;      /* actually a number | NodeJS.Timeout */
     notbynOpenTimeoutObj: any = null;   /* actually a number | NodeJS.Timeout */
     tcpChan: (YHTTPRequest | null)[] = [];
     nextAsyncId: number          = 48;
@@ -9340,18 +9340,14 @@ export abstract class YWebSocketHub extends YGenericHub
         this._connectionState = WSConnState.CONNECTING;
         if(!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
-            if (mstimeout) {
-                this.notbynOpenTimeoutObj = setTimeout(() => {
-                    if (this.websocket && this.websocket.terminate) {
-                        try {
-                            this.websocket.terminate();
-                        } catch(e){}
-                    }
-                    //resolve({res: YAPI_TIMEOUT, msg: "Timeout on WebSocket connection"});
-                }, mstimeout);
-            }
             this.notbynOpenPromise = new Promise<YConditionalResult>(
                 (resolve, reject) => {
+                    if (mstimeout) {
+                        this.notbynOpenTimeoutObj = setTimeout(() => {
+                            resolve({errorType: YAPI_TIMEOUT, errorMsg: "Timeout on WebSocket connection"});
+                            this.disconnect();
+                        }, mstimeout);
+                    }
                     this.notbynTryOpen = () => {
                         if (this.disconnecting) {
                             resolve({ errorType: YAPI_IO_ERROR, errorMsg: "I/O error" });
@@ -9366,7 +9362,6 @@ export abstract class YWebSocketHub extends YGenericHub
                                     if (this._connectionState == WSConnState.CONNECTED) {
                                         if(!this._hubAdded) {
                                             // registration is now complete
-                                            this.notbynOpenTimeout = null;
                                             if (this.notbynOpenTimeoutObj) {
                                                 clearTimeout(this.notbynOpenTimeoutObj);
                                                 this.notbynOpenTimeoutObj = null;
@@ -12242,7 +12237,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.44175';
+        return /* version number patched automatically */'1.10.45343';
     }
 
     /**

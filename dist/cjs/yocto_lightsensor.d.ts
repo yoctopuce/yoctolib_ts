@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -38,7 +38,7 @@
  *********************************************************************/
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
 /**
- * YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V3,
+ * YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V4,
  * the Yocto-Proximity or the Yocto-RangeFinder
  *
  * The YLightSensor class allows you to read and configure Yoctopuce light sensors.
@@ -137,7 +137,7 @@ export declare class YLightSensor extends YSensor {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the light sensor, for instance
-     *         LIGHTMK3.lightSensor.
+     *         LIGHTMK4.lightSensor.
      *
      * @return a YLightSensor object allowing you to drive the light sensor.
      */
@@ -163,7 +163,7 @@ export declare class YLightSensor extends YSensor {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the light sensor, for instance
-     *         LIGHTMK3.lightSensor.
+     *         LIGHTMK4.lightSensor.
      *
      * @return a YLightSensor object allowing you to drive the light sensor.
      */

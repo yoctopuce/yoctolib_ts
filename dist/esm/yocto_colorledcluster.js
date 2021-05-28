@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 44921 2021-05-06 08:03:05Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -68,6 +68,7 @@ export class YColorLedCluster extends YFunction {
         this.ACTIVELEDCOUNT_INVALID = YAPI.INVALID_UINT;
         this.LEDTYPE_RGB = 0;
         this.LEDTYPE_RGBW = 1;
+        this.LEDTYPE_WS2811 = 2;
         this.LEDTYPE_INVALID = -1;
         this.MAXLEDCOUNT_INVALID = YAPI.INVALID_UINT;
         this.BLINKSEQMAXCOUNT_INVALID = YAPI.INVALID_UINT;
@@ -136,8 +137,8 @@ export class YColorLedCluster extends YFunction {
     /**
      * Returns the RGB LED type currently handled by the device.
      *
-     * @return either YColorLedCluster.LEDTYPE_RGB or YColorLedCluster.LEDTYPE_RGBW, according to the RGB
-     * LED type currently handled by the device
+     * @return a value among YColorLedCluster.LEDTYPE_RGB, YColorLedCluster.LEDTYPE_RGBW and
+     * YColorLedCluster.LEDTYPE_WS2811 corresponding to the RGB LED type currently handled by the device
      *
      * On failure, throws an exception or returns YColorLedCluster.LEDTYPE_INVALID.
      */
@@ -156,8 +157,8 @@ export class YColorLedCluster extends YFunction {
      * Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
      *
-     * @param newval : either YColorLedCluster.LEDTYPE_RGB or YColorLedCluster.LEDTYPE_RGBW, according to
-     * the RGB LED type currently handled by the device
+     * @param newval : a value among YColorLedCluster.LEDTYPE_RGB, YColorLedCluster.LEDTYPE_RGBW and
+     * YColorLedCluster.LEDTYPE_WS2811 corresponding to the RGB LED type currently handled by the device
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -1224,6 +1225,7 @@ export class YColorLedCluster extends YFunction {
 YColorLedCluster.ACTIVELEDCOUNT_INVALID = YAPI.INVALID_UINT;
 YColorLedCluster.LEDTYPE_RGB = 0;
 YColorLedCluster.LEDTYPE_RGBW = 1;
+YColorLedCluster.LEDTYPE_WS2811 = 2;
 YColorLedCluster.LEDTYPE_INVALID = -1;
 YColorLedCluster.MAXLEDCOUNT_INVALID = YAPI.INVALID_UINT;
 YColorLedCluster.BLINKSEQMAXCOUNT_INVALID = YAPI.INVALID_UINT;

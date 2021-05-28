@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 44921 2021-05-06 08:03:05Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -71,6 +71,7 @@ export class YColorLedCluster extends YFunction
     public readonly ACTIVELEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly LEDTYPE_RGB: YColorLedCluster.LEDTYPE = 0;
     public readonly LEDTYPE_RGBW: YColorLedCluster.LEDTYPE = 1;
+    public readonly LEDTYPE_WS2811: YColorLedCluster.LEDTYPE = 2;
     public readonly LEDTYPE_INVALID: YColorLedCluster.LEDTYPE = -1;
     public readonly MAXLEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly BLINKSEQMAXCOUNT_INVALID: number = YAPI.INVALID_UINT;
@@ -81,6 +82,7 @@ export class YColorLedCluster extends YFunction
     public static readonly ACTIVELEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly LEDTYPE_RGB: YColorLedCluster.LEDTYPE = 0;
     public static readonly LEDTYPE_RGBW: YColorLedCluster.LEDTYPE = 1;
+    public static readonly LEDTYPE_WS2811: YColorLedCluster.LEDTYPE = 2;
     public static readonly LEDTYPE_INVALID: YColorLedCluster.LEDTYPE = -1;
     public static readonly MAXLEDCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly BLINKSEQMAXCOUNT_INVALID: number = YAPI.INVALID_UINT;
@@ -163,8 +165,8 @@ export class YColorLedCluster extends YFunction
     /**
      * Returns the RGB LED type currently handled by the device.
      *
-     * @return either YColorLedCluster.LEDTYPE_RGB or YColorLedCluster.LEDTYPE_RGBW, according to the RGB
-     * LED type currently handled by the device
+     * @return a value among YColorLedCluster.LEDTYPE_RGB, YColorLedCluster.LEDTYPE_RGBW and
+     * YColorLedCluster.LEDTYPE_WS2811 corresponding to the RGB LED type currently handled by the device
      *
      * On failure, throws an exception or returns YColorLedCluster.LEDTYPE_INVALID.
      */
@@ -185,8 +187,8 @@ export class YColorLedCluster extends YFunction
      * Remember to call the matching module
      * saveToFlash() method to save the setting permanently.
      *
-     * @param newval : either YColorLedCluster.LEDTYPE_RGB or YColorLedCluster.LEDTYPE_RGBW, according to
-     * the RGB LED type currently handled by the device
+     * @param newval : a value among YColorLedCluster.LEDTYPE_RGB, YColorLedCluster.LEDTYPE_RGBW and
+     * YColorLedCluster.LEDTYPE_WS2811 corresponding to the RGB LED type currently handled by the device
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -1370,6 +1372,7 @@ export namespace YColorLedCluster {
     export const enum LEDTYPE {
         RGB = 0,
         RGBW = 1,
+        WS2811 = 2,
         INVALID = -1
     }
     export interface ValueCallback { (func: YColorLedCluster, value: string): void }

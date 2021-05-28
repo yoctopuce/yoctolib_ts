@@ -1,4 +1,9 @@
-TypeScript v1.10.44175
+TypeScript v1.10.45343
 
-- Add Yocto-CO2-V2 forced calibration method
-- Fix possible course condition in case of multiple async RegisterHub of the same hub
+- Add edgePerCycle attribute to the QuadratureDecoder
+- Add Example for Yocto-MaxiKnob
+- Fix missing documentation for isReadOnly() method.
+- Fix reconnection after disconnect in http mode
+- Fix TestHub timeout in case of non-responding IP address
+- Fix download of binary files in http mode
+- Return YAPI_UNAUTHORIZED when http auth fails

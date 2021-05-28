@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 44114 2021-03-03 17:47:55Z mvuilleu $
+ * $Id: yocto_api.ts 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -3071,7 +3071,7 @@ export declare class YDataLogger extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         LIGHTMK3.dataLogger.
+     *         RX420MA1.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -3097,7 +3097,7 @@ export declare class YDataLogger extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         LIGHTMK3.dataLogger.
+     *         RX420MA1.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -3372,7 +3372,6 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     _USB_META_WS_RW: number;
     websocket: _YY_WebSocket | null;
     notbynOpenPromise: Promise<YConditionalResult> | null;
-    notbynOpenTimeout: any;
     notbynOpenTimeoutObj: any;
     tcpChan: (YHTTPRequest | null)[];
     nextAsyncId: number;

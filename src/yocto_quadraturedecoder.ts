@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 44023 2021-02-25 09:23:38Z web $
+ *  $Id: yocto_quadraturedecoder.ts 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -55,6 +55,7 @@ export class YQuadratureDecoder extends YSensor
     _className: string;
     _speed: number = YQuadratureDecoder.SPEED_INVALID;
     _decoding: YQuadratureDecoder.DECODING = YQuadratureDecoder.DECODING_INVALID;
+    _edgesPerCycle: number = YQuadratureDecoder.EDGESPERCYCLE_INVALID;
     _valueCallbackQuadratureDecoder: YQuadratureDecoder.ValueCallback | null = null;
     _timedReportCallbackQuadratureDecoder: YQuadratureDecoder.TimedReportCallback | null = null;
 
@@ -62,17 +63,15 @@ export class YQuadratureDecoder extends YSensor
     public readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly DECODING_OFF: YQuadratureDecoder.DECODING = 0;
     public readonly DECODING_ON: YQuadratureDecoder.DECODING = 1;
-    public readonly DECODING_DIV2: YQuadratureDecoder.DECODING = 2;
-    public readonly DECODING_DIV4: YQuadratureDecoder.DECODING = 3;
     public readonly DECODING_INVALID: YQuadratureDecoder.DECODING = -1;
+    public readonly EDGESPERCYCLE_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
     public static readonly SPEED_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly DECODING_OFF: YQuadratureDecoder.DECODING = 0;
     public static readonly DECODING_ON: YQuadratureDecoder.DECODING = 1;
-    public static readonly DECODING_DIV2: YQuadratureDecoder.DECODING = 2;
-    public static readonly DECODING_DIV4: YQuadratureDecoder.DECODING = 3;
     public static readonly DECODING_INVALID: YQuadratureDecoder.DECODING = -1;
+    public static readonly EDGESPERCYCLE_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YQuadratureDecoder attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -93,6 +92,9 @@ export class YQuadratureDecoder extends YSensor
             return 1;
         case 'decoding':
             this._decoding = <YQuadratureDecoder.DECODING> <number> val;
+            return 1;
+        case 'edgesPerCycle':
+            this._edgesPerCycle = <number> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -116,9 +118,9 @@ export class YQuadratureDecoder extends YSensor
     }
 
     /**
-     * Returns the increments frequency, in Hz.
+     * Returns the cycle frequency, in Hz.
      *
-     * @return a floating point number corresponding to the increments frequency, in Hz
+     * @return a floating point number corresponding to the cycle frequency, in Hz
      *
      * On failure, throws an exception or returns YQuadratureDecoder.SPEED_INVALID.
      */
@@ -137,9 +139,8 @@ export class YQuadratureDecoder extends YSensor
     /**
      * Returns the current activation state of the quadrature decoder.
      *
-     * @return a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
-     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the current
-     * activation state of the quadrature decoder
+     * @return either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according to the
+     * current activation state of the quadrature decoder
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
@@ -160,9 +161,8 @@ export class YQuadratureDecoder extends YSensor
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
-     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the
-     * activation state of the quadrature decoder
+     * @param newval : either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according
+     * to the activation state of the quadrature decoder
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -173,6 +173,43 @@ export class YQuadratureDecoder extends YSensor
         let rest_val: string;
         rest_val = String(newval);
         return await this._setAttr('decoding',rest_val);
+    }
+
+    /**
+     * Returns the edge count per full cycle configuration setting.
+     *
+     * @return an integer corresponding to the edge count per full cycle configuration setting
+     *
+     * On failure, throws an exception or returns YQuadratureDecoder.EDGESPERCYCLE_INVALID.
+     */
+    async get_edgesPerCycle(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YQuadratureDecoder.EDGESPERCYCLE_INVALID;
+            }
+        }
+        res = this._edgesPerCycle;
+        return res;
+    }
+
+    /**
+     * Changes the edge count per full cycle configuration setting.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : an integer corresponding to the edge count per full cycle configuration setting
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_edgesPerCycle(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('edgesPerCycle',rest_val);
     }
 
     /**
@@ -393,8 +430,6 @@ export namespace YQuadratureDecoder {
     export const enum DECODING {
         OFF = 0,
         ON = 1,
-        DIV2 = 2,
-        DIV4 = 3,
         INVALID = -1
     }
     export interface ValueCallback { (func: YQuadratureDecoder, value: string): void }    export interface TimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }

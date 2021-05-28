@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 44548 2021-04-13 09:56:42Z mvuilleu $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -63,6 +63,7 @@ export declare class YWatchdog extends YFunction {
     _running: YWatchdog.RUNNING;
     _triggerDelay: number;
     _triggerDuration: number;
+    _lastTrigger: number;
     _valueCallbackWatchdog: YWatchdog.ValueCallback | null;
     _firm: number;
     readonly STATE_A: YWatchdog.STATE;
@@ -87,6 +88,7 @@ export declare class YWatchdog extends YFunction {
     readonly RUNNING_INVALID: YWatchdog.RUNNING;
     readonly TRIGGERDELAY_INVALID: number;
     readonly TRIGGERDURATION_INVALID: number;
+    readonly LASTTRIGGER_INVALID: number;
     static readonly DELAYEDPULSETIMER_INVALID: YWatchdog.DelayedPulse;
     static readonly STATE_A: YWatchdog.STATE;
     static readonly STATE_B: YWatchdog.STATE;
@@ -110,6 +112,7 @@ export declare class YWatchdog extends YFunction {
     static readonly RUNNING_INVALID: YWatchdog.RUNNING;
     static readonly TRIGGERDELAY_INVALID: number;
     static readonly TRIGGERDURATION_INVALID: number;
+    static readonly LASTTRIGGER_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -366,6 +369,14 @@ export declare class YWatchdog extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_triggerDuration(newval: number): Promise<number>;
+    /**
+     * Returns the number of seconds spent since the last output power-up event.
+     *
+     * @return an integer corresponding to the number of seconds spent since the last output power-up event
+     *
+     * On failure, throws an exception or returns YWatchdog.LASTTRIGGER_INVALID.
+     */
+    get_lastTrigger(): Promise<number>;
     /**
      * Retrieves a watchdog for a given identifier.
      * The identifier can be specified using several formats:

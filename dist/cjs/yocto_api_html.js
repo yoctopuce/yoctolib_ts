@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 43403 2021-01-19 11:58:02Z mvuilleu $
+ * $Id: yocto_api_html.ts 44679 2021-04-25 21:08:54Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -127,8 +127,7 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
         super(yapi, urlInfo);
         this.notbynRequest = null;
         this.notbynOpenPromise = null;
-        this.notbynRequest = null;
-        this.notbynOpenPromise = null;
+        this.notbynOpenTimeoutObj = null; /* actually a number | NodeJS.Timeout */
     }
     /** Handle HTTP-based event-monitoring work on a registered hub
      *
@@ -150,6 +149,12 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
         if (!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             this.notbynOpenPromise = new Promise((resolve, reject) => {
+                if (mstimeout) {
+                    this.notbynOpenTimeoutObj = setTimeout(() => {
+                        resolve({ errorType: yocto_api_js_1.YAPI.TIMEOUT, errorMsg: "Timeout on HTTP connection" });
+                        this.disconnect();
+                    }, mstimeout);
+                }
                 this.notbynTryOpen = () => {
                     let xmlHttpRequest = new XMLHttpRequest();
                     this._firstArrivalCallback = true;
@@ -165,6 +170,9 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                                 (xmlHttpRequest.status >> 0) != 200 &&
                                 (xmlHttpRequest.status >> 0) != 304) {
                                 // connection error
+                                if ((xmlHttpRequest.status >> 0) == 401) {
+                                    resolve({ errorType: yocto_api_js_1.YAPI.UNAUTHORIZED, errorMsg: "Unauthorized access" });
+                                }
                                 if (!this.imm_testHubAgainLater()) {
                                     resolve({ errorType: yocto_api_js_1.YAPI.IO_ERROR, errorMsg: "I/O error" });
                                 }
@@ -172,6 +180,11 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                             else {
                                 // receiving data properly
                                 if (!this._hubAdded) {
+                                    // registration is now complete
+                                    if (this.notbynOpenTimeoutObj) {
+                                        clearTimeout(this.notbynOpenTimeoutObj);
+                                        this.notbynOpenTimeoutObj = null;
+                                    }
                                     this.signalHubConnected().then(() => {
                                         resolve({ errorType: yocto_api_js_1.YAPI_SUCCESS, errorMsg: "" });
                                     });
@@ -192,6 +205,12 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                                     this.testHub(0, errmsg);
                                 }
                             }
+                        }
+                    });
+                    xmlHttpRequest.onerror = (() => {
+                        // connection aborted, need to reconnect ASAP
+                        if (!this.imm_testHubAgainLater()) {
+                            resolve({ errorType: yocto_api_js_1.YAPI.IO_ERROR, errorMsg: "I/O error" });
                         }
                     });
                     this.notbynRequest.send('');
@@ -219,6 +238,7 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
             let prefix = this.urlInfo.url.slice(0, -1);
             let httpRequest = new XMLHttpRequest();
             httpRequest.open(method, prefix + devUrl, true, this.urlInfo.user, this.urlInfo.pass);
+            httpRequest.overrideMimeType('text/plain; charset=x-user-defined');
             httpRequest.onreadystatechange = (() => {
                 if (httpRequest.readyState == 4) {
                     let yreq = new yocto_api_js_1.YHTTPRequest(null);

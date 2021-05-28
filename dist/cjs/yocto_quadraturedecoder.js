@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 44023 2021-02-25 09:23:38Z web $
+ *  $Id: yocto_quadraturedecoder.ts 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -56,15 +56,15 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
         super(yapi, func);
         this._speed = YQuadratureDecoder.SPEED_INVALID;
         this._decoding = YQuadratureDecoder.DECODING_INVALID;
+        this._edgesPerCycle = YQuadratureDecoder.EDGESPERCYCLE_INVALID;
         this._valueCallbackQuadratureDecoder = null;
         this._timedReportCallbackQuadratureDecoder = null;
         // API symbols as object properties
         this.SPEED_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.DECODING_OFF = 0;
         this.DECODING_ON = 1;
-        this.DECODING_DIV2 = 2;
-        this.DECODING_DIV4 = 3;
         this.DECODING_INVALID = -1;
+        this.EDGESPERCYCLE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this._className = 'QuadratureDecoder';
         //--- (end of YQuadratureDecoder constructor)
     }
@@ -76,6 +76,9 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
                 return 1;
             case 'decoding':
                 this._decoding = val;
+                return 1;
+            case 'edgesPerCycle':
+                this._edgesPerCycle = val;
                 return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -96,9 +99,9 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
         return await this._setAttr('currentValue', rest_val);
     }
     /**
-     * Returns the increments frequency, in Hz.
+     * Returns the cycle frequency, in Hz.
      *
-     * @return a floating point number corresponding to the increments frequency, in Hz
+     * @return a floating point number corresponding to the cycle frequency, in Hz
      *
      * On failure, throws an exception or returns YQuadratureDecoder.SPEED_INVALID.
      */
@@ -115,9 +118,8 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
     /**
      * Returns the current activation state of the quadrature decoder.
      *
-     * @return a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
-     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the current
-     * activation state of the quadrature decoder
+     * @return either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according to the
+     * current activation state of the quadrature decoder
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
@@ -136,9 +138,8 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
-     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the
-     * activation state of the quadrature decoder
+     * @param newval : either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according
+     * to the activation state of the quadrature decoder
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -148,6 +149,39 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
         let rest_val;
         rest_val = String(newval);
         return await this._setAttr('decoding', rest_val);
+    }
+    /**
+     * Returns the edge count per full cycle configuration setting.
+     *
+     * @return an integer corresponding to the edge count per full cycle configuration setting
+     *
+     * On failure, throws an exception or returns YQuadratureDecoder.EDGESPERCYCLE_INVALID.
+     */
+    async get_edgesPerCycle() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YQuadratureDecoder.EDGESPERCYCLE_INVALID;
+            }
+        }
+        res = this._edgesPerCycle;
+        return res;
+    }
+    /**
+     * Changes the edge count per full cycle configuration setting.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : an integer corresponding to the edge count per full cycle configuration setting
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_edgesPerCycle(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('edgesPerCycle', rest_val);
     }
     /**
      * Retrieves a quadrature decoder for a given identifier.
@@ -357,7 +391,6 @@ exports.YQuadratureDecoder = YQuadratureDecoder;
 YQuadratureDecoder.SPEED_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YQuadratureDecoder.DECODING_OFF = 0;
 YQuadratureDecoder.DECODING_ON = 1;
-YQuadratureDecoder.DECODING_DIV2 = 2;
-YQuadratureDecoder.DECODING_DIV4 = 3;
 YQuadratureDecoder.DECODING_INVALID = -1;
+YQuadratureDecoder.EDGESPERCYCLE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 //# sourceMappingURL=yocto_quadraturedecoder.js.map

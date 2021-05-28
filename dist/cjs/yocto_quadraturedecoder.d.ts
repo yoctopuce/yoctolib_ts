@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 44023 2021-02-25 09:23:38Z web $
+ *  $Id: yocto_quadraturedecoder.ts 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -48,20 +48,19 @@ export declare class YQuadratureDecoder extends YSensor {
     _className: string;
     _speed: number;
     _decoding: YQuadratureDecoder.DECODING;
+    _edgesPerCycle: number;
     _valueCallbackQuadratureDecoder: YQuadratureDecoder.ValueCallback | null;
     _timedReportCallbackQuadratureDecoder: YQuadratureDecoder.TimedReportCallback | null;
     readonly SPEED_INVALID: number;
     readonly DECODING_OFF: YQuadratureDecoder.DECODING;
     readonly DECODING_ON: YQuadratureDecoder.DECODING;
-    readonly DECODING_DIV2: YQuadratureDecoder.DECODING;
-    readonly DECODING_DIV4: YQuadratureDecoder.DECODING;
     readonly DECODING_INVALID: YQuadratureDecoder.DECODING;
+    readonly EDGESPERCYCLE_INVALID: number;
     static readonly SPEED_INVALID: number;
     static readonly DECODING_OFF: YQuadratureDecoder.DECODING;
     static readonly DECODING_ON: YQuadratureDecoder.DECODING;
-    static readonly DECODING_DIV2: YQuadratureDecoder.DECODING;
-    static readonly DECODING_DIV4: YQuadratureDecoder.DECODING;
     static readonly DECODING_INVALID: YQuadratureDecoder.DECODING;
+    static readonly EDGESPERCYCLE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
     /**
@@ -76,9 +75,9 @@ export declare class YQuadratureDecoder extends YSensor {
      */
     set_currentValue(newval: number): Promise<number>;
     /**
-     * Returns the increments frequency, in Hz.
+     * Returns the cycle frequency, in Hz.
      *
-     * @return a floating point number corresponding to the increments frequency, in Hz
+     * @return a floating point number corresponding to the cycle frequency, in Hz
      *
      * On failure, throws an exception or returns YQuadratureDecoder.SPEED_INVALID.
      */
@@ -86,9 +85,8 @@ export declare class YQuadratureDecoder extends YSensor {
     /**
      * Returns the current activation state of the quadrature decoder.
      *
-     * @return a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
-     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the current
-     * activation state of the quadrature decoder
+     * @return either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according to the
+     * current activation state of the quadrature decoder
      *
      * On failure, throws an exception or returns YQuadratureDecoder.DECODING_INVALID.
      */
@@ -98,15 +96,34 @@ export declare class YQuadratureDecoder extends YSensor {
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
-     * @param newval : a value among YQuadratureDecoder.DECODING_OFF, YQuadratureDecoder.DECODING_ON,
-     * YQuadratureDecoder.DECODING_DIV2 and YQuadratureDecoder.DECODING_DIV4 corresponding to the
-     * activation state of the quadrature decoder
+     * @param newval : either YQuadratureDecoder.DECODING_OFF or YQuadratureDecoder.DECODING_ON, according
+     * to the activation state of the quadrature decoder
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
     set_decoding(newval: YQuadratureDecoder.DECODING): Promise<number>;
+    /**
+     * Returns the edge count per full cycle configuration setting.
+     *
+     * @return an integer corresponding to the edge count per full cycle configuration setting
+     *
+     * On failure, throws an exception or returns YQuadratureDecoder.EDGESPERCYCLE_INVALID.
+     */
+    get_edgesPerCycle(): Promise<number>;
+    /**
+     * Changes the edge count per full cycle configuration setting.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : an integer corresponding to the edge count per full cycle configuration setting
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_edgesPerCycle(newval: number): Promise<number>;
     /**
      * Retrieves a quadrature decoder for a given identifier.
      * The identifier can be specified using several formats:
@@ -226,8 +243,6 @@ export declare namespace YQuadratureDecoder {
     const enum DECODING {
         OFF = 0,
         ON = 1,
-        DIV2 = 2,
-        DIV4 = 3,
         INVALID = -1
     }
     interface ValueCallback {

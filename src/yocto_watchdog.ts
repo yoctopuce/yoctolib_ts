@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 44548 2021-04-13 09:56:42Z mvuilleu $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -70,6 +70,7 @@ export class YWatchdog extends YFunction
     _running: YWatchdog.RUNNING = YWatchdog.RUNNING_INVALID;
     _triggerDelay: number = YWatchdog.TRIGGERDELAY_INVALID;
     _triggerDuration: number = YWatchdog.TRIGGERDURATION_INVALID;
+    _lastTrigger: number = YWatchdog.LASTTRIGGER_INVALID;
     _valueCallbackWatchdog: YWatchdog.ValueCallback | null = null;
     _firm: number = 0;
 
@@ -96,6 +97,7 @@ export class YWatchdog extends YFunction
     public readonly RUNNING_INVALID: YWatchdog.RUNNING = -1;
     public readonly TRIGGERDELAY_INVALID: number = YAPI.INVALID_LONG;
     public readonly TRIGGERDURATION_INVALID: number = YAPI.INVALID_LONG;
+    public readonly LASTTRIGGER_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
     public static readonly DELAYEDPULSETIMER_INVALID: YWatchdog.DelayedPulse = {};
@@ -121,6 +123,7 @@ export class YWatchdog extends YFunction
     public static readonly RUNNING_INVALID: YWatchdog.RUNNING = -1;
     public static readonly TRIGGERDELAY_INVALID: number = YAPI.INVALID_LONG;
     public static readonly TRIGGERDURATION_INVALID: number = YAPI.INVALID_LONG;
+    public static readonly LASTTRIGGER_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YWatchdog attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -171,6 +174,9 @@ export class YWatchdog extends YFunction
             return 1;
         case 'triggerDuration':
             this._triggerDuration = <number> <number> val;
+            return 1;
+        case 'lastTrigger':
+            this._lastTrigger = <number> <number> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -644,6 +650,25 @@ export class YWatchdog extends YFunction
         let rest_val: string;
         rest_val = String(newval);
         return await this._setAttr('triggerDuration',rest_val);
+    }
+
+    /**
+     * Returns the number of seconds spent since the last output power-up event.
+     *
+     * @return an integer corresponding to the number of seconds spent since the last output power-up event
+     *
+     * On failure, throws an exception or returns YWatchdog.LASTTRIGGER_INVALID.
+     */
+    async get_lastTrigger(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YWatchdog.LASTTRIGGER_INVALID;
+            }
+        }
+        res = this._lastTrigger;
+        return res;
     }
 
     /**
