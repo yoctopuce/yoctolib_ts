@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 45292 2021-05-25 23:27:54Z mvuilleu $
+ * $Id: yocto_api.ts 46019 2021-08-16 17:44:41Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -53,6 +53,7 @@ export const YAPI_DOUBLE_ACCES = -11; // you have two process that try to access
 export const YAPI_UNAUTHORIZED = -12; // unauthorized access to password-protected device
 export const YAPI_RTC_NOT_READY = -13; // real-time clock has not been initialized (or time was lost)
 export const YAPI_FILE_NOT_FOUND = -14; // the file is not found
+export const YAPI_SSL_ERROR = -15; // Error reported by mbedSSL
 export const YAPI_INVALID_INT = 0x7fffffff;
 export const YAPI_INVALID_UINT = -1;
 export const YAPI_INVALID_LONG = 0x7fffffffffffffff;
@@ -816,9 +817,16 @@ export class YDataStream {
         if (this._isAvg) {
             while (idx + 3 < udat.length) {
                 dat.length = 0;
-                dat.push(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
-                dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
-                dat.push(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
+                    dat.push(NaN);
+                    dat.push(NaN);
+                    dat.push(NaN);
+                }
+                else {
+                    dat.push(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
+                    dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                    dat.push(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                }
                 idx = idx + 6;
                 this._values.push(dat.slice());
             }
@@ -826,7 +834,12 @@ export class YDataStream {
         else {
             while (idx + 1 < udat.length) {
                 dat.length = 0;
-                dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
+                    dat.push(NaN);
+                }
+                else {
+                    dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                }
                 this._values.push(dat.slice());
                 idx = idx + 2;
             }
@@ -1353,6 +1366,7 @@ export class YDataSet {
         let tim;
         let itv;
         let fitv;
+        let avgv;
         let end_;
         let nCols;
         let minCol;
@@ -1404,8 +1418,9 @@ export class YDataSet {
             else {
                 end_ = tim + itv;
             }
-            if ((end_ > this._startTimeMs) && ((this._endTimeMs == 0) || (tim < this._endTimeMs))) {
-                this._measures.push(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+            avgv = dataRows[ii][avgCol];
+            if ((end_ > this._startTimeMs) && ((this._endTimeMs == 0) || (tim < this._endTimeMs)) && !(isNaN(avgv))) {
+                this._measures.push(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], avgv, dataRows[ii][maxCol]));
             }
             tim = end_;
         }
@@ -4360,7 +4375,7 @@ export class YModule extends YFunction {
         if (devid == YAPI_INVALID_STRING) {
             return '';
         }
-        let lockdev = this._yapi.imm_getDevice(this._serial);
+        let lockdev = this._yapi.imm_getDevice(devid);
         if (!lockdev) {
             return '';
         }
@@ -7460,7 +7475,7 @@ export class YDataLogger extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK4.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -7494,7 +7509,7 @@ export class YDataLogger extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK4.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -9391,6 +9406,7 @@ export class YAPIContext {
         this.UNAUTHORIZED = -12;
         this.RTC_NOT_READY = -13;
         this.FILE_NOT_FOUND = -14;
+        this.SSL_ERROR = -15;
         this.defaultCacheValidity = 5;
         //--- (end of generated code: YAPIContext attributes declaration)
         // API symbols
@@ -10932,7 +10948,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.45343';
+        return /* version number patched automatically */ '1.10.46020';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -11893,5 +11909,6 @@ YAPIContext.DOUBLE_ACCES = -11;
 YAPIContext.UNAUTHORIZED = -12;
 YAPIContext.RTC_NOT_READY = -13;
 YAPIContext.FILE_NOT_FOUND = -14;
+YAPIContext.SSL_ERROR = -15;
 export var YAPI = new YAPIContext();
 //# sourceMappingURL=yocto_api.js.map

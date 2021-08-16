@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 44526 2021-04-12 14:34:33Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 45834 2021-08-03 16:55:35Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *

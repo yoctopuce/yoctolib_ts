@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 45292 2021-05-25 23:27:54Z mvuilleu $
+ * $Id: yocto_api.ts 46019 2021-08-16 17:44:41Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -51,6 +51,7 @@ export declare const YAPI_DOUBLE_ACCES: number;
 export declare const YAPI_UNAUTHORIZED: number;
 export declare const YAPI_RTC_NOT_READY: number;
 export declare const YAPI_FILE_NOT_FOUND: number;
+export declare const YAPI_SSL_ERROR: number;
 export declare const YAPI_INVALID_INT: number;
 export declare const YAPI_INVALID_UINT: number;
 export declare const YAPI_INVALID_LONG: number;
@@ -207,7 +208,7 @@ declare class YFunctionType {
      */
     imm_getNextHardwareId(str_hwid: string): string | null;
 }
-interface YDownloadProgressCallback {
+export interface YDownloadProgressCallback {
     (curr: number, total: number): void;
 }
 export declare class YHTTPBody {
@@ -3071,7 +3072,7 @@ export declare class YDataLogger extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK4.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -3097,7 +3098,7 @@ export declare class YDataLogger extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK4.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -3553,6 +3554,7 @@ export declare class YAPIContext {
     readonly UNAUTHORIZED: number;
     readonly RTC_NOT_READY: number;
     readonly FILE_NOT_FOUND: number;
+    readonly SSL_ERROR: number;
     defaultCacheValidity: number;
     static readonly SUCCESS: number;
     static readonly NOT_INITIALIZED: number;
@@ -3569,6 +3571,7 @@ export declare class YAPIContext {
     static readonly UNAUTHORIZED: number;
     static readonly RTC_NOT_READY: number;
     static readonly FILE_NOT_FOUND: number;
+    static readonly SSL_ERROR: number;
     readonly INVALID_INT: number;
     readonly INVALID_UINT: number;
     readonly INVALID_LONG: number;

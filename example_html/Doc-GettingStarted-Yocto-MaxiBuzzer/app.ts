@@ -15,8 +15,6 @@ import { YBuzzer } from "../../dist/esm/yocto_buzzer.js"
 import { YColorLedCluster } from "../../dist/esm/yocto_colorledcluster.js"
 import { YAnButton } from "../../dist/esm/yocto_anbutton.js"
 
-
-
 import { Chooser } from "./chooser.js"
 
 function error(msg: string)

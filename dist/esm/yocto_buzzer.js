@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 45843 2021-08-04 07:51:59Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -39,7 +39,8 @@
 import { YAPI, YFunction } from './yocto_api.js';
 //--- (YBuzzer class start)
 /**
- * YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer or the Yocto-MaxiBuzzer
+ * YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer, the
+ * Yocto-MaxiBuzzer or the Yocto-MaxiKnob
  *
  * The YBuzzer class allows you to drive a buzzer. You can
  * choose the frequency and the volume at which the buzzer must sound.

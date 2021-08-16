@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_wakeupmonitor.ts 45843 2021-08-04 07:51:59Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -39,7 +39,7 @@
 import { YAPIContext, YFunction } from './yocto_api.js';
 /**
  * YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
- * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
+ * YoctoHub-GSM-2G, the YoctoHub-GSM-3G-EU, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * The YWakeUpMonitor class handles globally all wake-up sources, as well
  * as automated sleep mode.
@@ -187,7 +187,7 @@ export declare class YWakeUpMonitor extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the wake-up monitor, for instance
-     *         YHUBGSM3.wakeUpMonitor.
+     *         YHUBGSM1.wakeUpMonitor.
      *
      * @return a YWakeUpMonitor object allowing you to drive the wake-up monitor.
      */
@@ -213,7 +213,7 @@ export declare class YWakeUpMonitor extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the wake-up monitor, for instance
-     *         YHUBGSM3.wakeUpMonitor.
+     *         YHUBGSM1.wakeUpMonitor.
      *
      * @return a YWakeUpMonitor object allowing you to drive the wake-up monitor.
      */

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 45843 2021-08-04 07:51:59Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -39,7 +39,7 @@
 import { YAPIContext, YFunction } from './yocto_api.js';
 /**
  * YRealTimeClock Class: real-time clock control interface, available for instance in the
- * YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
+ * YoctoHub-GSM-2G, the YoctoHub-GSM-3G-EU, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  *
  * The YRealTimeClock class provide access to the embedded real-time clock available on some Yoctopuce
  * devices. It can provide current date and time, even after a power outage
@@ -149,7 +149,7 @@ export declare class YRealTimeClock extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the real-time clock, for instance
-     *         YHUBGSM3.realTimeClock.
+     *         YHUBGSM1.realTimeClock.
      *
      * @return a YRealTimeClock object allowing you to drive the real-time clock.
      */
@@ -175,7 +175,7 @@ export declare class YRealTimeClock extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the real-time clock, for instance
-     *         YHUBGSM3.realTimeClock.
+     *         YHUBGSM1.realTimeClock.
      *
      * @return a YRealTimeClock object allowing you to drive the real-time clock.
      */

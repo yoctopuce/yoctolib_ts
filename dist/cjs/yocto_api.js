@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 45292 2021-05-25 23:27:54Z mvuilleu $
+ * $Id: yocto_api.ts 46019 2021-08-16 17:44:41Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -38,7 +38,7 @@
  *
  *********************************************************************/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.YAPI = exports.YAPIContext = exports.YGenericSSDPManager = exports.YWebSocketHub = exports.YGenericHub = exports.YSystemEnv = exports.YDataLogger = exports.YMeasure = exports.YSensor = exports.YModule = exports.YFunction = exports.YFirmwareUpdate = exports.YFirmwareFile = exports.YConsolidatedDataSet = exports.YDataSet = exports.YDataStream = exports.YHTTPRequest = exports.YHTTPBody = exports.YoctoError = exports.YErrorMsg = exports.Y_DETECT_ALL = exports.Y_DETECT_NET = exports.Y_DETECT_USB = exports.Y_DETECT_NONE = exports.Y_FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_MAX_DOUBLE = exports.YAPI_MIN_DOUBLE = exports.YAPI_INVALID_STRING = exports.YAPI_INVALID_DOUBLE = exports.YAPI_INVALID_LONG = exports.YAPI_INVALID_UINT = exports.YAPI_INVALID_INT = exports.YAPI_FILE_NOT_FOUND = exports.YAPI_RTC_NOT_READY = exports.YAPI_UNAUTHORIZED = exports.YAPI_DOUBLE_ACCES = exports.YAPI_EXHAUSTED = exports.YAPI_NO_MORE_DATA = exports.YAPI_IO_ERROR = exports.YAPI_TIMEOUT = exports.YAPI_DEVICE_BUSY = exports.YAPI_VERSION_MISMATCH = exports.YAPI_DEVICE_NOT_FOUND = exports.YAPI_NOT_SUPPORTED = exports.YAPI_INVALID_ARGUMENT = exports.YAPI_NOT_INITIALIZED = exports.YAPI_SUCCESS = void 0;
+exports.YAPI = exports.YAPIContext = exports.YGenericSSDPManager = exports.YWebSocketHub = exports.YGenericHub = exports.YSystemEnv = exports.YDataLogger = exports.YMeasure = exports.YSensor = exports.YModule = exports.YFunction = exports.YFirmwareUpdate = exports.YFirmwareFile = exports.YConsolidatedDataSet = exports.YDataSet = exports.YDataStream = exports.YHTTPRequest = exports.YHTTPBody = exports.YoctoError = exports.YErrorMsg = exports.Y_DETECT_ALL = exports.Y_DETECT_NET = exports.Y_DETECT_USB = exports.Y_DETECT_NONE = exports.Y_FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_MAX_DOUBLE = exports.YAPI_MIN_DOUBLE = exports.YAPI_INVALID_STRING = exports.YAPI_INVALID_DOUBLE = exports.YAPI_INVALID_LONG = exports.YAPI_INVALID_UINT = exports.YAPI_INVALID_INT = exports.YAPI_SSL_ERROR = exports.YAPI_FILE_NOT_FOUND = exports.YAPI_RTC_NOT_READY = exports.YAPI_UNAUTHORIZED = exports.YAPI_DOUBLE_ACCES = exports.YAPI_EXHAUSTED = exports.YAPI_NO_MORE_DATA = exports.YAPI_IO_ERROR = exports.YAPI_TIMEOUT = exports.YAPI_DEVICE_BUSY = exports.YAPI_VERSION_MISMATCH = exports.YAPI_DEVICE_NOT_FOUND = exports.YAPI_NOT_SUPPORTED = exports.YAPI_INVALID_ARGUMENT = exports.YAPI_NOT_INITIALIZED = exports.YAPI_SUCCESS = void 0;
 //--- (generated code: YFunction return codes)
 // Yoctopuce error codes, also used by default as function return value
 exports.YAPI_SUCCESS = 0; // everything worked all right
@@ -56,6 +56,7 @@ exports.YAPI_DOUBLE_ACCES = -11; // you have two process that try to access to t
 exports.YAPI_UNAUTHORIZED = -12; // unauthorized access to password-protected device
 exports.YAPI_RTC_NOT_READY = -13; // real-time clock has not been initialized (or time was lost)
 exports.YAPI_FILE_NOT_FOUND = -14; // the file is not found
+exports.YAPI_SSL_ERROR = -15; // Error reported by mbedSSL
 exports.YAPI_INVALID_INT = 0x7fffffff;
 exports.YAPI_INVALID_UINT = -1;
 exports.YAPI_INVALID_LONG = 0x7fffffffffffffff;
@@ -823,9 +824,16 @@ class YDataStream {
         if (this._isAvg) {
             while (idx + 3 < udat.length) {
                 dat.length = 0;
-                dat.push(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
-                dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
-                dat.push(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
+                    dat.push(NaN);
+                    dat.push(NaN);
+                    dat.push(NaN);
+                }
+                else {
+                    dat.push(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
+                    dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                    dat.push(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                }
                 idx = idx + 6;
                 this._values.push(dat.slice());
             }
@@ -833,7 +841,12 @@ class YDataStream {
         else {
             while (idx + 1 < udat.length) {
                 dat.length = 0;
-                dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
+                    dat.push(NaN);
+                }
+                else {
+                    dat.push(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                }
                 this._values.push(dat.slice());
                 idx = idx + 2;
             }
@@ -1361,6 +1374,7 @@ class YDataSet {
         let tim;
         let itv;
         let fitv;
+        let avgv;
         let end_;
         let nCols;
         let minCol;
@@ -1412,8 +1426,9 @@ class YDataSet {
             else {
                 end_ = tim + itv;
             }
-            if ((end_ > this._startTimeMs) && ((this._endTimeMs == 0) || (tim < this._endTimeMs))) {
-                this._measures.push(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+            avgv = dataRows[ii][avgCol];
+            if ((end_ > this._startTimeMs) && ((this._endTimeMs == 0) || (tim < this._endTimeMs)) && !(isNaN(avgv))) {
+                this._measures.push(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], avgv, dataRows[ii][maxCol]));
             }
             tim = end_;
         }
@@ -4373,7 +4388,7 @@ class YModule extends YFunction {
         if (devid == exports.YAPI_INVALID_STRING) {
             return '';
         }
-        let lockdev = this._yapi.imm_getDevice(this._serial);
+        let lockdev = this._yapi.imm_getDevice(devid);
         if (!lockdev) {
             return '';
         }
@@ -7476,7 +7491,7 @@ class YDataLogger extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK4.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -7510,7 +7525,7 @@ class YDataLogger extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the data logger, for instance
-     *         RX420MA1.dataLogger.
+     *         LIGHTMK4.dataLogger.
      *
      * @return a YDataLogger object allowing you to drive the data logger.
      */
@@ -9412,6 +9427,7 @@ class YAPIContext {
         this.UNAUTHORIZED = -12;
         this.RTC_NOT_READY = -13;
         this.FILE_NOT_FOUND = -14;
+        this.SSL_ERROR = -15;
         this.defaultCacheValidity = 5;
         //--- (end of generated code: YAPIContext attributes declaration)
         // API symbols
@@ -10953,7 +10969,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.45343';
+        return /* version number patched automatically */ '1.10.46020';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -11915,5 +11931,6 @@ YAPIContext.DOUBLE_ACCES = -11;
 YAPIContext.UNAUTHORIZED = -12;
 YAPIContext.RTC_NOT_READY = -13;
 YAPIContext.FILE_NOT_FOUND = -14;
+YAPIContext.SSL_ERROR = -15;
 exports.YAPI = new YAPIContext();
 //# sourceMappingURL=yocto_api.js.map
