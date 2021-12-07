@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_tvoc.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -285,7 +285,8 @@ export class YTvoc extends YSensor
 
 export namespace YTvoc {
     //--- (YTvoc definitions)
-    export interface ValueCallback { (func: YTvoc, value: string): void }    export interface TimedReportCallback { (func: YTvoc, measure: YMeasure): void }
+    export interface ValueCallback { (func: YTvoc, value: string): void }
+    export interface TimedReportCallback { (func: YTvoc, measure: YMeasure): void }
     //--- (end of YTvoc definitions)
 }
 

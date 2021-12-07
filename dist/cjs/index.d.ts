@@ -26,6 +26,7 @@ export * from './yocto_gyro.js';
 export * from './yocto_hubport.js';
 export * from './yocto_humidity.js';
 export * from './yocto_i2cport.js';
+export * from './yocto_inputchain.js';
 export * from './yocto_latitude.js';
 export * from './yocto_led.js';
 export * from './yocto_lightsensor.js';

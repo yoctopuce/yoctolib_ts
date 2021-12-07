@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_rangefinder.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -633,7 +633,8 @@ export namespace YRangeFinder {
         HIGH_SPEED = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YRangeFinder, value: string): void }    export interface TimedReportCallback { (func: YRangeFinder, measure: YMeasure): void }
+    export interface ValueCallback { (func: YRangeFinder, value: string): void }
+    export interface TimedReportCallback { (func: YRangeFinder, measure: YMeasure): void }
     //--- (end of YRangeFinder definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 45292 2021-05-25 23:27:54Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -397,7 +397,8 @@ export namespace YLightSensor {
         HIGH_RESOLUTION = 5,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YLightSensor, value: string): void }    export interface TimedReportCallback { (func: YLightSensor, measure: YMeasure): void }
+    export interface ValueCallback { (func: YLightSensor, value: string): void }
+    export interface TimedReportCallback { (func: YLightSensor, measure: YMeasure): void }
     //--- (end of YLightSensor definitions)
 }
 

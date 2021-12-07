@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 46019 2021-08-16 17:44:41Z mvuilleu $
+ * $Id: yocto_api.ts 47311 2021-11-16 09:46:24Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -7962,7 +7962,8 @@ export namespace YSensor {
         PERIOD_MAX = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YSensor, value: string): void }    export interface TimedReportCallback { (func: YSensor, measure: YMeasure): void }
+    export interface ValueCallback { (func: YSensor, value: string): void }
+    export interface TimedReportCallback { (func: YSensor, measure: YMeasure): void }
     //--- (end of generated code: YSensor definitions)
 }
 
@@ -11515,7 +11516,10 @@ export class YAPIContext
         let dev = null;
         let serial;
 
-        if(str_device.substr(0,7) == 'http://' || str_device.substr(0,5) == 'ws://' || str_device.substr(0,6) == 'wss://') {
+        if(str_device.substr(0,7) == 'http://' ||
+            str_device.substr(0,5) == 'ws://' ||
+            str_device.substr(0,8) == 'https://' ||
+            str_device.substr(0,6) == 'wss://') {
             // lookup by url
             serial = this._snByUrl[str_device];
             if(serial != undefined) dev = this._devs[serial];
@@ -11820,7 +11824,10 @@ export class YAPIContext
         let res: YHTTPRequest = new YHTTPRequest(null);
         let lockdev: YDevice | null = null;
         let baseUrl: string;
-        if(str_device.substr(0,7) == 'http://' || str_device.substr(0,5) == 'ws://' || str_device.substr(0,6) == 'wss://') {
+        if(str_device.substr(0,7) == 'http://' ||
+            str_device.substr(0,5) == 'ws://' ||
+            str_device.substr(0,8) == 'https://' ||
+            str_device.substr(0,6) == 'wss://') {
             baseUrl = str_device;
             if (baseUrl.slice(-1) != '/') baseUrl = baseUrl + '/';
             if(lines[0].substr(0,12) != 'GET /not.byn') {
@@ -12252,7 +12259,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.46020';
+        return /* version number patched automatically */'1.10.47582';
     }
 
     /**
@@ -12403,6 +12410,9 @@ export class YAPIContext
             str_url = str_url.slice(7);
         } else if(str_url.slice(0,5) == 'ws://') {
             str_url = str_url.slice(5);
+        } else if(str_url.slice(0,8) == 'https://') {
+            proto= 'https://';
+            str_url = str_url.slice(8);
         } else if(str_url.slice(0,6) == 'wss://') {
             proto = 'wss://';
             str_url = str_url.slice(6);
@@ -12479,7 +12489,8 @@ export class YAPIContext
     }
 
     /**
-     * Setup the Yoctopuce library to use modules connected on a given machine. The
+     * Setup the Yoctopuce library to use modules connected on a given machine. Idealy this
+     * call will be made once at the begining of your application.  The
      * parameter will determine how the API will work. Use the following values:
      *
      * <b>usb</b>: When the usb keyword is used, the API will work with
@@ -12512,7 +12523,9 @@ export class YAPIContext
      *
      * http://username:password@address:port
      *
-     * You can call <i>RegisterHub</i> several times to connect to several machines.
+     * You can call <i>RegisterHub</i> several times to connect to several machines. On
+     * the other hand, it is useless and even counterproductive to call <i>RegisterHub</i>
+     * with to same address multiple times during the life of the application.
      *
      * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor

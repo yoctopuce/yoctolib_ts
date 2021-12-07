@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_longitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_longitude.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -284,7 +284,8 @@ export class YLongitude extends YSensor
 
 export namespace YLongitude {
     //--- (YLongitude definitions)
-    export interface ValueCallback { (func: YLongitude, value: string): void }    export interface TimedReportCallback { (func: YLongitude, measure: YMeasure): void }
+    export interface ValueCallback { (func: YLongitude, value: string): void }
+    export interface TimedReportCallback { (func: YLongitude, measure: YMeasure): void }
     //--- (end of YLongitude definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_arithmeticsensor.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -500,7 +500,8 @@ export class YArithmeticSensor extends YSensor
 
 export namespace YArithmeticSensor {
     //--- (YArithmeticSensor definitions)
-    export interface ValueCallback { (func: YArithmeticSensor, value: string): void }    export interface TimedReportCallback { (func: YArithmeticSensor, measure: YMeasure): void }
+    export interface ValueCallback { (func: YArithmeticSensor, value: string): void }
+    export interface TimedReportCallback { (func: YArithmeticSensor, measure: YMeasure): void }
     //--- (end of YArithmeticSensor definitions)
 }
 

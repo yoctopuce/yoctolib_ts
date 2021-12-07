@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_latitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_latitude.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Latitude functions
  *
@@ -284,7 +284,8 @@ export class YLatitude extends YSensor
 
 export namespace YLatitude {
     //--- (YLatitude definitions)
-    export interface ValueCallback { (func: YLatitude, value: string): void }    export interface TimedReportCallback { (func: YLatitude, measure: YMeasure): void }
+    export interface ValueCallback { (func: YLatitude, value: string): void }
+    export interface TimedReportCallback { (func: YLatitude, measure: YMeasure): void }
     //--- (end of YLatitude definitions)
 }
 

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 45292 2021-05-25 23:27:54Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *

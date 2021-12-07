@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_multicellweighscale.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -749,7 +749,8 @@ export namespace YMultiCellWeighScale {
         AC = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YMultiCellWeighScale, value: string): void }    export interface TimedReportCallback { (func: YMultiCellWeighScale, measure: YMeasure): void }
+    export interface ValueCallback { (func: YMultiCellWeighScale, value: string): void }
+    export interface TimedReportCallback { (func: YMultiCellWeighScale, measure: YMeasure): void }
     //--- (end of YMultiCellWeighScale definitions)
 }
 

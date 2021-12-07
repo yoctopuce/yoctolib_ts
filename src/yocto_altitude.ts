@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_altitude.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -391,7 +391,8 @@ export class YAltitude extends YSensor
 
 export namespace YAltitude {
     //--- (YAltitude definitions)
-    export interface ValueCallback { (func: YAltitude, value: string): void }    export interface TimedReportCallback { (func: YAltitude, measure: YMeasure): void }
+    export interface ValueCallback { (func: YAltitude, value: string): void }
+    export interface TimedReportCallback { (func: YAltitude, measure: YMeasure): void }
     //--- (end of YAltitude definitions)
 }
 

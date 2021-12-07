@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_magnetometer.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -421,7 +421,8 @@ export class YMagnetometer extends YSensor
 
 export namespace YMagnetometer {
     //--- (YMagnetometer definitions)
-    export interface ValueCallback { (func: YMagnetometer, value: string): void }    export interface TimedReportCallback { (func: YMagnetometer, measure: YMeasure): void }
+    export interface ValueCallback { (func: YMagnetometer, value: string): void }
+    export interface TimedReportCallback { (func: YMagnetometer, measure: YMeasure): void }
     //--- (end of YMagnetometer definitions)
 }
 

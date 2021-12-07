@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pressure.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_pressure.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -285,7 +285,8 @@ export class YPressure extends YSensor
 
 export namespace YPressure {
     //--- (YPressure definitions)
-    export interface ValueCallback { (func: YPressure, value: string): void }    export interface TimedReportCallback { (func: YPressure, measure: YMeasure): void }
+    export interface ValueCallback { (func: YPressure, value: string): void }
+    export interface TimedReportCallback { (func: YPressure, measure: YMeasure): void }
     //--- (end of YPressure definitions)
 }
 

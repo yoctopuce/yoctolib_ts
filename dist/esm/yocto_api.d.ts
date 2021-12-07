@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 46019 2021-08-16 17:44:41Z mvuilleu $
+ * $Id: yocto_api.ts 47311 2021-11-16 09:46:24Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -3915,7 +3915,8 @@ export declare class YAPIContext {
     imm_registerHub_internal(urlInfo: _YY_UrlInfo): YGenericHub | null;
     imm_forgetHub(hub: YGenericHub): void;
     /**
-     * Setup the Yoctopuce library to use modules connected on a given machine. The
+     * Setup the Yoctopuce library to use modules connected on a given machine. Idealy this
+     * call will be made once at the begining of your application.  The
      * parameter will determine how the API will work. Use the following values:
      *
      * <b>usb</b>: When the usb keyword is used, the API will work with
@@ -3948,7 +3949,9 @@ export declare class YAPIContext {
      *
      * http://username:password@address:port
      *
-     * You can call <i>RegisterHub</i> several times to connect to several machines.
+     * You can call <i>RegisterHub</i> several times to connect to several machines. On
+     * the other hand, it is useless and even counterproductive to call <i>RegisterHub</i>
+     * with to same address multiple times during the life of the application.
      *
      * @param url : a string containing either "usb","callback" or the
      *         root URL of the hub to monitor

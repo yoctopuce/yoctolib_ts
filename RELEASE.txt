@@ -1,4 +1,5 @@
-TypeScript v1.10.46020
+TypeScript v1.10.47582
 
-- Add support for missing measures in DataStream (returned as NaN) and skipping them in DataSet
-- Fix retrieval of module url within arrival callback
+- Add support for YInputChain class
+- Improve documentation of YAPI.RegisterHub
+- Fix use of API over HTTPS

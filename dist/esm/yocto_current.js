@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_current.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Current functions
  *

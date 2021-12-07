@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 44679 2021-04-25 21:08:54Z mvuilleu $
+ * $Id: yocto_api_html.ts 46218 2021-09-06 16:37:37Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -168,6 +168,8 @@ class YHttpHtmlHub extends YGenericHub
         let args = '?len=' + this.notiflen.toString();
         if (this.notifPos > 0) {
             args += '&abs=' + this.notifPos.toString();
+        } else {
+            this._firstArrivalCallback = true;
         }
         if(!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
@@ -181,7 +183,6 @@ class YHttpHtmlHub extends YGenericHub
                     }
                     this.notbynTryOpen = () => {
                         let xmlHttpRequest = new XMLHttpRequest();
-                        this._firstArrivalCallback = true;
                         this.notbynRequest = xmlHttpRequest;
                         xmlHttpRequest.open('GET', this.urlInfo.url+'not.byn'+args, true, '', '');
                         xmlHttpRequest.overrideMimeType('text/plain; charset=x-user-defined');

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 45834 2021-08-03 16:55:35Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 46218 2021-09-06 16:37:37Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -297,6 +297,9 @@ class YHttpNodeHub extends yocto_api_js_1.YGenericHub {
         if (this.notifPos > 0) {
             args = '?abs=' + this.notifPos.toString();
         }
+        else {
+            this._firstArrivalCallback = true;
+        }
         console.log(this.urlInfo);
         let options = {
             method: 'GET',
@@ -316,7 +319,6 @@ class YHttpNodeHub extends yocto_api_js_1.YGenericHub {
                 }
                 this.notbynTryOpen = () => {
                     this.notbynRequest = http.request(options, (res) => {
-                        this._firstArrivalCallback = true;
                         if (this.disconnecting) {
                             return;
                         }

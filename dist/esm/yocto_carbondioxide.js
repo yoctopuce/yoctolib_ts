@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 44175 2021-03-11 11:27:12Z mvuilleu $
+ *  $Id: yocto_carbondioxide.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *

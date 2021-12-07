@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 45843 2021-08-04 07:51:59Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *

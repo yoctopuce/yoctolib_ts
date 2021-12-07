@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 45843 2021-08-04 07:51:59Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -433,7 +433,8 @@ export namespace YQuadratureDecoder {
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YQuadratureDecoder, value: string): void }    export interface TimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }
+    export interface ValueCallback { (func: YQuadratureDecoder, value: string): void }
+    export interface TimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }
     //--- (end of YQuadratureDecoder definitions)
 }
 

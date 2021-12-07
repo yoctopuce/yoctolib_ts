@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -664,7 +664,8 @@ export namespace YGenericSensor {
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YGenericSensor, value: string): void }    export interface TimedReportCallback { (func: YGenericSensor, measure: YMeasure): void }
+    export interface ValueCallback { (func: YGenericSensor, value: string): void }
+    export interface TimedReportCallback { (func: YGenericSensor, measure: YMeasure): void }
     //--- (end of YGenericSensor definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_power.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Power functions
  *
@@ -449,7 +449,8 @@ export class YPower extends YSensor
 
 export namespace YPower {
     //--- (YPower definitions)
-    export interface ValueCallback { (func: YPower, value: string): void }    export interface TimedReportCallback { (func: YPower, measure: YMeasure): void }
+    export interface ValueCallback { (func: YPower, value: string): void }
+    export interface TimedReportCallback { (func: YPower, measure: YMeasure): void }
     //--- (end of YPower definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_gyro.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -299,7 +299,8 @@ async function yInternalGyroCallback(YQt_obj: YQt, str_value: string)
 export namespace YQt
 {
     //--- (generated code: YQt definitions)
-    export interface ValueCallback { (func: YQt, value: string): void }    export interface TimedReportCallback { (func: YQt, measure: YMeasure): void }
+    export interface ValueCallback { (func: YQt, value: string): void }
+    export interface TimedReportCallback { (func: YQt, measure: YMeasure): void }
     //--- (end of generated code: YQt definitions)
 }
 
@@ -1013,7 +1014,8 @@ export class YGyro extends YSensor
 export namespace YGyro
 {
     //--- (generated code: YGyro definitions)
-    export interface ValueCallback { (func: YGyro, value: string): void }    export interface TimedReportCallback { (func: YGyro, measure: YMeasure): void }
+    export interface ValueCallback { (func: YGyro, value: string): void }
+    export interface TimedReportCallback { (func: YGyro, measure: YMeasure): void }
     //--- (end of generated code: YGyro definitions)
     export interface YQuatCallback{ (func: YGyro, w: number, x: number, y:number, z: number): void }
     export interface YAnglesCallback{ (func: YGyro, roll: number, pitch: number, head:number): void }

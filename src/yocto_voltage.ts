@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltage.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_voltage.ts 47311 2021-11-16 09:46:24Z seb $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -350,7 +350,8 @@ export namespace YVoltage {
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YVoltage, value: string): void }    export interface TimedReportCallback { (func: YVoltage, measure: YMeasure): void }
+    export interface ValueCallback { (func: YVoltage, value: string): void }
+    export interface TimedReportCallback { (func: YVoltage, measure: YMeasure): void }
     //--- (end of YVoltage definitions)
 }
 
