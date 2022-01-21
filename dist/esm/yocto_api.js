@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 47311 2021-11-16 09:46:24Z seb $
+ * $Id: yocto_api.ts 48143 2022-01-17 12:38:14Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -9478,19 +9478,30 @@ export class YAPIContext {
     imm_log(msg, ...moreArgs) {
         let now = new Date();
         let day = now.getFullYear().toString() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
-        let time = now.getHours().toString() + ':' + ('0' + now.getMinutes()).slice(-2) + ':' + ('0' + now.getSeconds()).slice(-2);
+        let time = ('0' + now.getHours().toString()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2) + ':' + ('0' + now.getSeconds()).slice(-2);
         let prefix = day + ' ' + time + ' [' + this._uniqueID + '] ';
+        let isError = false;
+        if (moreArgs.length > 0) {
+            if (moreArgs[0].constructor && /Error/i.test(moreArgs[0].constructor.name)) {
+                isError = true;
+            }
+        }
         if (this._logCallback) {
             try {
                 if (moreArgs.length > 0) {
-                    msg += moreArgs[0].toString();
+                    if (moreArgs[0].message) {
+                        msg += moreArgs[0].message;
+                    }
+                    else {
+                        msg += moreArgs[0].toString();
+                    }
                 }
                 this._logCallback(prefix + msg);
             }
             catch (e) {
                 console.error(prefix + 'Exception in custom log callback: ', e);
                 console.log('... while trying to log:');
-                if (moreArgs.length > 0 && moreArgs[0] instanceof Error) {
+                if (isError) {
                     console.error(prefix + msg, ...moreArgs);
                 }
                 else {
@@ -9499,7 +9510,7 @@ export class YAPIContext {
             }
         }
         else {
-            if (moreArgs.length > 0 && moreArgs[0] instanceof Error) {
+            if (isError) {
                 console.error(prefix + msg, ...moreArgs);
             }
             else {
@@ -9634,18 +9645,21 @@ export class YAPIContext {
                             }
                             break;
                         case '-':
-                            if (this._logLevel >= 3) {
-                                this.imm_log('Device ' + serial + ' unplugged');
-                            }
-                            if (this._removalCallback) {
-                                try {
-                                    await this._removalCallback(YModule.FindModuleInContext(this, serial + '.module'));
+                            if (this._devs[serial]) {
+                                // double-event may be generated in case of timeout due to asynchronous calls
+                                if (this._logLevel >= 3) {
+                                    this.imm_log('Device ' + serial + ' unplugged');
                                 }
-                                catch (e) {
-                                    this.imm_log('Exception in device removal callback:', e);
+                                if (this._removalCallback) {
+                                    try {
+                                        await this._removalCallback(YModule.FindModuleInContext(this, serial + '.module'));
+                                    }
+                                    catch (e) {
+                                        this.imm_log('Exception in device removal callback:', e);
+                                    }
                                 }
+                                this.imm_forgetDevice(this._devs[serial]);
                             }
-                            this.imm_forgetDevice(this._devs[serial]);
                             break;
                     }
                 }
@@ -10954,7 +10968,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.47582';
+        return /* version number patched automatically */ '1.10.48220';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
