@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_poweroutput.ts 43762 2021-02-08 15:30:55Z mvuilleu $
+ *  $Id: yocto_poweroutput.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -165,7 +165,7 @@ export class YPowerOutput extends YFunction
      */
     static FindPowerOutput(func: string): YPowerOutput
     {
-        let obj: YPowerOutput;
+        let obj: YPowerOutput | null;
         obj = <YPowerOutput> YFunction._FindFromCache('PowerOutput', func);
         if (obj == null) {
             obj = new YPowerOutput(YAPI, func);
@@ -201,7 +201,7 @@ export class YPowerOutput extends YFunction
      */
     static FindPowerOutputInContext(yctx: YAPIContext, func: string): YPowerOutput
     {
-        let obj: YPowerOutput;
+        let obj: YPowerOutput | null;
         obj = <YPowerOutput> YFunction._FindFromCacheInContext(yctx,  'PowerOutput', func);
         if (obj == null) {
             obj = new YPowerOutput(yctx, func);

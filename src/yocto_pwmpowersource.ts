@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmpowersource.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_pwmpowersource.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -164,7 +164,7 @@ export class YPwmPowerSource extends YFunction
      */
     static FindPwmPowerSource(func: string): YPwmPowerSource
     {
-        let obj: YPwmPowerSource;
+        let obj: YPwmPowerSource | null;
         obj = <YPwmPowerSource> YFunction._FindFromCache('PwmPowerSource', func);
         if (obj == null) {
             obj = new YPwmPowerSource(YAPI, func);
@@ -200,7 +200,7 @@ export class YPwmPowerSource extends YFunction
      */
     static FindPwmPowerSourceInContext(yctx: YAPIContext, func: string): YPwmPowerSource
     {
-        let obj: YPwmPowerSource;
+        let obj: YPwmPowerSource | null;
         obj = <YPwmPowerSource> YFunction._FindFromCacheInContext(yctx,  'PwmPowerSource', func);
         if (obj == null) {
             obj = new YPwmPowerSource(yctx, func);

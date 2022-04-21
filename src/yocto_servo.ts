@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_servo.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_servo.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -282,7 +282,7 @@ export class YServo extends YFunction
 
     async get_move(): Promise<YServo.Move>
     {
-        let res: YServo.Move;
+        let res: YServo.Move | null;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YServo.MOVE_INVALID;
@@ -419,7 +419,7 @@ export class YServo extends YFunction
      */
     static FindServo(func: string): YServo
     {
-        let obj: YServo;
+        let obj: YServo | null;
         obj = <YServo> YFunction._FindFromCache('Servo', func);
         if (obj == null) {
             obj = new YServo(YAPI, func);
@@ -455,7 +455,7 @@ export class YServo extends YFunction
      */
     static FindServoInContext(yctx: YAPIContext, func: string): YServo
     {
-        let obj: YServo;
+        let obj: YServo | null;
         obj = <YServo> YFunction._FindFromCacheInContext(yctx,  'Servo', func);
         if (obj == null) {
             obj = new YServo(yctx, func);

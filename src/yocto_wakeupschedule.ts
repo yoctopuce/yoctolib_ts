@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -391,7 +391,7 @@ export class YWakeUpSchedule extends YFunction
      */
     static FindWakeUpSchedule(func: string): YWakeUpSchedule
     {
-        let obj: YWakeUpSchedule;
+        let obj: YWakeUpSchedule | null;
         obj = <YWakeUpSchedule> YFunction._FindFromCache('WakeUpSchedule', func);
         if (obj == null) {
             obj = new YWakeUpSchedule(YAPI, func);
@@ -427,7 +427,7 @@ export class YWakeUpSchedule extends YFunction
      */
     static FindWakeUpScheduleInContext(yctx: YAPIContext, func: string): YWakeUpSchedule
     {
-        let obj: YWakeUpSchedule;
+        let obj: YWakeUpSchedule | null;
         obj = <YWakeUpSchedule> YFunction._FindFromCacheInContext(yctx,  'WakeUpSchedule', func);
         if (obj == null) {
             obj = new YWakeUpSchedule(yctx, func);

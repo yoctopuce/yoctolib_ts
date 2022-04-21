@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_gyro.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -105,7 +105,7 @@ export class YQt extends YSensor
      */
     static FindQt(func: string): YQt
     {
-        let obj: YQt;
+        let obj: YQt | null;
         obj = <YQt> YFunction._FindFromCache('Qt', func);
         if (obj == null) {
             obj = new YQt(YAPI, func);
@@ -141,7 +141,7 @@ export class YQt extends YSensor
      */
     static FindQtInContext(yctx: YAPIContext, func: string): YQt
     {
-        let obj: YQt;
+        let obj: YQt | null;
         obj = <YQt> YFunction._FindFromCacheInContext(yctx,  'Qt', func);
         if (obj == null) {
             obj = new YQt(yctx, func);
@@ -207,7 +207,7 @@ export class YQt extends YSensor
      */
     async registerTimedReportCallback(callback: YQt.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);
@@ -518,7 +518,7 @@ export class YGyro extends YSensor
      */
     static FindGyro(func: string): YGyro
     {
-        let obj: YGyro;
+        let obj: YGyro | null;
         obj = <YGyro> YFunction._FindFromCache('Gyro', func);
         if (obj == null) {
             obj = new YGyro(YAPI, func);
@@ -554,7 +554,7 @@ export class YGyro extends YSensor
      */
     static FindGyroInContext(yctx: YAPIContext, func: string): YGyro
     {
-        let obj: YGyro;
+        let obj: YGyro | null;
         obj = <YGyro> YFunction._FindFromCacheInContext(yctx,  'Gyro', func);
         if (obj == null) {
             obj = new YGyro(yctx, func);
@@ -620,7 +620,7 @@ export class YGyro extends YSensor
      */
     async registerTimedReportCallback(callback: YGyro.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

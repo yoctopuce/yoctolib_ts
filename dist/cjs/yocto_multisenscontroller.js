@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 49501 2022-04-21 07:09:25Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -57,6 +57,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         this._nSensors = YMultiSensController.NSENSORS_INVALID;
         this._maxSensors = YMultiSensController.MAXSENSORS_INVALID;
         this._maintenanceMode = YMultiSensController.MAINTENANCEMODE_INVALID;
+        this._lastAddressDetected = YMultiSensController.LASTADDRESSDETECTED_INVALID;
         this._command = YMultiSensController.COMMAND_INVALID;
         this._valueCallbackMultiSensController = null;
         // API symbols as object properties
@@ -65,6 +66,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         this.MAINTENANCEMODE_FALSE = 0;
         this.MAINTENANCEMODE_TRUE = 1;
         this.MAINTENANCEMODE_INVALID = -1;
+        this.LASTADDRESSDETECTED_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this._className = 'MultiSensController';
         //--- (end of YMultiSensController constructor)
@@ -80,6 +82,9 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
                 return 1;
             case 'maintenanceMode':
                 this._maintenanceMode = val;
+                return 1;
+            case 'lastAddressDetected':
+                this._lastAddressDetected = val;
                 return 1;
             case 'command':
                 this._command = val;
@@ -109,7 +114,7 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      * saveToFlash() method of the module if the
      * modification must be kept. It is recommended to restart the
      * device with  module->reboot() after modifying
-     * (and saving) this settings
+     * (and saving) this settings.
      *
      * @param newval : an integer corresponding to the number of sensors to poll
      *
@@ -174,6 +179,26 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
         let rest_val;
         rest_val = String(newval);
         return await this._setAttr('maintenanceMode', rest_val);
+    }
+    /**
+     * Returns the I2C address of the most recently detected sensor. This method can
+     * be used to in case of I2C communication error to determine what is the
+     * last sensor that can be reached, or after a call to setupAddress
+     * to make sure that the address change was properly processed.
+     *
+     * @return an integer corresponding to the I2C address of the most recently detected sensor
+     *
+     * On failure, throws an exception or returns YMultiSensController.LASTADDRESSDETECTED_INVALID.
+     */
+    async get_lastAddressDetected() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YMultiSensController.LASTADDRESSDETECTED_INVALID;
+            }
+        }
+        res = this._lastAddressDetected;
+        return res;
     }
     async get_command() {
         let res;
@@ -308,9 +333,10 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      * Configures the I2C address of the only sensor connected to the device.
      * It is recommended to put the the device in maintenance mode before
      * changing sensor addresses.  This method is only intended to work with a single
-     * sensor connected to the device, if several sensors are connected, the result
+     * sensor connected to the device. If several sensors are connected, the result
      * is unpredictable.
-     * Note that the device is probably expecting to find a string of sensors with specific
+     *
+     * Note that the device is expecting to find a sensor or a string of sensors with specific
      * addresses. Check the device documentation to find out which addresses should be used.
      *
      * @param addr : new address of the connected sensor
@@ -320,8 +346,40 @@ class YMultiSensController extends yocto_api_js_1.YFunction {
      */
     async setupAddress(addr) {
         let cmd;
+        let res;
         cmd = 'A' + String(Math.round(addr));
-        return await this.set_command(cmd);
+        res = await this.set_command(cmd);
+        if (!(res == this._yapi.SUCCESS)) {
+            return this._throw(this._yapi.IO_ERROR, 'unable to trigger address change', this._yapi.IO_ERROR);
+        }
+        yocto_api_js_1.YAPI.Sleep(1500);
+        res = await this.get_lastAddressDetected();
+        if (!(res > 0)) {
+            return this._throw(this._yapi.IO_ERROR, 'IR sensor not found', this._yapi.IO_ERROR);
+        }
+        if (!(res == addr)) {
+            return this._throw(this._yapi.IO_ERROR, 'address change failed', this._yapi.IO_ERROR);
+        }
+        return this._yapi.SUCCESS;
+    }
+    /**
+     * Triggers the I2C address detection procedure for the only sensor connected to the device.
+     * This method is only intended to work with a single sensor connected to the device.
+     * If several sensors are connected, the result is unpredictable.
+     *
+     * @return the I2C address of the detected sensor, or 0 if none is found
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async get_sensorAddress() {
+        let res;
+        res = await this.set_command('a');
+        if (!(res == this._yapi.SUCCESS)) {
+            return this._throw(this._yapi.IO_ERROR, 'unable to trigger address detection', res);
+        }
+        yocto_api_js_1.YAPI.Sleep(1000);
+        res = await this.get_lastAddressDetected();
+        return res;
     }
     /**
      * Continues the enumeration of multi-sensor controllers started using yFirstMultiSensController().
@@ -382,5 +440,6 @@ YMultiSensController.MAXSENSORS_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YMultiSensController.MAINTENANCEMODE_FALSE = 0;
 YMultiSensController.MAINTENANCEMODE_TRUE = 1;
 YMultiSensController.MAINTENANCEMODE_INVALID = -1;
+YMultiSensController.LASTADDRESSDETECTED_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YMultiSensController.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_multisenscontroller.js.map

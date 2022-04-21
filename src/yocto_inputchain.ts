@@ -59,6 +59,7 @@ export class YInputChain extends YFunction
     _className: string;
     _expectedNodes: number = YInputChain.EXPECTEDNODES_INVALID;
     _detectedNodes: number = YInputChain.DETECTEDNODES_INVALID;
+    _loopbackTest: YInputChain.LOOPBACKTEST = YInputChain.LOOPBACKTEST_INVALID;
     _refreshRate: number = YInputChain.REFRESHRATE_INVALID;
     _bitChain1: string = YInputChain.BITCHAIN1_INVALID;
     _bitChain2: string = YInputChain.BITCHAIN2_INVALID;
@@ -79,6 +80,9 @@ export class YInputChain extends YFunction
     // API symbols as object properties
     public readonly EXPECTEDNODES_INVALID: number = YAPI.INVALID_UINT;
     public readonly DETECTEDNODES_INVALID: number = YAPI.INVALID_UINT;
+    public readonly LOOPBACKTEST_OFF: YInputChain.LOOPBACKTEST = 0;
+    public readonly LOOPBACKTEST_ON: YInputChain.LOOPBACKTEST = 1;
+    public readonly LOOPBACKTEST_INVALID: YInputChain.LOOPBACKTEST = -1;
     public readonly REFRESHRATE_INVALID: number = YAPI.INVALID_UINT;
     public readonly BITCHAIN1_INVALID: string = YAPI.INVALID_STRING;
     public readonly BITCHAIN2_INVALID: string = YAPI.INVALID_STRING;
@@ -93,6 +97,9 @@ export class YInputChain extends YFunction
     // API symbols as static members
     public static readonly EXPECTEDNODES_INVALID: number = YAPI.INVALID_UINT;
     public static readonly DETECTEDNODES_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly LOOPBACKTEST_OFF: YInputChain.LOOPBACKTEST = 0;
+    public static readonly LOOPBACKTEST_ON: YInputChain.LOOPBACKTEST = 1;
+    public static readonly LOOPBACKTEST_INVALID: YInputChain.LOOPBACKTEST = -1;
     public static readonly REFRESHRATE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly BITCHAIN1_INVALID: string = YAPI.INVALID_STRING;
     public static readonly BITCHAIN2_INVALID: string = YAPI.INVALID_STRING;
@@ -123,6 +130,9 @@ export class YInputChain extends YFunction
             return 1;
         case 'detectedNodes':
             this._detectedNodes = <number> <number> val;
+            return 1;
+        case 'loopbackTest':
+            this._loopbackTest = <YInputChain.LOOPBACKTEST> <number> val;
             return 1;
         case 'refreshRate':
             this._refreshRate = <number> <number> val;
@@ -212,6 +222,47 @@ export class YInputChain extends YFunction
         }
         res = this._detectedNodes;
         return res;
+    }
+
+    /**
+     * Returns the activation state of the exhaustive chain connectivity test.
+     * The connectivity test requires a cable connecting the end of the chain
+     * to the loopback test connector.
+     *
+     * @return either YInputChain.LOOPBACKTEST_OFF or YInputChain.LOOPBACKTEST_ON, according to the
+     * activation state of the exhaustive chain connectivity test
+     *
+     * On failure, throws an exception or returns YInputChain.LOOPBACKTEST_INVALID.
+     */
+    async get_loopbackTest(): Promise<YInputChain.LOOPBACKTEST>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YInputChain.LOOPBACKTEST_INVALID;
+            }
+        }
+        res = this._loopbackTest;
+        return res;
+    }
+
+    /**
+     * Changes the activation state of the exhaustive chain connectivity test.
+     * The connectivity test requires a cable connecting the end of the chain
+     * to the loopback test connector.
+     *
+     * @param newval : either YInputChain.LOOPBACKTEST_OFF or YInputChain.LOOPBACKTEST_ON, according to
+     * the activation state of the exhaustive chain connectivity test
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_loopbackTest(newval: YInputChain.LOOPBACKTEST): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('loopbackTest',rest_val);
     }
 
     /**
@@ -500,7 +551,7 @@ export class YInputChain extends YFunction
      */
     static FindInputChain(func: string): YInputChain
     {
-        let obj: YInputChain;
+        let obj: YInputChain | null;
         obj = <YInputChain> YFunction._FindFromCache('InputChain', func);
         if (obj == null) {
             obj = new YInputChain(YAPI, func);
@@ -536,7 +587,7 @@ export class YInputChain extends YFunction
      */
     static FindInputChainInContext(yctx: YAPIContext, func: string): YInputChain
     {
-        let obj: YInputChain;
+        let obj: YInputChain | null;
         obj = <YInputChain> YFunction._FindFromCacheInContext(yctx,  'InputChain', func);
         if (obj == null) {
             obj = new YInputChain(yctx, func);
@@ -843,6 +894,11 @@ export class YInputChain extends YFunction
 
 export namespace YInputChain {
     //--- (YInputChain definitions)
+    export const enum LOOPBACKTEST {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
     export interface ValueCallback { (func: YInputChain, value: string): void }
     export interface EventCallback { (func: YInputChain, timestampr:number, evtType:string, eventData:string, eventChange: string): void }
     //--- (end of YInputChain definitions)

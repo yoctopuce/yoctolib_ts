@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_weighscale.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -428,7 +428,7 @@ export class YWeighScale extends YSensor
      */
     static FindWeighScale(func: string): YWeighScale
     {
-        let obj: YWeighScale;
+        let obj: YWeighScale | null;
         obj = <YWeighScale> YFunction._FindFromCache('WeighScale', func);
         if (obj == null) {
             obj = new YWeighScale(YAPI, func);
@@ -464,7 +464,7 @@ export class YWeighScale extends YSensor
      */
     static FindWeighScaleInContext(yctx: YAPIContext, func: string): YWeighScale
     {
-        let obj: YWeighScale;
+        let obj: YWeighScale | null;
         obj = <YWeighScale> YFunction._FindFromCacheInContext(yctx,  'WeighScale', func);
         if (obj == null) {
             obj = new YWeighScale(yctx, func);
@@ -530,7 +530,7 @@ export class YWeighScale extends YSensor
      */
     async registerTimedReportCallback(callback: YWeighScale.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

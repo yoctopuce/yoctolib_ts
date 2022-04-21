@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_proximity.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -523,7 +523,7 @@ export class YProximity extends YSensor
      */
     static FindProximity(func: string): YProximity
     {
-        let obj: YProximity;
+        let obj: YProximity | null;
         obj = <YProximity> YFunction._FindFromCache('Proximity', func);
         if (obj == null) {
             obj = new YProximity(YAPI, func);
@@ -559,7 +559,7 @@ export class YProximity extends YSensor
      */
     static FindProximityInContext(yctx: YAPIContext, func: string): YProximity
     {
-        let obj: YProximity;
+        let obj: YProximity | null;
         obj = <YProximity> YFunction._FindFromCacheInContext(yctx,  'Proximity', func);
         if (obj == null) {
             obj = new YProximity(yctx, func);
@@ -625,7 +625,7 @@ export class YProximity extends YSensor
      */
     async registerTimedReportCallback(callback: YProximity.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

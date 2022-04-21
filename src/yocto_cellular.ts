@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_cellular.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -900,7 +900,7 @@ export class YCellular extends YFunction
      */
     static FindCellular(func: string): YCellular
     {
-        let obj: YCellular;
+        let obj: YCellular | null;
         obj = <YCellular> YFunction._FindFromCache('Cellular', func);
         if (obj == null) {
             obj = new YCellular(YAPI, func);
@@ -936,7 +936,7 @@ export class YCellular extends YFunction
      */
     static FindCellularInContext(yctx: YAPIContext, func: string): YCellular
     {
-        let obj: YCellular;
+        let obj: YCellular | null;
         obj = <YCellular> YFunction._FindFromCacheInContext(yctx,  'Cellular', func);
         if (obj == null) {
             obj = new YCellular(yctx, func);

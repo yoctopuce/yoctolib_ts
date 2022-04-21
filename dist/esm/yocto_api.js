@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 48143 2022-01-17 12:38:14Z mvuilleu $
+ * $Id: yocto_api.ts 48520 2022-02-03 10:51:20Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -10968,7 +10968,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.48220';
+        return /* version number patched automatically */ '1.10.49504';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

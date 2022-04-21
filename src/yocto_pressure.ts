@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pressure.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_pressure.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -100,7 +100,7 @@ export class YPressure extends YSensor
      */
     static FindPressure(func: string): YPressure
     {
-        let obj: YPressure;
+        let obj: YPressure | null;
         obj = <YPressure> YFunction._FindFromCache('Pressure', func);
         if (obj == null) {
             obj = new YPressure(YAPI, func);
@@ -136,7 +136,7 @@ export class YPressure extends YSensor
      */
     static FindPressureInContext(yctx: YAPIContext, func: string): YPressure
     {
-        let obj: YPressure;
+        let obj: YPressure | null;
         obj = <YPressure> YFunction._FindFromCacheInContext(yctx,  'Pressure', func);
         if (obj == null) {
             obj = new YPressure(yctx, func);
@@ -202,7 +202,7 @@ export class YPressure extends YSensor
      */
     async registerTimedReportCallback(callback: YPressure.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

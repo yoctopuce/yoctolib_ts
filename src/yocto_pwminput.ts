@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_pwminput.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -484,7 +484,7 @@ export class YPwmInput extends YSensor
      */
     static FindPwmInput(func: string): YPwmInput
     {
-        let obj: YPwmInput;
+        let obj: YPwmInput | null;
         obj = <YPwmInput> YFunction._FindFromCache('PwmInput', func);
         if (obj == null) {
             obj = new YPwmInput(YAPI, func);
@@ -520,7 +520,7 @@ export class YPwmInput extends YSensor
      */
     static FindPwmInputInContext(yctx: YAPIContext, func: string): YPwmInput
     {
-        let obj: YPwmInput;
+        let obj: YPwmInput | null;
         obj = <YPwmInput> YFunction._FindFromCacheInContext(yctx,  'PwmInput', func);
         if (obj == null) {
             obj = new YPwmInput(yctx, func);
@@ -586,7 +586,7 @@ export class YPwmInput extends YSensor
      */
     async registerTimedReportCallback(callback: YPwmInput.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

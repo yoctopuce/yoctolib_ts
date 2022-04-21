@@ -47,6 +47,7 @@ export declare class YInputChain extends YFunction {
     _className: string;
     _expectedNodes: number;
     _detectedNodes: number;
+    _loopbackTest: YInputChain.LOOPBACKTEST;
     _refreshRate: number;
     _bitChain1: string;
     _bitChain2: string;
@@ -65,6 +66,9 @@ export declare class YInputChain extends YFunction {
     _eventChains: string[];
     readonly EXPECTEDNODES_INVALID: number;
     readonly DETECTEDNODES_INVALID: number;
+    readonly LOOPBACKTEST_OFF: YInputChain.LOOPBACKTEST;
+    readonly LOOPBACKTEST_ON: YInputChain.LOOPBACKTEST;
+    readonly LOOPBACKTEST_INVALID: YInputChain.LOOPBACKTEST;
     readonly REFRESHRATE_INVALID: number;
     readonly BITCHAIN1_INVALID: string;
     readonly BITCHAIN2_INVALID: string;
@@ -77,6 +81,9 @@ export declare class YInputChain extends YFunction {
     readonly CHAINDIAGS_INVALID: number;
     static readonly EXPECTEDNODES_INVALID: number;
     static readonly DETECTEDNODES_INVALID: number;
+    static readonly LOOPBACKTEST_OFF: YInputChain.LOOPBACKTEST;
+    static readonly LOOPBACKTEST_ON: YInputChain.LOOPBACKTEST;
+    static readonly LOOPBACKTEST_INVALID: YInputChain.LOOPBACKTEST;
     static readonly REFRESHRATE_INVALID: number;
     static readonly BITCHAIN1_INVALID: string;
     static readonly BITCHAIN2_INVALID: string;
@@ -117,6 +124,30 @@ export declare class YInputChain extends YFunction {
      * On failure, throws an exception or returns YInputChain.DETECTEDNODES_INVALID.
      */
     get_detectedNodes(): Promise<number>;
+    /**
+     * Returns the activation state of the exhaustive chain connectivity test.
+     * The connectivity test requires a cable connecting the end of the chain
+     * to the loopback test connector.
+     *
+     * @return either YInputChain.LOOPBACKTEST_OFF or YInputChain.LOOPBACKTEST_ON, according to the
+     * activation state of the exhaustive chain connectivity test
+     *
+     * On failure, throws an exception or returns YInputChain.LOOPBACKTEST_INVALID.
+     */
+    get_loopbackTest(): Promise<YInputChain.LOOPBACKTEST>;
+    /**
+     * Changes the activation state of the exhaustive chain connectivity test.
+     * The connectivity test requires a cable connecting the end of the chain
+     * to the loopback test connector.
+     *
+     * @param newval : either YInputChain.LOOPBACKTEST_OFF or YInputChain.LOOPBACKTEST_ON, according to
+     * the activation state of the exhaustive chain connectivity test
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_loopbackTest(newval: YInputChain.LOOPBACKTEST): Promise<number>;
     /**
      * Returns the desired refresh rate, measured in Hz.
      * The higher the refresh rate is set, the higher the
@@ -389,6 +420,11 @@ export declare class YInputChain extends YFunction {
     static FirstInputChainInContext(yctx: YAPIContext): YInputChain | null;
 }
 export declare namespace YInputChain {
+    const enum LOOPBACKTEST {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
     interface ValueCallback {
         (func: YInputChain, value: string): void;
     }

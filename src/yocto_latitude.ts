@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_latitude.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_latitude.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Latitude functions
  *
@@ -99,7 +99,7 @@ export class YLatitude extends YSensor
      */
     static FindLatitude(func: string): YLatitude
     {
-        let obj: YLatitude;
+        let obj: YLatitude | null;
         obj = <YLatitude> YFunction._FindFromCache('Latitude', func);
         if (obj == null) {
             obj = new YLatitude(YAPI, func);
@@ -135,7 +135,7 @@ export class YLatitude extends YSensor
      */
     static FindLatitudeInContext(yctx: YAPIContext, func: string): YLatitude
     {
-        let obj: YLatitude;
+        let obj: YLatitude | null;
         obj = <YLatitude> YFunction._FindFromCacheInContext(yctx,  'Latitude', func);
         if (obj == null) {
             obj = new YLatitude(yctx, func);
@@ -201,7 +201,7 @@ export class YLatitude extends YSensor
      */
     async registerTimedReportCallback(callback: YLatitude.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

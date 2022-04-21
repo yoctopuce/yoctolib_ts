@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -645,7 +645,7 @@ export class YI2cPort extends YFunction
      */
     static FindI2cPort(func: string): YI2cPort
     {
-        let obj: YI2cPort;
+        let obj: YI2cPort | null;
         obj = <YI2cPort> YFunction._FindFromCache('I2cPort', func);
         if (obj == null) {
             obj = new YI2cPort(YAPI, func);
@@ -681,7 +681,7 @@ export class YI2cPort extends YFunction
      */
     static FindI2cPortInContext(yctx: YAPIContext, func: string): YI2cPort
     {
-        let obj: YI2cPort;
+        let obj: YI2cPort | null;
         obj = <YI2cPort> YFunction._FindFromCacheInContext(yctx,  'I2cPort', func);
         if (obj == null) {
             obj = new YI2cPort(yctx, func);

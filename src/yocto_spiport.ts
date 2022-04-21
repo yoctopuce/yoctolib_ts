@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 43762 2021-02-08 15:30:55Z mvuilleu $
+ *  $Id: yocto_spiport.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -761,7 +761,7 @@ export class YSpiPort extends YFunction
      */
     static FindSpiPort(func: string): YSpiPort
     {
-        let obj: YSpiPort;
+        let obj: YSpiPort | null;
         obj = <YSpiPort> YFunction._FindFromCache('SpiPort', func);
         if (obj == null) {
             obj = new YSpiPort(YAPI, func);
@@ -797,7 +797,7 @@ export class YSpiPort extends YFunction
      */
     static FindSpiPortInContext(yctx: YAPIContext, func: string): YSpiPort
     {
-        let obj: YSpiPort;
+        let obj: YSpiPort | null;
         obj = <YSpiPort> YFunction._FindFromCacheInContext(yctx,  'SpiPort', func);
         if (obj == null) {
             obj = new YSpiPort(yctx, func);

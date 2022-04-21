@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: yocto_network.ts 49385 2022-04-06 00:49:27Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -42,7 +42,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
 //--- (YNetwork class start)
 /**
  * YNetwork Class: network interface control interface, available for instance in the
- * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-SR or the YoctoHub-Wireless-n
  *
  * YNetwork objects provide access to TCP/IP parameters of Yoctopuce
  * devices that include a built-in network interface.
@@ -58,6 +58,7 @@ export class YNetwork extends YFunction
     _ipAddress: string = YNetwork.IPADDRESS_INVALID;
     _subnetMask: string = YNetwork.SUBNETMASK_INVALID;
     _router: string = YNetwork.ROUTER_INVALID;
+    _currentDNS: string = YNetwork.CURRENTDNS_INVALID;
     _ipConfig: string = YNetwork.IPCONFIG_INVALID;
     _primaryDNS: string = YNetwork.PRIMARYDNS_INVALID;
     _secondaryDNS: string = YNetwork.SECONDARYDNS_INVALID;
@@ -90,6 +91,7 @@ export class YNetwork extends YFunction
     public readonly IPADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public readonly SUBNETMASK_INVALID: string = YAPI.INVALID_STRING;
     public readonly ROUTER_INVALID: string = YAPI.INVALID_STRING;
+    public readonly CURRENTDNS_INVALID: string = YAPI.INVALID_STRING;
     public readonly IPCONFIG_INVALID: string = YAPI.INVALID_STRING;
     public readonly PRIMARYDNS_INVALID: string = YAPI.INVALID_STRING;
     public readonly SECONDARYDNS_INVALID: string = YAPI.INVALID_STRING;
@@ -139,6 +141,7 @@ export class YNetwork extends YFunction
     public static readonly IPADDRESS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SUBNETMASK_INVALID: string = YAPI.INVALID_STRING;
     public static readonly ROUTER_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly CURRENTDNS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly IPCONFIG_INVALID: string = YAPI.INVALID_STRING;
     public static readonly PRIMARYDNS_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SECONDARYDNS_INVALID: string = YAPI.INVALID_STRING;
@@ -205,6 +208,9 @@ export class YNetwork extends YFunction
             return 1;
         case 'router':
             this._router = <string> <string> val;
+            return 1;
+        case 'currentDNS':
+            this._currentDNS = <string> <string> val;
             return 1;
         case 'ipConfig':
             this._ipConfig = <string> <string> val;
@@ -376,6 +382,25 @@ export class YNetwork extends YFunction
             }
         }
         res = this._router;
+        return res;
+    }
+
+    /**
+     * Returns the IP address of the DNS server currently used by the device.
+     *
+     * @return a string corresponding to the IP address of the DNS server currently used by the device
+     *
+     * On failure, throws an exception or returns YNetwork.CURRENTDNS_INVALID.
+     */
+    async get_currentDNS(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YNetwork.CURRENTDNS_INVALID;
+            }
+        }
+        res = this._currentDNS;
         return res;
     }
 
@@ -1174,7 +1199,7 @@ export class YNetwork extends YFunction
      */
     static FindNetwork(func: string): YNetwork
     {
-        let obj: YNetwork;
+        let obj: YNetwork | null;
         obj = <YNetwork> YFunction._FindFromCache('Network', func);
         if (obj == null) {
             obj = new YNetwork(YAPI, func);
@@ -1210,7 +1235,7 @@ export class YNetwork extends YFunction
      */
     static FindNetworkInContext(yctx: YAPIContext, func: string): YNetwork
     {
-        let obj: YNetwork;
+        let obj: YNetwork | null;
         obj = <YNetwork> YFunction._FindFromCacheInContext(yctx,  'Network', func);
         if (obj == null) {
             obj = new YNetwork(yctx, func);

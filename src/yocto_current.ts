@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_current.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Current functions
  *
@@ -160,7 +160,7 @@ export class YCurrent extends YSensor
      */
     static FindCurrent(func: string): YCurrent
     {
-        let obj: YCurrent;
+        let obj: YCurrent | null;
         obj = <YCurrent> YFunction._FindFromCache('Current', func);
         if (obj == null) {
             obj = new YCurrent(YAPI, func);
@@ -196,7 +196,7 @@ export class YCurrent extends YSensor
      */
     static FindCurrentInContext(yctx: YAPIContext, func: string): YCurrent
     {
-        let obj: YCurrent;
+        let obj: YCurrent | null;
         obj = <YCurrent> YFunction._FindFromCacheInContext(yctx,  'Current', func);
         if (obj == null) {
             obj = new YCurrent(yctx, func);
@@ -262,7 +262,7 @@ export class YCurrent extends YSensor
      */
     async registerTimedReportCallback(callback: YCurrent.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

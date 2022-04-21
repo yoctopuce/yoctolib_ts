@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 43775 2021-02-09 10:35:51Z mvuilleu $
+ *  $Id: yocto_refframe.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -325,7 +325,7 @@ export class YRefFrame extends YFunction
      */
     static FindRefFrame(func: string): YRefFrame
     {
-        let obj: YRefFrame;
+        let obj: YRefFrame | null;
         obj = <YRefFrame> YFunction._FindFromCache('RefFrame', func);
         if (obj == null) {
             obj = new YRefFrame(YAPI, func);
@@ -361,7 +361,7 @@ export class YRefFrame extends YFunction
      */
     static FindRefFrameInContext(yctx: YAPIContext, func: string): YRefFrame
     {
-        let obj: YRefFrame;
+        let obj: YRefFrame | null;
         obj = <YRefFrame> YFunction._FindFromCacheInContext(yctx,  'RefFrame', func);
         if (obj == null) {
             obj = new YRefFrame(yctx, func);

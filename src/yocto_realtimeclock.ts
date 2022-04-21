@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -251,7 +251,7 @@ export class YRealTimeClock extends YFunction
      */
     static FindRealTimeClock(func: string): YRealTimeClock
     {
-        let obj: YRealTimeClock;
+        let obj: YRealTimeClock | null;
         obj = <YRealTimeClock> YFunction._FindFromCache('RealTimeClock', func);
         if (obj == null) {
             obj = new YRealTimeClock(YAPI, func);
@@ -287,7 +287,7 @@ export class YRealTimeClock extends YFunction
      */
     static FindRealTimeClockInContext(yctx: YAPIContext, func: string): YRealTimeClock
     {
-        let obj: YRealTimeClock;
+        let obj: YRealTimeClock | null;
         obj = <YRealTimeClock> YFunction._FindFromCacheInContext(yctx,  'RealTimeClock', func);
         if (obj == null) {
             obj = new YRealTimeClock(yctx, func);

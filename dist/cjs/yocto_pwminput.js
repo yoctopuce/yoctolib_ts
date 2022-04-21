@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_pwminput.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for PwmInput functions
  *

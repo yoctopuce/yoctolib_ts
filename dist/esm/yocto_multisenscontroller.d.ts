@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 49501 2022-04-21 07:09:25Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -49,6 +49,7 @@ export declare class YMultiSensController extends YFunction {
     _nSensors: number;
     _maxSensors: number;
     _maintenanceMode: YMultiSensController.MAINTENANCEMODE;
+    _lastAddressDetected: number;
     _command: string;
     _valueCallbackMultiSensController: YMultiSensController.ValueCallback | null;
     readonly NSENSORS_INVALID: number;
@@ -56,12 +57,14 @@ export declare class YMultiSensController extends YFunction {
     readonly MAINTENANCEMODE_FALSE: YMultiSensController.MAINTENANCEMODE;
     readonly MAINTENANCEMODE_TRUE: YMultiSensController.MAINTENANCEMODE;
     readonly MAINTENANCEMODE_INVALID: YMultiSensController.MAINTENANCEMODE;
+    readonly LASTADDRESSDETECTED_INVALID: number;
     readonly COMMAND_INVALID: string;
     static readonly NSENSORS_INVALID: number;
     static readonly MAXSENSORS_INVALID: number;
     static readonly MAINTENANCEMODE_FALSE: YMultiSensController.MAINTENANCEMODE;
     static readonly MAINTENANCEMODE_TRUE: YMultiSensController.MAINTENANCEMODE;
     static readonly MAINTENANCEMODE_INVALID: YMultiSensController.MAINTENANCEMODE;
+    static readonly LASTADDRESSDETECTED_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
@@ -78,7 +81,7 @@ export declare class YMultiSensController extends YFunction {
      * saveToFlash() method of the module if the
      * modification must be kept. It is recommended to restart the
      * device with  module->reboot() after modifying
-     * (and saving) this settings
+     * (and saving) this settings.
      *
      * @param newval : an integer corresponding to the number of sensors to poll
      *
@@ -118,6 +121,17 @@ export declare class YMultiSensController extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_maintenanceMode(newval: YMultiSensController.MAINTENANCEMODE): Promise<number>;
+    /**
+     * Returns the I2C address of the most recently detected sensor. This method can
+     * be used to in case of I2C communication error to determine what is the
+     * last sensor that can be reached, or after a call to setupAddress
+     * to make sure that the address change was properly processed.
+     *
+     * @return an integer corresponding to the I2C address of the most recently detected sensor
+     *
+     * On failure, throws an exception or returns YMultiSensController.LASTADDRESSDETECTED_INVALID.
+     */
+    get_lastAddressDetected(): Promise<number>;
     get_command(): Promise<string>;
     set_command(newval: string): Promise<number>;
     /**
@@ -192,9 +206,10 @@ export declare class YMultiSensController extends YFunction {
      * Configures the I2C address of the only sensor connected to the device.
      * It is recommended to put the the device in maintenance mode before
      * changing sensor addresses.  This method is only intended to work with a single
-     * sensor connected to the device, if several sensors are connected, the result
+     * sensor connected to the device. If several sensors are connected, the result
      * is unpredictable.
-     * Note that the device is probably expecting to find a string of sensors with specific
+     *
+     * Note that the device is expecting to find a sensor or a string of sensors with specific
      * addresses. Check the device documentation to find out which addresses should be used.
      *
      * @param addr : new address of the connected sensor
@@ -203,6 +218,16 @@ export declare class YMultiSensController extends YFunction {
      *         On failure, throws an exception or returns a negative error code.
      */
     setupAddress(addr: number): Promise<number>;
+    /**
+     * Triggers the I2C address detection procedure for the only sensor connected to the device.
+     * This method is only intended to work with a single sensor connected to the device.
+     * If several sensors are connected, the result is unpredictable.
+     *
+     * @return the I2C address of the detected sensor, or 0 if none is found
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    get_sensorAddress(): Promise<number>;
     /**
      * Continues the enumeration of multi-sensor controllers started using yFirstMultiSensController().
      * Caution: You can't make any assumption about the returned multi-sensor controllers order.

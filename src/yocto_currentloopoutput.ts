@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -251,7 +251,7 @@ export class YCurrentLoopOutput extends YFunction
      */
     static FindCurrentLoopOutput(func: string): YCurrentLoopOutput
     {
-        let obj: YCurrentLoopOutput;
+        let obj: YCurrentLoopOutput | null;
         obj = <YCurrentLoopOutput> YFunction._FindFromCache('CurrentLoopOutput', func);
         if (obj == null) {
             obj = new YCurrentLoopOutput(YAPI, func);
@@ -287,7 +287,7 @@ export class YCurrentLoopOutput extends YFunction
      */
     static FindCurrentLoopOutputInContext(yctx: YAPIContext, func: string): YCurrentLoopOutput
     {
-        let obj: YCurrentLoopOutput;
+        let obj: YCurrentLoopOutput | null;
         obj = <YCurrentLoopOutput> YFunction._FindFromCacheInContext(yctx,  'CurrentLoopOutput', func);
         if (obj == null) {
             obj = new YCurrentLoopOutput(yctx, func);

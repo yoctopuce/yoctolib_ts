@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_motor.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -534,7 +534,7 @@ export class YMotor extends YFunction
      */
     static FindMotor(func: string): YMotor
     {
-        let obj: YMotor;
+        let obj: YMotor | null;
         obj = <YMotor> YFunction._FindFromCache('Motor', func);
         if (obj == null) {
             obj = new YMotor(YAPI, func);
@@ -570,7 +570,7 @@ export class YMotor extends YFunction
      */
     static FindMotorInContext(yctx: YAPIContext, func: string): YMotor
     {
-        let obj: YMotor;
+        let obj: YMotor | null;
         obj = <YMotor> YFunction._FindFromCacheInContext(yctx,  'Motor', func);
         if (obj == null) {
             obj = new YMotor(yctx, func);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_humidity.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -181,7 +181,7 @@ export class YHumidity extends YSensor
      */
     static FindHumidity(func: string): YHumidity
     {
-        let obj: YHumidity;
+        let obj: YHumidity | null;
         obj = <YHumidity> YFunction._FindFromCache('Humidity', func);
         if (obj == null) {
             obj = new YHumidity(YAPI, func);
@@ -217,7 +217,7 @@ export class YHumidity extends YSensor
      */
     static FindHumidityInContext(yctx: YAPIContext, func: string): YHumidity
     {
-        let obj: YHumidity;
+        let obj: YHumidity | null;
         obj = <YHumidity> YFunction._FindFromCacheInContext(yctx,  'Humidity', func);
         if (obj == null) {
             obj = new YHumidity(yctx, func);
@@ -283,7 +283,7 @@ export class YHumidity extends YSensor
      */
     async registerTimedReportCallback(callback: YHumidity.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

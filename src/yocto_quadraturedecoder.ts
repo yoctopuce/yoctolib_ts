@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_quadraturedecoder.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -243,7 +243,7 @@ export class YQuadratureDecoder extends YSensor
      */
     static FindQuadratureDecoder(func: string): YQuadratureDecoder
     {
-        let obj: YQuadratureDecoder;
+        let obj: YQuadratureDecoder | null;
         obj = <YQuadratureDecoder> YFunction._FindFromCache('QuadratureDecoder', func);
         if (obj == null) {
             obj = new YQuadratureDecoder(YAPI, func);
@@ -279,7 +279,7 @@ export class YQuadratureDecoder extends YSensor
      */
     static FindQuadratureDecoderInContext(yctx: YAPIContext, func: string): YQuadratureDecoder
     {
-        let obj: YQuadratureDecoder;
+        let obj: YQuadratureDecoder | null;
         obj = <YQuadratureDecoder> YFunction._FindFromCacheInContext(yctx,  'QuadratureDecoder', func);
         if (obj == null) {
             obj = new YQuadratureDecoder(yctx, func);
@@ -345,7 +345,7 @@ export class YQuadratureDecoder extends YSensor
      */
     async registerTimedReportCallback(callback: YQuadratureDecoder.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

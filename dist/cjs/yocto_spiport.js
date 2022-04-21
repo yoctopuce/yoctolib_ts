@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 43762 2021-02-08 15:30:55Z mvuilleu $
+ *  $Id: yocto_spiport.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *

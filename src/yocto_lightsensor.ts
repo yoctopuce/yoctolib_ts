@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_lightsensor.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -203,7 +203,7 @@ export class YLightSensor extends YSensor
      */
     static FindLightSensor(func: string): YLightSensor
     {
-        let obj: YLightSensor;
+        let obj: YLightSensor | null;
         obj = <YLightSensor> YFunction._FindFromCache('LightSensor', func);
         if (obj == null) {
             obj = new YLightSensor(YAPI, func);
@@ -239,7 +239,7 @@ export class YLightSensor extends YSensor
      */
     static FindLightSensorInContext(yctx: YAPIContext, func: string): YLightSensor
     {
-        let obj: YLightSensor;
+        let obj: YLightSensor | null;
         obj = <YLightSensor> YFunction._FindFromCacheInContext(yctx,  'LightSensor', func);
         if (obj == null) {
             obj = new YLightSensor(yctx, func);
@@ -305,7 +305,7 @@ export class YLightSensor extends YSensor
      */
     async registerTimedReportCallback(callback: YLightSensor.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

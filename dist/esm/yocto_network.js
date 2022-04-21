@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: yocto_network.ts 49385 2022-04-06 00:49:27Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -40,7 +40,7 @@ import { YAPI, YFunction } from './yocto_api.js';
 //--- (YNetwork class start)
 /**
  * YNetwork Class: network interface control interface, available for instance in the
- * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-SR or the YoctoHub-Wireless-n
  *
  * YNetwork objects provide access to TCP/IP parameters of Yoctopuce
  * devices that include a built-in network interface.
@@ -56,6 +56,7 @@ export class YNetwork extends YFunction {
         this._ipAddress = YNetwork.IPADDRESS_INVALID;
         this._subnetMask = YNetwork.SUBNETMASK_INVALID;
         this._router = YNetwork.ROUTER_INVALID;
+        this._currentDNS = YNetwork.CURRENTDNS_INVALID;
         this._ipConfig = YNetwork.IPCONFIG_INVALID;
         this._primaryDNS = YNetwork.PRIMARYDNS_INVALID;
         this._secondaryDNS = YNetwork.SECONDARYDNS_INVALID;
@@ -87,6 +88,7 @@ export class YNetwork extends YFunction {
         this.IPADDRESS_INVALID = YAPI.INVALID_STRING;
         this.SUBNETMASK_INVALID = YAPI.INVALID_STRING;
         this.ROUTER_INVALID = YAPI.INVALID_STRING;
+        this.CURRENTDNS_INVALID = YAPI.INVALID_STRING;
         this.IPCONFIG_INVALID = YAPI.INVALID_STRING;
         this.PRIMARYDNS_INVALID = YAPI.INVALID_STRING;
         this.SECONDARYDNS_INVALID = YAPI.INVALID_STRING;
@@ -144,6 +146,9 @@ export class YNetwork extends YFunction {
                 return 1;
             case 'router':
                 this._router = val;
+                return 1;
+            case 'currentDNS':
+                this._currentDNS = val;
                 return 1;
             case 'ipConfig':
                 this._ipConfig = val;
@@ -305,6 +310,23 @@ export class YNetwork extends YFunction {
             }
         }
         res = this._router;
+        return res;
+    }
+    /**
+     * Returns the IP address of the DNS server currently used by the device.
+     *
+     * @return a string corresponding to the IP address of the DNS server currently used by the device
+     *
+     * On failure, throws an exception or returns YNetwork.CURRENTDNS_INVALID.
+     */
+    async get_currentDNS() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YNetwork.CURRENTDNS_INVALID;
+            }
+        }
+        res = this._currentDNS;
         return res;
     }
     /**
@@ -1262,6 +1284,7 @@ YNetwork.MACADDRESS_INVALID = YAPI.INVALID_STRING;
 YNetwork.IPADDRESS_INVALID = YAPI.INVALID_STRING;
 YNetwork.SUBNETMASK_INVALID = YAPI.INVALID_STRING;
 YNetwork.ROUTER_INVALID = YAPI.INVALID_STRING;
+YNetwork.CURRENTDNS_INVALID = YAPI.INVALID_STRING;
 YNetwork.IPCONFIG_INVALID = YAPI.INVALID_STRING;
 YNetwork.PRIMARYDNS_INVALID = YAPI.INVALID_STRING;
 YNetwork.SECONDARYDNS_INVALID = YAPI.INVALID_STRING;

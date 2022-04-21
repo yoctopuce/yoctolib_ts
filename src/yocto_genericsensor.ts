@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_genericsensor.ts 49385 2022-04-06 00:49:27Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -42,7 +42,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
 //--- (YGenericSensor class start)
 /**
  * YGenericSensor Class: GenericSensor control interface, available for instance in the
- * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-Serial or the Yocto-milliVolt-Rx
+ * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-SPI or the Yocto-milliVolt-Rx
  *
  * The YGenericSensor class allows you to read and configure Yoctopuce signal
  * transducers. It inherits from YSensor class the core functions to read measurements,
@@ -448,7 +448,7 @@ export class YGenericSensor extends YSensor
      */
     static FindGenericSensor(func: string): YGenericSensor
     {
-        let obj: YGenericSensor;
+        let obj: YGenericSensor | null;
         obj = <YGenericSensor> YFunction._FindFromCache('GenericSensor', func);
         if (obj == null) {
             obj = new YGenericSensor(YAPI, func);
@@ -484,7 +484,7 @@ export class YGenericSensor extends YSensor
      */
     static FindGenericSensorInContext(yctx: YAPIContext, func: string): YGenericSensor
     {
-        let obj: YGenericSensor;
+        let obj: YGenericSensor | null;
         obj = <YGenericSensor> YFunction._FindFromCacheInContext(yctx,  'GenericSensor', func);
         if (obj == null) {
             obj = new YGenericSensor(yctx, func);
@@ -550,7 +550,7 @@ export class YGenericSensor extends YSensor
      */
     async registerTimedReportCallback(callback: YGenericSensor.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

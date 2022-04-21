@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioin.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_audioin.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for AudioIn functions
  *
@@ -272,7 +272,7 @@ export class YAudioIn extends YFunction
      */
     static FindAudioIn(func: string): YAudioIn
     {
-        let obj: YAudioIn;
+        let obj: YAudioIn | null;
         obj = <YAudioIn> YFunction._FindFromCache('AudioIn', func);
         if (obj == null) {
             obj = new YAudioIn(YAPI, func);
@@ -308,7 +308,7 @@ export class YAudioIn extends YFunction
      */
     static FindAudioInInContext(yctx: YAPIContext, func: string): YAudioIn
     {
-        let obj: YAudioIn;
+        let obj: YAudioIn | null;
         obj = <YAudioIn> YFunction._FindFromCacheInContext(yctx,  'AudioIn', func);
         if (obj == null) {
             obj = new YAudioIn(yctx, func);

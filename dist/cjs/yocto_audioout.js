@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_audioout.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for AudioOut functions
  *

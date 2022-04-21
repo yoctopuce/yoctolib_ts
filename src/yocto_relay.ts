@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_relay.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -390,7 +390,7 @@ export class YRelay extends YFunction
 
     async get_delayedPulseTimer(): Promise<YRelay.DelayedPulse>
     {
-        let res: YRelay.DelayedPulse;
+        let res: YRelay.DelayedPulse | null;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YRelay.DELAYEDPULSETIMER_INVALID;
@@ -475,7 +475,7 @@ export class YRelay extends YFunction
      */
     static FindRelay(func: string): YRelay
     {
-        let obj: YRelay;
+        let obj: YRelay | null;
         obj = <YRelay> YFunction._FindFromCache('Relay', func);
         if (obj == null) {
             obj = new YRelay(YAPI, func);
@@ -511,7 +511,7 @@ export class YRelay extends YFunction
      */
     static FindRelayInContext(yctx: YAPIContext, func: string): YRelay
     {
-        let obj: YRelay;
+        let obj: YRelay | null;
         obj = <YRelay> YFunction._FindFromCacheInContext(yctx,  'Relay', func);
         if (obj == null) {
             obj = new YRelay(yctx, func);
@@ -575,7 +575,7 @@ export class YRelay extends YFunction
     {
         let sta: number;
         let fw: string;
-        let mo: YModule;
+        let mo: YModule | null;
         if (this._firm == 0) {
             mo = await this.get_module();
             fw = await mo.get_firmwareRelease();

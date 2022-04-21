@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_steppermotor.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -643,7 +643,7 @@ export class YStepperMotor extends YFunction
      */
     static FindStepperMotor(func: string): YStepperMotor
     {
-        let obj: YStepperMotor;
+        let obj: YStepperMotor | null;
         obj = <YStepperMotor> YFunction._FindFromCache('StepperMotor', func);
         if (obj == null) {
             obj = new YStepperMotor(YAPI, func);
@@ -679,7 +679,7 @@ export class YStepperMotor extends YFunction
      */
     static FindStepperMotorInContext(yctx: YAPIContext, func: string): YStepperMotor
     {
-        let obj: YStepperMotor;
+        let obj: YStepperMotor | null;
         obj = <YStepperMotor> YFunction._FindFromCacheInContext(yctx,  'StepperMotor', func);
         if (obj == null) {
             obj = new YStepperMotor(yctx, func);

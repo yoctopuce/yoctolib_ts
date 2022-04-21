@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_digitalio.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -435,7 +435,7 @@ export class YDigitalIO extends YFunction
      */
     static FindDigitalIO(func: string): YDigitalIO
     {
-        let obj: YDigitalIO;
+        let obj: YDigitalIO | null;
         obj = <YDigitalIO> YFunction._FindFromCache('DigitalIO', func);
         if (obj == null) {
             obj = new YDigitalIO(YAPI, func);
@@ -471,7 +471,7 @@ export class YDigitalIO extends YFunction
      */
     static FindDigitalIOInContext(yctx: YAPIContext, func: string): YDigitalIO
     {
-        let obj: YDigitalIO;
+        let obj: YDigitalIO | null;
         obj = <YDigitalIO> YFunction._FindFromCacheInContext(yctx,  'DigitalIO', func);
         if (obj == null) {
             obj = new YDigitalIO(yctx, func);

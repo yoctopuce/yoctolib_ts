@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_files.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -227,7 +227,7 @@ export class YFiles extends YFunction
      */
     static FindFiles(func: string): YFiles
     {
-        let obj: YFiles;
+        let obj: YFiles | null;
         obj = <YFiles> YFunction._FindFromCache('Files', func);
         if (obj == null) {
             obj = new YFiles(YAPI, func);
@@ -263,7 +263,7 @@ export class YFiles extends YFunction
      */
     static FindFilesInContext(yctx: YAPIContext, func: string): YFiles
     {
-        let obj: YFiles;
+        let obj: YFiles | null;
         obj = <YFiles> YFunction._FindFromCacheInContext(yctx,  'Files', func);
         if (obj == null) {
             obj = new YFiles(yctx, func);

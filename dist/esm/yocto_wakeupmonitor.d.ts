@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: yocto_wakeupmonitor.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *

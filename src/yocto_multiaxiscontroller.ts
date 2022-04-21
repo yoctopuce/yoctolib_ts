@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multiaxiscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_multiaxiscontroller.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for MultiAxisController functions
  *
@@ -212,7 +212,7 @@ export class YMultiAxisController extends YFunction
      */
     static FindMultiAxisController(func: string): YMultiAxisController
     {
-        let obj: YMultiAxisController;
+        let obj: YMultiAxisController | null;
         obj = <YMultiAxisController> YFunction._FindFromCache('MultiAxisController', func);
         if (obj == null) {
             obj = new YMultiAxisController(YAPI, func);
@@ -248,7 +248,7 @@ export class YMultiAxisController extends YFunction
      */
     static FindMultiAxisControllerInContext(yctx: YAPIContext, func: string): YMultiAxisController
     {
-        let obj: YMultiAxisController;
+        let obj: YMultiAxisController | null;
         obj = <YMultiAxisController> YFunction._FindFromCacheInContext(yctx,  'MultiAxisController', func);
         if (obj == null) {
             obj = new YMultiAxisController(yctx, func);

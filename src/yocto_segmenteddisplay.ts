@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_segmenteddisplay.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_segmenteddisplay.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for SegmentedDisplay functions
  *
@@ -179,7 +179,7 @@ export class YSegmentedDisplay extends YFunction
      */
     static FindSegmentedDisplay(func: string): YSegmentedDisplay
     {
-        let obj: YSegmentedDisplay;
+        let obj: YSegmentedDisplay | null;
         obj = <YSegmentedDisplay> YFunction._FindFromCache('SegmentedDisplay', func);
         if (obj == null) {
             obj = new YSegmentedDisplay(YAPI, func);
@@ -215,7 +215,7 @@ export class YSegmentedDisplay extends YFunction
      */
     static FindSegmentedDisplayInContext(yctx: YAPIContext, func: string): YSegmentedDisplay
     {
-        let obj: YSegmentedDisplay;
+        let obj: YSegmentedDisplay | null;
         obj = <YSegmentedDisplay> YFunction._FindFromCacheInContext(yctx,  'SegmentedDisplay', func);
         if (obj == null) {
             obj = new YSegmentedDisplay(yctx, func);

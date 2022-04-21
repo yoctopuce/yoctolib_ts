@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 48014 2022-01-12 08:06:41Z seb $
+ *  $Id: yocto_messagebox.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -525,7 +525,7 @@ export class YSms
         let i: number;
         let retcode: number;
         let totsize: number;
-        let subsms: YSms;
+        let subsms: YSms | null;
         let subdata: Uint8Array;
         let res: Uint8Array;
         this._npdu = parts.length;
@@ -952,7 +952,7 @@ export class YSms
         let partlen: number;
         let newud: Uint8Array;
         let newudh: Uint8Array;
-        let newpdu: YSms;
+        let newpdu: YSms | null;
         let i: number;
         let wpos: number;
         udhsize = (this._udh).length;
@@ -1259,7 +1259,7 @@ export class YSms
     {
         let i: number;
         let retcode: number;
-        let pdu: YSms;
+        let pdu: YSms | null;
 
         if (this._npdu == 0) {
             await this.generatePdu();
@@ -1281,7 +1281,7 @@ export class YSms
     {
         let i: number;
         let retcode: number;
-        let pdu: YSms;
+        let pdu: YSms | null;
 
         if (this._slot > 0) {
             return await this._mbox.clearSIMSlot(this._slot);
@@ -1554,7 +1554,7 @@ export class YMessageBox extends YFunction
      */
     static FindMessageBox(func: string): YMessageBox
     {
-        let obj: YMessageBox;
+        let obj: YMessageBox | null;
         obj = <YMessageBox> YFunction._FindFromCache('MessageBox', func);
         if (obj == null) {
             obj = new YMessageBox(YAPI, func);
@@ -1590,7 +1590,7 @@ export class YMessageBox extends YFunction
      */
     static FindMessageBoxInContext(yctx: YAPIContext, func: string): YMessageBox
     {
-        let obj: YMessageBox;
+        let obj: YMessageBox | null;
         obj = <YMessageBox> YFunction._FindFromCacheInContext(yctx,  'MessageBox', func);
         if (obj == null) {
             obj = new YMessageBox(yctx, func);
@@ -1660,7 +1660,7 @@ export class YMessageBox extends YFunction
         let binPdu: Uint8Array;
         let arrPdu: string[] = [];
         let hexPdu: string;
-        let sms: YSms;
+        let sms: YSms | null;
 
         binPdu = await this._download('sms.json?pos='+String(Math.round(slot))+'&len=1');
         arrPdu = this.imm_json_get_array(binPdu);
@@ -2025,7 +2025,7 @@ export class YMessageBox extends YFunction
         let newMsg: YSms[] = [];
         let newAgg: YSms[] = [];
         let signatures: string[] = [];
-        let sms: YSms;
+        let sms: YSms | null;
 
         bitmapStr = await this.get_slotsBitmap();
         if (bitmapStr == this._prevBitmapStr) {
@@ -2175,7 +2175,7 @@ export class YMessageBox extends YFunction
      */
     async sendTextMessage(recipient: string, message: string): Promise<number>
     {
-        let sms: YSms;
+        let sms: YSms | null;
 
         sms = new YSms(this);
         await sms.set_recipient(recipient);
@@ -2201,7 +2201,7 @@ export class YMessageBox extends YFunction
      */
     async sendFlashMessage(recipient: string, message: string): Promise<number>
     {
-        let sms: YSms;
+        let sms: YSms | null;
 
         sms = new YSms(this);
         await sms.set_recipient(recipient);
@@ -2222,7 +2222,7 @@ export class YMessageBox extends YFunction
      */
     async newMessage(recipient: string): Promise<YSms>
     {
-        let sms: YSms;
+        let sms: YSms | null;
         sms = new YSms(this);
         await sms.set_recipient(recipient);
         return sms;

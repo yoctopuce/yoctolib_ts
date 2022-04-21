@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_serialport.ts 48954 2022-03-14 09:55:13Z seb $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -1276,6 +1276,21 @@ class YSerialPort extends yocto_api_js_1.YFunction {
             ofs = ofs + 1;
         }
         return res;
+    }
+    /**
+     * Emits a BREAK condition on the serial interface. When the specified
+     * duration is 0, the BREAK signal will be exactly one character wide.
+     * When the duration is between 1 and 100, the BREAK condition will
+     * be hold for the specified number of milliseconds.
+     *
+     * @param duration : 0 for a standard BREAK, or duration between 1 and 100 ms
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async sendBreak(duration) {
+        return await this.sendCommand('B' + String(Math.round(duration)));
     }
     /**
      * Manually sets the state of the RTS line. This function has no effect when

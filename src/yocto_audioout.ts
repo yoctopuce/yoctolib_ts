@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_audioout.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -272,7 +272,7 @@ export class YAudioOut extends YFunction
      */
     static FindAudioOut(func: string): YAudioOut
     {
-        let obj: YAudioOut;
+        let obj: YAudioOut | null;
         obj = <YAudioOut> YFunction._FindFromCache('AudioOut', func);
         if (obj == null) {
             obj = new YAudioOut(YAPI, func);
@@ -308,7 +308,7 @@ export class YAudioOut extends YFunction
      */
     static FindAudioOutInContext(yctx: YAPIContext, func: string): YAudioOut
     {
-        let obj: YAudioOut;
+        let obj: YAudioOut | null;
         obj = <YAudioOut> YFunction._FindFromCacheInContext(yctx,  'AudioOut', func);
         if (obj == null) {
             obj = new YAudioOut(yctx, func);

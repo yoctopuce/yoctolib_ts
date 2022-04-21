@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_hubport.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_hubport.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -220,7 +220,7 @@ export class YHubPort extends YFunction
      */
     static FindHubPort(func: string): YHubPort
     {
-        let obj: YHubPort;
+        let obj: YHubPort | null;
         obj = <YHubPort> YFunction._FindFromCache('HubPort', func);
         if (obj == null) {
             obj = new YHubPort(YAPI, func);
@@ -256,7 +256,7 @@ export class YHubPort extends YFunction
      */
     static FindHubPortInContext(yctx: YAPIContext, func: string): YHubPort
     {
-        let obj: YHubPort;
+        let obj: YHubPort | null;
         obj = <YHubPort> YFunction._FindFromCacheInContext(yctx,  'HubPort', func);
         if (obj == null) {
             obj = new YHubPort(yctx, func);

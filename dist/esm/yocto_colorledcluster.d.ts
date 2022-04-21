@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 45843 2021-08-04 07:51:59Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *

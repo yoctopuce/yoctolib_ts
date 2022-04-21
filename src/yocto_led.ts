@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_led.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_led.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Led functions
  *
@@ -250,7 +250,7 @@ export class YLed extends YFunction
      */
     static FindLed(func: string): YLed
     {
-        let obj: YLed;
+        let obj: YLed | null;
         obj = <YLed> YFunction._FindFromCache('Led', func);
         if (obj == null) {
             obj = new YLed(YAPI, func);
@@ -286,7 +286,7 @@ export class YLed extends YFunction
      */
     static FindLedInContext(yctx: YAPIContext, func: string): YLed
     {
-        let obj: YLed;
+        let obj: YLed | null;
         obj = <YLed> YFunction._FindFromCacheInContext(yctx,  'Led', func);
         if (obj == null) {
             obj = new YLed(yctx, func);

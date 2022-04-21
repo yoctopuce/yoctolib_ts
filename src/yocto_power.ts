@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_power.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Power functions
  *
@@ -252,7 +252,7 @@ export class YPower extends YSensor
      */
     static FindPower(func: string): YPower
     {
-        let obj: YPower;
+        let obj: YPower | null;
         obj = <YPower> YFunction._FindFromCache('Power', func);
         if (obj == null) {
             obj = new YPower(YAPI, func);
@@ -288,7 +288,7 @@ export class YPower extends YSensor
      */
     static FindPowerInContext(yctx: YAPIContext, func: string): YPower
     {
-        let obj: YPower;
+        let obj: YPower | null;
         obj = <YPower> YFunction._FindFromCacheInContext(yctx,  'Power', func);
         if (obj == null) {
             obj = new YPower(yctx, func);
@@ -354,7 +354,7 @@ export class YPower extends YSensor
      */
     async registerTimedReportCallback(callback: YPower.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 48143 2022-01-17 12:38:14Z mvuilleu $
+ * $Id: yocto_api.ts 48520 2022-02-03 10:51:20Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -1757,7 +1757,7 @@ export class YDataSet
      */
     async get_hardwareId(): Promise<string>
     {
-        let mo: YModule;
+        let mo: YModule | null;
         if (!(this._hardwareId == '')) {
             return this._hardwareId;
         }
@@ -2162,8 +2162,8 @@ export class YConsolidatedDataSet
         let sensorList: YSensor[] = [];
         let idx: number;
         let sensorName: string;
-        let s: YSensor;
-        let obj: YConsolidatedDataSet;
+        let s: YSensor | null;
+        let obj: YConsolidatedDataSet | null;
         nSensors = sensorNames.length;
         sensorList.length = 0;
         idx = 0;
@@ -2194,8 +2194,8 @@ export class YConsolidatedDataSet
     {
         let s: number;
         let idx: number;
-        let sensor: YSensor;
-        let newdataset: YDataSet;
+        let sensor: YSensor | null;
+        let newdataset: YDataSet | null;
         let globprogress: number;
         let currprogress: number;
         let currnexttim: number;
@@ -3678,7 +3678,7 @@ export class YFunction
      */
     static FindFunction(func: string): YFunction
     {
-        let obj: YFunction;
+        let obj: YFunction | null;
         obj = <YFunction> YFunction._FindFromCache('Function', func);
         if (obj == null) {
             obj = new YFunction(YAPI, func);
@@ -3714,7 +3714,7 @@ export class YFunction
      */
     static FindFunctionInContext(yctx: YAPIContext, func: string): YFunction
     {
-        let obj: YFunction;
+        let obj: YFunction | null;
         obj = <YFunction> YFunction._FindFromCacheInContext(yctx,  'Function', func);
         if (obj == null) {
             obj = new YFunction(yctx, func);
@@ -3836,7 +3836,7 @@ export class YFunction
      */
     async get_serialNumber(): Promise<string>
     {
-        let m: YModule;
+        let m: YModule | null;
         m = await this.get_module();
         return await m.get_serialNumber();
     }
@@ -5115,7 +5115,7 @@ export class YModule extends YFunction
     async get_productName(): Promise<string>
     {
         let res: string;
-        let dev: YDevice;
+        let dev: YDevice | null;
         if (this._cacheExpiration == 0) {
             dev = this.imm_getDev();
             if (!(dev == null)) {
@@ -5139,7 +5139,7 @@ export class YModule extends YFunction
     async get_serialNumber(): Promise<string>
     {
         let res: string;
-        let dev: YDevice;
+        let dev: YDevice | null;
         if (this._cacheExpiration == 0) {
             dev = this.imm_getDev();
             if (!(dev == null)) {
@@ -5163,7 +5163,7 @@ export class YModule extends YFunction
     async get_productId(): Promise<number>
     {
         let res: number;
-        let dev: YDevice;
+        let dev: YDevice | null;
         if (this._cacheExpiration == 0) {
             dev = this.imm_getDev();
             if (!(dev == null)) {
@@ -5291,7 +5291,7 @@ export class YModule extends YFunction
     async get_beacon(): Promise<YModule.BEACON>
     {
         let res: number;
-        let dev: YDevice;
+        let dev: YDevice | null;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             dev = this.imm_getDev();
             if (!(dev == null)) {
@@ -5449,7 +5449,7 @@ export class YModule extends YFunction
      */
     static FindModule(func: string): YModule
     {
-        let obj: YModule;
+        let obj: YModule | null;
         let cleanHwId: string;
         let modpos: number;
         cleanHwId = func;
@@ -5492,7 +5492,7 @@ export class YModule extends YFunction
      */
     static FindModuleInContext(yctx: YAPIContext, func: string): YModule
     {
-        let obj: YModule;
+        let obj: YModule | null;
         let cleanHwId: string;
         let modpos: number;
         cleanHwId = func;
@@ -7291,7 +7291,7 @@ export class YSensor extends YFunction
      */
     static FindSensor(func: string): YSensor
     {
-        let obj: YSensor;
+        let obj: YSensor | null;
         obj = <YSensor> YFunction._FindFromCache('Sensor', func);
         if (obj == null) {
             obj = new YSensor(YAPI, func);
@@ -7327,7 +7327,7 @@ export class YSensor extends YFunction
      */
     static FindSensorInContext(yctx: YAPIContext, func: string): YSensor
     {
-        let obj: YSensor;
+        let obj: YSensor | null;
         obj = <YSensor> YFunction._FindFromCacheInContext(yctx,  'Sensor', func);
         if (obj == null) {
             obj = new YSensor(yctx, func);
@@ -7528,8 +7528,8 @@ export class YSensor extends YFunction
      */
     async get_dataLogger(): Promise<YDataLogger | null>
     {
-        let logger: YDataLogger;
-        let modu: YModule;
+        let logger: YDataLogger | null;
+        let modu: YModule | null;
         let serial: string;
         let hwid: string;
 
@@ -7626,7 +7626,7 @@ export class YSensor extends YFunction
      */
     async registerTimedReportCallback(callback: YSensor.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);
@@ -8431,7 +8431,7 @@ export class YDataLogger extends YFunction
      */
     static FindDataLogger(func: string): YDataLogger
     {
-        let obj: YDataLogger;
+        let obj: YDataLogger | null;
         obj = <YDataLogger> YFunction._FindFromCache('DataLogger', func);
         if (obj == null) {
             obj = new YDataLogger(YAPI, func);
@@ -8467,7 +8467,7 @@ export class YDataLogger extends YFunction
      */
     static FindDataLoggerInContext(yctx: YAPIContext, func: string): YDataLogger
     {
-        let obj: YDataLogger;
+        let obj: YDataLogger | null;
         obj = <YDataLogger> YFunction._FindFromCacheInContext(yctx,  'DataLogger', func);
         if (obj == null) {
             obj = new YDataLogger(yctx, func);
@@ -8553,7 +8553,7 @@ export class YDataLogger extends YFunction
     async parse_dataSets(json: Uint8Array): Promise<YDataSet[]>
     {
         let dslist: string[] = [];
-        let dataset: YDataSet;
+        let dataset: YDataSet | null;
         let res: YDataSet[] = [];
 
         dslist = this.imm_json_get_array(json);
@@ -12272,7 +12272,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.48220';
+        return /* version number patched automatically */'1.10.49504';
     }
 
     /**

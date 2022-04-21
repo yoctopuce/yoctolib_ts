@@ -55,6 +55,7 @@ export class YInputChain extends YFunction {
         super(yapi, func);
         this._expectedNodes = YInputChain.EXPECTEDNODES_INVALID;
         this._detectedNodes = YInputChain.DETECTEDNODES_INVALID;
+        this._loopbackTest = YInputChain.LOOPBACKTEST_INVALID;
         this._refreshRate = YInputChain.REFRESHRATE_INVALID;
         this._bitChain1 = YInputChain.BITCHAIN1_INVALID;
         this._bitChain2 = YInputChain.BITCHAIN2_INVALID;
@@ -74,6 +75,9 @@ export class YInputChain extends YFunction {
         // API symbols as object properties
         this.EXPECTEDNODES_INVALID = YAPI.INVALID_UINT;
         this.DETECTEDNODES_INVALID = YAPI.INVALID_UINT;
+        this.LOOPBACKTEST_OFF = 0;
+        this.LOOPBACKTEST_ON = 1;
+        this.LOOPBACKTEST_INVALID = -1;
         this.REFRESHRATE_INVALID = YAPI.INVALID_UINT;
         this.BITCHAIN1_INVALID = YAPI.INVALID_STRING;
         this.BITCHAIN2_INVALID = YAPI.INVALID_STRING;
@@ -95,6 +99,9 @@ export class YInputChain extends YFunction {
                 return 1;
             case 'detectedNodes':
                 this._detectedNodes = val;
+                return 1;
+            case 'loopbackTest':
+                this._loopbackTest = val;
                 return 1;
             case 'refreshRate':
                 this._refreshRate = val;
@@ -178,6 +185,43 @@ export class YInputChain extends YFunction {
         }
         res = this._detectedNodes;
         return res;
+    }
+    /**
+     * Returns the activation state of the exhaustive chain connectivity test.
+     * The connectivity test requires a cable connecting the end of the chain
+     * to the loopback test connector.
+     *
+     * @return either YInputChain.LOOPBACKTEST_OFF or YInputChain.LOOPBACKTEST_ON, according to the
+     * activation state of the exhaustive chain connectivity test
+     *
+     * On failure, throws an exception or returns YInputChain.LOOPBACKTEST_INVALID.
+     */
+    async get_loopbackTest() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YInputChain.LOOPBACKTEST_INVALID;
+            }
+        }
+        res = this._loopbackTest;
+        return res;
+    }
+    /**
+     * Changes the activation state of the exhaustive chain connectivity test.
+     * The connectivity test requires a cable connecting the end of the chain
+     * to the loopback test connector.
+     *
+     * @param newval : either YInputChain.LOOPBACKTEST_OFF or YInputChain.LOOPBACKTEST_ON, according to
+     * the activation state of the exhaustive chain connectivity test
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_loopbackTest(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('loopbackTest', rest_val);
     }
     /**
      * Returns the desired refresh rate, measured in Hz.
@@ -765,6 +809,9 @@ export class YInputChain extends YFunction {
 // API symbols as static members
 YInputChain.EXPECTEDNODES_INVALID = YAPI.INVALID_UINT;
 YInputChain.DETECTEDNODES_INVALID = YAPI.INVALID_UINT;
+YInputChain.LOOPBACKTEST_OFF = 0;
+YInputChain.LOOPBACKTEST_ON = 1;
+YInputChain.LOOPBACKTEST_INVALID = -1;
 YInputChain.REFRESHRATE_INVALID = YAPI.INVALID_UINT;
 YInputChain.BITCHAIN1_INVALID = YAPI.INVALID_STRING;
 YInputChain.BITCHAIN2_INVALID = YAPI.INVALID_STRING;

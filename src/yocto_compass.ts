@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_compass.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -201,7 +201,7 @@ export class YCompass extends YSensor
      */
     static FindCompass(func: string): YCompass
     {
-        let obj: YCompass;
+        let obj: YCompass | null;
         obj = <YCompass> YFunction._FindFromCache('Compass', func);
         if (obj == null) {
             obj = new YCompass(YAPI, func);
@@ -237,7 +237,7 @@ export class YCompass extends YSensor
      */
     static FindCompassInContext(yctx: YAPIContext, func: string): YCompass
     {
-        let obj: YCompass;
+        let obj: YCompass | null;
         obj = <YCompass> YFunction._FindFromCacheInContext(yctx,  'Compass', func);
         if (obj == null) {
             obj = new YCompass(yctx, func);
@@ -303,7 +303,7 @@ export class YCompass extends YSensor
      */
     async registerTimedReportCallback(callback: YCompass.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

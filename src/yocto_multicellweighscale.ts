@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_multicellweighscale.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -522,7 +522,7 @@ export class YMultiCellWeighScale extends YSensor
      */
     static FindMultiCellWeighScale(func: string): YMultiCellWeighScale
     {
-        let obj: YMultiCellWeighScale;
+        let obj: YMultiCellWeighScale | null;
         obj = <YMultiCellWeighScale> YFunction._FindFromCache('MultiCellWeighScale', func);
         if (obj == null) {
             obj = new YMultiCellWeighScale(YAPI, func);
@@ -558,7 +558,7 @@ export class YMultiCellWeighScale extends YSensor
      */
     static FindMultiCellWeighScaleInContext(yctx: YAPIContext, func: string): YMultiCellWeighScale
     {
-        let obj: YMultiCellWeighScale;
+        let obj: YMultiCellWeighScale | null;
         obj = <YMultiCellWeighScale> YFunction._FindFromCacheInContext(yctx,  'MultiCellWeighScale', func);
         if (obj == null) {
             obj = new YMultiCellWeighScale(yctx, func);
@@ -624,7 +624,7 @@ export class YMultiCellWeighScale extends YSensor
      */
     async registerTimedReportCallback(callback: YMultiCellWeighScale.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

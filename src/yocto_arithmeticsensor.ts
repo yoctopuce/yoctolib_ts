@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_arithmeticsensor.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -178,7 +178,7 @@ export class YArithmeticSensor extends YSensor
      */
     static FindArithmeticSensor(func: string): YArithmeticSensor
     {
-        let obj: YArithmeticSensor;
+        let obj: YArithmeticSensor | null;
         obj = <YArithmeticSensor> YFunction._FindFromCache('ArithmeticSensor', func);
         if (obj == null) {
             obj = new YArithmeticSensor(YAPI, func);
@@ -214,7 +214,7 @@ export class YArithmeticSensor extends YSensor
      */
     static FindArithmeticSensorInContext(yctx: YAPIContext, func: string): YArithmeticSensor
     {
-        let obj: YArithmeticSensor;
+        let obj: YArithmeticSensor | null;
         obj = <YArithmeticSensor> YFunction._FindFromCacheInContext(yctx,  'ArithmeticSensor', func);
         if (obj == null) {
             obj = new YArithmeticSensor(yctx, func);
@@ -280,7 +280,7 @@ export class YArithmeticSensor extends YSensor
      */
     async registerTimedReportCallback(callback: YArithmeticSensor.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

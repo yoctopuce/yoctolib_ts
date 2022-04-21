@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_temperature.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -308,7 +308,7 @@ export class YTemperature extends YSensor
      */
     static FindTemperature(func: string): YTemperature
     {
-        let obj: YTemperature;
+        let obj: YTemperature | null;
         obj = <YTemperature> YFunction._FindFromCache('Temperature', func);
         if (obj == null) {
             obj = new YTemperature(YAPI, func);
@@ -344,7 +344,7 @@ export class YTemperature extends YSensor
      */
     static FindTemperatureInContext(yctx: YAPIContext, func: string): YTemperature
     {
-        let obj: YTemperature;
+        let obj: YTemperature | null;
         obj = <YTemperature> YFunction._FindFromCacheInContext(yctx,  'Temperature', func);
         if (obj == null) {
             obj = new YTemperature(yctx, func);
@@ -410,7 +410,7 @@ export class YTemperature extends YSensor
      */
     async registerTimedReportCallback(callback: YTemperature.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

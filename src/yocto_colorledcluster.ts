@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 45843 2021-08-04 07:51:59Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -307,7 +307,7 @@ export class YColorLedCluster extends YFunction
      */
     static FindColorLedCluster(func: string): YColorLedCluster
     {
-        let obj: YColorLedCluster;
+        let obj: YColorLedCluster | null;
         obj = <YColorLedCluster> YFunction._FindFromCache('ColorLedCluster', func);
         if (obj == null) {
             obj = new YColorLedCluster(YAPI, func);
@@ -343,7 +343,7 @@ export class YColorLedCluster extends YFunction
      */
     static FindColorLedClusterInContext(yctx: YAPIContext, func: string): YColorLedCluster
     {
-        let obj: YColorLedCluster;
+        let obj: YColorLedCluster | null;
         obj = <YColorLedCluster> YFunction._FindFromCacheInContext(yctx,  'ColorLedCluster', func);
         if (obj == null) {
             obj = new YColorLedCluster(yctx, func);

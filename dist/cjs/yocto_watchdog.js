@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 44548 2021-04-13 09:56:42Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *

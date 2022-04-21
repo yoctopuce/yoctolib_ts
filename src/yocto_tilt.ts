@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tilt.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_tilt.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Tilt functions
  *
@@ -182,7 +182,7 @@ export class YTilt extends YSensor
      */
     static FindTilt(func: string): YTilt
     {
-        let obj: YTilt;
+        let obj: YTilt | null;
         obj = <YTilt> YFunction._FindFromCache('Tilt', func);
         if (obj == null) {
             obj = new YTilt(YAPI, func);
@@ -218,7 +218,7 @@ export class YTilt extends YSensor
      */
     static FindTiltInContext(yctx: YAPIContext, func: string): YTilt
     {
-        let obj: YTilt;
+        let obj: YTilt | null;
         obj = <YTilt> YFunction._FindFromCacheInContext(yctx,  'Tilt', func);
         if (obj == null) {
             obj = new YTilt(yctx, func);
@@ -284,7 +284,7 @@ export class YTilt extends YSensor
      */
     async registerTimedReportCallback(callback: YTilt.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

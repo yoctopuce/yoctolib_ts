@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 46218 2021-09-06 16:37:37Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 48521 2022-02-03 10:56:31Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -271,14 +271,12 @@ class YHttpNodeHub extends YGenericHub {
         else {
             this._firstArrivalCallback = true;
         }
-        console.log(this.urlInfo);
         let options = {
             method: 'GET',
             hostname: this.urlInfo.host,
             port: this.urlInfo.port,
             path: '/' + this.urlInfo.domain + 'not.byn' + args
         };
-        console.log('http hub:', options);
         if (!this.notbynOpenPromise) {
             this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
             this.notbynOpenPromise = new Promise((resolve, reject) => {
@@ -357,7 +355,7 @@ class YHttpNodeHub extends YGenericHub {
             method: str_method,
             hostname: this.urlInfo.host,
             port: this.urlInfo.port,
-            path: '/' + this.urlInfo.domain + devUrl
+            path: '/' + this.urlInfo.domain + devUrl.slice(1)
         };
         let boundary = '';
         if (obj_body) {

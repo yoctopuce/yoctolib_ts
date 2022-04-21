@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_wireless.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -402,7 +402,7 @@ export class YWireless extends YFunction
      */
     static FindWireless(func: string): YWireless
     {
-        let obj: YWireless;
+        let obj: YWireless | null;
         obj = <YWireless> YFunction._FindFromCache('Wireless', func);
         if (obj == null) {
             obj = new YWireless(YAPI, func);
@@ -438,7 +438,7 @@ export class YWireless extends YFunction
      */
     static FindWirelessInContext(yctx: YAPIContext, func: string): YWireless
     {
-        let obj: YWireless;
+        let obj: YWireless | null;
         obj = <YWireless> YFunction._FindFromCacheInContext(yctx,  'Wireless', func);
         if (obj == null) {
             obj = new YWireless(yctx, func);

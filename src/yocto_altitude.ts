@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_altitude.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -206,7 +206,7 @@ export class YAltitude extends YSensor
      */
     static FindAltitude(func: string): YAltitude
     {
-        let obj: YAltitude;
+        let obj: YAltitude | null;
         obj = <YAltitude> YFunction._FindFromCache('Altitude', func);
         if (obj == null) {
             obj = new YAltitude(YAPI, func);
@@ -242,7 +242,7 @@ export class YAltitude extends YSensor
      */
     static FindAltitudeInContext(yctx: YAPIContext, func: string): YAltitude
     {
-        let obj: YAltitude;
+        let obj: YAltitude | null;
         obj = <YAltitude> YFunction._FindFromCacheInContext(yctx,  'Altitude', func);
         if (obj == null) {
             obj = new YAltitude(yctx, func);
@@ -308,7 +308,7 @@ export class YAltitude extends YSensor
      */
     async registerTimedReportCallback(callback: YAltitude.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

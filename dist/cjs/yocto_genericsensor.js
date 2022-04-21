@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_genericsensor.ts 49385 2022-04-06 00:49:27Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -43,7 +43,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
 //--- (YGenericSensor class start)
 /**
  * YGenericSensor Class: GenericSensor control interface, available for instance in the
- * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-Serial or the Yocto-milliVolt-Rx
+ * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-SPI or the Yocto-milliVolt-Rx
  *
  * The YGenericSensor class allows you to read and configure Yoctopuce signal
  * transducers. It inherits from YSensor class the core functions to read measurements,

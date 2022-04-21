@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_carbondioxide.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -181,7 +181,7 @@ export class YCarbonDioxide extends YSensor
      */
     static FindCarbonDioxide(func: string): YCarbonDioxide
     {
-        let obj: YCarbonDioxide;
+        let obj: YCarbonDioxide | null;
         obj = <YCarbonDioxide> YFunction._FindFromCache('CarbonDioxide', func);
         if (obj == null) {
             obj = new YCarbonDioxide(YAPI, func);
@@ -217,7 +217,7 @@ export class YCarbonDioxide extends YSensor
      */
     static FindCarbonDioxideInContext(yctx: YAPIContext, func: string): YCarbonDioxide
     {
-        let obj: YCarbonDioxide;
+        let obj: YCarbonDioxide | null;
         obj = <YCarbonDioxide> YFunction._FindFromCacheInContext(yctx,  'CarbonDioxide', func);
         if (obj == null) {
             obj = new YCarbonDioxide(yctx, func);
@@ -283,7 +283,7 @@ export class YCarbonDioxide extends YSensor
      */
     async registerTimedReportCallback(callback: YCarbonDioxide.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

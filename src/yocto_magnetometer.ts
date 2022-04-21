@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_magnetometer.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -236,7 +236,7 @@ export class YMagnetometer extends YSensor
      */
     static FindMagnetometer(func: string): YMagnetometer
     {
-        let obj: YMagnetometer;
+        let obj: YMagnetometer | null;
         obj = <YMagnetometer> YFunction._FindFromCache('Magnetometer', func);
         if (obj == null) {
             obj = new YMagnetometer(YAPI, func);
@@ -272,7 +272,7 @@ export class YMagnetometer extends YSensor
      */
     static FindMagnetometerInContext(yctx: YAPIContext, func: string): YMagnetometer
     {
-        let obj: YMagnetometer;
+        let obj: YMagnetometer | null;
         obj = <YMagnetometer> YFunction._FindFromCacheInContext(yctx,  'Magnetometer', func);
         if (obj == null) {
             obj = new YMagnetometer(yctx, func);
@@ -338,7 +338,7 @@ export class YMagnetometer extends YSensor
      */
     async registerTimedReportCallback(callback: YMagnetometer.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

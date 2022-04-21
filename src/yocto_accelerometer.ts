@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_accelerometer.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -259,7 +259,7 @@ export class YAccelerometer extends YSensor
      */
     static FindAccelerometer(func: string): YAccelerometer
     {
-        let obj: YAccelerometer;
+        let obj: YAccelerometer | null;
         obj = <YAccelerometer> YFunction._FindFromCache('Accelerometer', func);
         if (obj == null) {
             obj = new YAccelerometer(YAPI, func);
@@ -295,7 +295,7 @@ export class YAccelerometer extends YSensor
      */
     static FindAccelerometerInContext(yctx: YAPIContext, func: string): YAccelerometer
     {
-        let obj: YAccelerometer;
+        let obj: YAccelerometer | null;
         obj = <YAccelerometer> YFunction._FindFromCacheInContext(yctx,  'Accelerometer', func);
         if (obj == null) {
             obj = new YAccelerometer(yctx, func);
@@ -361,7 +361,7 @@ export class YAccelerometer extends YSensor
      */
     async registerTimedReportCallback(callback: YAccelerometer.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

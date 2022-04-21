@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorled.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_colorled.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -205,7 +205,7 @@ export class YColorLed extends YFunction
 
     async get_rgbMove(): Promise<YColorLed.Move>
     {
-        let res: YColorLed.Move;
+        let res: YColorLed.Move | null;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YColorLed.RGBMOVE_INVALID;
@@ -241,7 +241,7 @@ export class YColorLed extends YFunction
 
     async get_hslMove(): Promise<YColorLed.Move>
     {
-        let res: YColorLed.Move;
+        let res: YColorLed.Move | null;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YColorLed.HSLMOVE_INVALID;
@@ -422,7 +422,7 @@ export class YColorLed extends YFunction
      */
     static FindColorLed(func: string): YColorLed
     {
-        let obj: YColorLed;
+        let obj: YColorLed | null;
         obj = <YColorLed> YFunction._FindFromCache('ColorLed', func);
         if (obj == null) {
             obj = new YColorLed(YAPI, func);
@@ -458,7 +458,7 @@ export class YColorLed extends YFunction
      */
     static FindColorLedInContext(yctx: YAPIContext, func: string): YColorLed
     {
-        let obj: YColorLed;
+        let obj: YColorLed | null;
         obj = <YColorLed> YFunction._FindFromCacheInContext(yctx,  'ColorLed', func);
         if (obj == null) {
             obj = new YColorLed(yctx, func);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 49501 2022-04-21 07:09:25Z mvuilleu $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -56,6 +56,7 @@ export class YMultiSensController extends YFunction
     _nSensors: number = YMultiSensController.NSENSORS_INVALID;
     _maxSensors: number = YMultiSensController.MAXSENSORS_INVALID;
     _maintenanceMode: YMultiSensController.MAINTENANCEMODE = YMultiSensController.MAINTENANCEMODE_INVALID;
+    _lastAddressDetected: number = YMultiSensController.LASTADDRESSDETECTED_INVALID;
     _command: string = YMultiSensController.COMMAND_INVALID;
     _valueCallbackMultiSensController: YMultiSensController.ValueCallback | null = null;
 
@@ -65,6 +66,7 @@ export class YMultiSensController extends YFunction
     public readonly MAINTENANCEMODE_FALSE: YMultiSensController.MAINTENANCEMODE = 0;
     public readonly MAINTENANCEMODE_TRUE: YMultiSensController.MAINTENANCEMODE = 1;
     public readonly MAINTENANCEMODE_INVALID: YMultiSensController.MAINTENANCEMODE = -1;
+    public readonly LASTADDRESSDETECTED_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
@@ -73,6 +75,7 @@ export class YMultiSensController extends YFunction
     public static readonly MAINTENANCEMODE_FALSE: YMultiSensController.MAINTENANCEMODE = 0;
     public static readonly MAINTENANCEMODE_TRUE: YMultiSensController.MAINTENANCEMODE = 1;
     public static readonly MAINTENANCEMODE_INVALID: YMultiSensController.MAINTENANCEMODE = -1;
+    public static readonly LASTADDRESSDETECTED_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YMultiSensController attributes declaration)
 
@@ -97,6 +100,9 @@ export class YMultiSensController extends YFunction
             return 1;
         case 'maintenanceMode':
             this._maintenanceMode = <YMultiSensController.MAINTENANCEMODE> <number> val;
+            return 1;
+        case 'lastAddressDetected':
+            this._lastAddressDetected = <number> <number> val;
             return 1;
         case 'command':
             this._command = <string> <string> val;
@@ -129,7 +135,7 @@ export class YMultiSensController extends YFunction
      * saveToFlash() method of the module if the
      * modification must be kept. It is recommended to restart the
      * device with  module->reboot() after modifying
-     * (and saving) this settings
+     * (and saving) this settings.
      *
      * @param newval : an integer corresponding to the number of sensors to poll
      *
@@ -203,6 +209,28 @@ export class YMultiSensController extends YFunction
         return await this._setAttr('maintenanceMode',rest_val);
     }
 
+    /**
+     * Returns the I2C address of the most recently detected sensor. This method can
+     * be used to in case of I2C communication error to determine what is the
+     * last sensor that can be reached, or after a call to setupAddress
+     * to make sure that the address change was properly processed.
+     *
+     * @return an integer corresponding to the I2C address of the most recently detected sensor
+     *
+     * On failure, throws an exception or returns YMultiSensController.LASTADDRESSDETECTED_INVALID.
+     */
+    async get_lastAddressDetected(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YMultiSensController.LASTADDRESSDETECTED_INVALID;
+            }
+        }
+        res = this._lastAddressDetected;
+        return res;
+    }
+
     async get_command(): Promise<string>
     {
         let res: string;
@@ -252,7 +280,7 @@ export class YMultiSensController extends YFunction
      */
     static FindMultiSensController(func: string): YMultiSensController
     {
-        let obj: YMultiSensController;
+        let obj: YMultiSensController | null;
         obj = <YMultiSensController> YFunction._FindFromCache('MultiSensController', func);
         if (obj == null) {
             obj = new YMultiSensController(YAPI, func);
@@ -288,7 +316,7 @@ export class YMultiSensController extends YFunction
      */
     static FindMultiSensControllerInContext(yctx: YAPIContext, func: string): YMultiSensController
     {
-        let obj: YMultiSensController;
+        let obj: YMultiSensController | null;
         obj = <YMultiSensController> YFunction._FindFromCacheInContext(yctx,  'MultiSensController', func);
         if (obj == null) {
             obj = new YMultiSensController(yctx, func);
@@ -345,9 +373,10 @@ export class YMultiSensController extends YFunction
      * Configures the I2C address of the only sensor connected to the device.
      * It is recommended to put the the device in maintenance mode before
      * changing sensor addresses.  This method is only intended to work with a single
-     * sensor connected to the device, if several sensors are connected, the result
+     * sensor connected to the device. If several sensors are connected, the result
      * is unpredictable.
-     * Note that the device is probably expecting to find a string of sensors with specific
+     *
+     * Note that the device is expecting to find a sensor or a string of sensors with specific
      * addresses. Check the device documentation to find out which addresses should be used.
      *
      * @param addr : new address of the connected sensor
@@ -358,8 +387,42 @@ export class YMultiSensController extends YFunction
     async setupAddress(addr: number): Promise<number>
     {
         let cmd: string;
+        let res: number;
         cmd = 'A'+String(Math.round(addr));
-        return await this.set_command(cmd);
+        res = await this.set_command(cmd);
+        if (!(res == this._yapi.SUCCESS)) {
+            return this._throw(this._yapi.IO_ERROR,'unable to trigger address change',this._yapi.IO_ERROR);
+        }
+        YAPI.Sleep(1500);
+        res = await this.get_lastAddressDetected();
+        if (!(res > 0)) {
+            return this._throw(this._yapi.IO_ERROR,'IR sensor not found',this._yapi.IO_ERROR);
+        }
+        if (!(res == addr)) {
+            return this._throw(this._yapi.IO_ERROR,'address change failed',this._yapi.IO_ERROR);
+        }
+        return this._yapi.SUCCESS;
+    }
+
+    /**
+     * Triggers the I2C address detection procedure for the only sensor connected to the device.
+     * This method is only intended to work with a single sensor connected to the device.
+     * If several sensors are connected, the result is unpredictable.
+     *
+     * @return the I2C address of the detected sensor, or 0 if none is found
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async get_sensorAddress(): Promise<number>
+    {
+        let res: number;
+        res = await this.set_command('a');
+        if (!(res == this._yapi.SUCCESS)) {
+            return this._throw(this._yapi.IO_ERROR,'unable to trigger address detection',res);
+        }
+        YAPI.Sleep(1000);
+        res = await this.get_lastAddressDetected();
+        return res;
     }
 
     /**

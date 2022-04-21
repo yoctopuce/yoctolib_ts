@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: yocto_network.ts 49385 2022-04-06 00:49:27Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -39,7 +39,7 @@
 import { YAPIContext, YFunction } from './yocto_api.js';
 /**
  * YNetwork Class: network interface control interface, available for instance in the
- * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ * YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-SR or the YoctoHub-Wireless-n
  *
  * YNetwork objects provide access to TCP/IP parameters of Yoctopuce
  * devices that include a built-in network interface.
@@ -51,6 +51,7 @@ export declare class YNetwork extends YFunction {
     _ipAddress: string;
     _subnetMask: string;
     _router: string;
+    _currentDNS: string;
     _ipConfig: string;
     _primaryDNS: string;
     _secondaryDNS: string;
@@ -81,6 +82,7 @@ export declare class YNetwork extends YFunction {
     readonly IPADDRESS_INVALID: string;
     readonly SUBNETMASK_INVALID: string;
     readonly ROUTER_INVALID: string;
+    readonly CURRENTDNS_INVALID: string;
     readonly IPCONFIG_INVALID: string;
     readonly PRIMARYDNS_INVALID: string;
     readonly SECONDARYDNS_INVALID: string;
@@ -128,6 +130,7 @@ export declare class YNetwork extends YFunction {
     static readonly IPADDRESS_INVALID: string;
     static readonly SUBNETMASK_INVALID: string;
     static readonly ROUTER_INVALID: string;
+    static readonly CURRENTDNS_INVALID: string;
     static readonly IPCONFIG_INVALID: string;
     static readonly PRIMARYDNS_INVALID: string;
     static readonly SECONDARYDNS_INVALID: string;
@@ -224,6 +227,14 @@ export declare class YNetwork extends YFunction {
      * On failure, throws an exception or returns YNetwork.ROUTER_INVALID.
      */
     get_router(): Promise<string>;
+    /**
+     * Returns the IP address of the DNS server currently used by the device.
+     *
+     * @return a string corresponding to the IP address of the DNS server currently used by the device
+     *
+     * On failure, throws an exception or returns YNetwork.CURRENTDNS_INVALID.
+     */
+    get_currentDNS(): Promise<string>;
     /**
      * Returns the IP configuration of the network interface.
      *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_tvoc.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -100,7 +100,7 @@ export class YTvoc extends YSensor
      */
     static FindTvoc(func: string): YTvoc
     {
-        let obj: YTvoc;
+        let obj: YTvoc | null;
         obj = <YTvoc> YFunction._FindFromCache('Tvoc', func);
         if (obj == null) {
             obj = new YTvoc(YAPI, func);
@@ -136,7 +136,7 @@ export class YTvoc extends YSensor
      */
     static FindTvocInContext(yctx: YAPIContext, func: string): YTvoc
     {
-        let obj: YTvoc;
+        let obj: YTvoc | null;
         obj = <YTvoc> YFunction._FindFromCacheInContext(yctx,  'Tvoc', func);
         if (obj == null) {
             obj = new YTvoc(yctx, func);
@@ -202,7 +202,7 @@ export class YTvoc extends YSensor
      */
     async registerTimedReportCallback(callback: YTvoc.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

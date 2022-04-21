@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltage.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_voltage.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -160,7 +160,7 @@ export class YVoltage extends YSensor
      */
     static FindVoltage(func: string): YVoltage
     {
-        let obj: YVoltage;
+        let obj: YVoltage | null;
         obj = <YVoltage> YFunction._FindFromCache('Voltage', func);
         if (obj == null) {
             obj = new YVoltage(YAPI, func);
@@ -196,7 +196,7 @@ export class YVoltage extends YSensor
      */
     static FindVoltageInContext(yctx: YAPIContext, func: string): YVoltage
     {
-        let obj: YVoltage;
+        let obj: YVoltage | null;
         obj = <YVoltage> YFunction._FindFromCacheInContext(yctx,  'Voltage', func);
         if (obj == null) {
             obj = new YVoltage(yctx, func);
@@ -262,7 +262,7 @@ export class YVoltage extends YSensor
      */
     async registerTimedReportCallback(callback: YVoltage.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 44548 2021-04-13 09:56:42Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -431,7 +431,7 @@ export class YWatchdog extends YFunction
 
     async get_delayedPulseTimer(): Promise<YWatchdog.DelayedPulse>
     {
-        let res: YWatchdog.DelayedPulse;
+        let res: YWatchdog.DelayedPulse | null;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
                 return YWatchdog.DELAYEDPULSETIMER_INVALID;
@@ -701,7 +701,7 @@ export class YWatchdog extends YFunction
      */
     static FindWatchdog(func: string): YWatchdog
     {
-        let obj: YWatchdog;
+        let obj: YWatchdog | null;
         obj = <YWatchdog> YFunction._FindFromCache('Watchdog', func);
         if (obj == null) {
             obj = new YWatchdog(YAPI, func);
@@ -737,7 +737,7 @@ export class YWatchdog extends YFunction
      */
     static FindWatchdogInContext(yctx: YAPIContext, func: string): YWatchdog
     {
-        let obj: YWatchdog;
+        let obj: YWatchdog | null;
         obj = <YWatchdog> YFunction._FindFromCacheInContext(yctx,  'Watchdog', func);
         if (obj == null) {
             obj = new YWatchdog(yctx, func);
@@ -801,7 +801,7 @@ export class YWatchdog extends YFunction
     {
         let sta: number;
         let fw: string;
-        let mo: YModule;
+        let mo: YModule | null;
         if (this._firm == 0) {
             mo = await this.get_module();
             fw = await mo.get_firmwareRelease();

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_daisychain.ts 43760 2021-02-08 14:33:45Z mvuilleu $
+ *  $Id: yocto_daisychain.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -214,7 +214,7 @@ export class YDaisyChain extends YFunction
      */
     static FindDaisyChain(func: string): YDaisyChain
     {
-        let obj: YDaisyChain;
+        let obj: YDaisyChain | null;
         obj = <YDaisyChain> YFunction._FindFromCache('DaisyChain', func);
         if (obj == null) {
             obj = new YDaisyChain(YAPI, func);
@@ -250,7 +250,7 @@ export class YDaisyChain extends YFunction
      */
     static FindDaisyChainInContext(yctx: YAPIContext, func: string): YDaisyChain
     {
-        let obj: YDaisyChain;
+        let obj: YDaisyChain | null;
         obj = <YDaisyChain> YFunction._FindFromCacheInContext(yctx,  'DaisyChain', func);
         if (obj == null) {
             obj = new YDaisyChain(yctx, func);

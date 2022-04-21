@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 47311 2021-11-16 09:46:24Z seb $
+ *  $Id: yocto_rangefinder.ts 48520 2022-02-03 10:51:20Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -336,7 +336,7 @@ export class YRangeFinder extends YSensor
      */
     static FindRangeFinder(func: string): YRangeFinder
     {
-        let obj: YRangeFinder;
+        let obj: YRangeFinder | null;
         obj = <YRangeFinder> YFunction._FindFromCache('RangeFinder', func);
         if (obj == null) {
             obj = new YRangeFinder(YAPI, func);
@@ -372,7 +372,7 @@ export class YRangeFinder extends YSensor
      */
     static FindRangeFinderInContext(yctx: YAPIContext, func: string): YRangeFinder
     {
-        let obj: YRangeFinder;
+        let obj: YRangeFinder | null;
         obj = <YRangeFinder> YFunction._FindFromCacheInContext(yctx,  'RangeFinder', func);
         if (obj == null) {
             obj = new YRangeFinder(yctx, func);
@@ -438,7 +438,7 @@ export class YRangeFinder extends YSensor
      */
     async registerTimedReportCallback(callback: YRangeFinder.TimedReportCallback | null): Promise<number>
     {
-        let sensor: YSensor;
+        let sensor: YSensor | null;
         sensor = this;
         if (callback != null) {
             await YFunction._UpdateTimedReportCallbackList(sensor, true);
