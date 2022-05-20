@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_spiport.ts 49744 2022-05-11 15:13:45Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -143,6 +143,7 @@ export class YSpiPort extends YFunction {
         this.VOLTAGELEVEL_RS232 = 5;
         this.VOLTAGELEVEL_RS485 = 6;
         this.VOLTAGELEVEL_TTL1V8 = 7;
+        this.VOLTAGELEVEL_SDI12 = 8;
         this.VOLTAGELEVEL_INVALID = -1;
         this.SPIMODE_INVALID = YAPI.INVALID_STRING;
         this.SSPOLARITY_ACTIVE_LOW = 0;
@@ -472,8 +473,8 @@ export class YSpiPort extends YFunction {
      *
      * @return a value among YSpiPort.VOLTAGELEVEL_OFF, YSpiPort.VOLTAGELEVEL_TTL3V,
      * YSpiPort.VOLTAGELEVEL_TTL3VR, YSpiPort.VOLTAGELEVEL_TTL5V, YSpiPort.VOLTAGELEVEL_TTL5VR,
-     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485 and YSpiPort.VOLTAGELEVEL_TTL1V8
-     * corresponding to the voltage level used on the serial line
+     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485, YSpiPort.VOLTAGELEVEL_TTL1V8 and
+     * YSpiPort.VOLTAGELEVEL_SDI12 corresponding to the voltage level used on the serial line
      *
      * On failure, throws an exception or returns YSpiPort.VOLTAGELEVEL_INVALID.
      */
@@ -498,8 +499,8 @@ export class YSpiPort extends YFunction {
      *
      * @param newval : a value among YSpiPort.VOLTAGELEVEL_OFF, YSpiPort.VOLTAGELEVEL_TTL3V,
      * YSpiPort.VOLTAGELEVEL_TTL3VR, YSpiPort.VOLTAGELEVEL_TTL5V, YSpiPort.VOLTAGELEVEL_TTL5VR,
-     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485 and YSpiPort.VOLTAGELEVEL_TTL1V8
-     * corresponding to the voltage type used on the serial line
+     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485, YSpiPort.VOLTAGELEVEL_TTL1V8 and
+     * YSpiPort.VOLTAGELEVEL_SDI12 corresponding to the voltage type used on the serial line
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -1465,6 +1466,7 @@ YSpiPort.VOLTAGELEVEL_TTL5VR = 4;
 YSpiPort.VOLTAGELEVEL_RS232 = 5;
 YSpiPort.VOLTAGELEVEL_RS485 = 6;
 YSpiPort.VOLTAGELEVEL_TTL1V8 = 7;
+YSpiPort.VOLTAGELEVEL_SDI12 = 8;
 YSpiPort.VOLTAGELEVEL_INVALID = -1;
 YSpiPort.SPIMODE_INVALID = YAPI.INVALID_STRING;
 YSpiPort.SSPOLARITY_ACTIVE_LOW = 0;

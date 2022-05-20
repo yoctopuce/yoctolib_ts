@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 48520 2022-02-03 10:51:20Z seb $
+ * $Id: yocto_api.ts 49755 2022-05-13 09:48:35Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -2925,9 +2925,7 @@ class YFirmwareUpdate {
         return await this._processMore_internal(newupdate);
     }
     /**
-     * Returns a list of all the modules in "firmware update" mode. Only devices
-     * connected over USB are listed. For devices connected to a YoctoHub, you
-     * must connect yourself to the YoctoHub web interface.
+     * Returns a list of all the modules in "firmware update" mode.
      *
      * @return an array of strings containing the serial numbers of devices in "firmware update" mode.
      */
@@ -2935,9 +2933,7 @@ class YFirmwareUpdate {
         return await this.GetAllBootLoaders_internal();
     }
     /**
-     * Returns a list of all the modules in "firmware update" mode. Only devices
-     * connected over USB are listed. For devices connected to a YoctoHub, you
-     * must connect to the YoctoHub web interface.
+     * Returns a list of all the modules in "firmware update" mode.
      *
      * @param yctx : a YAPI context.
      *
@@ -10989,7 +10985,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.49504';
+        return /* version number patched automatically */ '1.10.49822';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

@@ -37,9 +37,6 @@
  *
  *********************************************************************/
 import { YAPI, YFunction } from './yocto_api.js';
-async function yInternalEventCallback(YInputChain_inputChain, str_value) {
-    YInputChain_inputChain._internalEventHandler(str_value);
-}
 //--- (YInputChain class start)
 /**
  * YInputChain Class: InputChain function interface
@@ -135,6 +132,9 @@ export class YInputChain extends YFunction {
                 return 1;
         }
         return super.imm_parseAttr(name, val);
+    }
+    async _internalEventCallback(YInputChain_obj, str_value) {
+        await YInputChain_obj._internalEventHandler(str_value);
     }
     /**
      * Returns the number of nodes expected in the chain.
@@ -608,7 +608,7 @@ export class YInputChain extends YFunction {
      */
     async registerEventCallback(callback) {
         if (callback != null) {
-            await this.registerValueCallback(yInternalEventCallback);
+            await this.registerValueCallback(this._internalEventCallback);
         }
         else {
             await this.registerValueCallback(null);

@@ -96,6 +96,7 @@ export declare class YInputChain extends YFunction {
     static readonly CHAINDIAGS_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
+    _internalEventCallback(YInputChain_obj: YInputChain, str_value: string): Promise<void>;
     /**
      * Returns the number of nodes expected in the chain.
      *

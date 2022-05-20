@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_files.ts 49755 2022-05-13 09:48:35Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -185,7 +185,7 @@ class YFiles extends yocto_api_js_1.YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the filesystem, for instance
-     *         YRGBLED2.files.
+     *         YMAXBUZ1.files.
      *
      * @return a YFiles object allowing you to drive the filesystem.
      */
@@ -219,7 +219,7 @@ class YFiles extends yocto_api_js_1.YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the filesystem, for instance
-     *         YRGBLED2.files.
+     *         YMAXBUZ1.files.
      *
      * @return a YFiles object allowing you to drive the filesystem.
      */

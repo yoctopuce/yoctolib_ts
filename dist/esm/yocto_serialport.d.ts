@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 48954 2022-03-14 09:55:13Z seb $
+ *  $Id: yocto_serialport.ts 49818 2022-05-19 09:57:42Z seb $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -99,6 +99,8 @@ export declare class YSerialPort extends YFunction {
     _rxptr: number;
     _rxbuff: Uint8Array;
     _rxbuffptr: number;
+    _eventCallback: YSerialPort.SnoopingCallback | null;
+    _eventPos: number;
     readonly RXCOUNT_INVALID: number;
     readonly TXCOUNT_INVALID: number;
     readonly ERRCOUNT_INVALID: number;
@@ -119,6 +121,7 @@ export declare class YSerialPort extends YFunction {
     readonly VOLTAGELEVEL_RS232: YSerialPort.VOLTAGELEVEL;
     readonly VOLTAGELEVEL_RS485: YSerialPort.VOLTAGELEVEL;
     readonly VOLTAGELEVEL_TTL1V8: YSerialPort.VOLTAGELEVEL;
+    readonly VOLTAGELEVEL_SDI12: YSerialPort.VOLTAGELEVEL;
     readonly VOLTAGELEVEL_INVALID: YSerialPort.VOLTAGELEVEL;
     readonly SERIALMODE_INVALID: string;
     static readonly RXCOUNT_INVALID: number;
@@ -141,10 +144,12 @@ export declare class YSerialPort extends YFunction {
     static readonly VOLTAGELEVEL_RS232: YSerialPort.VOLTAGELEVEL;
     static readonly VOLTAGELEVEL_RS485: YSerialPort.VOLTAGELEVEL;
     static readonly VOLTAGELEVEL_TTL1V8: YSerialPort.VOLTAGELEVEL;
+    static readonly VOLTAGELEVEL_SDI12: YSerialPort.VOLTAGELEVEL;
     static readonly VOLTAGELEVEL_INVALID: YSerialPort.VOLTAGELEVEL;
     static readonly SERIALMODE_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): 0 | 1;
+    _internalEventCallback(YSerialPort_obj: YSerialPort, str_value: string): Promise<void>;
     /**
      * Returns the total number of bytes received since last reset.
      *
@@ -295,8 +300,8 @@ export declare class YSerialPort extends YFunction {
      *
      * @return a value among YSerialPort.VOLTAGELEVEL_OFF, YSerialPort.VOLTAGELEVEL_TTL3V,
      * YSerialPort.VOLTAGELEVEL_TTL3VR, YSerialPort.VOLTAGELEVEL_TTL5V, YSerialPort.VOLTAGELEVEL_TTL5VR,
-     * YSerialPort.VOLTAGELEVEL_RS232, YSerialPort.VOLTAGELEVEL_RS485 and YSerialPort.VOLTAGELEVEL_TTL1V8
-     * corresponding to the voltage level used on the serial line
+     * YSerialPort.VOLTAGELEVEL_RS232, YSerialPort.VOLTAGELEVEL_RS485, YSerialPort.VOLTAGELEVEL_TTL1V8 and
+     * YSerialPort.VOLTAGELEVEL_SDI12 corresponding to the voltage level used on the serial line
      *
      * On failure, throws an exception or returns YSerialPort.VOLTAGELEVEL_INVALID.
      */
@@ -312,8 +317,8 @@ export declare class YSerialPort extends YFunction {
      *
      * @param newval : a value among YSerialPort.VOLTAGELEVEL_OFF, YSerialPort.VOLTAGELEVEL_TTL3V,
      * YSerialPort.VOLTAGELEVEL_TTL3VR, YSerialPort.VOLTAGELEVEL_TTL5V, YSerialPort.VOLTAGELEVEL_TTL5VR,
-     * YSerialPort.VOLTAGELEVEL_RS232, YSerialPort.VOLTAGELEVEL_RS485 and YSerialPort.VOLTAGELEVEL_TTL1V8
-     * corresponding to the voltage type used on the serial line
+     * YSerialPort.VOLTAGELEVEL_RS232, YSerialPort.VOLTAGELEVEL_RS485, YSerialPort.VOLTAGELEVEL_TTL1V8 and
+     * YSerialPort.VOLTAGELEVEL_SDI12 corresponding to the voltage type used on the serial line
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -708,6 +713,19 @@ export declare class YSerialPort extends YFunction {
      */
     snoopMessages(maxWait: number): Promise<YSnoopingRecord[]>;
     /**
+     * Registers a callback function to be called each time that a message is sent or
+     * received by the serial port.
+     *
+     * @param callback : the callback function to call, or a null pointer.
+     *         The callback function should take four arguments:
+     *         the YSerialPort object that emitted the event, and
+     *         the SnoopingRecord object that describes the message
+     *         sent or received.
+     *         On failure, throws an exception or returns a negative error code.
+     */
+    registerSnoopingCallback(callback: YSerialPort.SnoopingCallback | null): Promise<number>;
+    _internalEventHandler(advstr: string): Promise<number>;
+    /**
      * Sends an ASCII string to the serial port, preceeded with an STX code and
      * followed by an ETX code.
      *
@@ -907,9 +925,13 @@ export declare namespace YSerialPort {
         RS232 = 5,
         RS485 = 6,
         TTL1V8 = 7,
+        SDI12 = 8,
         INVALID = -1
     }
     interface ValueCallback {
         (func: YSerialPort, value: string): void;
+    }
+    interface SnoopingCallback {
+        (func: YSerialPort, rec: YSnoopingRecord): void;
     }
 }

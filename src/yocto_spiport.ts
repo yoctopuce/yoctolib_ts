@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_spiport.ts 49744 2022-05-11 15:13:45Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -165,6 +165,7 @@ export class YSpiPort extends YFunction
     public readonly VOLTAGELEVEL_RS232: YSpiPort.VOLTAGELEVEL = 5;
     public readonly VOLTAGELEVEL_RS485: YSpiPort.VOLTAGELEVEL = 6;
     public readonly VOLTAGELEVEL_TTL1V8: YSpiPort.VOLTAGELEVEL = 7;
+    public readonly VOLTAGELEVEL_SDI12: YSpiPort.VOLTAGELEVEL = 8;
     public readonly VOLTAGELEVEL_INVALID: YSpiPort.VOLTAGELEVEL = -1;
     public readonly SPIMODE_INVALID: string = YAPI.INVALID_STRING;
     public readonly SSPOLARITY_ACTIVE_LOW: YSpiPort.SSPOLARITY = 0;
@@ -195,6 +196,7 @@ export class YSpiPort extends YFunction
     public static readonly VOLTAGELEVEL_RS232: YSpiPort.VOLTAGELEVEL = 5;
     public static readonly VOLTAGELEVEL_RS485: YSpiPort.VOLTAGELEVEL = 6;
     public static readonly VOLTAGELEVEL_TTL1V8: YSpiPort.VOLTAGELEVEL = 7;
+    public static readonly VOLTAGELEVEL_SDI12: YSpiPort.VOLTAGELEVEL = 8;
     public static readonly VOLTAGELEVEL_INVALID: YSpiPort.VOLTAGELEVEL = -1;
     public static readonly SPIMODE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SSPOLARITY_ACTIVE_LOW: YSpiPort.SSPOLARITY = 0;
@@ -566,8 +568,8 @@ export class YSpiPort extends YFunction
      *
      * @return a value among YSpiPort.VOLTAGELEVEL_OFF, YSpiPort.VOLTAGELEVEL_TTL3V,
      * YSpiPort.VOLTAGELEVEL_TTL3VR, YSpiPort.VOLTAGELEVEL_TTL5V, YSpiPort.VOLTAGELEVEL_TTL5VR,
-     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485 and YSpiPort.VOLTAGELEVEL_TTL1V8
-     * corresponding to the voltage level used on the serial line
+     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485, YSpiPort.VOLTAGELEVEL_TTL1V8 and
+     * YSpiPort.VOLTAGELEVEL_SDI12 corresponding to the voltage level used on the serial line
      *
      * On failure, throws an exception or returns YSpiPort.VOLTAGELEVEL_INVALID.
      */
@@ -594,8 +596,8 @@ export class YSpiPort extends YFunction
      *
      * @param newval : a value among YSpiPort.VOLTAGELEVEL_OFF, YSpiPort.VOLTAGELEVEL_TTL3V,
      * YSpiPort.VOLTAGELEVEL_TTL3VR, YSpiPort.VOLTAGELEVEL_TTL5V, YSpiPort.VOLTAGELEVEL_TTL5VR,
-     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485 and YSpiPort.VOLTAGELEVEL_TTL1V8
-     * corresponding to the voltage type used on the serial line
+     * YSpiPort.VOLTAGELEVEL_RS232, YSpiPort.VOLTAGELEVEL_RS485, YSpiPort.VOLTAGELEVEL_TTL1V8 and
+     * YSpiPort.VOLTAGELEVEL_SDI12 corresponding to the voltage type used on the serial line
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -1635,6 +1637,7 @@ export namespace YSpiPort
         RS232 = 5,
         RS485 = 6,
         TTL1V8 = 7,
+        SDI12 = 8,
         INVALID = -1
     }
     export const enum SSPOLARITY {
