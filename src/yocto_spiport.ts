@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 49744 2022-05-11 15:13:45Z mvuilleu $
+ *  $Id: yocto_spiport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -143,6 +143,7 @@ export class YSpiPort extends YFunction
     _rxptr: number = 0;
     _rxbuff: Uint8Array = new Uint8Array(0);
     _rxbuffptr: number = 0;
+    _eventPos: number = 0;
 
     // API symbols as object properties
     public readonly RXCOUNT_INVALID: number = YAPI.INVALID_UINT;
@@ -1106,6 +1107,7 @@ export class YSpiPort extends YFunction
      */
     async reset(): Promise<number>
     {
+        this._eventPos = 0;
         this._rxptr = 0;
         this._rxbuffptr = 0;
         this._rxbuff = new Uint8Array(0);

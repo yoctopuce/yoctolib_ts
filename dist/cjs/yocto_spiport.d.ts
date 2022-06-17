@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 49744 2022-05-11 15:13:45Z mvuilleu $
+ *  $Id: yocto_spiport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -100,6 +100,7 @@ export declare class YSpiPort extends YFunction {
     _rxptr: number;
     _rxbuff: Uint8Array;
     _rxbuffptr: number;
+    _eventPos: number;
     readonly RXCOUNT_INVALID: number;
     readonly TXCOUNT_INVALID: number;
     readonly ERRCOUNT_INVALID: number;

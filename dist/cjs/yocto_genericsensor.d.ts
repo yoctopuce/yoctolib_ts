@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 49385 2022-04-06 00:49:27Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -68,6 +68,7 @@ export declare class YGenericSensor extends YSensor {
     readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor.SIGNALSAMPLING;
     readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor.SIGNALSAMPLING;
     readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor.SIGNALSAMPLING;
+    readonly SIGNALSAMPLING_AC: YGenericSensor.SIGNALSAMPLING;
     readonly SIGNALSAMPLING_INVALID: YGenericSensor.SIGNALSAMPLING;
     readonly ENABLED_FALSE: YGenericSensor.ENABLED;
     readonly ENABLED_TRUE: YGenericSensor.ENABLED;
@@ -82,6 +83,7 @@ export declare class YGenericSensor extends YSensor {
     static readonly SIGNALSAMPLING_LOW_NOISE: YGenericSensor.SIGNALSAMPLING;
     static readonly SIGNALSAMPLING_LOW_NOISE_FILTERED: YGenericSensor.SIGNALSAMPLING;
     static readonly SIGNALSAMPLING_HIGHEST_RATE: YGenericSensor.SIGNALSAMPLING;
+    static readonly SIGNALSAMPLING_AC: YGenericSensor.SIGNALSAMPLING;
     static readonly SIGNALSAMPLING_INVALID: YGenericSensor.SIGNALSAMPLING;
     static readonly ENABLED_FALSE: YGenericSensor.ENABLED;
     static readonly ENABLED_TRUE: YGenericSensor.ENABLED;
@@ -206,8 +208,8 @@ export declare class YGenericSensor extends YSensor {
      *
      * @return a value among YGenericSensor.SIGNALSAMPLING_HIGH_RATE,
      * YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED, YGenericSensor.SIGNALSAMPLING_LOW_NOISE,
-     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED and YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE
-     * corresponding to the electric signal sampling method to use
+     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED, YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE and
+     * YGenericSensor.SIGNALSAMPLING_AC corresponding to the electric signal sampling method to use
      *
      * On failure, throws an exception or returns YGenericSensor.SIGNALSAMPLING_INVALID.
      */
@@ -224,8 +226,8 @@ export declare class YGenericSensor extends YSensor {
      *
      * @param newval : a value among YGenericSensor.SIGNALSAMPLING_HIGH_RATE,
      * YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED, YGenericSensor.SIGNALSAMPLING_LOW_NOISE,
-     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED and YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE
-     * corresponding to the electric signal sampling method to use
+     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED, YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE and
+     * YGenericSensor.SIGNALSAMPLING_AC corresponding to the electric signal sampling method to use
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -388,6 +390,7 @@ export declare namespace YGenericSensor {
         LOW_NOISE = 2,
         LOW_NOISE_FILTERED = 3,
         HIGHEST_RATE = 4,
+        AC = 5,
         INVALID = -1
     }
     const enum ENABLED {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_messagebox.ts 50144 2022-06-17 06:59:52Z seb $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -550,13 +550,13 @@ export class YSms
             }
         }
         this._parts = sorted;
-        this._npdu = sorted.length;
         // inherit header fields from first part
         subsms = this._parts[0];
         retcode = await this.parsePdu(await subsms.get_pdu());
         if (retcode != this._yapi.SUCCESS) {
             return retcode;
         }
+        this._npdu = sorted.length;
         // concatenate user data from all parts
         totsize = 0;
         partno = 0;
@@ -1283,7 +1283,7 @@ export class YSms
         let retcode: number;
         let pdu: YSms | null;
 
-        if (this._slot > 0) {
+        if (this._npdu < 2) {
             return await this._mbox.clearSIMSlot(this._slot);
         }
         retcode = this._yapi.SUCCESS;
@@ -1651,8 +1651,99 @@ export class YMessageBox extends YFunction
 
     async clearSIMSlot(slot: number): Promise<number>
     {
-        this._prevBitmapStr = '';
-        return await this.set_command('DS'+String(Math.round(slot)));
+        let retry: number;
+        let idx: number;
+        let res: string;
+        let bitmapStr: string;
+        let int_res: number;
+        let newBitmap: Uint8Array;
+        let bitVal: number;
+
+        retry = 5;
+        while (retry > 0) {
+            await this.clearCache();
+            bitmapStr = await this.get_slotsBitmap();
+            newBitmap = this._yapi.imm_hexstr2bin(bitmapStr);
+            idx = ((slot) >> (3));
+            if (idx < (newBitmap).length) {
+                bitVal = ((1) << ((((slot) & (7)))));
+                if ((((newBitmap[idx]) & (bitVal))) != 0) {
+                    this._prevBitmapStr = '';
+                    int_res = await this.set_command('DS'+String(Math.round(slot)));
+                    if (int_res < 0) {
+                        return int_res;
+                    }
+                } else {
+                    return this._yapi.SUCCESS;
+                }
+            } else {
+                return this._yapi.INVALID_ARGUMENT;
+            }
+            res = await this._AT('');
+            retry = retry - 1;
+        }
+        return this._yapi.IO_ERROR;
+    }
+
+    async _AT(cmd: string): Promise<string>
+    {
+        let chrPos: number;
+        let cmdLen: number;
+        let waitMore: number;
+        let res: string;
+        let buff: Uint8Array;
+        let bufflen: number;
+        let buffstr: string;
+        let buffstrlen: number;
+        let idx: number;
+        let suffixlen: number;
+        // copied form the YCellular class
+        // quote dangerous characters used in AT commands
+        cmdLen = (cmd).length;
+        chrPos = (cmd).indexOf('#');
+        while (chrPos >= 0) {
+            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'23'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmdLen = cmdLen + 2;
+            chrPos = (cmd).indexOf('#');
+        }
+        chrPos = (cmd).indexOf('+');
+        while (chrPos >= 0) {
+            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'2B'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmdLen = cmdLen + 2;
+            chrPos = (cmd).indexOf('+');
+        }
+        chrPos = (cmd).indexOf('=');
+        while (chrPos >= 0) {
+            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'3D'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmdLen = cmdLen + 2;
+            chrPos = (cmd).indexOf('=');
+        }
+        cmd = 'at.txt?cmd='+cmd;
+        res = '';
+        // max 2 minutes (each iteration may take up to 5 seconds if waiting)
+        waitMore = 24;
+        while (waitMore > 0) {
+            buff = await this._download(cmd);
+            bufflen = (buff).length;
+            buffstr = this._yapi.imm_bin2str(buff);
+            buffstrlen = (buffstr).length;
+            idx = bufflen - 1;
+            while ((idx > 0) && (buff[idx] != 64) && (buff[idx] != 10) && (buff[idx] != 13)) {
+                idx = idx - 1;
+            }
+            if (buff[idx] == 64) {
+                // continuation detected
+                suffixlen = bufflen - idx;
+                cmd = 'at.txt?cmd='+(buffstr).substr( buffstrlen - suffixlen, suffixlen);
+                buffstr = (buffstr).substr( 0, buffstrlen - suffixlen);
+                waitMore = waitMore - 1;
+            } else {
+                // request complete
+                waitMore = 0;
+            }
+            res = res+''+buffstr;
+        }
+        return res;
     }
 
     async fetchPdu(slot: number): Promise<YSms>

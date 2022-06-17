@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_messagebox.ts 50144 2022-06-17 06:59:52Z seb $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -313,6 +313,7 @@ export declare class YMessageBox extends YFunction {
     _invokeValueCallback(value: string): Promise<number>;
     nextMsgRef(): Promise<number>;
     clearSIMSlot(slot: number): Promise<number>;
+    _AT(cmd: string): Promise<string>;
     fetchPdu(slot: number): Promise<YSms>;
     initGsm2Unicode(): Promise<number>;
     gsm2unicode(gsm: Uint8Array): Promise<number[]>;

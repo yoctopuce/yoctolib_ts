@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 49818 2022-05-19 09:57:42Z seb $
+ *  $Id: yocto_serialport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -99,8 +99,8 @@ export declare class YSerialPort extends YFunction {
     _rxptr: number;
     _rxbuff: Uint8Array;
     _rxbuffptr: number;
-    _eventCallback: YSerialPort.SnoopingCallback | null;
     _eventPos: number;
+    _eventCallback: YSerialPort.SnoopingCallback | null;
     readonly RXCOUNT_INVALID: number;
     readonly TXCOUNT_INVALID: number;
     readonly ERRCOUNT_INVALID: number;
@@ -714,12 +714,15 @@ export declare class YSerialPort extends YFunction {
     snoopMessages(maxWait: number): Promise<YSnoopingRecord[]>;
     /**
      * Registers a callback function to be called each time that a message is sent or
-     * received by the serial port.
+     * received by the serial port. The callback is invoked only during the execution of
+     * ySleep or yHandleEvents. This provides control over the time when
+     * the callback is triggered. For good responsiveness, remember to call one of these
+     * two functions periodically. To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer.
      *         The callback function should take four arguments:
      *         the YSerialPort object that emitted the event, and
-     *         the SnoopingRecord object that describes the message
+     *         the YSnoopingRecord object that describes the message
      *         sent or received.
      *         On failure, throws an exception or returns a negative error code.
      */

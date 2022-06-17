@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 49385 2022-04-06 00:49:27Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -74,6 +74,7 @@ export class YGenericSensor extends YSensor {
         this.SIGNALSAMPLING_LOW_NOISE = 2;
         this.SIGNALSAMPLING_LOW_NOISE_FILTERED = 3;
         this.SIGNALSAMPLING_HIGHEST_RATE = 4;
+        this.SIGNALSAMPLING_AC = 5;
         this.SIGNALSAMPLING_INVALID = -1;
         this.ENABLED_FALSE = 0;
         this.ENABLED_TRUE = 1;
@@ -287,8 +288,8 @@ export class YGenericSensor extends YSensor {
      *
      * @return a value among YGenericSensor.SIGNALSAMPLING_HIGH_RATE,
      * YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED, YGenericSensor.SIGNALSAMPLING_LOW_NOISE,
-     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED and YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE
-     * corresponding to the electric signal sampling method to use
+     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED, YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE and
+     * YGenericSensor.SIGNALSAMPLING_AC corresponding to the electric signal sampling method to use
      *
      * On failure, throws an exception or returns YGenericSensor.SIGNALSAMPLING_INVALID.
      */
@@ -314,8 +315,8 @@ export class YGenericSensor extends YSensor {
      *
      * @param newval : a value among YGenericSensor.SIGNALSAMPLING_HIGH_RATE,
      * YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED, YGenericSensor.SIGNALSAMPLING_LOW_NOISE,
-     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED and YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE
-     * corresponding to the electric signal sampling method to use
+     * YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED, YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE and
+     * YGenericSensor.SIGNALSAMPLING_AC corresponding to the electric signal sampling method to use
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -593,6 +594,7 @@ YGenericSensor.SIGNALSAMPLING_HIGH_RATE_FILTERED = 1;
 YGenericSensor.SIGNALSAMPLING_LOW_NOISE = 2;
 YGenericSensor.SIGNALSAMPLING_LOW_NOISE_FILTERED = 3;
 YGenericSensor.SIGNALSAMPLING_HIGHEST_RATE = 4;
+YGenericSensor.SIGNALSAMPLING_AC = 5;
 YGenericSensor.SIGNALSAMPLING_INVALID = -1;
 YGenericSensor.ENABLED_FALSE = 0;
 YGenericSensor.ENABLED_TRUE = 1;

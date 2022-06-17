@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 49818 2022-05-19 09:57:42Z seb $
+ *  $Id: yocto_serialport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -125,8 +125,8 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         this._rxptr = 0;
         this._rxbuff = new Uint8Array(0);
         this._rxbuffptr = 0;
-        this._eventCallback = null;
         this._eventPos = 0;
+        this._eventCallback = null;
         // API symbols as object properties
         this.RXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.TXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -904,6 +904,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async reset() {
+        this._eventPos = 0;
         this._rxptr = 0;
         this._rxbuffptr = 0;
         this._rxbuff = new Uint8Array(0);
@@ -1371,12 +1372,15 @@ class YSerialPort extends yocto_api_js_1.YFunction {
     }
     /**
      * Registers a callback function to be called each time that a message is sent or
-     * received by the serial port.
+     * received by the serial port. The callback is invoked only during the execution of
+     * ySleep or yHandleEvents. This provides control over the time when
+     * the callback is triggered. For good responsiveness, remember to call one of these
+     * two functions periodically. To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer.
      *         The callback function should take four arguments:
      *         the YSerialPort object that emitted the event, and
-     *         the SnoopingRecord object that describes the message
+     *         the YSnoopingRecord object that describes the message
      *         sent or received.
      *         On failure, throws an exception or returns a negative error code.
      */

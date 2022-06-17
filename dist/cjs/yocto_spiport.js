@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 49744 2022-05-11 15:13:45Z mvuilleu $
+ *  $Id: yocto_spiport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -126,6 +126,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         this._rxptr = 0;
         this._rxbuff = new Uint8Array(0);
         this._rxbuffptr = 0;
+        this._eventPos = 0;
         // API symbols as object properties
         this.RXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.TXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -968,6 +969,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async reset() {
+        this._eventPos = 0;
         this._rxptr = 0;
         this._rxbuffptr = 0;
         this._rxbuff = new Uint8Array(0);

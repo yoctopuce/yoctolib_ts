@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 49755 2022-05-13 09:48:35Z mvuilleu $
+ * $Id: yocto_api.ts 50066 2022-06-10 06:36:34Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -3297,7 +3297,7 @@ export declare abstract class YGenericHub {
     reportFailure(message: string): Promise<void>;
     disconnect(): Promise<void>;
     imm_isForwarded(): boolean;
-    reconnect(): Promise<void>;
+    imm_disconnectNow(): void;
     imm_isOnline(): boolean;
 }
 export interface _YY_WebSocketSendOptions {
@@ -3350,7 +3350,8 @@ declare const enum WSConnState {
     DISCONNECTED = 1,
     CONNECTING = 2,
     AUTHENTICATING = 3,
-    CONNECTED = 4
+    READY = 4,
+    CONNECTED = 5
 }
 export declare abstract class YWebSocketHub extends YGenericHub {
     _DEFAULT_TCP_ROUND_TRIP_TIME: number;
@@ -3464,7 +3465,7 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     imm_sendAPIAnnouncePkt(): boolean;
     imm_handleAPIAuthPkt(msg: Uint8Array): void;
     disconnect(): Promise<void>;
-    reconnect(): Promise<void>;
+    imm_disconnectNow(): void;
     imm_isOnline(): boolean;
 }
 interface _YY_SSDPCacheEntry {
@@ -3499,6 +3500,11 @@ export declare abstract class YGenericSSDPManager {
     ySSDPStop(): Promise<void>;
     ySSDPDiscover(): Promise<void>;
 }
+interface DeviceUpdateEvent {
+    event: string;
+    serial: string;
+    module: YModule;
+}
 /**
  * YAPIContext Class: Yoctopuce I/O context configuration.
  *
@@ -3518,7 +3524,7 @@ export declare class YAPIContext {
     _lastErrorType: number;
     _lastErrorMsg: string;
     _updateDevListStarted: number;
-    _pendingCallbacks: string[];
+    _pendingCallbacks: DeviceUpdateEvent[];
     _logLevel: number;
     _logCallback: YLogCallback | null;
     _arrivalCallback: YDeviceUpdateCallback | null;
@@ -3595,6 +3601,7 @@ export declare class YAPIContext {
     RegisterLogFunction(logfun: YLogCallback): Promise<number>;
     _addHub(newhub: YGenericHub): Promise<void>;
     imm_getHub(obj_urlInfo: _YY_UrlInfo): YGenericHub | null;
+    ensureUpdateDeviceListNotRunning(): Promise<void>;
     _updateDeviceList_internal(bool_forceupdate: boolean, bool_invokecallbacks: boolean): Promise<YConditionalResult>;
     updateDeviceList_process(hub: YGenericHub, hubDev: YDevice, whitePages: _YY_WhitePage[], yellowPages: _YY_YellowPages): Promise<number>;
     /** process event data produced by a hub
