@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_colorledcluster.ts 50281 2022-06-30 07:21:14Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -55,6 +55,7 @@ export declare class YColorLedCluster extends YFunction {
     _activeLedCount: number;
     _ledType: YColorLedCluster.LEDTYPE;
     _maxLedCount: number;
+    _dynamicLedCount: number;
     _blinkSeqMaxCount: number;
     _blinkSeqMaxSize: number;
     _command: string;
@@ -65,6 +66,7 @@ export declare class YColorLedCluster extends YFunction {
     readonly LEDTYPE_WS2811: YColorLedCluster.LEDTYPE;
     readonly LEDTYPE_INVALID: YColorLedCluster.LEDTYPE;
     readonly MAXLEDCOUNT_INVALID: number;
+    readonly DYNAMICLEDCOUNT_INVALID: number;
     readonly BLINKSEQMAXCOUNT_INVALID: number;
     readonly BLINKSEQMAXSIZE_INVALID: number;
     readonly COMMAND_INVALID: string;
@@ -74,6 +76,7 @@ export declare class YColorLedCluster extends YFunction {
     static readonly LEDTYPE_WS2811: YColorLedCluster.LEDTYPE;
     static readonly LEDTYPE_INVALID: YColorLedCluster.LEDTYPE;
     static readonly MAXLEDCOUNT_INVALID: number;
+    static readonly DYNAMICLEDCOUNT_INVALID: number;
     static readonly BLINKSEQMAXCOUNT_INVALID: number;
     static readonly BLINKSEQMAXSIZE_INVALID: number;
     static readonly COMMAND_INVALID: string;
@@ -129,6 +132,15 @@ export declare class YColorLedCluster extends YFunction {
      * On failure, throws an exception or returns YColorLedCluster.MAXLEDCOUNT_INVALID.
      */
     get_maxLedCount(): Promise<number>;
+    /**
+     * Returns the maximum number of LEDs that can perform autonomous transitions and sequences.
+     *
+     * @return an integer corresponding to the maximum number of LEDs that can perform autonomous
+     * transitions and sequences
+     *
+     * On failure, throws an exception or returns YColorLedCluster.DYNAMICLEDCOUNT_INVALID.
+     */
+    get_dynamicLedCount(): Promise<number>;
     /**
      * Returns the maximum number of sequences that the device can handle.
      *

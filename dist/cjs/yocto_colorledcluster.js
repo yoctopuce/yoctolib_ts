@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_colorledcluster.ts 50281 2022-06-30 07:21:14Z mvuilleu $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -63,6 +63,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         this._activeLedCount = YColorLedCluster.ACTIVELEDCOUNT_INVALID;
         this._ledType = YColorLedCluster.LEDTYPE_INVALID;
         this._maxLedCount = YColorLedCluster.MAXLEDCOUNT_INVALID;
+        this._dynamicLedCount = YColorLedCluster.DYNAMICLEDCOUNT_INVALID;
         this._blinkSeqMaxCount = YColorLedCluster.BLINKSEQMAXCOUNT_INVALID;
         this._blinkSeqMaxSize = YColorLedCluster.BLINKSEQMAXSIZE_INVALID;
         this._command = YColorLedCluster.COMMAND_INVALID;
@@ -74,6 +75,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         this.LEDTYPE_WS2811 = 2;
         this.LEDTYPE_INVALID = -1;
         this.MAXLEDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
+        this.DYNAMICLEDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.BLINKSEQMAXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.BLINKSEQMAXSIZE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
@@ -91,6 +93,9 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
                 return 1;
             case 'maxLedCount':
                 this._maxLedCount = val;
+                return 1;
+            case 'dynamicLedCount':
+                this._dynamicLedCount = val;
                 return 1;
             case 'blinkSeqMaxCount':
                 this._blinkSeqMaxCount = val;
@@ -187,6 +192,24 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
             }
         }
         res = this._maxLedCount;
+        return res;
+    }
+    /**
+     * Returns the maximum number of LEDs that can perform autonomous transitions and sequences.
+     *
+     * @return an integer corresponding to the maximum number of LEDs that can perform autonomous
+     * transitions and sequences
+     *
+     * On failure, throws an exception or returns YColorLedCluster.DYNAMICLEDCOUNT_INVALID.
+     */
+    async get_dynamicLedCount() {
+        let res;
+        if (this._cacheExpiration == 0) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YColorLedCluster.DYNAMICLEDCOUNT_INVALID;
+            }
+        }
+        res = this._dynamicLedCount;
         return res;
     }
     /**
@@ -1232,6 +1255,7 @@ YColorLedCluster.LEDTYPE_RGBW = 1;
 YColorLedCluster.LEDTYPE_WS2811 = 2;
 YColorLedCluster.LEDTYPE_INVALID = -1;
 YColorLedCluster.MAXLEDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
+YColorLedCluster.DYNAMICLEDCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YColorLedCluster.BLINKSEQMAXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YColorLedCluster.BLINKSEQMAXSIZE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
 YColorLedCluster.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_cellular.ts 50281 2022-06-30 07:21:14Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -626,6 +626,15 @@ export declare class YCellular extends YFunction {
      * @return a string containing the corresponding cell operator brand name.
      */
     decodePLMN(mccmnc: string): Promise<string>;
+    /**
+     * Returns the list available radio communication profiles, as a string array
+     * (YoctoHub-GSM-4G only).
+     * Each string is a made of a numerical ID, followed by a colon,
+     * followed by the profile description.
+     *
+     * @return a list of string describing available radio communication profiles.
+     */
+    get_communicationProfiles(): Promise<string[]>;
     /**
      * Continues the enumeration of cellular interfaces started using yFirstCellular().
      * Caution: You can't make any assumption about the returned cellular interfaces order.

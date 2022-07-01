@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_cellular.ts 50281 2022-06-30 07:21:14Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -5887,6 +5887,44 @@ export class YCellular extends YFunction {
      */
     async decodePLMN(mccmnc) {
         return this.imm_decodePLMN(mccmnc);
+    }
+    /**
+     * Returns the list available radio communication profiles, as a string array
+     * (YoctoHub-GSM-4G only).
+     * Each string is a made of a numerical ID, followed by a colon,
+     * followed by the profile description.
+     *
+     * @return a list of string describing available radio communication profiles.
+     */
+    async get_communicationProfiles() {
+        let profiles;
+        let lines = [];
+        let nlines;
+        let idx;
+        let line;
+        let cpos;
+        let profno;
+        let res = [];
+        profiles = await this._AT('+UMNOPROF=?');
+        lines = (profiles).split('\n');
+        nlines = lines.length;
+        if (!(nlines > 0)) {
+            return this._throw(this._yapi.IO_ERROR, 'fail to retrieve profile list', res);
+        }
+        res.length = 0;
+        idx = 0;
+        while (idx < nlines) {
+            line = lines[idx];
+            cpos = (line).indexOf(':');
+            if (cpos > 0) {
+                profno = this._yapi.imm_atoi((line).substr(0, cpos));
+                if (profno > 0) {
+                    res.push(line);
+                }
+            }
+            idx = idx + 1;
+        }
+        return res;
     }
     /**
      * Continues the enumeration of cellular interfaces started using yFirstCellular().
