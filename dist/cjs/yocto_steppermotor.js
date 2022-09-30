@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_steppermotor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -107,17 +107,20 @@ class YStepperMotor extends yocto_api_js_1.YFunction {
             case 'diags':
                 this._diags = val;
                 return 1;
+            case 'stepPos':
+                this._stepPos = val / 16.0;
+                return 1;
             case 'speed':
-                this._speed = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._speed = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'pullinSpeed':
-                this._pullinSpeed = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._pullinSpeed = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'maxAccel':
-                this._maxAccel = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._maxAccel = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'maxSpeed':
-                this._maxSpeed = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._maxSpeed = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'stepping':
                 this._stepping = val;
@@ -200,6 +203,24 @@ class YStepperMotor extends yocto_api_js_1.YFunction {
         let rest_val;
         rest_val = String(Math.round(newval * 100.0) / 100.0);
         return await this._setAttr('stepPos', rest_val);
+    }
+    /**
+     * Returns the current logical motor position, measured in steps.
+     * The value may include a fractional part when micro-stepping is in use.
+     *
+     * @return a floating point number corresponding to the current logical motor position, measured in steps
+     *
+     * On failure, throws an exception or returns YStepperMotor.STEPPOS_INVALID.
+     */
+    async get_stepPos() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YStepperMotor.STEPPOS_INVALID;
+            }
+        }
+        res = this._stepPos;
+        return res;
     }
     /**
      * Returns current motor speed, measured in steps per second.

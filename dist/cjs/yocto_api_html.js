@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 46218 2021-09-06 16:37:37Z mvuilleu $
+ * $Id: yocto_api_html.ts 51111 2022-09-27 22:03:27Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -128,6 +128,80 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
         this.notbynRequest = null;
         this.notbynOpenPromise = null;
         this.notbynOpenTimeoutObj = null; /* actually a number | NodeJS.Timeout */
+        this.infoJson = null;
+        this.realm = '';
+        this.nonce = '';
+        this.nonceCount = 0;
+    }
+    // Initiate an XmlHttpRequest with proper authentication settings and mime type
+    // Handle header-based client authentication (to prevent browser pop-ups)
+    //
+    imm_sendXHR(xmlHttpRequest, method, uri, obj_body, readyStateChangeHandler, errorHandler) {
+        let body = '';
+        if (this.infoJson && this.infoJson.realm && this.infoJson.nonce) {
+            // Use X-YAuth JSON encoding
+            if (this.realm != this.infoJson.realm || this.nonce != this.infoJson.nonce) {
+                this.realm = this.infoJson.realm;
+                this.nonce = this.infoJson.nonce;
+                this.nonceCount = 0;
+            }
+            let shorturi = uri;
+            let parseURI = uri.match(/([A-Za-z]+:\/\/)([^\/@]+@)?([^\/]+)(\/.*)/);
+            if (parseURI) {
+                uri = parseURI[1] + parseURI[3] + parseURI[4];
+                shorturi = parseURI[4];
+            }
+            let jsonBody = {
+                'x-yauth': {
+                    method: method,
+                    uri: shorturi
+                }
+            };
+            if (this.urlInfo.user || this.urlInfo.pass) {
+                let cnonce = Math.floor(Math.random() * 2147483647).toString(16).toLowerCase();
+                let nc = (++this.nonceCount).toString(16).toLowerCase();
+                let ha1_str = this.urlInfo.user + ':' + this.realm + ':' + this.urlInfo.pass;
+                let ha2_str = method + ':' + shorturi;
+                let A1 = this._yapi.imm_bin2hexstr(this._yapi.imm_yMD5(ha1_str)).toLowerCase();
+                let A2 = this._yapi.imm_bin2hexstr(this._yapi.imm_ySHA1(ha2_str)).toLowerCase();
+                let signature = A1 + ':' + this.nonce + ':' + nc + ':' + cnonce + ':auth:' + A2;
+                let response = this._yapi.imm_bin2hexstr(this._yapi.imm_ySHA1(signature)).toLowerCase();
+                jsonBody['x-yauth']['username'] = this.urlInfo.user;
+                jsonBody['x-yauth']['cnonce'] = cnonce;
+                jsonBody['x-yauth']['nonce'] = this.nonce;
+                jsonBody['x-yauth']['nc'] = nc;
+                jsonBody['x-yauth']['qop'] = 'auth';
+                jsonBody['x-yauth']['response'] = response;
+            }
+            if (obj_body) {
+                let binstr = this._yapi.imm_bin2str(obj_body.data);
+                jsonBody['body'] = {
+                    filename: obj_body.fname,
+                    b64content: btoa(binstr)
+                };
+            }
+            body = JSON.stringify(jsonBody);
+            // Remove GET parameters from the URL, as the server will use the x-yauth value
+            let qpos = uri.indexOf('?');
+            if (qpos > 0) {
+                uri = uri.substr(0, qpos);
+            }
+            // Send the request using text/plain POST, to avoid CORS checks
+            xmlHttpRequest.open('POST', uri, true, '', '');
+            xmlHttpRequest.setRequestHeader('Content-Type', 'text/plain; charset=x-user-defined');
+        }
+        else {
+            if (obj_body) {
+                let blob = new Blob([obj_body.data], { type: 'application/octet-binary' });
+                body = new FormData();
+                body.append(obj_body.fname, blob);
+            }
+            xmlHttpRequest.open(method, uri, true, '', '');
+        }
+        xmlHttpRequest.overrideMimeType('text/plain; charset=x-user-defined');
+        xmlHttpRequest.onreadystatechange = readyStateChangeHandler;
+        xmlHttpRequest.onerror = errorHandler;
+        xmlHttpRequest.send(body);
     }
     /** Handle HTTP-based event-monitoring work on a registered hub
      *
@@ -141,6 +215,24 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                 errmsg.msg = "I/O error";
             }
             return yocto_api_js_1.YAPI.IO_ERROR;
+        }
+        if (!this.infoJson) {
+            if (!await new Promise((resolve, reject) => {
+                // Try to download info.json first to check if x-yauth is available
+                let xhr = new XMLHttpRequest();
+                this.imm_sendXHR(xhr, 'GET', this.urlInfo.url + 'info.json', null, () => {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            this.infoJson = JSON.parse(xhr.responseText);
+                            resolve(true);
+                        }
+                        resolve(false);
+                    }
+                }, () => { resolve(false); });
+            })) {
+                // could not download info.json
+                this.infoJson = {};
+            }
         }
         let args = '?len=' + this.notiflen.toString();
         if (this.notifPos > 0) {
@@ -161,22 +253,22 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                 this.notbynTryOpen = () => {
                     let xmlHttpRequest = new XMLHttpRequest();
                     this.notbynRequest = xmlHttpRequest;
-                    xmlHttpRequest.open('GET', this.urlInfo.url + 'not.byn' + args, true, '', '');
-                    xmlHttpRequest.overrideMimeType('text/plain; charset=x-user-defined');
-                    xmlHttpRequest.onreadystatechange = (() => {
+                    this.imm_sendXHR(xmlHttpRequest, 'GET', this.urlInfo.url + 'not.byn' + args, null, () => {
                         if (this.disconnecting) {
                             return;
                         }
                         if (xmlHttpRequest.readyState >= 3) {
-                            if (xmlHttpRequest.readyState == 4 &&
-                                (xmlHttpRequest.status >> 0) != 200 &&
-                                (xmlHttpRequest.status >> 0) != 304) {
+                            let httpStatus = xmlHttpRequest.status >> 0;
+                            if (xmlHttpRequest.readyState == 4 && httpStatus != 200 && httpStatus != 304) {
                                 // connection error
-                                if ((xmlHttpRequest.status >> 0) == 401) {
+                                if (httpStatus == 401 || httpStatus == 204) {
+                                    // Authentication failure
                                     resolve({ errorType: yocto_api_js_1.YAPI.UNAUTHORIZED, errorMsg: "Unauthorized access" });
+                                    return;
                                 }
                                 if (!this.imm_testHubAgainLater()) {
                                     resolve({ errorType: yocto_api_js_1.YAPI.IO_ERROR, errorMsg: "I/O error" });
+                                    return;
                                 }
                             }
                             else {
@@ -208,14 +300,12 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                                 }
                             }
                         }
-                    });
-                    xmlHttpRequest.onerror = (() => {
+                    }, () => {
                         // connection aborted, need to reconnect ASAP
                         if (!this.imm_testHubAgainLater()) {
                             resolve({ errorType: yocto_api_js_1.YAPI.IO_ERROR, errorMsg: "I/O error" });
                         }
                     });
-                    this.notbynRequest.send('');
                 };
                 this.notbynTryOpen();
             });
@@ -239,13 +329,12 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
         return new Promise((resolve, reject) => {
             let prefix = this.urlInfo.url.slice(0, -1);
             let httpRequest = new XMLHttpRequest();
-            httpRequest.open(method, prefix + devUrl, true, this.urlInfo.user, this.urlInfo.pass);
-            httpRequest.overrideMimeType('text/plain; charset=x-user-defined');
-            httpRequest.onreadystatechange = (() => {
+            this.imm_sendXHR(httpRequest, method, prefix + devUrl, obj_body, () => {
                 if (httpRequest.readyState == 4) {
+                    let httpStatus = httpRequest.status;
                     let yreq = new yocto_api_js_1.YHTTPRequest(null);
-                    if (httpRequest.status != 200 && httpRequest.status != 304) {
-                        yreq.errorType = (httpRequest.status == 401 ? yocto_api_js_1.YAPI.UNAUTHORIZED : yocto_api_js_1.YAPI.NOT_SUPPORTED);
+                    if (httpStatus != 200 && httpStatus != 304) {
+                        yreq.errorType = ((httpStatus == 401 || httpStatus == 204) ? yocto_api_js_1.YAPI.UNAUTHORIZED : yocto_api_js_1.YAPI.NOT_SUPPORTED);
                         yreq.errorMsg = 'HTTP Error ' + httpRequest.status + ' on ' + prefix + devUrl;
                     }
                     else {
@@ -253,14 +342,12 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                     }
                     resolve(yreq);
                 }
+            }, () => {
+                let yreq = new yocto_api_js_1.YHTTPRequest(null);
+                yreq.errorType = yocto_api_js_1.YAPI.IO_ERROR;
+                yreq.errorMsg = 'I/O Error on ' + prefix + devUrl;
+                resolve(yreq);
             });
-            let body = '';
-            if (obj_body) {
-                let blob = new Blob([obj_body.data], { type: 'application/octet-binary' });
-                body = new FormData();
-                body.append(obj_body.fname, blob);
-            }
-            httpRequest.send(body || '');
         });
     }
     async disconnect() {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_power.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -91,16 +91,16 @@ export class YPower extends YSensor
     {
         switch(name) {
         case 'cosPhi':
-            this._cosPhi = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._cosPhi = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'meter':
-            this._meter = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._meter = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'deliveredEnergyMeter':
-            this._deliveredEnergyMeter = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._deliveredEnergyMeter = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'receivedEnergyMeter':
-            this._receivedEnergyMeter = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._receivedEnergyMeter = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'meterTimer':
             this._meterTimer = <number> <number> val;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_magnetometer.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *
@@ -96,13 +96,13 @@ export class YMagnetometer extends YSensor
             this._bandwidth = <number> <number> val;
             return 1;
         case 'xValue':
-            this._xValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._xValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'yValue':
-            this._yValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._yValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'zValue':
-            this._zValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._zValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         }
         return super.imm_parseAttr(name, val);

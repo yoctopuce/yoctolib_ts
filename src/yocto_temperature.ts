@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_temperature.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -129,7 +129,7 @@ export class YTemperature extends YSensor
             this._sensorType = <YTemperature.SENSORTYPE> <number> val;
             return 1;
         case 'signalValue':
-            this._signalValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._signalValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'signalUnit':
             this._signalUnit = <string> <string> val;

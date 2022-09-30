@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 49904 2022-05-25 14:18:55Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -89,7 +89,7 @@ class YGenericSensor extends yocto_api_js_1.YSensor {
     imm_parseAttr(name, val) {
         switch (name) {
             case 'signalValue':
-                this._signalValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._signalValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'signalUnit':
                 this._signalUnit = val;
@@ -101,7 +101,7 @@ class YGenericSensor extends yocto_api_js_1.YSensor {
                 this._valueRange = val;
                 return 1;
             case 'signalBias':
-                this._signalBias = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._signalBias = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'signalSampling':
                 this._signalSampling = val;

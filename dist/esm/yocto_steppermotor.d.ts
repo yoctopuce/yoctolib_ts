@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_steppermotor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -147,6 +147,15 @@ export declare class YStepperMotor extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_stepPos(newval: number): Promise<number>;
+    /**
+     * Returns the current logical motor position, measured in steps.
+     * The value may include a fractional part when micro-stepping is in use.
+     *
+     * @return a floating point number corresponding to the current logical motor position, measured in steps
+     *
+     * On failure, throws an exception or returns YStepperMotor.STEPPOS_INVALID.
+     */
+    get_stepPos(): Promise<number>;
     /**
      * Returns current motor speed, measured in steps per second.
      * To change speed, use method changeSpeed().

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_altitude.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -68,7 +68,7 @@ export class YAltitude extends YSensor {
     imm_parseAttr(name, val) {
         switch (name) {
             case 'qnh':
-                this._qnh = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._qnh = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'technology':
                 this._technology = val;

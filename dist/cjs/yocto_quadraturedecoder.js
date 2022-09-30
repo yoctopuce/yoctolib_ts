@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_quadraturedecoder.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -73,7 +73,7 @@ class YQuadratureDecoder extends yocto_api_js_1.YSensor {
     imm_parseAttr(name, val) {
         switch (name) {
             case 'speed':
-                this._speed = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._speed = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'decoding':
                 this._decoding = val;

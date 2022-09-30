@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_currentloopoutput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -92,13 +92,13 @@ export class YCurrentLoopOutput extends YFunction
     {
         switch(name) {
         case 'current':
-            this._current = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._current = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'currentTransition':
             this._currentTransition = <string> <string> val;
             return 1;
         case 'currentAtStartUp':
-            this._currentAtStartUp = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._currentAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'loopPower':
             this._loopPower = <YCurrentLoopOutput.LOOPPOWER> <number> val;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_pwminput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -129,16 +129,16 @@ export class YPwmInput extends YSensor
     {
         switch(name) {
         case 'dutyCycle':
-            this._dutyCycle = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._dutyCycle = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'pulseDuration':
-            this._pulseDuration = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._pulseDuration = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'frequency':
-            this._frequency = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._frequency = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'period':
-            this._period = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._period = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'pulseCounter':
             this._pulseCounter = <number> <number> val;

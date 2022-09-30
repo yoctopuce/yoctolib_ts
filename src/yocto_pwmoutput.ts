@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_pwmoutput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -109,16 +109,16 @@ export class YPwmOutput extends YFunction
             this._enabled = <YPwmOutput.ENABLED> <number> val;
             return 1;
         case 'frequency':
-            this._frequency = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._frequency = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'period':
-            this._period = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._period = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'dutyCycle':
-            this._dutyCycle = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._dutyCycle = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'pulseDuration':
-            this._pulseDuration = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._pulseDuration = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'pwmTransition':
             this._pwmTransition = <string> <string> val;
@@ -127,7 +127,7 @@ export class YPwmOutput extends YFunction
             this._enabledAtPowerOn = <YPwmOutput.ENABLEDATPOWERON> <number> val;
             return 1;
         case 'dutyCycleAtPowerOn':
-            this._dutyCycleAtPowerOn = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._dutyCycleAtPowerOn = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         }
         return super.imm_parseAttr(name, val);

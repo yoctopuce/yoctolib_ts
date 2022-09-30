@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 50066 2022-06-10 06:36:34Z mvuilleu $
+ * $Id: yocto_api.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -6083,16 +6083,16 @@ class YSensor extends YFunction {
                 this._unit = val;
                 return 1;
             case 'currentValue':
-                this._currentValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._currentValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'lowestValue':
-                this._lowestValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._lowestValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'highestValue':
-                this._highestValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._highestValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'currentRawValue':
-                this._currentRawValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._currentRawValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'logFrequency':
                 this._logFrequency = val;
@@ -6107,7 +6107,7 @@ class YSensor extends YFunction {
                 this._calibrationParam = val;
                 return 1;
             case 'resolution':
-                this._resolution = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._resolution = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'sensorState':
                 this._sensorState = val;
@@ -11038,7 +11038,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.50357';
+        return /* version number patched automatically */ '1.10.51176';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

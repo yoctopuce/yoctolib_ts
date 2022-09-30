@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_weighscale.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -111,22 +111,22 @@ export class YWeighScale extends YSensor
             this._excitation = <YWeighScale.EXCITATION> <number> val;
             return 1;
         case 'tempAvgAdaptRatio':
-            this._tempAvgAdaptRatio = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._tempAvgAdaptRatio = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'tempChgAdaptRatio':
-            this._tempChgAdaptRatio = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._tempChgAdaptRatio = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'compTempAvg':
-            this._compTempAvg = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._compTempAvg = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'compTempChg':
-            this._compTempChg = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._compTempChg = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'compensation':
-            this._compensation = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._compensation = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'zeroTracking':
-            this._zeroTracking = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._zeroTracking = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'command':
             this._command = <string> <string> val;

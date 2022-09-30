@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 50066 2022-06-10 06:36:34Z mvuilleu $
+ * $Id: yocto_api.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -6872,16 +6872,16 @@ export class YSensor extends YFunction
             this._unit = <string> <string> val;
             return 1;
         case 'currentValue':
-            this._currentValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._currentValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'lowestValue':
-            this._lowestValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._lowestValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'highestValue':
-            this._highestValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._highestValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'currentRawValue':
-            this._currentRawValue = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._currentRawValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'logFrequency':
             this._logFrequency = <string> <string> val;
@@ -6896,7 +6896,7 @@ export class YSensor extends YFunction
             this._calibrationParam = <string> <string> val;
             return 1;
         case 'resolution':
-            this._resolution = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._resolution = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'sensorState':
             this._sensorState = <number> <number> val;
@@ -12333,7 +12333,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.50357';
+        return /* version number patched automatically */'1.10.51176';
     }
 
     /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_gps.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -116,7 +116,7 @@ export class YGps extends YFunction {
                 this._satPerConst = val;
                 return 1;
             case 'gpsRefreshRate':
-                this._gpsRefreshRate = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._gpsRefreshRate = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'coordSystem':
                 this._coordSystem = val;
@@ -131,16 +131,16 @@ export class YGps extends YFunction {
                 this._longitude = val;
                 return 1;
             case 'dilution':
-                this._dilution = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._dilution = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'altitude':
-                this._altitude = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._altitude = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'groundSpeed':
-                this._groundSpeed = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._groundSpeed = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'direction':
-                this._direction = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._direction = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'unixTime':
                 this._unixTime = val;

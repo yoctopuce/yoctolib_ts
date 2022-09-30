@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_humidity.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -82,10 +82,10 @@ export class YHumidity extends YSensor
     {
         switch(name) {
         case 'relHum':
-            this._relHum = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._relHum = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'absHum':
-            this._absHum = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._absHum = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         }
         return super.imm_parseAttr(name, val);

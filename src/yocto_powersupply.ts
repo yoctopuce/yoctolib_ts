@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_powersupply.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -121,10 +121,10 @@ export class YPowerSupply extends YFunction
     {
         switch(name) {
         case 'voltageSetPoint':
-            this._voltageSetPoint = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._voltageSetPoint = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'currentLimit':
-            this._currentLimit = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._currentLimit = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'powerOutput':
             this._powerOutput = <YPowerSupply.POWEROUTPUT> <number> val;
@@ -133,28 +133,28 @@ export class YPowerSupply extends YFunction
             this._voltageSense = <YPowerSupply.VOLTAGESENSE> <number> val;
             return 1;
         case 'measuredVoltage':
-            this._measuredVoltage = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._measuredVoltage = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'measuredCurrent':
-            this._measuredCurrent = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._measuredCurrent = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'inputVoltage':
-            this._inputVoltage = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._inputVoltage = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'vInt':
-            this._vInt = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._vInt = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'ldoTemperature':
-            this._ldoTemperature = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._ldoTemperature = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'voltageTransition':
             this._voltageTransition = <string> <string> val;
             return 1;
         case 'voltageAtStartUp':
-            this._voltageAtStartUp = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._voltageAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'currentAtStartUp':
-            this._currentAtStartUp = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._currentAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'command':
             this._command = <string> <string> val;

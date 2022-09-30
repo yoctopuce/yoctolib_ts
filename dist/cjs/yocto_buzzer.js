@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_buzzer.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -76,7 +76,7 @@ class YBuzzer extends yocto_api_js_1.YFunction {
     imm_parseAttr(name, val) {
         switch (name) {
             case 'frequency':
-                this._frequency = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._frequency = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'volume':
                 this._volume = val;

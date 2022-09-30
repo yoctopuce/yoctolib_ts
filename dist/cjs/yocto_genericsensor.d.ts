@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 49904 2022-05-25 14:18:55Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *

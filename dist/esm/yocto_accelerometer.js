@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_accelerometer.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -79,13 +79,13 @@ export class YAccelerometer extends YSensor {
                 this._bandwidth = val;
                 return 1;
             case 'xValue':
-                this._xValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._xValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'yValue':
-                this._yValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._yValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'zValue':
-                this._zValue = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._zValue = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'gravityCancellation':
                 this._gravityCancellation = val;

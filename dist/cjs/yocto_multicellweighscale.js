@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_multicellweighscale.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -101,22 +101,22 @@ class YMultiCellWeighScale extends yocto_api_js_1.YSensor {
                 this._excitation = val;
                 return 1;
             case 'tempAvgAdaptRatio':
-                this._tempAvgAdaptRatio = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._tempAvgAdaptRatio = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'tempChgAdaptRatio':
-                this._tempChgAdaptRatio = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._tempChgAdaptRatio = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'compTempAvg':
-                this._compTempAvg = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._compTempAvg = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'compTempChg':
-                this._compTempChg = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._compTempChg = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'compensation':
-                this._compensation = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._compensation = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'zeroTracking':
-                this._zeroTracking = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._zeroTracking = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'command':
                 this._command = val;

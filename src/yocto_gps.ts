@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_gps.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -158,7 +158,7 @@ export class YGps extends YFunction
             this._satPerConst = <number> <number> val;
             return 1;
         case 'gpsRefreshRate':
-            this._gpsRefreshRate = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._gpsRefreshRate = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'coordSystem':
             this._coordSystem = <YGps.COORDSYSTEM> <number> val;
@@ -173,16 +173,16 @@ export class YGps extends YFunction
             this._longitude = <string> <string> val;
             return 1;
         case 'dilution':
-            this._dilution = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._dilution = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'altitude':
-            this._altitude = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._altitude = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'groundSpeed':
-            this._groundSpeed = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._groundSpeed = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'direction':
-            this._direction = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._direction = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'unixTime':
             this._unixTime = <number> <number> val;

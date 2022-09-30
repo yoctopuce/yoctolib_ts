@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_realtimeclock.ts 50595 2022-07-28 07:54:15Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -58,6 +58,7 @@ export class YRealTimeClock extends YFunction {
         this._dateTime = YRealTimeClock.DATETIME_INVALID;
         this._utcOffset = YRealTimeClock.UTCOFFSET_INVALID;
         this._timeSet = YRealTimeClock.TIMESET_INVALID;
+        this._disableHostSync = YRealTimeClock.DISABLEHOSTSYNC_INVALID;
         this._valueCallbackRealTimeClock = null;
         // API symbols as object properties
         this.UNIXTIME_INVALID = YAPI.INVALID_LONG;
@@ -66,6 +67,9 @@ export class YRealTimeClock extends YFunction {
         this.TIMESET_FALSE = 0;
         this.TIMESET_TRUE = 1;
         this.TIMESET_INVALID = -1;
+        this.DISABLEHOSTSYNC_FALSE = 0;
+        this.DISABLEHOSTSYNC_TRUE = 1;
+        this.DISABLEHOSTSYNC_INVALID = -1;
         this._className = 'RealTimeClock';
         //--- (end of YRealTimeClock constructor)
     }
@@ -83,6 +87,9 @@ export class YRealTimeClock extends YFunction {
                 return 1;
             case 'timeSet':
                 this._timeSet = val;
+                return 1;
+            case 'disableHostSync':
+                this._disableHostSync = val;
                 return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -187,6 +194,43 @@ export class YRealTimeClock extends YFunction {
         }
         res = this._timeSet;
         return res;
+    }
+    /**
+     * Returns true if the automatic clock synchronization with host has been disabled,
+     * and false otherwise.
+     *
+     * @return either YRealTimeClock.DISABLEHOSTSYNC_FALSE or YRealTimeClock.DISABLEHOSTSYNC_TRUE,
+     * according to true if the automatic clock synchronization with host has been disabled,
+     *         and false otherwise
+     *
+     * On failure, throws an exception or returns YRealTimeClock.DISABLEHOSTSYNC_INVALID.
+     */
+    async get_disableHostSync() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YRealTimeClock.DISABLEHOSTSYNC_INVALID;
+            }
+        }
+        res = this._disableHostSync;
+        return res;
+    }
+    /**
+     * Changes the automatic clock synchronization with host working state.
+     * To disable automatic synchronization, set the value to true.
+     * To enable automatic synchronization (default), set the value to false.
+     *
+     * @param newval : either YRealTimeClock.DISABLEHOSTSYNC_FALSE or YRealTimeClock.DISABLEHOSTSYNC_TRUE,
+     * according to the automatic clock synchronization with host working state
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_disableHostSync(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('disableHostSync', rest_val);
     }
     /**
      * Retrieves a real-time clock for a given identifier.
@@ -361,4 +405,7 @@ YRealTimeClock.UTCOFFSET_INVALID = YAPI.INVALID_INT;
 YRealTimeClock.TIMESET_FALSE = 0;
 YRealTimeClock.TIMESET_TRUE = 1;
 YRealTimeClock.TIMESET_INVALID = -1;
+YRealTimeClock.DISABLEHOSTSYNC_FALSE = 0;
+YRealTimeClock.DISABLEHOSTSYNC_TRUE = 1;
+YRealTimeClock.DISABLEHOSTSYNC_INVALID = -1;
 //# sourceMappingURL=yocto_realtimeclock.js.map

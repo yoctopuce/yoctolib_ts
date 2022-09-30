@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_refframe.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -153,7 +153,7 @@ export class YRefFrame extends YFunction
             this._mountPos = <number> <number> val;
             return 1;
         case 'bearing':
-            this._bearing = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._bearing = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'calibrationParam':
             this._calibrationParam = <string> <string> val;

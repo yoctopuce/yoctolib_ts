@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_steppermotor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -144,17 +144,20 @@ export class YStepperMotor extends YFunction
         case 'diags':
             this._diags = <number> <number> val;
             return 1;
+        case 'stepPos':
+            this._stepPos = <number> <number> val / 16.0;
+            return 1;
         case 'speed':
-            this._speed = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._speed = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'pullinSpeed':
-            this._pullinSpeed = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._pullinSpeed = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'maxAccel':
-            this._maxAccel = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._maxAccel = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'maxSpeed':
-            this._maxSpeed = <number> Math.round(<number>val * 1000.0 / 65536.0) / 1000.0;
+            this._maxSpeed = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'stepping':
             this._stepping = <YStepperMotor.STEPPING> <number> val;
@@ -243,6 +246,26 @@ export class YStepperMotor extends YFunction
         let rest_val: string;
         rest_val = String(Math.round(<number>newval * 100.0)/100.0);
         return await this._setAttr('stepPos',rest_val);
+    }
+
+    /**
+     * Returns the current logical motor position, measured in steps.
+     * The value may include a fractional part when micro-stepping is in use.
+     *
+     * @return a floating point number corresponding to the current logical motor position, measured in steps
+     *
+     * On failure, throws an exception or returns YStepperMotor.STEPPOS_INVALID.
+     */
+    async get_stepPos(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YStepperMotor.STEPPOS_INVALID;
+            }
+        }
+        res = this._stepPos;
+        return res;
     }
 
     /**

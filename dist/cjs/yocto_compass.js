@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_compass.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -79,7 +79,7 @@ class YCompass extends yocto_api_js_1.YSensor {
                 this._axis = val;
                 return 1;
             case 'magneticHeading':
-                this._magneticHeading = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._magneticHeading = Math.round(val / 65.536) / 1000.0;
                 return 1;
         }
         return super.imm_parseAttr(name, val);

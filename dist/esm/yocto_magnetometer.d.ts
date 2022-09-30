@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_magnetometer.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_magnetometer.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Magnetometer functions
  *

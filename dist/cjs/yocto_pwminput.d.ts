@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_pwminput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for PwmInput functions
  *

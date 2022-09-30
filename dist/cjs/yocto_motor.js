@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_motor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -94,19 +94,19 @@ class YMotor extends yocto_api_js_1.YFunction {
                 this._motorStatus = val;
                 return 1;
             case 'drivingForce':
-                this._drivingForce = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._drivingForce = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'brakingForce':
-                this._brakingForce = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._brakingForce = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'cutOffVoltage':
-                this._cutOffVoltage = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._cutOffVoltage = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'overCurrentLimit':
                 this._overCurrentLimit = val;
                 return 1;
             case 'frequency':
-                this._frequency = Math.round(val * 1000.0 / 65536.0) / 1000.0;
+                this._frequency = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'starterTime':
                 this._starterTime = val;

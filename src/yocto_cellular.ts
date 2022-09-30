@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 50281 2022-06-30 07:21:14Z mvuilleu $
+ *  $Id: yocto_cellular.ts 50494 2022-07-19 16:08:56Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -5721,7 +5721,7 @@ export class YCellular extends YFunction
             cpos = (line).indexOf(':');
             if (cpos > 0) {
                 profno = this._yapi.imm_atoi((line).substr( 0, cpos));
-                if (profno > 0) {
+                if (profno > 1) {
                     res.push(line);
                 }
             }
