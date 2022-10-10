@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ * $Id: yocto_api.ts 51266 2022-10-10 09:18:25Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -2202,6 +2202,16 @@ export declare class YModule extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_allSettings(settings: Uint8Array): Promise<number>;
+    /**
+     * Adds a file to the uploaded data at the next HTTP callback.
+     * This function only affects the next HTTP callback and only works in
+     * HTTP callback mode.
+     *
+     * @param filename : the name of the file to upload at the next HTTP callback
+     *
+     * @return nothing.
+     */
+    addFileToHTTPCallback(filename: string): Promise<number>;
     /**
      * Returns the unique hardware identifier of the module.
      * The unique hardware identifier is made of the device serial

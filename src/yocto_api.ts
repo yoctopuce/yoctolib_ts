@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ * $Id: yocto_api.ts 51266 2022-10-10 09:18:25Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -6599,6 +6599,26 @@ export class YModule extends YFunction
     }
 
     /**
+     * Adds a file to the uploaded data at the next HTTP callback.
+     * This function only affects the next HTTP callback and only works in
+     * HTTP callback mode.
+     *
+     * @param filename : the name of the file to upload at the next HTTP callback
+     *
+     * @return nothing.
+     */
+    async addFileToHTTPCallback(filename: string): Promise<number>
+    {
+        let content: Uint8Array;
+
+        content = await this._download('@YCB+' + filename);
+        if ((content).length == 0) {
+            return YAPI_NOT_SUPPORTED;
+        }
+        return YAPI_SUCCESS;
+    }
+
+    /**
      * Returns the unique hardware identifier of the module.
      * The unique hardware identifier is made of the device serial
      * number followed by string ".module".
@@ -12333,7 +12353,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.51176';
+        return /* version number patched automatically */'1.10.51266';
     }
 
     /**
