@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51266 2022-10-10 09:18:25Z seb $
+ * $Id: yocto_api.ts 51363 2022-10-25 06:40:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -3235,8 +3235,8 @@ export class YFirmwareUpdate
                 this.imm_progress(5 + ((percent*80+50)/100) >> 0, msg);
             });
         } catch(e) {
-            this.imm_progress(-1, e.message);
-            return this._yapi._throw(YAPI_IO_ERROR, e.message, YAPI_IO_ERROR);
+            this.imm_progress(-1, (e as Error).message);
+            return this._yapi._throw(YAPI_IO_ERROR, (e as Error).message, YAPI_IO_ERROR);
         }
         this.imm_progress(80, 'Wait for the device to restart');
         let timeout = this._yapi.GetTickCount() + 60000;
@@ -5708,6 +5708,10 @@ export class YModule extends YFunction
 
     async _invokeBeaconCallback(beaconState: number): Promise<number>
     {
+        let dev = <YDevice>this._yapi.imm_getDevice(this._serial);
+        if (dev) {
+            dev._beacon = beaconState;
+        }
         if (this._beaconCallback != null) {
             try {
                 await this._beaconCallback(this, beaconState);
@@ -8761,6 +8765,7 @@ export abstract class YGenericHub
     _reconnectionTimer: any = null;         // actually a number | NodeJS.Timeout
     _firstArrivalCallback: boolean = true;  // indicates that this is the first time we see this device
     _missing: YBoolDict = {};               // hash table by serial number, used during UpdateDeviceList
+    _rwAccess: boolean | null = null;       // null until hub has been tested for rw-access
     _hubAdded: boolean = false;
     _connectionType: Y_YHubType;
 
@@ -8918,9 +8923,13 @@ export abstract class YGenericHub
         }
     }
 
-    imm_hasRwAccess(): boolean
+    async hasRwAccess(): Promise<boolean>
     {
-        return true; // assume write will work
+        if(this._rwAccess == null) {
+            let yreq: YHTTPRequest = await this.request('GET', '/api/module/serialNumber.json?serialNumber=rwTest', null, 0);
+            this._rwAccess = (yreq.errorType == YAPI_SUCCESS);
+        }
+        return this._rwAccess;
     }
 
     /** Perform an HTTP query on the hub
@@ -9318,7 +9327,6 @@ export abstract class YWebSocketHub extends YGenericHub
     _nonce: number = -1;
     _session_error: string | null = null;
     _session_errno: number | null = null;
-    _rwAccess: boolean = false;
     _tcpRoundTripTime: number;
     _tcpMaxWindowSize: number;
     _lastUploadAckBytes: number[] = [ 0 ];
@@ -9763,6 +9771,8 @@ export abstract class YWebSocketHub extends YGenericHub
                         let inflags = arr_bytes[3]+(arr_bytes[4]<<8);
                         if ((inflags & this._USB_META_WS_RW) != 0) {
                             this._rwAccess = true;
+                        } else {
+                            this._rwAccess = false;
                         }
                         if ((inflags & this._USB_META_WS_VALID_SHA1) != 0) {
                             let remote_sha1 = arr_bytes.subarray(9,29);
@@ -9859,11 +9869,6 @@ export abstract class YWebSocketHub extends YGenericHub
         if(this.websocket) {
             this.websocket.send(arr_bytes);
         }
-    }
-
-    imm_hasRwAccess(): boolean
-    {
-        return this._rwAccess;
     }
 
     /** Perform an HTTP query on the hub
@@ -10822,15 +10827,6 @@ export class YAPIContext
     // Add a hub object to the list of known hub
     async _addHub(newhub: YGenericHub): Promise<void>
     {
-        let i: number;
-        let hubFound = false;
-        for (i = 0; i < this._hubs.length; i++) {
-            let url = this._hubs[i].urlInfo.url;
-            if (newhub.urlInfo.url == url) {
-                hubFound = true;
-                break;
-            }
-        }
 
         // If hub is not yet known, create a device object
         let serial: string = this._snByUrl[newhub.urlInfo.url];
@@ -10842,6 +10838,14 @@ export class YAPIContext
         }
 
         // Add hub to active list if needed, and remove from pending list if present
+        let hubFound = false;
+        for (let i = 0; i < this._hubs.length; i++) {
+            let url = this._hubs[i].urlInfo.url;
+            if (newhub.urlInfo.url == url) {
+                hubFound = true;
+                break;
+            }
+        }
         if (!hubFound) {
             this._hubs.push(newhub);
         }
@@ -11981,7 +11985,7 @@ export class YAPIContext
         }
 
         // make sure we are allowed to execute this query
-        if(devUrl.slice(-2) == '&.' && !hub.imm_hasRwAccess()) {
+        if(devUrl.slice(-2) == '&.' && !await hub.hasRwAccess()) {
             res.errorType = YAPI_UNAUTHORIZED;
             res.errorMsg = 'Access denied: admin credentials required';
             return res;
@@ -12023,7 +12027,7 @@ export class YAPIContext
                 break;
             }
         }
-        if(!hub || !hub.imm_hasRwAccess()) {
+        if(!hub || !await hub.hasRwAccess()) {
             return true;
         }
 
@@ -12353,7 +12357,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.51266';
+        return /* version number patched automatically */'1.10.51371';
     }
 
     /**
@@ -12515,7 +12519,7 @@ export class YAPIContext
         let pos = str_url.indexOf('/');
         if (pos > 0) {
             dom = str_url.slice(pos+1);
-            if (dom.length > 0 && dom.substr(-1) != '/')
+            if (dom.length > 0 && dom.slice(-1) != '/')
                 dom += '/';
             str_url = str_url.slice(0, pos);
         }
@@ -12710,7 +12714,13 @@ export class YAPIContext
         this._pendingHubs[urlInfo.url] = newhub;
         // trigger testHub, but don't wait for the result
         // the hub will be removed from _pendingHubs when connected
-        newhub.testHub(0, errmsg);
+        newhub.testHub(0, errmsg).then((errcode: number) => {
+            if(errcode != YAPI_SUCCESS) {
+                if(this._pendingHubs[urlInfo.url]) {
+                    delete this._pendingHubs[urlInfo.url];
+                }
+            }
+        })
 
         return YAPI_SUCCESS;
     }

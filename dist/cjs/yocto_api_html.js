@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 51111 2022-09-27 22:03:27Z mvuilleu $
+ * $Id: yocto_api_html.ts 51289 2022-10-10 15:31:22Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -184,7 +184,7 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
             // Remove GET parameters from the URL, as the server will use the x-yauth value
             let qpos = uri.indexOf('?');
             if (qpos > 0) {
-                uri = uri.substr(0, qpos);
+                uri = uri.slice(0, qpos);
             }
             // Send the request using text/plain POST, to avoid CORS checks
             xmlHttpRequest.open('POST', uri, true, '', '');
@@ -232,6 +232,19 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
             })) {
                 // could not download info.json
                 this.infoJson = {};
+            }
+            if (this.infoJson.serialNumber) {
+                // make sure we don't already have a hub with the same serial number
+                let knownHubs = this._yapi._hubs;
+                for (let i = 0; i < knownHubs.length; i++) {
+                    let hubSerials = knownHubs[i].serialByYdx;
+                    if (hubSerials && hubSerials[0] == this.infoJson.serialNumber) {
+                        if (errmsg) {
+                            errmsg.msg = "Hub " + this.infoJson.serialNumber + " is already registered";
+                        }
+                        return yocto_api_js_1.YAPI.INVALID_ARGUMENT;
+                    }
+                }
             }
         }
         let args = '?len=' + this.notiflen.toString();
@@ -290,7 +303,7 @@ class YHttpHtmlHub extends yocto_api_js_1.YGenericHub {
                                 }
                                 let newlen = xmlHttpRequest.responseText.length;
                                 if (newlen > this.currPos) {
-                                    this._yapi.parseEvents(this, xmlHttpRequest.responseText.substr(this.currPos, newlen - this.currPos));
+                                    this._yapi.parseEvents(this, xmlHttpRequest.responseText.slice(this.currPos, newlen));
                                 }
                                 // trigger immediately a new connection if closed in success
                                 if (xmlHttpRequest.readyState == 4 && (xmlHttpRequest.status >> 0) != 0) {

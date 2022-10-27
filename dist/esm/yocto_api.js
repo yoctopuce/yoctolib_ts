@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51266 2022-10-10 09:18:25Z seb $
+ * $Id: yocto_api.ts 51363 2022-10-25 06:40:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -4972,6 +4972,10 @@ export class YModule extends YFunction {
         return 0;
     }
     async _invokeBeaconCallback(beaconState) {
+        let dev = this._yapi.imm_getDevice(this._serial);
+        if (dev) {
+            dev._beacon = beaconState;
+        }
         if (this._beaconCallback != null) {
             try {
                 await this._beaconCallback(this, beaconState);
@@ -7754,6 +7758,7 @@ export class YGenericHub {
         this._reconnectionTimer = null; // actually a number | NodeJS.Timeout
         this._firstArrivalCallback = true; // indicates that this is the first time we see this device
         this._missing = {}; // hash table by serial number, used during UpdateDeviceList
+        this._rwAccess = null; // null until hub has been tested for rw-access
         this._hubAdded = false;
         this._yapi = yapi;
         this.urlInfo = urlInfo;
@@ -7892,8 +7897,12 @@ export class YGenericHub {
             return YAPI_IO_ERROR;
         }
     }
-    imm_hasRwAccess() {
-        return true; // assume write will work
+    async hasRwAccess() {
+        if (this._rwAccess == null) {
+            let yreq = await this.request('GET', '/api/module/serialNumber.json?serialNumber=rwTest', null, 0);
+            this._rwAccess = (yreq.errorType == YAPI_SUCCESS);
+        }
+        return this._rwAccess;
     }
     /** Perform an HTTP query on the hub
      *
@@ -8189,7 +8198,6 @@ export class YWebSocketHub extends YGenericHub {
         this._nonce = -1;
         this._session_error = null;
         this._session_errno = null;
-        this._rwAccess = false;
         this._lastUploadAckBytes = [0];
         this._lastUploadAckTime = [0];
         this._lastUploadRateBytes = [0];
@@ -8611,6 +8619,9 @@ export class YWebSocketHub extends YGenericHub {
                         if ((inflags & this._USB_META_WS_RW) != 0) {
                             this._rwAccess = true;
                         }
+                        else {
+                            this._rwAccess = false;
+                        }
                         if ((inflags & this._USB_META_WS_VALID_SHA1) != 0) {
                             let remote_sha1 = arr_bytes.subarray(9, 29);
                             let sha1 = this.imm_computeAuth(this.urlInfo.user, this.urlInfo.pass, this._remoteSerial, this._nonce);
@@ -8712,9 +8723,6 @@ export class YWebSocketHub extends YGenericHub {
         if (this.websocket) {
             this.websocket.send(arr_bytes);
         }
-    }
-    imm_hasRwAccess() {
-        return this._rwAccess;
     }
     /** Perform an HTTP query on the hub
      *
@@ -9577,15 +9585,6 @@ export class YAPIContext {
     }
     // Add a hub object to the list of known hub
     async _addHub(newhub) {
-        let i;
-        let hubFound = false;
-        for (i = 0; i < this._hubs.length; i++) {
-            let url = this._hubs[i].urlInfo.url;
-            if (newhub.urlInfo.url == url) {
-                hubFound = true;
-                break;
-            }
-        }
         // If hub is not yet known, create a device object
         let serial = this._snByUrl[newhub.urlInfo.url];
         if (!serial) {
@@ -9595,6 +9594,14 @@ export class YAPIContext {
             await newdev.refresh();
         }
         // Add hub to active list if needed, and remove from pending list if present
+        let hubFound = false;
+        for (let i = 0; i < this._hubs.length; i++) {
+            let url = this._hubs[i].urlInfo.url;
+            if (newhub.urlInfo.url == url) {
+                hubFound = true;
+                break;
+            }
+        }
         if (!hubFound) {
             this._hubs.push(newhub);
         }
@@ -10698,7 +10705,7 @@ export class YAPIContext {
             devUrl = baseUrl.slice(pos) + devUrl;
         }
         // make sure we are allowed to execute this query
-        if (devUrl.slice(-2) == '&.' && !hub.imm_hasRwAccess()) {
+        if (devUrl.slice(-2) == '&.' && !await hub.hasRwAccess()) {
             res.errorType = YAPI_UNAUTHORIZED;
             res.errorMsg = 'Access denied: admin credentials required';
             return res;
@@ -10737,7 +10744,7 @@ export class YAPIContext {
                 break;
             }
         }
-        if (!hub || !hub.imm_hasRwAccess()) {
+        if (!hub || !await hub.hasRwAccess()) {
             return true;
         }
         return false;
@@ -11034,7 +11041,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.51266';
+        return /* version number patched automatically */ '1.10.51371';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -11186,7 +11193,7 @@ export class YAPIContext {
         let pos = str_url.indexOf('/');
         if (pos > 0) {
             dom = str_url.slice(pos + 1);
-            if (dom.length > 0 && dom.substr(-1) != '/')
+            if (dom.length > 0 && dom.slice(-1) != '/')
                 dom += '/';
             str_url = str_url.slice(0, pos);
         }
@@ -11378,7 +11385,13 @@ export class YAPIContext {
         this._pendingHubs[urlInfo.url] = newhub;
         // trigger testHub, but don't wait for the result
         // the hub will be removed from _pendingHubs when connected
-        newhub.testHub(0, errmsg);
+        newhub.testHub(0, errmsg).then((errcode) => {
+            if (errcode != YAPI_SUCCESS) {
+                if (this._pendingHubs[urlInfo.url]) {
+                    delete this._pendingHubs[urlInfo.url];
+                }
+            }
+        });
         return YAPI_SUCCESS;
     }
     /**

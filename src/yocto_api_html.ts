@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 51111 2022-09-27 22:03:27Z mvuilleu $
+ * $Id: yocto_api_html.ts 51289 2022-10-10 15:31:22Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -42,12 +42,12 @@ export * from "./yocto_api.js";
 import {
     YUnhandledPromiseRejectionCallback,
     _YY_UrlInfo,
+    _YY_WebSocket,
     YConditionalResult,
     YHTTPBody,
     YHTTPRequest,
     YErrorMsg,
     YSystemEnv,
-    Y_YHubType,
     YGenericHub,
     YWebSocketHub,
     YGenericSSDPManager,
@@ -209,7 +209,7 @@ class YHttpHtmlHub extends YGenericHub
             // Remove GET parameters from the URL, as the server will use the x-yauth value
             let qpos: number = uri.indexOf('?');
             if(qpos > 0) {
-                uri = uri.substr(0,qpos);
+                uri = uri.slice(0,qpos);
             }
             // Send the request using text/plain POST, to avoid CORS checks
             xmlHttpRequest.open('POST', uri, true, '', '');
@@ -260,6 +260,19 @@ class YHttpHtmlHub extends YGenericHub
             })) {
                 // could not download info.json
                 this.infoJson = {};
+            }
+        if(this.infoJson.serialNumber) {
+            // make sure we don't already have a hub with the same serial number
+            let knownHubs: YGenericHub[] = this._yapi._hubs;
+            for (let i: number = 0; i < knownHubs.length; i++) {
+                let hubSerials: string[] = knownHubs[i].serialByYdx;
+                if (hubSerials && hubSerials[0] == this.infoJson.serialNumber) {
+                    if(errmsg) {
+                        errmsg.msg = "Hub "+this.infoJson.serialNumber+" is already registered";
+                    }
+                    return YAPI.INVALID_ARGUMENT;
+                    }
+                }
             }
         }
 
@@ -320,7 +333,7 @@ class YHttpHtmlHub extends YGenericHub
                                         }
                                         let newlen = xmlHttpRequest.responseText.length;
                                         if (newlen > this.currPos) {
-                                            this._yapi.parseEvents(this, xmlHttpRequest.responseText.substr(this.currPos, newlen - this.currPos));
+                                            this._yapi.parseEvents(this, xmlHttpRequest.responseText.slice(this.currPos, newlen));
                                         }
                                         // trigger immediately a new connection if closed in success
                                         if (xmlHttpRequest.readyState == 4 && (xmlHttpRequest.status >> 0) != 0) {
@@ -409,7 +422,7 @@ class YWebSocketHtmlHub extends YWebSocketHub
     {
         let websock = new WebSocket(str_url);
         websock.binaryType = 'arraybuffer';
-        this.websocket = websock;
+        this.websocket = websock as _YY_WebSocket;
     }
 
     /** Fills a buffer with random numbers

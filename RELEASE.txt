@@ -1,3 +1,5 @@
-TypeScript v1.10.51266
+TypeScript v1.10.51371
 
-- Add addFileToHTTPCallback methode to YModule
+- Prevent double-registration of the same HTTP hub
+- Fix detection of isReadOnly for non-Websocket hubs
+- Fix cache issue with beacon state

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51266 2022-10-10 09:18:25Z seb $
+ * $Id: yocto_api.ts 51363 2022-10-25 06:40:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -3248,6 +3248,7 @@ export declare abstract class YGenericHub {
     _reconnectionTimer: any;
     _firstArrivalCallback: boolean;
     _missing: YBoolDict;
+    _rwAccess: boolean | null;
     _hubAdded: boolean;
     _connectionType: Y_YHubType;
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
@@ -3267,7 +3268,7 @@ export declare abstract class YGenericHub {
     signalHubConnected(): Promise<void>;
     imm_testHubAgainLater(): boolean;
     hubUpdateDeviceList(): Promise<number>;
-    imm_hasRwAccess(): boolean;
+    hasRwAccess(): Promise<boolean>;
     /** Perform an HTTP query on the hub
      *
      * @param method {string}
@@ -3392,7 +3393,6 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     _nonce: number;
     _session_error: string | null;
     _session_errno: number | null;
-    _rwAccess: boolean;
     _tcpRoundTripTime: number;
     _tcpMaxWindowSize: number;
     _lastUploadAckBytes: number[];
@@ -3453,7 +3453,6 @@ export declare abstract class YWebSocketHub extends YGenericHub {
      * @param arr_bytes {Uint8Array}
      **/
     imm_webSocketSend(arr_bytes: Uint8Array): void;
-    imm_hasRwAccess(): boolean;
     /** Perform an HTTP query on the hub
      *
      * @param method {string}
