@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51363 2022-10-25 06:40:23Z seb $
+ * $Id: yocto_api.ts 51903 2022-11-29 17:25:59Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -348,10 +348,14 @@ export declare class YDataStream {
     _calraw: number[];
     _calref: number[];
     _values: number[][];
+    _isLoaded: boolean;
     constructor(obj_parent: YFunction, obj_dataset: YDataSet, encoded: number[]);
     imm_initFromDataSet(dataset: YDataSet, encoded: number[]): number;
     imm_parseStream(sdata: Uint8Array): number;
+    imm_wasLoaded(): boolean;
     imm_get_url(): string;
+    imm_get_baseurl(): string;
+    imm_get_urlsuffix(): string;
     loadStream(): Promise<number>;
     imm_decodeVal(w: number): number;
     imm_decodeAvg(dw: number, count: number): number;
@@ -559,6 +563,7 @@ export declare class YDataSet {
     _hardwareId: string;
     _functionId: string;
     _unit: string;
+    _bulkLoad: number;
     _startTimeMs: number;
     _endTimeMs: number;
     _progress: number;

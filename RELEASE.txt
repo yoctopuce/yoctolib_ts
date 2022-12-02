@@ -1,5 +1,4 @@
-TypeScript v1.10.51371
+TypeScript v1.10.52094
 
-- Prevent double-registration of the same HTTP hub
-- Fix detection of isReadOnly for non-Websocket hubs
-- Fix cache issue with beacon state
+- Add support for connecting to VirtualHub-4web
+- Fix caching issue with beacon state

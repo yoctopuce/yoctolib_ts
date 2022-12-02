@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51363 2022-10-25 06:40:23Z seb $
+ * $Id: yocto_api.ts 51903 2022-11-29 17:25:59Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -706,6 +706,7 @@ class YDataStream {
         this._calraw = [];
         this._calref = [];
         this._values = [];
+        this._isLoaded = false;
         this.DATA_INVALID = exports.YAPI_INVALID_DOUBLE;
         this.DURATION_INVALID = exports.YAPI_INVALID_DOUBLE;
         this._parent = obj_parent;
@@ -821,6 +822,9 @@ class YDataStream {
         let idx;
         let udat = [];
         let dat = [];
+        if (this._isLoaded && !(this._isClosed)) {
+            return exports.YAPI_SUCCESS;
+        }
         if ((sdata).length == 0) {
             this._nRows = 0;
             return exports.YAPI_SUCCESS;
@@ -859,11 +863,25 @@ class YDataStream {
             }
         }
         this._nRows = this._values.length;
+        this._isLoaded = true;
         return exports.YAPI_SUCCESS;
+    }
+    imm_wasLoaded() {
+        return this._isLoaded;
     }
     imm_get_url() {
         let url;
         url = 'logger.json?id=' + this._functionId + '&run=' + String(Math.round(this._runNo)) + '&utc=' + String(Math.round(this._utcStamp));
+        return url;
+    }
+    imm_get_baseurl() {
+        let url;
+        url = 'logger.json?id=' + this._functionId + '&run=' + String(Math.round(this._runNo)) + '&utc=';
+        return url;
+    }
+    imm_get_urlsuffix() {
+        let url;
+        url = String(Math.round(this._utcStamp));
         return url;
     }
     async loadStream() {
@@ -1156,6 +1174,7 @@ class YDataSet {
         this._hardwareId = '';
         this._functionId = '';
         this._unit = '';
+        this._bulkLoad = 0;
         this._startTimeMs = 0;
         this._endTimeMs = 0;
         this._progress = 0;
@@ -1274,9 +1293,11 @@ class YDataSet {
             else {
                 // stream that are partially in the dataset
                 // we need to parse data to filter value outside the dataset
-                url = this._streams[ii].imm_get_url();
-                data = await this._parent._download(url);
-                this._streams[ii].imm_parseStream(data);
+                if (!(this._streams[ii].imm_wasLoaded())) {
+                    url = this._streams[ii].imm_get_url();
+                    data = await this._parent._download(url);
+                    this._streams[ii].imm_parseStream(data);
+                }
                 dataRows = await this._streams[ii].get_dataRows();
                 if (dataRows.length == 0) {
                     return await this.get_progress();
@@ -1330,8 +1351,10 @@ class YDataSet {
                         if (previewMaxVal < maxVal) {
                             previewMaxVal = maxVal;
                         }
-                        previewTotalAvg = previewTotalAvg + (avgVal * mitv);
-                        previewTotalTime = previewTotalTime + mitv;
+                        if (!(isNaN(avgVal))) {
+                            previewTotalAvg = previewTotalAvg + (avgVal * mitv);
+                            previewTotalTime = previewTotalTime + mitv;
+                        }
                     }
                     tim = end_;
                     m_pos = m_pos + 1;
@@ -1388,6 +1411,15 @@ class YDataSet {
         let avgCol;
         let maxCol;
         let firstMeasure;
+        let baseurl;
+        let url;
+        let suffix;
+        let suffixes = [];
+        let idx;
+        let bulkFile;
+        let streamStr = [];
+        let urlIdx;
+        let streamBin;
         if (progress != this._progress) {
             return this._progress;
         }
@@ -1395,7 +1427,9 @@ class YDataSet {
             return await this.loadSummary(data);
         }
         stream = this._streams[this._progress];
-        stream.imm_parseStream(data);
+        if (!(stream.imm_wasLoaded())) {
+            stream.imm_parseStream(data);
+        }
         dataRows = await stream.get_dataRows();
         this._progress = this._progress + 1;
         if (dataRows.length == 0) {
@@ -1438,6 +1472,40 @@ class YDataSet {
                 this._measures.push(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], avgv, dataRows[ii][maxCol]));
             }
             tim = end_;
+        }
+        // Perform bulk preload to speed-up network transfer
+        if ((this._bulkLoad > 0) && (this._progress < this._streams.length)) {
+            stream = this._streams[this._progress];
+            if (stream.imm_wasLoaded()) {
+                return await this.get_progress();
+            }
+            baseurl = stream.imm_get_baseurl();
+            url = stream.imm_get_url();
+            suffix = stream.imm_get_urlsuffix();
+            suffixes.push(suffix);
+            idx = this._progress + 1;
+            while ((idx < this._streams.length) && (suffixes.length < this._bulkLoad)) {
+                stream = this._streams[idx];
+                if (!(stream.imm_wasLoaded()) && (stream.imm_get_baseurl() == baseurl)) {
+                    suffix = stream.imm_get_urlsuffix();
+                    suffixes.push(suffix);
+                    url = url + ',' + suffix;
+                }
+                idx = idx + 1;
+            }
+            bulkFile = await this._parent._download(url);
+            streamStr = this._parent.imm_json_get_array(bulkFile);
+            urlIdx = 0;
+            idx = this._progress;
+            while ((idx < this._streams.length) && (urlIdx < suffixes.length) && (urlIdx < streamStr.length)) {
+                stream = this._streams[idx];
+                if ((stream.imm_get_baseurl() == baseurl) && (stream.imm_get_urlsuffix() == suffixes[urlIdx])) {
+                    streamBin = this._yapi.imm_str2bin(streamStr[urlIdx]);
+                    stream.imm_parseStream(streamBin);
+                    urlIdx = urlIdx + 1;
+                }
+                idx = idx + 1;
+            }
         }
         return await this.get_progress();
     }
@@ -1569,6 +1637,10 @@ class YDataSet {
             }
             else {
                 stream = this._streams[this._progress];
+                if (stream.imm_wasLoaded()) {
+                    // Do not reload stream if it was already loaded
+                    return await this.processMore(this._progress, this._yapi.imm_str2bin(''));
+                }
                 url = stream.imm_get_url();
             }
         }
@@ -1727,6 +1799,7 @@ class YDataSet {
         }
         this._functionId = loadval.id;
         this._unit = loadval.unit;
+        this._bulkLoad = (loadval.bulk ? parseInt(loadval.bulk) : 0);
         if (loadval.calib) {
             this._calib = this._yapi.imm_decodeFloats(loadval.calib);
             this._calib[0] = (this._calib[0] / 1000) >> 0;
@@ -4375,12 +4448,56 @@ class YModule extends YFunction {
         return this._yapi.imm_str2bin(JSON.stringify(attrs));
     }
     async get_subDevices_internal() {
-        //fixme: not implemented
-        return [];
+        let baseUrl = await this.get_url_internal();
+        if (!baseUrl) {
+            return [];
+        }
+        let hub = null;
+        let hubUrl = '';
+        for (let i = 0; i < this._yapi._hubs.length; i++) {
+            hubUrl = this._yapi._hubs[i].urlInfo.url;
+            if (baseUrl.slice(0, hubUrl.length) == hubUrl) {
+                hub = this._yapi._hubs[i];
+                break;
+            }
+        }
+        if (!hub || !hubUrl) {
+            return [];
+        }
+        let hubSerial = hub.serialByYdx[0];
+        if (hubSerial != this._serial) {
+            return [];
+        }
+        let res = [];
+        for (let serial in this._yapi._devs) {
+            let rooturl = this._yapi._devs[serial].imm_getRootUrl();
+            if (rooturl.substr(0, hubUrl.length) == hubUrl) {
+                res.push(serial);
+            }
+        }
+        return res;
     }
     async get_parentHub_internal() {
-        //fixme: not implemented
-        return '';
+        let baseUrl = await this.get_url_internal();
+        if (!baseUrl) {
+            return '';
+        }
+        let hub = null;
+        for (let i = 0; i < this._yapi._hubs.length; i++) {
+            let hubUrl = this._yapi._hubs[i].urlInfo.url;
+            if (baseUrl.slice(0, hubUrl.length) == hubUrl) {
+                hub = this._yapi._hubs[i];
+                break;
+            }
+        }
+        if (!hub) {
+            return '';
+        }
+        let hubSerial = hub.serialByYdx[0];
+        if (hubSerial == this._serial) {
+            return '';
+        }
+        return hubSerial;
     }
     async get_url_internal() {
         /** @type {string} **/
@@ -4985,10 +5102,6 @@ class YModule extends YFunction {
         return 0;
     }
     async _invokeBeaconCallback(beaconState) {
-        let dev = this._yapi.imm_getDevice(this._serial);
-        if (dev) {
-            dev._beacon = beaconState;
-        }
         if (this._beaconCallback != null) {
             try {
                 await this._beaconCallback(this, beaconState);
@@ -10579,6 +10692,10 @@ class YAPIContext {
     async setBeaconChange(str_serial, int_beacon) {
         if (this._beacons[str_serial] === undefined || this._beacons[str_serial] != int_beacon) {
             this._beacons[str_serial] = int_beacon;
+            let dev = this.imm_getDevice(str_serial);
+            if (dev) {
+                dev._beacon = int_beacon;
+            }
             let module = YModule.FindModuleInContext(this, str_serial + ".module");
             await module._invokeBeaconCallback(int_beacon);
         }
@@ -11062,7 +11179,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.51371';
+        return /* version number patched automatically */ '1.10.52094';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

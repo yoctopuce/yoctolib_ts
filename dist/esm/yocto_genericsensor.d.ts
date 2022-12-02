@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 51903 2022-11-29 17:25:59Z mvuilleu $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -39,7 +39,7 @@
 import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
 /**
  * YGenericSensor Class: GenericSensor control interface, available for instance in the
- * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-SPI or the Yocto-milliVolt-Rx
+ * Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-Bridge or the Yocto-milliVolt-Rx
  *
  * The YGenericSensor class allows you to read and configure Yoctopuce signal
  * transducers. It inherits from YSensor class the core functions to read measurements,

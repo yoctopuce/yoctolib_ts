@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51363 2022-10-25 06:40:23Z seb $
+ * $Id: yocto_api.ts 51903 2022-11-29 17:25:59Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -873,6 +873,7 @@ interface _YY_LoggerApi
     calib: string;
     unit: string;
     cal: string;
+    bulk?: string;
     streams: string[];
 }
 
@@ -935,6 +936,7 @@ export class YDataStream
     _calraw: number[] = [];
     _calref: number[] = [];
     _values: number[][] = [];
+    _isLoaded: boolean = false;
 
     // API symbols as static members
     //--- (end of generated code: YDataStream attributes declaration)
@@ -1060,6 +1062,9 @@ export class YDataStream
         let idx: number;
         let udat: number[] = [];
         let dat: number[] = [];
+        if (this._isLoaded && !(this._isClosed)) {
+            return YAPI_SUCCESS;
+        }
         if ((sdata).length == 0) {
             this._nRows = 0;
             return YAPI_SUCCESS;
@@ -1097,13 +1102,33 @@ export class YDataStream
         }
 
         this._nRows = this._values.length;
+        this._isLoaded = true;
         return YAPI_SUCCESS;
+    }
+
+    imm_wasLoaded(): boolean
+    {
+        return this._isLoaded;
     }
 
     imm_get_url(): string
     {
         let url: string;
         url = 'logger.json?id='+this._functionId+'&run='+String(Math.round(this._runNo))+'&utc='+String(Math.round(this._utcStamp));
+        return url;
+    }
+
+    imm_get_baseurl(): string
+    {
+        let url: string;
+        url = 'logger.json?id='+this._functionId+'&run='+String(Math.round(this._runNo))+'&utc=';
+        return url;
+    }
+
+    imm_get_urlsuffix(): string
+    {
+        let url: string;
+        url = String(Math.round(this._utcStamp));
         return url;
     }
 
@@ -1447,6 +1472,7 @@ export class YDataSet
     _hardwareId: string = '';
     _functionId: string = '';
     _unit: string = '';
+    _bulkLoad: number = 0;
     _startTimeMs: number = 0;
     _endTimeMs: number = 0;
     _progress: number = 0;
@@ -1583,9 +1609,11 @@ export class YDataSet
             } else {
                 // stream that are partially in the dataset
                 // we need to parse data to filter value outside the dataset
-                url =  this._streams[ii].imm_get_url();
-                data = await this._parent._download(url);
-                this._streams[ii].imm_parseStream(data);
+                if (!( this._streams[ii].imm_wasLoaded())) {
+                    url =  this._streams[ii].imm_get_url();
+                    data = await this._parent._download(url);
+                    this._streams[ii].imm_parseStream(data);
+                }
                 dataRows = await  this._streams[ii].get_dataRows();
                 if (dataRows.length == 0) {
                     return await this.get_progress();
@@ -1636,8 +1664,10 @@ export class YDataSet
                         if (previewMaxVal < maxVal) {
                             previewMaxVal = maxVal;
                         }
-                        previewTotalAvg = previewTotalAvg + (avgVal * mitv);
-                        previewTotalTime = previewTotalTime + mitv;
+                        if (!(isNaN(avgVal))) {
+                            previewTotalAvg = previewTotalAvg + (avgVal * mitv);
+                            previewTotalTime = previewTotalTime + mitv;
+                        }
                     }
                     tim = end_;
                     m_pos = m_pos + 1;
@@ -1694,6 +1724,15 @@ export class YDataSet
         let avgCol: number;
         let maxCol: number;
         let firstMeasure: boolean;
+        let baseurl: string;
+        let url: string;
+        let suffix: string;
+        let suffixes: string[] = [];
+        let idx: number;
+        let bulkFile: Uint8Array;
+        let streamStr: string[] = [];
+        let urlIdx: number;
+        let streamBin: Uint8Array;
 
         if (progress != this._progress) {
             return this._progress;
@@ -1702,7 +1741,9 @@ export class YDataSet
             return await this.loadSummary(data);
         }
         stream = this._streams[this._progress];
-        stream.imm_parseStream(data);
+        if (!(stream.imm_wasLoaded())) {
+            stream.imm_parseStream(data);
+        }
         dataRows = await stream.get_dataRows();
         this._progress = this._progress + 1;
         if (dataRows.length == 0) {
@@ -1743,6 +1784,40 @@ export class YDataSet
                 this._measures.push(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], avgv, dataRows[ii][maxCol]));
             }
             tim = end_;
+        }
+        // Perform bulk preload to speed-up network transfer
+        if ((this._bulkLoad > 0) && (this._progress < this._streams.length)) {
+            stream = this._streams[this._progress];
+            if (stream.imm_wasLoaded()) {
+                return await this.get_progress();
+            }
+            baseurl = stream.imm_get_baseurl();
+            url = stream.imm_get_url();
+            suffix = stream.imm_get_urlsuffix();
+            suffixes.push(suffix);
+            idx = this._progress+1;
+            while ((idx < this._streams.length) && (suffixes.length < this._bulkLoad)) {
+                stream = this._streams[idx];
+                if (!(stream.imm_wasLoaded()) && (stream.imm_get_baseurl() == baseurl)) {
+                    suffix = stream.imm_get_urlsuffix();
+                    suffixes.push(suffix);
+                    url = url + ',' + suffix;
+                }
+                idx = idx + 1;
+            }
+            bulkFile = await this._parent._download(url);
+            streamStr = this._parent.imm_json_get_array(bulkFile);
+            urlIdx = 0;
+            idx = this._progress;
+            while ((idx < this._streams.length) && (urlIdx < suffixes.length) && (urlIdx < streamStr.length)) {
+                stream = this._streams[idx];
+                if ((stream.imm_get_baseurl() == baseurl) && (stream.imm_get_urlsuffix() == suffixes[urlIdx])) {
+                    streamBin = this._yapi.imm_str2bin(streamStr[urlIdx]);
+                    stream.imm_parseStream(streamBin);
+                    urlIdx = urlIdx + 1;
+                }
+                idx = idx + 1;
+            }
         }
         return await this.get_progress();
     }
@@ -1892,6 +1967,10 @@ export class YDataSet
                 return 100;
             } else {
                 stream = this._streams[this._progress];
+                if (stream.imm_wasLoaded()) {
+                    // Do not reload stream if it was already loaded
+                    return await this.processMore(this._progress, this._yapi.imm_str2bin(''));
+                }
                 url = stream.imm_get_url();
             }
         }
@@ -2058,6 +2137,7 @@ export class YDataSet
 
         this._functionId = loadval.id;
         this._unit       = loadval.unit;
+        this._bulkLoad   = (loadval.bulk ? parseInt(loadval.bulk) : 0);
         if(loadval.calib) {
             this._calib  = this._yapi.imm_decodeFloats(loadval.calib);
             this._calib[0] = (this._calib[0] / 1000) >> 0;
@@ -5028,27 +5108,71 @@ export class YModule extends YFunction
 
     async get_subDevices_internal(): Promise<string[]>
     {
-        //fixme: not implemented
-        return [];
+        let baseUrl: string = await this.get_url_internal();
+        if(!baseUrl) {
+            return [];
+        }
+        let hub: YGenericHub|null = null;
+        let hubUrl: string = '';
+        for(let i: number = 0; i < this._yapi._hubs.length; i++) {
+            hubUrl = this._yapi._hubs[i].urlInfo.url;
+            if(baseUrl.slice(0,hubUrl.length) == hubUrl) {
+                hub = this._yapi._hubs[i];
+                break;
+            }
+        }
+        if(!hub || !hubUrl) {
+            return [];
+        }
+        let hubSerial: string = hub.serialByYdx[0];
+        if(hubSerial != this._serial) {
+            return [];
+        }
+        let res: string[] = [];
+        for (let serial in this._yapi._devs) {
+            let rooturl: string = this._yapi._devs[serial].imm_getRootUrl();
+            if (rooturl.substr(0, hubUrl.length) == hubUrl) {
+                res.push(serial);
+            }
+        }
+        return res;
     }
 
     async get_parentHub_internal(): Promise<string>
     {
-        //fixme: not implemented
-        return '';
+        let baseUrl: string = await this.get_url_internal();
+        if(!baseUrl) {
+            return '';
+        }
+        let hub: YGenericHub|null = null;
+        for(let i: number = 0; i < this._yapi._hubs.length; i++) {
+            let hubUrl: string = this._yapi._hubs[i].urlInfo.url;
+            if(baseUrl.slice(0,hubUrl.length) == hubUrl) {
+                hub = this._yapi._hubs[i];
+                break;
+            }
+        }
+        if(!hub) {
+            return '';
+        }
+        let hubSerial: string = hub.serialByYdx[0];
+        if(hubSerial == this._serial) {
+            return '';
+        }
+        return hubSerial;
     }
 
     async get_url_internal(): Promise<string>
     {
         /** @type {string} **/
-        let devid = this._serial;
+        let devid: string = this._serial;
         if (devid == '') {
             devid = await this.get_serialNumber();
         }
         if (devid == YAPI_INVALID_STRING) {
             return '';
         }
-        let lockdev = this._yapi.imm_getDevice(devid);
+        let lockdev: YDevice|null = this._yapi.imm_getDevice(devid);
         if (!lockdev) {
             return '';
         }
@@ -5708,10 +5832,6 @@ export class YModule extends YFunction
 
     async _invokeBeaconCallback(beaconState: number): Promise<number>
     {
-        let dev = <YDevice>this._yapi.imm_getDevice(this._serial);
-        if (dev) {
-            dev._beacon = beaconState;
-        }
         if (this._beaconCallback != null) {
             try {
                 await this._beaconCallback(this, beaconState);
@@ -11836,6 +11956,10 @@ export class YAPIContext
     {
         if (this._beacons[str_serial] === undefined || this._beacons[str_serial] != int_beacon) {
             this._beacons[str_serial] = int_beacon;
+            let dev = this.imm_getDevice(str_serial);
+            if (dev) {
+                dev._beacon = int_beacon;
+            }
             let module = YModule.FindModuleInContext(this, str_serial + ".module");
             await module._invokeBeaconCallback(int_beacon);
         }
@@ -12357,7 +12481,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.51371';
+        return /* version number patched automatically */'1.10.52094';
     }
 
     /**

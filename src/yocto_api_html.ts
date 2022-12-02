@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 51289 2022-10-10 15:31:22Z mvuilleu $
+ * $Id: yocto_api_html.ts 51971 2022-11-30 16:39:09Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -277,7 +277,7 @@ class YHttpHtmlHub extends YGenericHub
         }
 
         let args = '?len=' + this.notiflen.toString();
-        if (this.notifPos > 0) {
+        if (this.notifPos >= 0) {
             args += '&abs=' + this.notifPos.toString();
         } else {
             this._firstArrivalCallback = true;

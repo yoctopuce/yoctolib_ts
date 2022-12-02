@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 49755 2022-05-13 09:48:35Z mvuilleu $
+ *  $Id: yocto_files.ts 51903 2022-11-29 17:25:59Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -181,7 +181,7 @@ export class YFiles extends YFunction {
      * call registerHub() at application initialization time.
      *
      * @param func : a string that uniquely characterizes the filesystem, for instance
-     *         YMAXBUZ1.files.
+     *         YRGBLED2.files.
      *
      * @return a YFiles object allowing you to drive the filesystem.
      */
@@ -215,7 +215,7 @@ export class YFiles extends YFunction {
      *
      * @param yctx : a YAPI context
      * @param func : a string that uniquely characterizes the filesystem, for instance
-     *         YMAXBUZ1.files.
+     *         YRGBLED2.files.
      *
      * @return a YFiles object allowing you to drive the filesystem.
      */
