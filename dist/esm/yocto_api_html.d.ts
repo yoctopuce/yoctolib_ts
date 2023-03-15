@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 51971 2022-11-30 16:39:09Z mvuilleu $
+ * $Id: yocto_api_html.ts 53248 2023-02-15 16:25:13Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 export * from "./yocto_api.js";
-import { YUnhandledPromiseRejectionCallback, _YY_UrlInfo, YSystemEnv, YGenericHub, YGenericSSDPManager, YAPIContext } from "./yocto_api.js";
+import { _YY_UrlInfo, YAPIContext, YGenericHub, YGenericSSDPManager, YSystemEnv, YUnhandledPromiseRejectionCallback } from "./yocto_api.js";
 /**
  * System environment definition, for use in a browser
  */

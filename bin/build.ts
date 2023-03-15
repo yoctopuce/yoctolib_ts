@@ -151,7 +151,7 @@ function cleanExamples()
                 }
                 if(fs.existsSync(modules)) {
                     console.log('Cleaning '+modules);
-                    fs.rmdirSync(modules, { recursive: true });
+                    fs.rmSync(modules, { recursive: true });
                 }
             }
         });

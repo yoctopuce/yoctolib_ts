@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
+ *  $Id: yocto_serialport.ts 52892 2023-01-25 10:13:30Z seb $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -900,16 +900,29 @@ export class YSerialPort extends YFunction
      */
     async read_avail(): Promise<number>
     {
-        let buff: Uint8Array;
-        let bufflen: number;
+        let availPosStr: string;
+        let atPos: number;
         let res: number;
+        let databin: Uint8Array;
 
-        buff = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
-        bufflen = (buff).length - 1;
-        while ((bufflen > 0) && (buff[bufflen] != 64)) {
-            bufflen = bufflen - 1;
-        }
-        res = this._yapi.imm_atoi((this._yapi.imm_bin2str(buff)).substr( 0, bufflen));
+        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        availPosStr = this._yapi.imm_bin2str(databin);
+        atPos = (availPosStr).indexOf('@');
+        res = this._yapi.imm_atoi((availPosStr).substr( 0, atPos));
+        return res;
+    }
+
+    async end_tell(): Promise<number>
+    {
+        let availPosStr: string;
+        let atPos: number;
+        let res: number;
+        let databin: Uint8Array;
+
+        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        availPosStr = this._yapi.imm_bin2str(databin);
+        atPos = (availPosStr).indexOf('@');
+        res = this._yapi.imm_atoi((availPosStr).substr( atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -927,13 +940,22 @@ export class YSerialPort extends YFunction
      */
     async queryLine(query: string, maxWait: number): Promise<string>
     {
+        let prevpos: number;
         let url: string;
         let msgbin: Uint8Array;
         let msgarr: string[] = [];
         let msglen: number;
         let res: string;
+        if ((query).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=!'+this.imm_escapeAttr(query);
+        } else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata', this._yapi.imm_str2bin(query + '\r\n'));
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+        }
 
-        url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=!'+this.imm_escapeAttr(query);
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -965,13 +987,22 @@ export class YSerialPort extends YFunction
      */
     async queryHex(hexString: string, maxWait: number): Promise<string>
     {
+        let prevpos: number;
         let url: string;
         let msgbin: Uint8Array;
         let msgarr: string[] = [];
         let msglen: number;
         let res: string;
+        if ((hexString).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=$'+hexString;
+        } else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata', this._yapi.imm_hexstr2bin(hexString));
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+        }
 
-        url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=$'+hexString;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1653,6 +1684,7 @@ export class YSerialPort extends YFunction
         let nib: number;
         let i: number;
         let cmd: string;
+        let prevpos: number;
         let url: string;
         let pat: string;
         let msgs: Uint8Array;
@@ -1670,8 +1702,16 @@ export class YSerialPort extends YFunction
             cmd = cmd+''+('00'+(((pduBytes[i]) & (0xff))).toString(16)).slice(-2).toUpperCase();
             i = i + 1;
         }
+        if ((cmd).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?cmd=:'+cmd+'&pat=:'+pat;
+        } else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata:', this._yapi.imm_hexstr2bin(cmd));
+            url = 'rxmsg.json?pos='+String(Math.round(prevpos))+'&maxw=2000&pat=:'+pat;
+        }
 
-        url = 'rxmsg.json?cmd=:'+cmd+'&pat=:'+pat;
         msgs = await this._download(url);
         reps = this.imm_json_get_array(msgs);
         if (!(reps.length > 1)) {
@@ -1837,6 +1877,9 @@ export class YSerialPort extends YFunction
         let regpos: number;
         let idx: number;
         let val: number;
+        if (!(nWords<=256)) {
+            return this._throw(this._yapi.INVALID_ARGUMENT,'Cannot read more than 256 words',res);
+        }
         pdu.push(0x03);
         pdu.push(((pduAddr) >> (8)));
         pdu.push(((pduAddr) & (0xff)));

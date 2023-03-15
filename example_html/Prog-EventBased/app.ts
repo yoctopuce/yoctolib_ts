@@ -39,6 +39,8 @@ function shtml(id: string, html: string)
 {
     let widget = wdg(id);
     if(widget) widget.innerHTML = html;
+    widget = wdg('lastUpdate');
+    if(widget) widget.innerHTML = 'Last update at '+(new Date().toLocaleString('sv-SE'))+': '+id;
 }
 
 async function valueChangeCallBack(obj_fct: YFunction, str_value: string): Promise<void>
@@ -79,6 +81,8 @@ async function deviceArrival(module: YModule): Promise<void>
         return;
     }
     (<HTMLElement>wdg('modules')).innerHTML += "<div id='"+serial+"'>Module "+serial+"<br></div>";
+    let widget = wdg('lastUpdate');
+    if(widget) widget.innerHTML = 'Last update at '+(new Date().toLocaleString('sv-SE'))+': '+serial+' plugged';
 
     // First solution: look for a specific type of function (eg. anButton)
     let fctcount: number = await module.functionCount();
@@ -117,6 +121,8 @@ async function deviceRemoval(module: YModule): Promise<void>
 {
     let serial = await module.get_serialNumber();
     (<HTMLElement>wdg(serial)).style.display = "none";
+    let widget = wdg('lastUpdate');
+    if(widget) widget.innerHTML = 'Last update at '+(new Date().toLocaleString('sv-SE'))+': '+serial+' unplugged';
 }
 
 function handleHotPlug()
@@ -126,12 +132,17 @@ function handleHotPlug()
 
 async function startDemo()
 {
+    // uncomment line below to get more debug information about plug, unplugs and requests in the console
+    //YAPI._logLevel = 4;
+    // uncomment line below to reduce traffic even more by relying entirely on plug/unplug events
+    YAPI.SetDeviceListValidity(3600);
+
     document.body.innerHTML = 'Trying to contact VirtualHub on local machine...';
     let errmsg = new YErrorMsg();
     if(await YAPI.PreregisterHub('127.0.0.1', errmsg) != YAPI.SUCCESS) {
         error('Cannot contact VirtualHub on 127.0.0.1: '+errmsg.msg);
     }
-    document.body.innerHTML = '<div id="modules"></div>';
+    document.body.innerHTML = '<div id="lastUpdate">Waiting for hub...</div><hr/><div id="modules"></div>';
 
     await YAPI.RegisterDeviceArrivalCallback(deviceArrival);
     await YAPI.RegisterDeviceRemovalCallback(deviceRemoval);

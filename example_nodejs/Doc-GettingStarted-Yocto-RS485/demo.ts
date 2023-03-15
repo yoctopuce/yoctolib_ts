@@ -68,8 +68,8 @@ async function handleInput(chunk: string): Promise<void>
                 target.slave = val;
                 g_step++;
                 console.log("Slave = " + target.slave);
-                console.log("Please select a Coil No (>=1), Input Bit No (>=10001+),");
-                console.log("       Register No (>=30001) or Input Register No (>=40001)");
+                console.log("Please select a Coil No (>=1), Input Bit No (>=10001),");
+                console.log("Input Register No (>=30001) or Holding Register No (>=40001)");
                 console.log("No: ");
             }
             break;
@@ -81,7 +81,7 @@ async function handleInput(chunk: string): Promise<void>
                 await printModbusValue(target.slave, target.reg);
                 g_step++;
                 console.log("Press ENTER to read again, Q to quit:");
-                if ((target.reg % 30000) < 10000) {
+                if ((target.reg % 40000) < 10000) {
                     console.log(" or enter a new value:");
                 }
             }
@@ -92,16 +92,16 @@ async function handleInput(chunk: string): Promise<void>
                 rl.close();
                 break;
             }
-            if (chunk.charAt(0) != 'r' && chunk.charAt(0) != 'R' && (target.reg % 30000) < 10000) {
-                if (target.reg >= 30001) {
-                    await serialPort.modbusWriteRegister(target.slave, target.reg - 30001, val);
+            if (chunk.charAt(0) != 'r' && chunk.charAt(0) != 'R' && (target.reg % 40000) < 10000) {
+                if (target.reg >= 40001) {
+                    await serialPort.modbusWriteRegister(target.slave, target.reg - 40001, val);
                 } else {
                     await serialPort.modbusWriteBit(target.slave, target.reg - 1, val);
                 }
             }
             await printModbusValue(target.slave, target.reg);
             console.log("Press R to read again, Q to quit");
-            if ((target.reg % 30000) < 10000) {
+            if ((target.reg % 40000) < 10000) {
                 console.log(" or enter a new value");
             }
             console.log(": ");

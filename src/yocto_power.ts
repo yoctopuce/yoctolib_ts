@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_power.ts 53420 2023-03-06 10:38:51Z mvuilleu $
  *
  *  Implements the high-level API for Power functions
  *
@@ -54,6 +54,7 @@ export class YPower extends YSensor
 {
     //--- (YPower attributes declaration)
     _className: string;
+    _powerFactor: number = YPower.POWERFACTOR_INVALID;
     _cosPhi: number = YPower.COSPHI_INVALID;
     _meter: number = YPower.METER_INVALID;
     _deliveredEnergyMeter: number = YPower.DELIVEREDENERGYMETER_INVALID;
@@ -63,6 +64,7 @@ export class YPower extends YSensor
     _timedReportCallbackPower: YPower.TimedReportCallback | null = null;
 
     // API symbols as object properties
+    public readonly POWERFACTOR_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly COSPHI_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly METER_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly DELIVEREDENERGYMETER_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -70,6 +72,7 @@ export class YPower extends YSensor
     public readonly METERTIMER_INVALID: number = YAPI.INVALID_UINT;
 
     // API symbols as static members
+    public static readonly POWERFACTOR_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly COSPHI_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly METER_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly DELIVEREDENERGYMETER_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -90,6 +93,9 @@ export class YPower extends YSensor
     imm_parseAttr(name: string, val: any)
     {
         switch(name) {
+        case 'powerFactor':
+            this._powerFactor = <number> Math.round(<number>val / 65.536) / 1000.0;
+            return 1;
         case 'cosPhi':
             this._cosPhi = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -110,11 +116,36 @@ export class YPower extends YSensor
     }
 
     /**
-     * Returns the power factor (the ratio between the real power consumed,
-     * measured in W, and the apparent power provided, measured in VA).
+     * Returns the power factor (PF), i.e. ratio between the active power consumed (in W)
+     * and the apparent power provided (VA).
      *
-     * @return a floating point number corresponding to the power factor (the ratio between the real power consumed,
-     *         measured in W, and the apparent power provided, measured in VA)
+     * @return a floating point number corresponding to the power factor (PF), i.e
+     *
+     * On failure, throws an exception or returns YPower.POWERFACTOR_INVALID.
+     */
+    async get_powerFactor(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YPower.POWERFACTOR_INVALID;
+            }
+        }
+        res = this._powerFactor;
+        if (res == YPower.POWERFACTOR_INVALID) {
+            res = this._cosPhi;
+        }
+        res = Math.round(res * 1000) / 1000;
+        return res;
+    }
+
+    /**
+     * Returns the Displacement Power factor (DPF), i.e. cosine of the phase shift between
+     * the voltage and current fundamentals.
+     * On the Yocto-Watt (V1), the value returned by this method correponds to the
+     * power factor as this device is cannot estimate the true DPF.
+     *
+     * @return a floating point number corresponding to the Displacement Power factor (DPF), i.e
      *
      * On failure, throws an exception or returns YPower.COSPHI_INVALID.
      */
@@ -138,12 +169,14 @@ export class YPower extends YSensor
     }
 
     /**
-     * Returns the energy counter, maintained by the wattmeter by integrating the power consumption over time,
-     * but only when positive. Note that this counter is reset at each start of the device.
+     * Returns the energy counter, maintained by the wattmeter by integrating the
+     * power consumption over time. This is the sum of forward and backwad energy transfers,
+     * if you are insterested in only one direction, use  get_receivedEnergyMeter() or
+     * get_deliveredEnergyMeter(). Note that this counter is reset at each start of the device.
      *
      * @return a floating point number corresponding to the energy counter, maintained by the wattmeter by
-     * integrating the power consumption over time,
-     *         but only when positive
+     * integrating the
+     *         power consumption over time
      *
      * On failure, throws an exception or returns YPower.METER_INVALID.
      */

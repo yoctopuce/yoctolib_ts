@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 51971 2022-11-30 16:39:09Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 53436 2023-03-06 17:28:56Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -40,19 +40,18 @@
 export * from "./yocto_api.js";
 
 import {
-    YUnhandledPromiseRejectionCallback,
     _YY_UrlInfo,
-    YConditionalResult,
+    Y_YHubConnType,
+    YAPI,
+    YAPI_SUCCESS, YAPI_UNAUTHORIZED,
+    YAPIContext, YConditionalResult,
+    YErrorMsg,
+    YGenericHub, YHttpHub, YWebSocketHub,
+    YGenericSSDPManager,
     YHTTPBody,
     YHTTPRequest,
-    YErrorMsg,
     YSystemEnv,
-    Y_YHubType,
-    YGenericHub,
-    YWebSocketHub,
-    YGenericSSDPManager,
-    YAPIContext,
-    YAPI, YAPI_SUCCESS
+    YUnhandledPromiseRejectionCallback,
 } from "./yocto_api.js";
 
 import 'process';
@@ -183,27 +182,24 @@ class YHttpCallbackHub extends YGenericHub
 
     /** Test input data for a HTTP callback hub
      *
-     * @param mstimeout {number}
-     * @param errmsg {YErrorMsg}
-     * @returns {number}
      */
-    async testHub(mstimeout: number, errmsg: YErrorMsg): Promise<number>
+    async reconnect(tryOpenID: string): Promise<void>
     {
         await this.httpCallbackPromise;
         if(this._incomingMessage.method != 'POST') {
-            errmsg.msg = 'HTTP POST expected';
-            return YAPI.INVALID_ARGUMENT;
+            this.imm_commonDisconnect(tryOpenID, YAPI.INVALID_ARGUMENT, 'HTTP POST expected');
+            return;
         }
         if(this._callbackData.length == 0) {
-            errmsg.msg = 'Empty POST body';
-            return YAPI.NO_MORE_DATA;
+            this.imm_commonDisconnect(tryOpenID, YAPI.NO_MORE_DATA, 'Empty POST body');
+            return;
         }
         if (this.urlInfo.pass != '') {
             // callback data signed, verify signature
             if (!this._callbackCache.sign) {
-                errmsg.msg = 'missing signature from incoming YoctoHub (callback password required)';
+                this.imm_commonDisconnect(tryOpenID, YAPI.NO_MORE_DATA, 'missing signature from incoming YoctoHub (callback password required)');
                 this._callbackCache = { sign: '' };
-                return YAPI.NO_MORE_DATA;
+                return;
             }
             let sign = this._callbackCache.sign;
             let pass = this.urlInfo.pass;
@@ -218,15 +214,19 @@ class YHttpCallbackHub extends YGenericHub
             if (check.toLowerCase() != sign.toLowerCase()) {
                 //this._yapi.imm_log('Computed signature: '+ check);
                 //this._yapi.imm_log('Received signature: '+ sign);
-                errmsg.msg = 'invalid signature from incoming YoctoHub (invalid callback password)';
+                this.imm_commonDisconnect(tryOpenID, YAPI.UNAUTHORIZED, 'invalid signature from incoming YoctoHub (invalid callback password)');
                 this._callbackCache = { sign: '' };
-                return YAPI.UNAUTHORIZED;
+                return;
             }
         }
-        if(!this._hubAdded) {
-            await this.signalHubConnected();
+        if(this._currentState < Y_YHubConnType.HUB_CONNECTED) {
+            if(this._callbackCache.serial) {
+                this.hubSerial = this._callbackCache.serial as string;
+            } else {
+                this.hubSerial = (this._callbackCache as any)['/api.json']['module']['serialNumber'];
+            }
+            await this.signalHubConnected(tryOpenID, this.hubSerial);
         }
-        return YAPI.SUCCESS;
     }
 
     /** Perform an HTTP query on the hub
@@ -292,12 +292,9 @@ class YHttpCallbackHub extends YGenericHub
     }
 }
 
-class YHttpNodeHub extends YGenericHub
+class YHttpNodeHub extends YHttpHub
 {
     agent: http.Agent;
-    notbynRequest: http.ClientRequest | null              = null;
-    notbynOpenPromise: Promise<YConditionalResult> | null = null;
-    notbynOpenTimeoutObj: any = null;   /* actually a number | NodeJS.Timeout */
 
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo)
     {
@@ -305,164 +302,100 @@ class YHttpNodeHub extends YGenericHub
         this.agent = new http.Agent({ keepAlive: true });
     }
 
-    /** Handle HTTP-based event-monitoring work on a registered hub
-     *
-     * @param mstimeout {number}
-     * @param errmsg {YErrorMsg}
-     * @returns {number}
-     */
-    async testHub(mstimeout: number, errmsg: YErrorMsg): Promise<number>
-    {
-        if (this.disconnecting) {
-            if(errmsg) {
-                errmsg.msg = "I/O error";
-            }
-            return YAPI.IO_ERROR;
-        }
-        let args = '';
-        if (this.notifPos >= 0) {
-            args = '?abs=' + this.notifPos.toString();
-        } else {
-            this._firstArrivalCallback = true;
-        }
-        let options = {
-            method: 'GET',
-            hostname: this.urlInfo.host,
-            port: this.urlInfo.port,
-            path: '/' + this.urlInfo.domain + 'not.byn' + args
-        };
-        if(!this.notbynOpenPromise) {
-            this.notbynOpenTimeout = (mstimeout ? this._yapi.GetTickCount() + mstimeout : null);
-            this.notbynOpenPromise = new Promise(
-                (resolve, reject) => {
-                    if (mstimeout) {
-                        this.notbynOpenTimeoutObj = setTimeout(() => {
-                            resolve({errorType: YAPI.TIMEOUT, errorMsg: "Timeout on HTTP connection"});
-                            this.disconnect();
-                        }, mstimeout);
-                    }
-                    this.notbynTryOpen = () => {
-                        this.notbynRequest = http.request(options, (res: http.IncomingMessage) => {
-                            if (this.disconnecting) {
-                                return;
-                            }
-                            if (res.statusCode == 401) {
-                                resolve({ errorType: YAPI.UNAUTHORIZED, errorMsg: "Unauthorized access (use WebSocket for authentication)" });
-                            }
-                            if (res.statusCode != 200 && res.statusCode != 304) {
-                                // connection error
-                                if (!this.imm_testHubAgainLater()) {
-                                    resolve({ errorType: YAPI.IO_ERROR, errorMsg: "I/O error" });
-                                }
-                            } else {
-                                res.on('data', (chunk: Uint8Array) => {
-                                    // receiving data properly
-                                    this._yapi.parseEvents(this, this._yapi.imm_bin2str(chunk));
-                                });
-                                res.on('end', () => {
-                                    // trigger immediately a new connection if closed in success
-                                    this.notbynOpenPromise = null;
-                                    this.currPos = 0;
-                                    this.testHub(0, errmsg);
-                                });
-                                if(!this._hubAdded) {
-                                    // registration is now complete
-                                    if (this.notbynOpenTimeoutObj) {
-                                        clearTimeout(this.notbynOpenTimeoutObj);
-                                        this.notbynOpenTimeoutObj = null;
-                                    }
-                                    this.signalHubConnected().then(() => {
-                                        resolve({ errorType: YAPI_SUCCESS, errorMsg: "" });
-                                    });
-                                }
-                            }
-                        });
-                        this.notbynRequest.on('error', () => {
-                            // connection aborted, need to reconnect ASAP
-                            if (!this.imm_testHubAgainLater()) {
-                                resolve({ errorType: YAPI.IO_ERROR, errorMsg: "I/O error" });
-                            }
-                        });
-                        this.notbynRequest.end();
-                    };
-                    this.notbynTryOpen();
-                }
-            );
-        }
-        let res_struct = await this.notbynOpenPromise;
-        if (errmsg) {
-            errmsg.msg = res_struct.errorMsg;
-        }
-        this.notbynOpenPromise = null;
-        return res_struct.errorType;
-    }
-
-    /** Perform an HTTP query on the hub
-     *
-     * @param str_method {string}
-     * @param devUrl {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param tcpchan {number}
-     * @returns {YHTTPRequest}
-     */
-    async request(str_method: string, devUrl: string, obj_body: YHTTPBody|null, tcpchan: number): Promise<YHTTPRequest>
+    // Low-level function to create an HTTP client request (abstraction layer)
+    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | null,
+                    onProgress: null | ((moreText: string) => void),
+                    onSuccess: null | ((responseText: string) => void),
+                    onError: (errorType: number, errorMsg: string) => void): http.ClientRequest
     {
         let options: http.RequestOptions = {
             agent: this.agent,
-            method: str_method,
+            method: method,
             hostname: this.urlInfo.host,
             port: this.urlInfo.port,
-            path: '/' + this.urlInfo.domain + devUrl.slice(1)
+            path: '/' + this.urlInfo.domain + relUrl,
+            headers: { 'Content-Type': contentType }
         };
-        let boundary = '';
-        if(obj_body) {
-            boundary = this.imm_getBoundary();
-            options.headers = {
-                'Content-Type': 'multipart/form-data; boundary='+boundary,
-                'Transfer-Encoding': ''
-            };
+        let bodyBuff: Buffer|null = null;
+        if(body !== null) {
+            bodyBuff = Buffer.from(body);
+            if(options.headers) {
+                options.headers['Content-Length'] = bodyBuff.length;
+            }
         }
-        let httpPromise = new Promise<YHTTPRequest>(
-            (resolve, reject) => {
-                let response = Buffer.alloc(0);
-                let httpRequest = http.request(options, (res: http.IncomingMessage) => {
-                    if(res.statusCode != 200 && res.statusCode != 304) {
-                        // connection error
-                        let yreq = new YHTTPRequest(null);
-                        yreq.errorType = (res.statusCode == 401 ? YAPI.UNAUTHORIZED : YAPI.NOT_SUPPORTED);
-                        yreq.errorMsg = 'HTTP Error '+res.statusCode+' on '+this.urlInfo.url.slice(0,-1)+devUrl;
-                        resolve(yreq);
-                    } else {
-                        res.on('data', (chunk: Buffer) => {
-                            // receiving data properly
-                            response = Buffer.concat([response,chunk]);
-                        });
-                        res.on('end', () => {
-                            resolve(new YHTTPRequest(new Uint8Array(response)));
-                        })
+        // FIXME: should implement digest authentication for basic HTTP
+
+        let response: Buffer = Buffer.alloc(0);
+        let endReceived: Boolean = false;
+        let closeWithoutEndTimeout: NodeJS.Timeout|null = null;
+        let httpRequest: http.ClientRequest = http.request(options, (res: http.IncomingMessage) => {
+            if (this.imm_isDisconnecting()) {
+                return;
+            }
+            if(res.statusCode == 200 || res.statusCode == 304) {
+                res.on('data', (chunk: Buffer) => {
+                    if (this.imm_isDisconnecting()) {
+                        return;
+                    }
+                    // receiving data properly
+                    if(onProgress) {
+                        onProgress(chunk.toString());
+                    }
+                    if(onSuccess) {
+                        response = Buffer.concat([response, chunk]);
                     }
                 });
-                httpRequest.on('error', (err: Error) => {
-                    let yreq = new YHTTPRequest(null);
-                    yreq.errorType = YAPI.IO_ERROR;
-                    yreq.errorMsg = err.message;
-                    resolve(yreq);
-                });
-                if(obj_body) {
-                    httpRequest.write(Buffer.from(this.imm_formEncodeBody(obj_body, boundary)));
-                }
-                httpRequest.end();
+                res.on('end', () => {
+                    endReceived = true;
+                    if (closeWithoutEndTimeout) {
+                        clearTimeout(closeWithoutEndTimeout);
+                        closeWithoutEndTimeout = null;
+                    }
+                    if (this.imm_isDisconnecting()) {
+                        return;
+                    }
+                    if(onSuccess) {
+                        onSuccess(response.toString('latin1'));
+                    }
+                })
+            } else if(res.statusCode == 401 || res.statusCode == 204) {
+                // Authentication failure (204 == x-yauth)
+                this.infoJson.stamp = 0; // force to reload nonce/domain
+                onError(YAPI.UNAUTHORIZED, 'Unauthorized access ('+res.statusCode+')');
+            } else if(res.statusCode == 404) {
+                // No such file
+                onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)');
+            } else {
+                onError(YAPI.IO_ERROR, 'HTTP request failed with status '+res.statusCode);
             }
-        );
-        return httpPromise;
+        });
+        httpRequest.on('close', () => {
+            if(!endReceived) {
+                if (httpRequest.destroyed) {
+                    onError(YAPI.IO_ERROR, 'HTTP request aborted');
+                } else {
+                    // Allow 100ms to receive a proper 'end' event, or declare the request as aborted
+                    // This should normally not be needed, but better safe than sorry
+                    closeWithoutEndTimeout = setTimeout(() => {
+                        onError(YAPI.IO_ERROR, 'HTTP request closed unexpectedly');
+                    }, 100);
+                }
+            }
+        });
+        httpRequest.on('error', (err: Error) => {
+            onError(YAPI.IO_ERROR, 'HTTP request failed: '+err.message);
+        });
+        if(bodyBuff !== null) {
+            httpRequest.write(bodyBuff);
+        }
+        httpRequest.end();
+        return httpRequest;
     }
 
-    async disconnect(): Promise<void>
+    // abort communication channel immediately
+    imm_abortRequest(clientRequest: any): void
     {
-        this.imm_commonDisconnect();
-        if(this.notbynRequest) {
-            this.notbynRequest.destroy();
-        }
+        (<http.ClientRequest> clientRequest).destroy();
     }
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 51971 2022-11-30 16:39:09Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 53436 2023-03-06 17:28:56Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -38,7 +38,7 @@
  *********************************************************************/
 /// <reference types="node" />
 export * from "./yocto_api.js";
-import { YUnhandledPromiseRejectionCallback, _YY_UrlInfo, YSystemEnv, YGenericHub, YGenericSSDPManager, YAPIContext } from "./yocto_api.js";
+import { _YY_UrlInfo, YAPIContext, YGenericHub, YGenericSSDPManager, YSystemEnv, YUnhandledPromiseRejectionCallback } from "./yocto_api.js";
 import 'process';
 import * as dgram from 'dgram';
 import * as http from 'http';

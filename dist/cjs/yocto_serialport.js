@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
+ *  $Id: yocto_serialport.ts 52892 2023-01-25 10:13:30Z seb $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -787,15 +787,25 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * @return the number of bytes available to read
      */
     async read_avail() {
-        let buff;
-        let bufflen;
+        let availPosStr;
+        let atPos;
         let res;
-        buff = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
-        bufflen = (buff).length - 1;
-        while ((bufflen > 0) && (buff[bufflen] != 64)) {
-            bufflen = bufflen - 1;
-        }
-        res = this._yapi.imm_atoi((this._yapi.imm_bin2str(buff)).substr(0, bufflen));
+        let databin;
+        databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
+        availPosStr = this._yapi.imm_bin2str(databin);
+        atPos = (availPosStr).indexOf('@');
+        res = this._yapi.imm_atoi((availPosStr).substr(0, atPos));
+        return res;
+    }
+    async end_tell() {
+        let availPosStr;
+        let atPos;
+        let res;
+        let databin;
+        databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
+        availPosStr = this._yapi.imm_bin2str(databin);
+        atPos = (availPosStr).indexOf('@');
+        res = this._yapi.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
         return res;
     }
     /**
@@ -811,12 +821,22 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * On failure, throws an exception or returns an empty string.
      */
     async queryLine(query, maxWait) {
+        let prevpos;
         let url;
         let msgbin;
         let msgarr = [];
         let msglen;
         let res;
-        url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=!' + this.imm_escapeAttr(query);
+        if ((query).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=!' + this.imm_escapeAttr(query);
+        }
+        else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata', this._yapi.imm_str2bin(query + '\r\n'));
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&pos=' + String(Math.round(prevpos));
+        }
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -846,12 +866,22 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * On failure, throws an exception or returns an empty string.
      */
     async queryHex(hexString, maxWait) {
+        let prevpos;
         let url;
         let msgbin;
         let msgarr = [];
         let msglen;
         let res;
-        url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=$' + hexString;
+        if ((hexString).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=$' + hexString;
+        }
+        else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata', this._yapi.imm_hexstr2bin(hexString));
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&pos=' + String(Math.round(prevpos));
+        }
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1480,6 +1510,7 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         let nib;
         let i;
         let cmd;
+        let prevpos;
         let url;
         let pat;
         let msgs;
@@ -1497,7 +1528,16 @@ class YSerialPort extends yocto_api_js_1.YFunction {
             cmd = cmd + '' + ('00' + (((pduBytes[i]) & (0xff))).toString(16)).slice(-2).toUpperCase();
             i = i + 1;
         }
-        url = 'rxmsg.json?cmd=:' + cmd + '&pat=:' + pat;
+        if ((cmd).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?cmd=:' + cmd + '&pat=:' + pat;
+        }
+        else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata:', this._yapi.imm_hexstr2bin(cmd));
+            url = 'rxmsg.json?pos=' + String(Math.round(prevpos)) + '&maxw=2000&pat=:' + pat;
+        }
         msgs = await this._download(url);
         reps = this.imm_json_get_array(msgs);
         if (!(reps.length > 1)) {
@@ -1659,6 +1699,9 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         let regpos;
         let idx;
         let val;
+        if (!(nWords <= 256)) {
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Cannot read more than 256 words', res);
+        }
         pdu.push(0x03);
         pdu.push(((pduAddr) >> (8)));
         pdu.push(((pduAddr) & (0xff)));

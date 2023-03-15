@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_i2cport.ts 52943 2023-01-26 15:46:47Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -858,16 +858,29 @@ export class YI2cPort extends YFunction
      */
     async read_avail(): Promise<number>
     {
-        let buff: Uint8Array;
-        let bufflen: number;
+        let availPosStr: string;
+        let atPos: number;
         let res: number;
+        let databin: Uint8Array;
 
-        buff = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
-        bufflen = (buff).length - 1;
-        while ((bufflen > 0) && (buff[bufflen] != 64)) {
-            bufflen = bufflen - 1;
-        }
-        res = this._yapi.imm_atoi((this._yapi.imm_bin2str(buff)).substr( 0, bufflen));
+        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        availPosStr = this._yapi.imm_bin2str(databin);
+        atPos = (availPosStr).indexOf('@');
+        res = this._yapi.imm_atoi((availPosStr).substr( 0, atPos));
+        return res;
+    }
+
+    async end_tell(): Promise<number>
+    {
+        let availPosStr: string;
+        let atPos: number;
+        let res: number;
+        let databin: Uint8Array;
+
+        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        availPosStr = this._yapi.imm_bin2str(databin);
+        atPos = (availPosStr).indexOf('@');
+        res = this._yapi.imm_atoi((availPosStr).substr( atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -885,13 +898,22 @@ export class YI2cPort extends YFunction
      */
     async queryLine(query: string, maxWait: number): Promise<string>
     {
+        let prevpos: number;
         let url: string;
         let msgbin: Uint8Array;
         let msgarr: string[] = [];
         let msglen: number;
         let res: string;
+        if ((query).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=!'+this.imm_escapeAttr(query);
+        } else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata', this._yapi.imm_str2bin(query + '\r\n'));
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+        }
 
-        url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=!'+this.imm_escapeAttr(query);
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -923,13 +945,22 @@ export class YI2cPort extends YFunction
      */
     async queryHex(hexString: string, maxWait: number): Promise<string>
     {
+        let prevpos: number;
         let url: string;
         let msgbin: Uint8Array;
         let msgarr: string[] = [];
         let msglen: number;
         let res: string;
+        if ((hexString).length <= 80) {
+            // fast query
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=$'+hexString;
+        } else {
+            // long query
+            prevpos = await this.end_tell();
+            await this._upload('txdata', this._yapi.imm_hexstr2bin(hexString));
+            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+        }
 
-        url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=$'+hexString;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1100,6 +1131,10 @@ export class YI2cPort extends YFunction
         let msg: string;
         let reply: string;
         let rcvbytes: Uint8Array;
+        rcvbytes = new Uint8Array(0);
+        if (!(rcvCount<=512)) {
+            return this._throw(this._yapi.INVALID_ARGUMENT,'Cannot read more than 512 bytes',rcvbytes);
+        }
         msg = '@'+('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase()+':';
         nBytes = (buff).length;
         idx = 0;
@@ -1109,13 +1144,22 @@ export class YI2cPort extends YFunction
             idx = idx + 1;
         }
         idx = 0;
+        if (rcvCount > 54) {
+            while (rcvCount - idx > 255) {
+                msg = msg+'xx*FF';
+                idx = idx + 255;
+            }
+            if (rcvCount - idx > 2) {
+                msg = msg+'xx*'+('00'+((rcvCount - idx)).toString(16)).slice(-2).toUpperCase();
+                idx = rcvCount;
+            }
+        }
         while (idx < rcvCount) {
             msg = msg+'xx';
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
-        rcvbytes = new Uint8Array(0);
         if (!((reply).length > 0)) {
             return this._throw(this._yapi.IO_ERROR,'No response from I2C device',rcvbytes);
         }
@@ -1154,6 +1198,10 @@ export class YI2cPort extends YFunction
         let reply: string;
         let rcvbytes: Uint8Array;
         let res: number[] = [];
+        res.length = 0;
+        if (!(rcvCount<=512)) {
+            return this._throw(this._yapi.INVALID_ARGUMENT,'Cannot read more than 512 bytes',res);
+        }
         msg = '@'+('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase()+':';
         nBytes = values.length;
         idx = 0;
@@ -1163,6 +1211,16 @@ export class YI2cPort extends YFunction
             idx = idx + 1;
         }
         idx = 0;
+        if (rcvCount > 54) {
+            while (rcvCount - idx > 255) {
+                msg = msg+'xx*FF';
+                idx = idx + 255;
+            }
+            if (rcvCount - idx > 2) {
+                msg = msg+'xx*'+('00'+((rcvCount - idx)).toString(16)).slice(-2).toUpperCase();
+                idx = rcvCount;
+            }
+        }
         while (idx < rcvCount) {
             msg = msg+'xx';
             idx = idx + 1;

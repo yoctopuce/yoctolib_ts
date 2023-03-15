@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 49385 2022-04-06 00:49:27Z mvuilleu $
+ *  $Id: yocto_network.ts 53420 2023-03-06 10:38:51Z mvuilleu $
  *
  *  Implements the high-level API for Network functions
  *
@@ -65,6 +65,7 @@ export declare class YNetwork extends YFunction {
     _callbackUrl: string;
     _callbackMethod: YNetwork.CALLBACKMETHOD;
     _callbackEncoding: YNetwork.CALLBACKENCODING;
+    _callbackTemplate: YNetwork.CALLBACKTEMPLATE;
     _callbackCredentials: string;
     _callbackInitialDelay: number;
     _callbackSchedule: string;
@@ -114,6 +115,9 @@ export declare class YNetwork extends YFunction {
     readonly CALLBACKENCODING_PRTG: YNetwork.CALLBACKENCODING;
     readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork.CALLBACKENCODING;
     readonly CALLBACKENCODING_INVALID: YNetwork.CALLBACKENCODING;
+    readonly CALLBACKTEMPLATE_OFF: YNetwork.CALLBACKTEMPLATE;
+    readonly CALLBACKTEMPLATE_ON: YNetwork.CALLBACKTEMPLATE;
+    readonly CALLBACKTEMPLATE_INVALID: YNetwork.CALLBACKTEMPLATE;
     readonly CALLBACKCREDENTIALS_INVALID: string;
     readonly CALLBACKINITIALDELAY_INVALID: number;
     readonly CALLBACKSCHEDULE_INVALID: string;
@@ -162,6 +166,9 @@ export declare class YNetwork extends YFunction {
     static readonly CALLBACKENCODING_PRTG: YNetwork.CALLBACKENCODING;
     static readonly CALLBACKENCODING_INFLUXDB_V2: YNetwork.CALLBACKENCODING;
     static readonly CALLBACKENCODING_INVALID: YNetwork.CALLBACKENCODING;
+    static readonly CALLBACKTEMPLATE_OFF: YNetwork.CALLBACKTEMPLATE;
+    static readonly CALLBACKTEMPLATE_ON: YNetwork.CALLBACKTEMPLATE;
+    static readonly CALLBACKTEMPLATE_INVALID: YNetwork.CALLBACKTEMPLATE;
     static readonly CALLBACKCREDENTIALS_INVALID: string;
     static readonly CALLBACKINITIALDELAY_INVALID: number;
     static readonly CALLBACKSCHEDULE_INVALID: string;
@@ -540,6 +547,32 @@ export declare class YNetwork extends YFunction {
      */
     set_callbackEncoding(newval: YNetwork.CALLBACKENCODING): Promise<number>;
     /**
+     * Returns the activation state of the custom template file to customize callback
+     * format. If the custom callback template is disabled, it will be ignored even
+     * if present on the YoctoHub.
+     *
+     * @return either YNetwork.CALLBACKTEMPLATE_OFF or YNetwork.CALLBACKTEMPLATE_ON, according to the
+     * activation state of the custom template file to customize callback
+     *         format
+     *
+     * On failure, throws an exception or returns YNetwork.CALLBACKTEMPLATE_INVALID.
+     */
+    get_callbackTemplate(): Promise<YNetwork.CALLBACKTEMPLATE>;
+    /**
+     * Enable the use of a template file to customize callbacks format.
+     * When the custom callback template file is enabled, the template file
+     * will be loaded for each callback in order to build the data to post to the
+     * server. If template file does not exist on the YoctoHub, the callback will
+     * fail with an error message indicating the name of the expected template file.
+     *
+     * @param newval : either YNetwork.CALLBACKTEMPLATE_OFF or YNetwork.CALLBACKTEMPLATE_ON
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_callbackTemplate(newval: YNetwork.CALLBACKTEMPLATE): Promise<number>;
+    /**
      * Returns a hashed version of the notification callback credentials if set,
      * or an empty string otherwise.
      *
@@ -882,6 +915,11 @@ export declare namespace YNetwork {
         YOCTO_API_JZON = 10,
         PRTG = 11,
         INFLUXDB_V2 = 12,
+        INVALID = -1
+    }
+    const enum CALLBACKTEMPLATE {
+        OFF = 0,
+        ON = 1,
         INVALID = -1
     }
     interface ValueCallback {

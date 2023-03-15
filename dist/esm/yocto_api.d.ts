@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 51903 2022-11-29 17:25:59Z mvuilleu $
+ * $Id: yocto_api.ts 53466 2023-03-07 18:46:15Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -91,10 +91,23 @@ export interface YDeviceUpdateCallback {
 export interface YUnhandledPromiseRejectionCallback {
     (reason: object, promise: PromiseLike<any>): void;
 }
+export interface _YY_UrlInfo {
+    proto: string;
+    user: string;
+    pass: string;
+    host: string;
+    port: string;
+    domain: string;
+    authUrl: string;
+    rootUrl: string;
+}
 export interface YConditionalResult {
     errorType: number;
     errorMsg: string;
     result?: string;
+}
+export interface YConditionalResultResolver {
+    (result: YConditionalResult): void;
 }
 export interface WebSocketCredential {
     user: string;
@@ -112,14 +125,17 @@ interface YIntDict {
 interface YDeviceDict {
     [ident: string]: YDevice;
 }
+interface YGenericHubDict {
+    [ident: string]: YGenericHub;
+}
 interface YFunctionTypeDict {
     [ident: string]: YFunctionType;
 }
 interface YDataStreamDict {
     [ident: string]: YDataStream;
 }
-interface YGenericHubDict {
-    [ident: string]: YGenericHub;
+interface YUrlInfoDict {
+    [ident: string]: _YY_UrlInfo;
 }
 declare class YFunctionType {
     private _yapi;
@@ -297,15 +313,6 @@ interface _YY_Services {
 interface _YY_HubApi {
     module: _YY_Module;
     services: _YY_Services;
-}
-export interface _YY_UrlInfo {
-    proto: string;
-    user: string;
-    pass: string;
-    host: string;
-    port: string;
-    domain: string;
-    url: string;
 }
 /**
  * YDataStream Class: Unformatted data sequence
@@ -652,7 +659,7 @@ export declare class YDataSet {
      */
     get_progress(): Promise<number>;
     /**
-     * Loads the the next block of measures from the dataLogger, and updates
+     * Loads the next block of measures from the dataLogger, and updates
      * the progress indicator.
      *
      * @return an integer in the range 0 to 100 (percentage of completion),
@@ -3223,57 +3230,114 @@ export declare class YSystemEnv {
     loadfile(file: string | Blob): Promise<Uint8Array>;
     downloadfile(url: string): Promise<Uint8Array>;
 }
-export declare const enum Y_YHubType {
-    HUB_REGISTERED = 0,
+export declare const enum Y_YHubConnType {
+    HUB_UNKNOWN = -6,
+    HUB_DETACHED = -5,
+    HUB_DETACHING = -4,
+    HUB_DISCONNECTED = -3,
+    HUB_DISCONNECTING = -2,
+    HUB_CONNECTING = -1,
+    HUB_CONNECTED = 0,
     HUB_PREREGISTERED = 1,
-    HUB_TESTONLY = 2
+    HUB_REGISTERED = 2,
+    HUB_CALLBACK = 3
 }
 export declare abstract class YGenericHub {
-    /** @member {YAPIContext} **/
     _yapi: YAPIContext;
     _lastErrorType: number;
     _lastErrorMsg: string;
     urlInfo: _YY_UrlInfo;
-    notiflen: number;
-    lastPingStamp: number;
+    hubSerial: string;
+    aliases: YUrlInfoDict;
+    serialByYdx: string[];
+    _currentState: Y_YHubConnType;
+    _targetState: Y_YHubConnType;
+    currentConnID: string;
+    connResolvers: YConditionalResultResolver[];
+    disconnResolvers: YConditionalResultResolver[];
+    retryDelay: number;
+    _reconnectionTimer: any;
+    _rwAccess: boolean | null;
+    keepTryingExpiration: number;
+    keepTryingTimeoutId: any;
+    stalledTimeoutMs: number;
     timeoutId: any;
+    lastPingStamp: number;
     isNotifWorking: boolean;
     devListExpires: number;
-    serialByYdx: string[];
-    retryDelay: number;
     notifPos: number;
     notifCarryOver: string;
-    currPos: number;
     missing: object;
-    disconnecting: boolean;
-    notbynOpenTimeout: number | null;
-    notbynTryOpen: {
-        (): void;
-    } | null;
-    _reconnectionTimer: any;
     _firstArrivalCallback: boolean;
     _missing: YBoolDict;
-    _rwAccess: boolean | null;
-    _hubAdded: boolean;
-    _connectionType: Y_YHubType;
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
-    imm_setConnectionType(hubtype: Y_YHubType): void;
     imm_forceUpdate(): void;
     imm_logrequest(method: string, devUrl: string, obj_body: YHTTPBody | null): void;
-    /** Make sure the hub can work properly
+    imm_setState(newState: Y_YHubConnType): void;
+    imm_setTargetState(newState: Y_YHubConnType): void;
+    imm_isDisconnecting(): boolean;
+    imm_isDisconnected(): boolean;
+    imm_isPreOrRegistered(): boolean;
+    imm_isOnline(): boolean;
+    imm_isForwarded(): boolean;
+    imm_updateUrl(urlInfo: _YY_UrlInfo): void;
+    imm_inheritAliasesFrom(otherHub: YGenericHub): void;
+    imm_getNewConnID(): string;
+    imm_tryTestConnectFor(mstimeout: number): void;
+    /** Trigger the setup of a connection to the target hub, and return.
+     * This method uses a connection helper that is overriden by each type of hub.
+     *
+     * @param targetConnType {Y_YHubConnType}
+     */
+    attach(targetConnType: Y_YHubConnType): Promise<void>;
+    /** Wait until the connection to the hub is established
      *
      * @param mstimeout {number}
      * @param errmsg {YErrorMsg}
      * @returns {number}
      */
-    testHub(mstimeout: number, errmsg: YErrorMsg): Promise<number>;
-    /** Handle successful hub connection (including preregisterhub handling)
+    waitForConnection(mstimeout: number, errmsg: YErrorMsg): Promise<number>;
+    /** Attempt to establish a connection to the hub asynchronously.
+     *
+     * On success, this method should call this.signalHubConnected()
+     * On temporary failure, this method should call this.imm_signalHubDisconnected()
+     * On fatal failure, this method should call this.imm_commonDisconnect()
+     *
+     * This method is supposed to be redefined by subclasses
      */
-    signalHubConnected(): Promise<void>;
-    imm_testHubAgainLater(): boolean;
+    reconnect(tryOpenID: string): Promise<void>;
+    /** Invoked by this.reconnect() to handle successful hub connection
+     */
+    signalHubConnected(tryOpenID: string, hubSerial: string): Promise<void>;
+    /** Invoked by the network handler to signal hub disconnection
+     *
+     * Returns true if a reconnection has been scheduled
+     *     or false if the target state is "detached"
+     */
+    imm_signalHubDisconnected(tryOpenID: string): boolean;
+    imm_commonDisconnect(tryOpenID: string, errType: number, errMsg: string): void;
+    imm_disconnectNow(connID?: string): boolean;
+    /** Invoked by UnregisterHub
+     *
+     * Free ressources allocated by the hub, close requests,
+     * call this.imm_commonDisconnect() and bring the link down.
+     *
+     * This method may be redefined by subclasses to do additional
+     * cleanup before invoking this.imm_commonDisconnect() to bring
+     * communication down, to prevent automatic reconnect.
+     *
+     * note: super.xxx() cannot be used in an async function !
+     */
+    detach(errType?: number, errMsg?: string): Promise<void>;
+    /** Wait until the hub is fully disconnected
+     *
+     * @param mstimeout {number}
+     * @param errmsg {YErrorMsg}
+     * @returns {number}
+     */
+    waitForDisconnection(mstimeout: number): Promise<void>;
     hubUpdateDeviceList(): Promise<number>;
-    hasRwAccess(): Promise<boolean>;
     /** Perform an HTTP query on the hub
      *
      * @param method {string}
@@ -3309,12 +3373,33 @@ export declare abstract class YGenericHub {
      * @returns {string[] | null}
      */
     firmwareUpdate(serial: string, firmware: YFirmwareFile, settings: Uint8Array, progress: YProgressCallback): Promise<string[] | null>;
-    imm_commonDisconnect(): void;
     reportFailure(message: string): Promise<void>;
-    disconnect(): Promise<void>;
-    imm_isForwarded(): boolean;
-    imm_disconnectNow(): void;
-    imm_isOnline(): boolean;
+    hasRwAccess(): Promise<boolean>;
+}
+export declare class YHttpHub extends YGenericHub {
+    infoJson: any;
+    realm: string;
+    nonce: string;
+    nonceCount: number;
+    notbynRequest: any;
+    constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
+    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => any): any;
+    imm_abortRequest(clientRequest: any): void;
+    imm_sendRequest(method: string, relUrl: string, obj_body: YHTTPBody | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => void): any;
+    tryFetch(relUrl: string): Promise<YConditionalResult>;
+    /** Handle HTTP-based event-monitoring work on a registered hub
+     */
+    reconnect(tryOpenID: string): Promise<void>;
+    imm_disconnectNow(connID?: string): boolean;
+    /** Perform an HTTP query on the hub
+     *
+     * @param method {string}
+     * @param devUrl {string}
+     * @param obj_body {YHTTPBody|null}
+     * @param tcpchan {number}
+     * @returns {YHTTPRequest}
+     */
+    request(method: string, devUrl: string, obj_body: YHTTPBody | null, tcpchan: number): Promise<YHTTPRequest>;
 }
 export interface _YY_WebSocketSendOptions {
     binary: boolean;
@@ -3385,11 +3470,8 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     _USB_META_WS_VALID_SHA1: number;
     _USB_META_WS_RW: number;
     websocket: _YY_WebSocket | null;
-    notbynOpenPromise: Promise<YConditionalResult> | null;
-    notbynOpenTimeoutObj: any;
     tcpChan: (YHTTPRequest | null)[];
     nextAsyncId: number;
-    _reconnectionTimer: null;
     _connectionTime: number;
     _connectionState: WSConnState;
     _remoteVersion: number;
@@ -3422,18 +3504,11 @@ export declare abstract class YWebSocketHub extends YGenericHub {
      **/
     abstract imm_getRandomValues(arr: Uint8Array): Uint8Array;
     /** Report a low-level asynchronous websocket error
-     *
-     * @param errorType {number}
-     * @param message {string}
      **/
     imm_asyncWebSocketError(errorType: number, message: string): void;
     /** Handle websocket-based event-monitoring work on a registered hub
-     *
-     * @param mstimeout {number}
-     * @param errmsg {YErrorMsg}
-     * @returns {number}
      */
-    testHub(mstimeout: number, errmsg: YErrorMsg): Promise<number>;
+    reconnect(tryOpenID: string): Promise<void>;
     /** Compute websocket authentication sha1 key
      *
      * @param user {string}
@@ -3478,8 +3553,8 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     websocketJoin(ws: _YY_WebSocket, arr_credentials: WebSocketCredential[], close_callback: Function): Promise<boolean>;
     imm_sendAPIAnnouncePkt(): boolean;
     imm_handleAPIAuthPkt(msg: Uint8Array): void;
-    disconnect(): Promise<void>;
-    imm_disconnectNow(): void;
+    detach(errType?: number, errMsg?: string): Promise<void>;
+    imm_disconnectNow(connID?: string): boolean;
     imm_isOnline(): boolean;
 }
 interface _YY_SSDPCacheEntry {
@@ -3528,9 +3603,10 @@ export declare class YAPIContext {
     system_env: YSystemEnv;
     _uniqueID: string;
     _detectType: number;
-    _hubs: YGenericHub[];
+    _knownHubsBySerial: YGenericHubDict;
+    _knownHubsByUrl: YGenericHubDict;
+    _connectedHubs: YGenericHub[];
     _ssdpManager: YGenericSSDPManager | null;
-    _pendingHubs: YGenericHubDict;
     _devs: YDeviceDict;
     _snByUrl: YStringDict;
     _snByName: YStringDict;
@@ -3613,9 +3689,12 @@ export declare class YAPIContext {
      *         to unregister a previously registered  callback.
      */
     RegisterLogFunction(logfun: YLogCallback): Promise<number>;
-    _addHub(newhub: YGenericHub): Promise<void>;
     imm_getHub(obj_urlInfo: _YY_UrlInfo): YGenericHub | null;
-    ensureUpdateDeviceListNotRunning(): Promise<void>;
+    imm_getPrimaryHub(hub: YGenericHub): YGenericHub;
+    _addConnectedHub(newhub: YGenericHub): Promise<void>;
+    imm_isActiveHub(hubSerial: string): boolean;
+    imm_dropConnectedHub(hub: YGenericHub): void;
+    _ensureUpdateDeviceListNotRunning(): Promise<void>;
     _updateDeviceList_internal(bool_forceupdate: boolean, bool_invokecallbacks: boolean): Promise<YConditionalResult>;
     updateDeviceList_process(hub: YGenericHub, hubDev: YDevice, whitePages: _YY_WhitePage[], yellowPages: _YY_YellowPages): Promise<number>;
     /** process event data produced by a hub
@@ -3930,7 +4009,6 @@ export declare class YAPIContext {
     LogUnhandledPromiseRejections(): Promise<void>;
     imm_parseRegisteredUrl(str_url: string): _YY_UrlInfo;
     imm_registerHub_internal(urlInfo: _YY_UrlInfo): YGenericHub | null;
-    imm_forgetHub(hub: YGenericHub): void;
     /**
      * Setup the Yoctopuce library to use modules connected on a given machine. Idealy this
      * call will be made once at the begining of your application.  The
@@ -3943,9 +4021,15 @@ export declare class YAPIContext {
      *
      * <b><i>x.x.x.x</i></b> or <b><i>hostname</i></b>: The API will use the devices connected to the
      * host with the given IP address or hostname. That host can be a regular computer
-     * running a VirtualHub, or a networked YoctoHub such as YoctoHub-Ethernet or
+     * running a <i>native VirtualHub</i>, a <i>VirtualHub for web</i> hosted on a server,
+     * or a networked YoctoHub such as YoctoHub-Ethernet or
      * YoctoHub-Wireless. If you want to use the VirtualHub running on you local
-     * computer, use the IP address 127.0.0.1.
+     * computer, use the IP address 127.0.0.1. If the given IP is unresponsive, yRegisterHub
+     * will not return until a time-out defined by ySetNetworkTimeout has elapsed.
+     * However, it is possible to preventively test a connection  with yTestHub.
+     * If you cannot afford a network time-out, you can use the non blocking yPregisterHub
+     * function that will establish the connection as soon as it is available.
+     *
      *
      * <b>callback</b>: that keyword make the API run in "<i>HTTP Callback</i>" mode.
      * This a special mode allowing to take control of Yoctopuce devices
@@ -3983,7 +4067,8 @@ export declare class YAPIContext {
      * Fault-tolerant alternative to yRegisterHub(). This function has the same
      * purpose and same arguments as yRegisterHub(), but does not trigger
      * an error when the selected hub is not available at the time of the function call.
-     * This makes it possible to register a network hub independently of the current
+     * If the connexion cannot be established immediately, a background task will automatically
+     * perform periodic retries. This makes it possible to register a network hub independently of the current
      * connectivity, and to try to contact it only when a device is actively needed.
      *
      * @param url : a string containing either "usb","callback" or the
@@ -4135,7 +4220,6 @@ export declare class YAPIContext {
      * On failure, throws an exception or returns a negative error code.
      */
     SetTimeout(callback: Function, ms_timeout: number, args?: any): number;
-    _setTimeout_internal(callback: Function, endtime: number, args: any): void;
     /**
      * Returns the current value of a monotone millisecond-based time counter.
      * This counter can be used to compute delays in relation with

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 49904 2022-05-25 14:18:55Z mvuilleu $
+ *  $Id: yocto_serialport.ts 52892 2023-01-25 10:13:30Z seb $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -485,6 +485,7 @@ export declare class YSerialPort extends YFunction {
      * @return the number of bytes available to read
      */
     read_avail(): Promise<number>;
+    end_tell(): Promise<number>;
     /**
      * Sends a text line query to the serial port, and reads the reply, if any.
      * This function is intended to be used when the serial port is configured for 'Line' protocol.

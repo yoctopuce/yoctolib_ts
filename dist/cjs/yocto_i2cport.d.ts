@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_i2cport.ts 52943 2023-01-26 15:46:47Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -447,6 +447,7 @@ export declare class YI2cPort extends YFunction {
      * @return the number of bytes available to read
      */
     read_avail(): Promise<number>;
+    end_tell(): Promise<number>;
     /**
      * Sends a text line query to the serial port, and reads the reply, if any.
      * This function is intended to be used when the serial port is configured for 'Line' protocol.
