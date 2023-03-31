@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 53466 2023-03-07 18:46:15Z mvuilleu $
+ * $Id: yocto_api.ts 53688 2023-03-22 11:13:13Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -38,7 +38,7 @@
  *
  *********************************************************************/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.YAPI = exports.YAPIContext = exports.YGenericSSDPManager = exports.YWebSocketHub = exports.YHttpHub = exports.YGenericHub = exports.YSystemEnv = exports.YDataLogger = exports.YMeasure = exports.YSensor = exports.YModule = exports.YFunction = exports.YFirmwareUpdate = exports.YFirmwareFile = exports.YConsolidatedDataSet = exports.YDataSet = exports.YDataStream = exports.YHTTPRequest = exports.YHTTPBody = exports.YoctoError = exports.YErrorMsg = exports.Y_DETECT_ALL = exports.Y_DETECT_NET = exports.Y_DETECT_USB = exports.Y_DETECT_NONE = exports.Y_FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_MAX_DOUBLE = exports.YAPI_MIN_DOUBLE = exports.YAPI_INVALID_STRING = exports.YAPI_INVALID_DOUBLE = exports.YAPI_INVALID_LONG = exports.YAPI_INVALID_UINT = exports.YAPI_INVALID_INT = exports.YAPI_SSL_ERROR = exports.YAPI_FILE_NOT_FOUND = exports.YAPI_RTC_NOT_READY = exports.YAPI_UNAUTHORIZED = exports.YAPI_DOUBLE_ACCES = exports.YAPI_EXHAUSTED = exports.YAPI_NO_MORE_DATA = exports.YAPI_IO_ERROR = exports.YAPI_TIMEOUT = exports.YAPI_DEVICE_BUSY = exports.YAPI_VERSION_MISMATCH = exports.YAPI_DEVICE_NOT_FOUND = exports.YAPI_NOT_SUPPORTED = exports.YAPI_INVALID_ARGUMENT = exports.YAPI_NOT_INITIALIZED = exports.YAPI_SUCCESS = void 0;
+exports.YAPI = exports.YAPIContext = exports.YHub = exports.YGenericSSDPManager = exports.YWebSocketHub = exports.YHttpHub = exports.YGenericHub = exports.YSystemEnv = exports.YDataLogger = exports.YMeasure = exports.YSensor = exports.YModule = exports.YFunction = exports.YFirmwareUpdate = exports.YFirmwareFile = exports.YConsolidatedDataSet = exports.YDataSet = exports.YDataStream = exports.YHTTPRequest = exports.YHTTPBody = exports.YoctoError = exports.YErrorMsg = exports.Y_DETECT_ALL = exports.Y_DETECT_NET = exports.Y_DETECT_USB = exports.Y_DETECT_NONE = exports.Y_FUNCTIONDESCRIPTOR_INVALID = exports.YAPI_MAX_DOUBLE = exports.YAPI_MIN_DOUBLE = exports.YAPI_INVALID_STRING = exports.YAPI_INVALID_DOUBLE = exports.YAPI_INVALID_LONG = exports.YAPI_INVALID_UINT = exports.YAPI_INVALID_INT = exports.YAPI_SSL_ERROR = exports.YAPI_FILE_NOT_FOUND = exports.YAPI_RTC_NOT_READY = exports.YAPI_UNAUTHORIZED = exports.YAPI_DOUBLE_ACCES = exports.YAPI_EXHAUSTED = exports.YAPI_NO_MORE_DATA = exports.YAPI_IO_ERROR = exports.YAPI_TIMEOUT = exports.YAPI_DEVICE_BUSY = exports.YAPI_VERSION_MISMATCH = exports.YAPI_DEVICE_NOT_FOUND = exports.YAPI_NOT_SUPPORTED = exports.YAPI_INVALID_ARGUMENT = exports.YAPI_NOT_INITIALIZED = exports.YAPI_SUCCESS = void 0;
 //--- (generated code: YFunction return codes)
 // Yoctopuce error codes, also used by default as function return value
 exports.YAPI_SUCCESS = 0; // everything worked all right
@@ -3381,10 +3381,11 @@ class YFunction {
         return this._yapi.imm_bin2str(attrVal);
     }
     /**
-     * Test if the function is readOnly. Return true if the function is write protected
-     * or that the function is not available.
+     * Indicates whether changes to the function are prohibited or allowed.
+     * Returns true if the function is blocked by an admin password
+     * or if the function is not available.
      *
-     * @return true if the function is readOnly or not online.
+     * @return true if the function is write-protected or not online.
      */
     async isReadOnly() {
         return await this.isReadOnly_internal();
@@ -7873,7 +7874,6 @@ class YGenericHub {
         this._lastErrorType = exports.YAPI_IO_ERROR;
         this._lastErrorMsg = 'Hub attachment has not been triggered';
         this.hubSerial = ''; // the hub true serial number, as obtained from the hub itself
-        this.aliases = {}; // full list of known urlInfo for this hub, hashed by urlInfo.rooturl
         this.serialByYdx = []; // serials by hub-specific devYdx
         // state variables to establish connection
         this._currentState = -6 /* HUB_UNKNOWN */;
@@ -7899,12 +7899,33 @@ class YGenericHub {
         this._yapi = yapi;
         this.urlInfo = urlInfo;
         this.stalledTimeoutMs = yapi._networkTimeoutMs;
-        this.aliases[urlInfo.rootUrl] = urlInfo;
     }
     _throw(int_errType, str_errMsg, obj_retVal) {
         this._lastErrorType = int_errType;
         this._lastErrorMsg = str_errMsg;
         return this._yapi._throw(int_errType, str_errMsg, obj_retVal);
+    }
+    /**
+     * Returns the numerical error code of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a number corresponding to the code of the latest error that occurred while
+     *         using the function object
+     */
+    get_errorType() {
+        return this._lastErrorType;
+    }
+    /**
+     * Returns the error message of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a string corresponding to the latest error message that occured while
+     *         using the function object
+     */
+    get_errorMessage() {
+        return this._lastErrorMsg;
     }
     imm_forceUpdate() {
         this.devListExpires = this._yapi.GetTickCount();
@@ -7957,16 +7978,7 @@ class YGenericHub {
             }
         }
     }
-    imm_inheritAliasesFrom(otherHub) {
-        // inherit URL aliases
-        for (let url in otherHub.aliases) {
-            this.aliases[url] = otherHub.aliases[url];
-        }
-        // inherit connection resolvers
-        for (let resolver of otherHub.connResolvers) {
-            this.connResolvers.push(resolver);
-        }
-        otherHub.connResolvers = [];
+    imm_inheritFrom(otherHub) {
         // keep the strongest targetState
         if (this._targetState < otherHub._targetState) {
             this.imm_setTargetState(otherHub._targetState);
@@ -7978,6 +7990,22 @@ class YGenericHub {
                 this.serialByYdx[j] = serial;
             }
         }
+        // merge pending resolvers (either resolve or transfer)
+        if (this._currentState >= 0 /* HUB_CONNECTED */ && otherHub._currentState < 0 /* HUB_CONNECTED */) {
+            // Forward the result to all pending promises
+            let res_struct = { errorType: exports.YAPI_SUCCESS, errorMsg: 'Hub ' + this.hubSerial + ' already connected' };
+            let resolvers = otherHub.connResolvers;
+            for (let resolveOne of resolvers) {
+                resolveOne(res_struct);
+            }
+        }
+        else {
+            // inherit connection resolvers
+            for (let resolver of otherHub.connResolvers) {
+                this.connResolvers.push(resolver);
+            }
+        }
+        otherHub.connResolvers = [];
         // shut down otherHub connection
         if (this._yapi._logLevel >= 3) {
             this._yapi.imm_log('Hub ' + this.hubSerial + ' is connected as ' + this.urlInfo.rootUrl + ', dropping connection to ' + otherHub.urlInfo.rootUrl);
@@ -8065,6 +8093,8 @@ class YGenericHub {
             this._currentState == -2 /* HUB_DISCONNECTING */) {
             if (this._yapi._logLevel >= 4) {
                 this._yapi.imm_log('Hub is currently disconnecting, reconnection will be triggered soon [' + this.currentConnID + ']');
+                this._yapi.imm_log('Current state: ' + this._currentState);
+                this._yapi.imm_log('Target state: ' + this._targetState + ' (' + targetConnType + ')');
             }
         }
     }
@@ -8267,8 +8297,11 @@ class YGenericHub {
     imm_commonDisconnect(tryOpenID, errType, errMsg) {
         this._lastErrorType = errType;
         this._lastErrorMsg = errMsg;
-        if (this._currentState > -4 /* HUB_DETACHING */) {
+        if (this._currentState >= -2 /* HUB_DISCONNECTING */) {
             this.imm_setState(-4 /* HUB_DETACHING */);
+        }
+        else if (this._currentState == -3 /* HUB_DISCONNECTED */) {
+            this.imm_setState(-5 /* HUB_DETACHED */);
         }
         this.imm_setTargetState(-5 /* HUB_DETACHED */);
         if (this._reconnectionTimer) {
@@ -8797,6 +8830,7 @@ class YHttpHub extends YGenericHub {
         if (primaryHub !== this) {
             this.imm_commonDisconnect(tryOpenID, exports.YAPI_SUCCESS, 'Hub ' + this.hubSerial + ' is already connected');
             this.currentConnID = '';
+            this.imm_signalHubDisconnected(tryOpenID);
             return;
         }
         // Then issue an HTTP request to open the notification channel
@@ -9939,7 +9973,7 @@ class YWebSocketHub extends YGenericHub {
         }
         catch (e) { }
         if (websocket.terminate) {
-            // schedule a socket hard close after 1s
+            // schedule a socket hard close after 0.9s
             setTimeout(() => {
                 try {
                     if (websocket.terminate) {
@@ -9947,7 +9981,7 @@ class YWebSocketHub extends YGenericHub {
                     }
                 }
                 catch (e) { }
-            }, 1000);
+            }, 900);
         }
         this.imm_dropAllPendingConnection();
         this.imm_signalHubDisconnected(prevOpenID);
@@ -10130,6 +10164,217 @@ class YGenericSSDPManager {
     }
 }
 exports.YGenericSSDPManager = YGenericSSDPManager;
+//--- (generated code: YHub definitions)
+//--- (end of generated code: YHub definitions)
+//--- (generated code: YHub class start)
+/**
+ * YHub Class: Hub Interface
+ *
+ *
+ */
+//--- (end of generated code: YHub class start)
+class YHub {
+    // API symbols as static members
+    //--- (end of generated code: YHub attributes declaration)
+    constructor(obj_yapi, hub, regUrl) {
+        this._userData = null;
+        //--- (generated code: YHub attributes declaration)
+        this._regUrl = "";
+        this._knownUrls = [];
+        this._yapi = obj_yapi;
+        this._hub = hub;
+        this._regUrl = regUrl;
+        this._knownUrls = [regUrl];
+        //--- (generated code: YHub constructor)
+        //--- (end of generated code: YHub constructor)
+    }
+    _imm_getHub() {
+        return this._hub;
+    }
+    //--- (generated code: YHub implementation)
+    /**
+     * Returns the URL that has been used first to register this hub.
+     */
+    async get_registeredUrl() {
+        return this._regUrl;
+    }
+    /**
+     * Returns all known URLs that have been used to register this hub.
+     * URLs are pointing to the same hub when the devices connected
+     * are sharing the same serial number.
+     */
+    async get_knownUrls(knownUrls) {
+        knownUrls.length = 0;
+        for (let ii in this._knownUrls) {
+            knownUrls.push(this._knownUrls[ii]);
+        }
+    }
+    imm_inheritFrom(otherHub) {
+        for (let ii in otherHub._knownUrls) {
+            this._knownUrls.push(otherHub._knownUrls[ii]);
+        }
+    }
+    //--- (end of generated code: YHub implementation)
+    /**
+     * Returns the URL currently in use to communicate with this hub.
+     */
+    async get_connectionUrl() {
+        return this._hub.urlInfo.rootUrl;
+    }
+    /**
+     * Returns the hub serial number, if the hub was already connected once.
+     */
+    async get_serialNumber() {
+        return this._hub.hubSerial;
+    }
+    /**
+     * Tells if this hub is still registered within the API.
+     *
+     * @return true if the hub has not been unregistered.
+     */
+    async isInUse() {
+        return this._hub.imm_isPreOrRegistered();
+    }
+    /**
+     * Tells if there is an active communication channel with this hub.
+     *
+     * @return true if the hub is currently connected.
+     */
+    async isOnline() {
+        return this._hub.imm_isOnline();
+    }
+    /**
+     * Tells if write access on this hub is blocked. Return true if it
+     * is not possible to change attributes on this hub
+     *
+     * @return true if it is not possible to change attributes on this hub.
+     */
+    async isReadOnly() {
+        return !this._hub.hasRwAccess();
+    }
+    /**
+     * Returns the numerical error code of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a number corresponding to the code of the latest error that occurred while
+     *         using the function object
+     */
+    get_errorType() {
+        return this._hub.get_errorType();
+    }
+    /**
+     * Returns the error message of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a string corresponding to the latest error message that occured while
+     *         using the function object
+     */
+    get_errorMessage() {
+        return this._hub.get_errorMessage();
+    }
+    /**
+     * Returns the network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
+     *
+     * @return the network connection delay in milliseconds.
+     */
+    async get_networkTimeout() {
+        return this._hub.stalledTimeoutMs;
+    }
+    /**
+     * Modifies tthe network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
+     *
+     * @param networkMsTimeout : the network connection delay in milliseconds.
+     * @noreturn
+     */
+    async set_networkTimeout(networkMsTimeout) {
+        this._hub.stalledTimeoutMs = networkMsTimeout;
+    }
+    /**
+     * Returns the value of the userData attribute, as previously stored
+     * using method set_userData.
+     * This attribute is never touched directly by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @return the object stored previously by the caller.
+     */
+    async get_userData() {
+        return this._userData;
+    }
+    /**
+     * Stores a user context provided as argument in the userData
+     * attribute of the function.
+     * This attribute is never touched by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @param data : any kind of object to be stored
+     * @noreturn
+     */
+    async set_userData(data) {
+        this._userData = data;
+    }
+    /**
+     * Continues the module enumeration started using YHub.FirstHubInUse().
+     * Caution: You can't make any assumption about the order of returned hubs.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the next hub currenlty in use, or a null pointer
+     *         if there are no more hubs to enumerate.
+     */
+    nextHubInUse() {
+        let found = false;
+        for (let rootUrl in this._yapi._yHubsInUse) {
+            if (found) {
+                return exports.YAPI._yHubsInUse[rootUrl];
+            }
+            if (exports.YAPI._yHubsInUse[rootUrl] == this) {
+                found = true;
+            }
+        }
+        return null;
+    }
+    /**
+     * Starts the enumeration of hubs currently in use by the API.
+     * Use the method YHub.nextHubInUse() to iterate on the
+     * next hubs.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the first hub currently in use by the API, or a
+     *         null pointer if none has been registered.
+     */
+    static FirstHubInUse() {
+        for (let rootUrl in exports.YAPI._yHubsInUse) {
+            return exports.YAPI._yHubsInUse[rootUrl];
+        }
+        return null;
+    }
+    /**
+     * Starts the enumeration of hubs currently in use by the API
+     * in a given YAPI context.
+     * Use the method YHub.nextHubInUse() to iterate on the
+     * next hubs.
+     *
+     * @param yctx : a YAPI context
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the first hub currently in use by the API, or a
+     *         null pointer if none has been registered.
+     */
+    static FirstHubInUseInContext(yctx) {
+        for (let rootUrl in yctx._yHubsInUse) {
+            return yctx._yHubsInUse[rootUrl];
+        }
+        return null;
+    }
+}
+exports.YHub = YHub;
 //--- (generated code: YAPIContext class start)
 /**
  * YAPIContext Class: Yoctopuce I/O context configuration.
@@ -10143,6 +10388,7 @@ class YAPIContext {
         this._knownHubsBySerial = {}; // hash table by serial number
         this._knownHubsByUrl = {}; // hash table by connection URL
         this._connectedHubs = [];
+        this._yHubsInUse = {};
         this._ssdpManager = null;
         this._devs = {}; // hash table of known devices, by serial number
         this._snByUrl = {}; // serial number for each known device, by URL
@@ -10330,12 +10576,24 @@ class YAPIContext {
         if (primaryHub._currentState >= hub._currentState) {
             // Existing hub is already "better" connected, keep it as primary hub
             // Remember alias URL and update target state if needed
-            primaryHub.imm_inheritAliasesFrom(hub);
+            primaryHub.imm_inheritFrom(hub);
+            let priYHub = this._yHubsInUse[primaryHub.urlInfo.rootUrl];
+            let altYHub = this._yHubsInUse[hub.urlInfo.rootUrl];
+            if (priYHub && altYHub) {
+                priYHub.imm_inheritFrom(altYHub);
+                delete this._yHubsInUse[hub.urlInfo.rootUrl];
+            }
             return primaryHub;
         }
         // Existing hub is not actively connected, set the new hub as primary
         this._knownHubsBySerial[hub.hubSerial] = hub;
-        hub.imm_inheritAliasesFrom(primaryHub);
+        hub.imm_inheritFrom(primaryHub);
+        let priYHub = this._yHubsInUse[primaryHub.urlInfo.rootUrl];
+        let altYHub = this._yHubsInUse[hub.urlInfo.rootUrl];
+        if (priYHub && altYHub) {
+            altYHub.imm_inheritFrom(priYHub);
+            delete this._yHubsInUse[primaryHub.urlInfo.rootUrl];
+        }
         return hub;
     }
     // Add a hub object to the list of actively attached hub
@@ -10574,7 +10832,7 @@ class YAPIContext {
             if (rooturl.charAt(0) == '/')
                 rooturl = hubDev.imm_getRootUrl() + rooturl.substr(1);
             let currdev = this._devs[serial];
-            if (this._logLevel >= 4) {
+            if (this._logLevel >= 5) {
                 this.imm_log('Device ' + serial + ' present, currdev ' + (currdev ? '' : 'NOT ') + 'set' + (hub._firstArrivalCallback ? ', firstArrival' : ''));
             }
             if (currdev && hub._firstArrivalCallback) {
@@ -11860,7 +12118,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.53532';
+        return /* version number patched automatically */ '1.10.53786';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -12162,6 +12420,9 @@ class YAPIContext {
             }
             hub.imm_updateUrl(urlInfo);
         }
+        if (!this._yHubsInUse[urlInfo.rootUrl]) {
+            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
+        }
         await hub.attach(2 /* HUB_REGISTERED */);
         let sub_errmsg = new YErrorMsg();
         let retcode = await hub.waitForConnection(this._networkTimeoutMs, sub_errmsg);
@@ -12219,6 +12480,9 @@ class YAPIContext {
             }
             hub.imm_updateUrl(urlInfo);
         }
+        if (!this._yHubsInUse[urlInfo.rootUrl]) {
+            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
+        }
         await hub.attach(1 /* HUB_PREREGISTERED */);
         return exports.YAPI_SUCCESS;
     }
@@ -12235,13 +12499,17 @@ class YAPIContext {
      * On failure, throws an exception or returns a negative error code.
      */
     async RegisterHubHttpCallback(incomingMessage, serverResponse, errmsg) {
-        let urlInfo = this.imm_parseRegisteredUrl('http://callback:4444');
+        let url = 'http://callback:4444';
+        let urlInfo = this.imm_parseRegisteredUrl(url);
         let hub = this.imm_getHub(urlInfo);
         if (!hub) {
             hub = this.system_env.getHttpCallbackHub(this, urlInfo, incomingMessage, serverResponse);
             if (!hub) {
                 return this._throw(exports.YAPI_NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', exports.YAPI_NOT_SUPPORTED);
             }
+        }
+        if (!this._yHubsInUse[urlInfo.rootUrl]) {
+            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
         }
         await hub.attach(3 /* HUB_CALLBACK */);
         let sub_errmsg = new YErrorMsg();
@@ -12279,13 +12547,17 @@ class YAPIContext {
      */
     async RegisterHubWebSocketCallback(ws, errmsg, authpwd) {
         let authstr = (authpwd ? 'ws:' + authpwd + '@' : '');
-        let urlInfo = this.imm_parseRegisteredUrl('http://' + authstr + 'callback:4444');
+        let url = 'http://' + authstr + 'callback:4444';
+        let urlInfo = this.imm_parseRegisteredUrl(url);
         let hub = this.imm_getHub(urlInfo);
         if (!hub) {
             hub = this.system_env.getWebSocketCallbackHub(this, urlInfo, ws);
             if (!hub) {
                 return this._throw(exports.YAPI_NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', exports.YAPI_NOT_SUPPORTED);
             }
+        }
+        if (!this._yHubsInUse[urlInfo.rootUrl]) {
+            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
         }
         await hub.attach(3 /* HUB_CALLBACK */);
         let sub_errmsg = new YErrorMsg();
@@ -12327,8 +12599,26 @@ class YAPIContext {
         let urlInfo = this.imm_parseRegisteredUrl(url);
         let hub = this.imm_getHub(urlInfo);
         if (hub) {
+            if (hub.hubSerial) {
+                // Make sure to work on the latest active "alias" hub
+                let activeHub = this._knownHubsBySerial[hub.hubSerial];
+                if (activeHub) {
+                    hub = activeHub;
+                    urlInfo = hub.urlInfo;
+                }
+            }
             if (this._logLevel >= 3) {
-                this.imm_log('Unregistering hub ' + urlInfo.rootUrl);
+                this.imm_log('Unregistering hub ' + url + ' (' + urlInfo.rootUrl + ')');
+            }
+            let removeKeys = [];
+            for (let rootUrl in this._yHubsInUse) {
+                let yhub = this._yHubsInUse[rootUrl];
+                if (yhub._imm_getHub() == hub || (await yhub.get_serialNumber()) == hub.hubSerial) {
+                    removeKeys.push(rootUrl);
+                }
+            }
+            for (let rootUrl of removeKeys) {
+                delete this._yHubsInUse[rootUrl];
             }
             this.imm_dropConnectedHub(hub);
             if (hub.imm_isDisconnected()) {

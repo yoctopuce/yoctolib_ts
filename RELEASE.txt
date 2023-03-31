@@ -1,23 +1,5 @@
-TypeScript v1.10.53532
+TypeScript v1.10.53786
 
-- Add support for callbackTemplate and powerFactor
-- Add a log when a bad event is received from hub
-- Allow upload to VirtualHub-4web from node.js without PHP post_data_reading problem
-- Avoid multiple exceptions on UpdateDeviceList when the websocket is known to be down
-- Change form encoding to upload files to VirtualHub-4web from node.js
-- Enforce network timeout on notification stream as well for detecting stalled connections
-- Improve YSerialPort, YSpiPort and I2cPort class
-- Improve handling of disconnection/reconnection (was broken when using solid RegisterHub in pure http mode)
-- Improve Prog-EventBased HTML example
-- Improve robustness and logging for disconnects in http mode
-- Reduce stack usage for YAPI.SetTimeout
-- Fix a few typos in the doc
-- Fix compilation warning (deprecated function)
-- Fix race condition in event handling when using VirtualHub-4web
-- Fix occasional bad events when connecting to VirtualHub-4web causing multiple arrival events (still some console.log included for now)
-- Fix TestHub
-- Fix value-change callbacks for devices that are registered before arrival and never accessed
-- Fix upload to yoctohubs
-- Fix node.js support for VirtualHub-4web
-- Fix get_subDevices() methods of YModule
-- Fix HTTPCallback server support
+- Add YHub class for enumerating connected hubs
+- Fix english in comments
+- Fix type used in set_userData and get_userData methods

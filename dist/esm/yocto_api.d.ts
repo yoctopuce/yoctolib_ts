@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 53466 2023-03-07 18:46:15Z mvuilleu $
+ * $Id: yocto_api.ts 53688 2023-03-22 11:13:13Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -128,14 +128,14 @@ interface YDeviceDict {
 interface YGenericHubDict {
     [ident: string]: YGenericHub;
 }
+interface YHubDict {
+    [ident: string]: YHub;
+}
 interface YFunctionTypeDict {
     [ident: string]: YFunctionType;
 }
 interface YDataStreamDict {
     [ident: string]: YDataStream;
-}
-interface YUrlInfoDict {
-    [ident: string]: _YY_UrlInfo;
 }
 declare class YFunctionType {
     private _yapi;
@@ -1264,10 +1264,11 @@ export declare class YFunction {
      */
     loadAttribute(attrName: string): Promise<string>;
     /**
-     * Test if the function is readOnly. Return true if the function is write protected
-     * or that the function is not available.
+     * Indicates whether changes to the function are prohibited or allowed.
+     * Returns true if the function is blocked by an admin password
+     * or if the function is not available.
      *
-     * @return true if the function is readOnly or not online.
+     * @return true if the function is write-protected or not online.
      */
     isReadOnly(): Promise<boolean>;
     /**
@@ -3248,7 +3249,6 @@ export declare abstract class YGenericHub {
     _lastErrorMsg: string;
     urlInfo: _YY_UrlInfo;
     hubSerial: string;
-    aliases: YUrlInfoDict;
     serialByYdx: string[];
     _currentState: Y_YHubConnType;
     _targetState: Y_YHubConnType;
@@ -3272,6 +3272,24 @@ export declare abstract class YGenericHub {
     _missing: YBoolDict;
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
+    /**
+     * Returns the numerical error code of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a number corresponding to the code of the latest error that occurred while
+     *         using the function object
+     */
+    get_errorType(): number;
+    /**
+     * Returns the error message of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a string corresponding to the latest error message that occured while
+     *         using the function object
+     */
+    get_errorMessage(): string;
     imm_forceUpdate(): void;
     imm_logrequest(method: string, devUrl: string, obj_body: YHTTPBody | null): void;
     imm_setState(newState: Y_YHubConnType): void;
@@ -3282,7 +3300,7 @@ export declare abstract class YGenericHub {
     imm_isOnline(): boolean;
     imm_isForwarded(): boolean;
     imm_updateUrl(urlInfo: _YY_UrlInfo): void;
-    imm_inheritAliasesFrom(otherHub: YGenericHub): void;
+    imm_inheritFrom(otherHub: YGenericHub): void;
     imm_getNewConnID(): string;
     imm_tryTestConnectFor(mstimeout: number): void;
     /** Trigger the setup of a connection to the target hub, and return.
@@ -3589,6 +3607,146 @@ export declare abstract class YGenericSSDPManager {
     ySSDPStop(): Promise<void>;
     ySSDPDiscover(): Promise<void>;
 }
+/**
+ * YHub Class: Hub Interface
+ *
+ *
+ */
+export declare class YHub {
+    _yapi: YAPIContext;
+    _hub: YGenericHub;
+    _userData: object | null;
+    _regUrl: string;
+    _knownUrls: string[];
+    constructor(obj_yapi: YAPIContext, hub: YGenericHub, regUrl: string);
+    _imm_getHub(): YGenericHub;
+    /**
+     * Returns the URL that has been used first to register this hub.
+     */
+    get_registeredUrl(): Promise<string>;
+    /**
+     * Returns all known URLs that have been used to register this hub.
+     * URLs are pointing to the same hub when the devices connected
+     * are sharing the same serial number.
+     */
+    get_knownUrls(knownUrls: string[]): Promise<void>;
+    imm_inheritFrom(otherHub: YHub): void;
+    /**
+     * Returns the URL currently in use to communicate with this hub.
+     */
+    get_connectionUrl(): Promise<string>;
+    /**
+     * Returns the hub serial number, if the hub was already connected once.
+     */
+    get_serialNumber(): Promise<string>;
+    /**
+     * Tells if this hub is still registered within the API.
+     *
+     * @return true if the hub has not been unregistered.
+     */
+    isInUse(): Promise<boolean>;
+    /**
+     * Tells if there is an active communication channel with this hub.
+     *
+     * @return true if the hub is currently connected.
+     */
+    isOnline(): Promise<boolean>;
+    /**
+     * Tells if write access on this hub is blocked. Return true if it
+     * is not possible to change attributes on this hub
+     *
+     * @return true if it is not possible to change attributes on this hub.
+     */
+    isReadOnly(): Promise<boolean>;
+    /**
+     * Returns the numerical error code of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a number corresponding to the code of the latest error that occurred while
+     *         using the function object
+     */
+    get_errorType(): number;
+    /**
+     * Returns the error message of the latest error with the function.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a string corresponding to the latest error message that occured while
+     *         using the function object
+     */
+    get_errorMessage(): string;
+    /**
+     * Returns the network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
+     *
+     * @return the network connection delay in milliseconds.
+     */
+    get_networkTimeout(): Promise<number>;
+    /**
+     * Modifies tthe network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
+     *
+     * @param networkMsTimeout : the network connection delay in milliseconds.
+     * @noreturn
+     */
+    set_networkTimeout(networkMsTimeout: number): Promise<void>;
+    /**
+     * Returns the value of the userData attribute, as previously stored
+     * using method set_userData.
+     * This attribute is never touched directly by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @return the object stored previously by the caller.
+     */
+    get_userData(): Promise<object | null>;
+    /**
+     * Stores a user context provided as argument in the userData
+     * attribute of the function.
+     * This attribute is never touched by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @param data : any kind of object to be stored
+     * @noreturn
+     */
+    set_userData(data: object | null): Promise<void>;
+    /**
+     * Continues the module enumeration started using YHub.FirstHubInUse().
+     * Caution: You can't make any assumption about the order of returned hubs.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the next hub currenlty in use, or a null pointer
+     *         if there are no more hubs to enumerate.
+     */
+    nextHubInUse(): YHub | null;
+    /**
+     * Starts the enumeration of hubs currently in use by the API.
+     * Use the method YHub.nextHubInUse() to iterate on the
+     * next hubs.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the first hub currently in use by the API, or a
+     *         null pointer if none has been registered.
+     */
+    static FirstHubInUse(): YHub | null;
+    /**
+     * Starts the enumeration of hubs currently in use by the API
+     * in a given YAPI context.
+     * Use the method YHub.nextHubInUse() to iterate on the
+     * next hubs.
+     *
+     * @param yctx : a YAPI context
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the first hub currently in use by the API, or a
+     *         null pointer if none has been registered.
+     */
+    static FirstHubInUseInContext(yctx: YAPIContext): YHub | null;
+}
 interface DeviceUpdateEvent {
     event: string;
     serial: string;
@@ -3606,6 +3764,7 @@ export declare class YAPIContext {
     _knownHubsBySerial: YGenericHubDict;
     _knownHubsByUrl: YGenericHubDict;
     _connectedHubs: YGenericHub[];
+    _yHubsInUse: YHubDict;
     _ssdpManager: YGenericSSDPManager | null;
     _devs: YDeviceDict;
     _snByUrl: YStringDict;
