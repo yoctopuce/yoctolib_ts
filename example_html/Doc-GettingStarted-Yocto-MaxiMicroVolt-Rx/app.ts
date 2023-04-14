@@ -11,7 +11,7 @@
  *********************************************************************/
 
 import { YAPI, YErrorMsg, YModule } from '../../dist/esm/yocto_api_html.js';
-import { YGenericSensor } from '../../dist/esm/yocto_genericSensor.js'
+import { YGenericSensor } from '../../dist/esm/yocto_genericsensor.js'
 
 let module: YModule;
 let sens1: YGenericSensor;

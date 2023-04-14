@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 51903 2022-11-29 17:25:59Z mvuilleu $
+ *  $Id: yocto_files.ts 53900 2023-04-05 11:42:04Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -75,7 +75,7 @@ export class YFileRecord
      *
      * @return a string with the name of the file.
      */
-    async get_name(): Promise<string>
+    get_name(): string
     {
         return this._name;
     }
@@ -85,7 +85,7 @@ export class YFileRecord
      *
      * @return the size of the file.
      */
-    async get_size(): Promise<number>
+    get_size(): number
     {
         return this._size;
     }
@@ -95,7 +95,7 @@ export class YFileRecord
      *
      * @return the 32-bit CRC of the file content.
      */
-    async get_crc(): Promise<number>
+    get_crc(): number
     {
         return this._crc;
     }

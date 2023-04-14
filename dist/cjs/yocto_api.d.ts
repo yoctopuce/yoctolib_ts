@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 53688 2023-03-22 11:13:13Z mvuilleu $
+ * $Id: yocto_api.ts 53894 2023-04-05 10:33:42Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -1113,7 +1113,7 @@ export declare class YFunction {
     _func: string;
     _lastErrorType: number;
     _lastErrorMsg: string;
-    _userData: object | null;
+    _userData: any;
     _cache: _YY_FuncCache;
     _dataStreams: YDataStreamDict;
     _logicalName: string;
@@ -1672,7 +1672,7 @@ export declare class YFunction {
      *
      * @return the object stored previously by the caller.
      */
-    get_userData(): Promise<object | null>;
+    get_userData(): Promise<any>;
     /**
      * Stores a user context provided as argument in the userData attribute of the function.
      * This attribute is never touched by the API, and is at disposal of the caller to store a context.
@@ -1680,7 +1680,7 @@ export declare class YFunction {
      * @param data : any kind of object to be stored
      * @noreturn
      */
-    set_userData(data: object | null): Promise<void>;
+    set_userData(data: any): Promise<void>;
 }
 export declare namespace YFunction {
     const FUNCTIONDESCRIPTOR_INVALID: string;
@@ -3401,7 +3401,7 @@ export declare class YHttpHub extends YGenericHub {
     nonceCount: number;
     notbynRequest: any;
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
-    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => any): any;
+    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | Uint8Array | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => any): any;
     imm_abortRequest(clientRequest: any): void;
     imm_sendRequest(method: string, relUrl: string, obj_body: YHTTPBody | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => void): any;
     tryFetch(relUrl: string): Promise<YConditionalResult>;
@@ -3615,9 +3615,9 @@ export declare abstract class YGenericSSDPManager {
 export declare class YHub {
     _yapi: YAPIContext;
     _hub: YGenericHub;
-    _userData: object | null;
     _regUrl: string;
     _knownUrls: string[];
+    _userData: any;
     constructor(obj_yapi: YAPIContext, hub: YGenericHub, regUrl: string);
     _imm_getHub(): YGenericHub;
     /**
@@ -3629,8 +3629,27 @@ export declare class YHub {
      * URLs are pointing to the same hub when the devices connected
      * are sharing the same serial number.
      */
-    get_knownUrls(knownUrls: string[]): Promise<void>;
+    get_knownUrls(): Promise<string[]>;
     imm_inheritFrom(otherHub: YHub): void;
+    /**
+     * Returns the value of the userData attribute, as previously stored
+     * using method set_userData.
+     * This attribute is never touched directly by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @return the object stored previously by the caller.
+     */
+    get_userData(): Promise<any>;
+    /**
+     * Stores a user context provided as argument in the userData
+     * attribute of the function.
+     * This attribute is never touched by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @param data : any kind of object to be stored
+     * @noreturn
+     */
+    set_userData(data: any): Promise<void>;
     /**
      * Returns the URL currently in use to communicate with this hub.
      */
@@ -3659,21 +3678,21 @@ export declare class YHub {
      */
     isReadOnly(): Promise<boolean>;
     /**
-     * Returns the numerical error code of the latest error with the function.
+     * Returns the numerical error code of the latest error with the hub.
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
      * @return a number corresponding to the code of the latest error that occurred while
-     *         using the function object
+     *         using the hub object
      */
     get_errorType(): number;
     /**
-     * Returns the error message of the latest error with the function.
+     * Returns the error message of the latest error with the hub.
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
      * @return a string corresponding to the latest error message that occured while
-     *         using the function object
+     *         using the hub object
      */
     get_errorMessage(): string;
     /**
@@ -3695,25 +3714,6 @@ export declare class YHub {
      * @noreturn
      */
     set_networkTimeout(networkMsTimeout: number): Promise<void>;
-    /**
-     * Returns the value of the userData attribute, as previously stored
-     * using method set_userData.
-     * This attribute is never touched directly by the API, and is at
-     * disposal of the caller to store a context.
-     *
-     * @return the object stored previously by the caller.
-     */
-    get_userData(): Promise<object | null>;
-    /**
-     * Stores a user context provided as argument in the userData
-     * attribute of the function.
-     * This attribute is never touched by the API, and is at
-     * disposal of the caller to store a context.
-     *
-     * @param data : any kind of object to be stored
-     * @noreturn
-     */
-    set_userData(data: object | null): Promise<void>;
     /**
      * Continues the module enumeration started using YHub.FirstHubInUse().
      * Caution: You can't make any assumption about the order of returned hubs.

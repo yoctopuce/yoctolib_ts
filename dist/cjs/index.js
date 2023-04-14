@@ -38,6 +38,7 @@ __exportStar(require("./yocto_gyro.js"), exports);
 __exportStar(require("./yocto_hubport.js"), exports);
 __exportStar(require("./yocto_humidity.js"), exports);
 __exportStar(require("./yocto_i2cport.js"), exports);
+__exportStar(require("./yocto_inputcapture.js"), exports);
 __exportStar(require("./yocto_inputchain.js"), exports);
 __exportStar(require("./yocto_latitude.js"), exports);
 __exportStar(require("./yocto_led.js"), exports);

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 50595 2022-07-28 07:54:15Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 53833 2023-04-04 08:12:55Z mvuilleu $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -222,6 +222,9 @@ class YRealTimeClock extends yocto_api_js_1.YFunction {
      * Changes the automatic clock synchronization with host working state.
      * To disable automatic synchronization, set the value to true.
      * To enable automatic synchronization (default), set the value to false.
+     *
+     * If you want the change to be kept after a device reboot,
+     * make sure  to call the matching module saveToFlash().
      *
      * @param newval : either YRealTimeClock.DISABLEHOSTSYNC_FALSE or YRealTimeClock.DISABLEHOSTSYNC_TRUE,
      * according to the automatic clock synchronization with host working state

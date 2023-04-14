@@ -1,5 +1,4 @@
-TypeScript v1.10.53786
+TypeScript v1.10.54037
 
-- Add YHub class for enumerating connected hubs
-- Fix english in comments
-- Fix type used in set_userData and get_userData methods
+- Add YInputCapture class
+- Change trivial accessors as immediate rather than async

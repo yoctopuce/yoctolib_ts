@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 52943 2023-01-26 15:46:47Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -68,7 +68,7 @@ class YI2cSnoopingRecord {
      *
      * @return the elapsed time, in ms, since the beginning of the preceding message.
      */
-    async get_time() {
+    get_time() {
         return this._tim;
     }
     /**
@@ -76,7 +76,7 @@ class YI2cSnoopingRecord {
      *
      * @return the message direction (RX=0, TX=1).
      */
-    async get_direction() {
+    get_direction() {
         return this._dir;
     }
     /**
@@ -84,7 +84,7 @@ class YI2cSnoopingRecord {
      *
      * @return the message content.
      */
-    async get_message() {
+    get_message() {
         return this._msg;
     }
 }

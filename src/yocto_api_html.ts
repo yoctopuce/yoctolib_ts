@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 53248 2023-02-15 16:25:13Z mvuilleu $
+ * $Id: yocto_api_html.ts 53821 2023-04-03 14:31:23Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -150,7 +150,7 @@ class YHttpHtmlHub extends YHttpHub
     }
 
     // Low-level function to create an HTTP client request (abstraction layer)
-    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | null,
+    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | Uint8Array | null,
                     onProgress: null | ((moreText: string) => void),
                     onSuccess: null | ((responseText: string) => void),
                     onError: (errorType: number, errorMsg: string) => any): XMLHttpRequest

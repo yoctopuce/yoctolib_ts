@@ -11,10 +11,7 @@
  *********************************************************************/
 
 import { YAPI, YErrorMsg , YModule } from "../../dist/esm/yocto_api_html.js"
-import { YColorLed } from "../../dist/esm/yocto_colorLed.js"
-
-
-
+import { YColorLed } from "../../dist/esm/yocto_colorled.js"
 import { Chooser } from "./chooser.js"
 
 function error(msg: string)

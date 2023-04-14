@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 53688 2023-03-22 11:13:13Z mvuilleu $
+ * $Id: yocto_api.ts 53894 2023-04-05 10:33:42Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -8771,7 +8771,7 @@ class YHttpHub extends YGenericHub {
                 // YoctoHubs: use multipart/form-data to avoid CORS preflight requests
                 contentType = 'multipart/form-data; boundary=' + boundary;
             }
-            body = this._yapi.imm_bin2str(this.imm_formEncodeBody(obj_body, boundary));
+            body = this.imm_formEncodeBody(obj_body, boundary);
         }
         return this.imm_makeRequest(method, relUrl, contentType, body, onProgress, onSuccess, onError);
     }
@@ -10177,7 +10177,6 @@ class YHub {
     // API symbols as static members
     //--- (end of generated code: YHub attributes declaration)
     constructor(obj_yapi, hub, regUrl) {
-        this._userData = null;
         //--- (generated code: YHub attributes declaration)
         this._regUrl = "";
         this._knownUrls = [];
@@ -10203,16 +10202,41 @@ class YHub {
      * URLs are pointing to the same hub when the devices connected
      * are sharing the same serial number.
      */
-    async get_knownUrls(knownUrls) {
+    async get_knownUrls() {
+        let knownUrls = [];
         knownUrls.length = 0;
         for (let ii in this._knownUrls) {
             knownUrls.push(this._knownUrls[ii]);
         }
+        return knownUrls;
     }
     imm_inheritFrom(otherHub) {
         for (let ii in otherHub._knownUrls) {
             this._knownUrls.push(otherHub._knownUrls[ii]);
         }
+    }
+    /**
+     * Returns the value of the userData attribute, as previously stored
+     * using method set_userData.
+     * This attribute is never touched directly by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @return the object stored previously by the caller.
+     */
+    async get_userData() {
+        return this._userData;
+    }
+    /**
+     * Stores a user context provided as argument in the userData
+     * attribute of the function.
+     * This attribute is never touched by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @param data : any kind of object to be stored
+     * @noreturn
+     */
+    async set_userData(data) {
+        this._userData = data;
     }
     //--- (end of generated code: YHub implementation)
     /**
@@ -10253,23 +10277,23 @@ class YHub {
         return !this._hub.hasRwAccess();
     }
     /**
-     * Returns the numerical error code of the latest error with the function.
+     * Returns the numerical error code of the latest error with the hub.
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
      * @return a number corresponding to the code of the latest error that occurred while
-     *         using the function object
+     *         using the hub object
      */
     get_errorType() {
         return this._hub.get_errorType();
     }
     /**
-     * Returns the error message of the latest error with the function.
+     * Returns the error message of the latest error with the hub.
      * This method is mostly useful when using the Yoctopuce library with
      * exceptions disabled.
      *
      * @return a string corresponding to the latest error message that occured while
-     *         using the function object
+     *         using the hub object
      */
     get_errorMessage() {
         return this._hub.get_errorMessage();
@@ -10296,29 +10320,6 @@ class YHub {
      */
     async set_networkTimeout(networkMsTimeout) {
         this._hub.stalledTimeoutMs = networkMsTimeout;
-    }
-    /**
-     * Returns the value of the userData attribute, as previously stored
-     * using method set_userData.
-     * This attribute is never touched directly by the API, and is at
-     * disposal of the caller to store a context.
-     *
-     * @return the object stored previously by the caller.
-     */
-    async get_userData() {
-        return this._userData;
-    }
-    /**
-     * Stores a user context provided as argument in the userData
-     * attribute of the function.
-     * This attribute is never touched by the API, and is at
-     * disposal of the caller to store a context.
-     *
-     * @param data : any kind of object to be stored
-     * @noreturn
-     */
-    async set_userData(data) {
-        this._userData = data;
     }
     /**
      * Continues the module enumeration started using YHub.FirstHubInUse().
@@ -12118,7 +12119,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.53786';
+        return /* version number patched automatically */ '1.10.54037';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

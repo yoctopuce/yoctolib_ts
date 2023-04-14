@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 52892 2023-01-25 10:13:30Z seb $
+ *  $Id: yocto_serialport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -65,7 +65,7 @@ export class YSnoopingRecord {
      *
      * @return the elapsed time, in ms, since the beginning of the preceding message.
      */
-    async get_time() {
+    get_time() {
         return this._tim;
     }
     /**
@@ -73,7 +73,7 @@ export class YSnoopingRecord {
      *
      * @return the message direction (RX=0, TX=1).
      */
-    async get_direction() {
+    get_direction() {
         return this._dir;
     }
     /**
@@ -81,7 +81,7 @@ export class YSnoopingRecord {
      *
      * @return the message content.
      */
-    async get_message() {
+    get_message() {
         return this._msg;
     }
 }

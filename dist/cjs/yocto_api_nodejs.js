@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 53436 2023-03-06 17:28:56Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 53821 2023-04-03 14:31:23Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *

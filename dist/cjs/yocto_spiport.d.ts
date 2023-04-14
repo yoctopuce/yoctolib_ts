@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 52892 2023-01-25 10:13:30Z seb $
+ *  $Id: yocto_spiport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -52,19 +52,19 @@ export declare class YSpiSnoopingRecord {
      *
      * @return the elapsed time, in ms, since the beginning of the preceding message.
      */
-    get_time(): Promise<number>;
+    get_time(): number;
     /**
      * Returns the message direction (RX=0, TX=1).
      *
      * @return the message direction (RX=0, TX=1).
      */
-    get_direction(): Promise<number>;
+    get_direction(): number;
     /**
      * Returns the message content.
      *
      * @return the message content.
      */
-    get_message(): Promise<string>;
+    get_message(): string;
 }
 export declare namespace YSpiSnoopingRecord {
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 52943 2023-01-26 15:46:47Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -74,7 +74,7 @@ export class YI2cSnoopingRecord
      *
      * @return the elapsed time, in ms, since the beginning of the preceding message.
      */
-    async get_time(): Promise<number>
+    get_time(): number
     {
         return this._tim;
     }
@@ -84,7 +84,7 @@ export class YI2cSnoopingRecord
      *
      * @return the message direction (RX=0, TX=1).
      */
-    async get_direction(): Promise<number>
+    get_direction(): number
     {
         return this._dir;
     }
@@ -94,7 +94,7 @@ export class YI2cSnoopingRecord
      *
      * @return the message content.
      */
-    async get_message(): Promise<string>
+    get_message(): string
     {
         return this._msg;
     }
