@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_latitude.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_latitude.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Latitude functions
  *
@@ -239,9 +239,9 @@ export class YLatitude extends YSensor
     nextLatitude(): YLatitude | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLatitude.FindLatitudeInContext(this._yapi, next_hwid);
     }
 
@@ -257,7 +257,7 @@ export class YLatitude extends YSensor
     static FirstLatitude(): YLatitude | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Latitude');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLatitude.FindLatitude(next_hwid);
     }
 
@@ -275,7 +275,7 @@ export class YLatitude extends YSensor
     static FirstLatitudeInContext(yctx: YAPIContext): YLatitude | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Latitude');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLatitude.FindLatitudeInContext(yctx, next_hwid);
     }
 
@@ -284,8 +284,10 @@ export class YLatitude extends YSensor
 
 export namespace YLatitude {
     //--- (YLatitude definitions)
-    export interface ValueCallback { (func: YLatitude, value: string): void }
-    export interface TimedReportCallback { (func: YLatitude, measure: YMeasure): void }
+    export interface ValueCallback {(func: YLatitude, value: string): void}
+
+    export interface TimedReportCallback {(func: YLatitude, measure: YMeasure): void}
+
     //--- (end of YLatitude definitions)
 }
 

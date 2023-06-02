@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_altitude.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -82,7 +82,7 @@ export class YAltitude extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'qnh':
             this._qnh = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -109,7 +109,7 @@ export class YAltitude extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentValue',rest_val);
+        return await this._setAttr('currentValue', rest_val);
     }
 
     /**
@@ -131,7 +131,7 @@ export class YAltitude extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('qnh',rest_val);
+        return await this._setAttr('qnh', rest_val);
     }
 
     /**
@@ -346,9 +346,9 @@ export class YAltitude extends YSensor
     nextAltitude(): YAltitude | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAltitude.FindAltitudeInContext(this._yapi, next_hwid);
     }
 
@@ -364,7 +364,7 @@ export class YAltitude extends YSensor
     static FirstAltitude(): YAltitude | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Altitude');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAltitude.FindAltitude(next_hwid);
     }
 
@@ -382,7 +382,7 @@ export class YAltitude extends YSensor
     static FirstAltitudeInContext(yctx: YAPIContext): YAltitude | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Altitude');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAltitude.FindAltitudeInContext(yctx, next_hwid);
     }
 
@@ -391,8 +391,10 @@ export class YAltitude extends YSensor
 
 export namespace YAltitude {
     //--- (YAltitude definitions)
-    export interface ValueCallback { (func: YAltitude, value: string): void }
-    export interface TimedReportCallback { (func: YAltitude, measure: YMeasure): void }
+    export interface ValueCallback {(func: YAltitude, value: string): void}
+
+    export interface TimedReportCallback {(func: YAltitude, measure: YMeasure): void}
+
     //--- (end of YAltitude definitions)
 }
 

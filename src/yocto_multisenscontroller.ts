@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 49501 2022-04-21 07:09:25Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -91,7 +91,7 @@ export class YMultiSensController extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'nSensors':
             this._nSensors = <number> <number> val;
             return 1;
@@ -147,7 +147,7 @@ export class YMultiSensController extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('nSensors',rest_val);
+        return await this._setAttr('nSensors', rest_val);
     }
 
     /**
@@ -206,7 +206,7 @@ export class YMultiSensController extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('maintenanceMode',rest_val);
+        return await this._setAttr('maintenanceMode', rest_val);
     }
 
     /**
@@ -247,7 +247,7 @@ export class YMultiSensController extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -388,18 +388,18 @@ export class YMultiSensController extends YFunction
     {
         let cmd: string;
         let res: number;
-        cmd = 'A'+String(Math.round(addr));
+        cmd = 'A' + String(Math.round(addr));
         res = await this.set_command(cmd);
         if (!(res == this._yapi.SUCCESS)) {
-            return this._throw(this._yapi.IO_ERROR,'unable to trigger address change',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'unable to trigger address change', this._yapi.IO_ERROR);
         }
         YAPI.Sleep(1500);
         res = await this.get_lastAddressDetected();
         if (!(res > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'IR sensor not found',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'IR sensor not found', this._yapi.IO_ERROR);
         }
         if (!(res == addr)) {
-            return this._throw(this._yapi.IO_ERROR,'address change failed',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'address change failed', this._yapi.IO_ERROR);
         }
         return this._yapi.SUCCESS;
     }
@@ -418,7 +418,7 @@ export class YMultiSensController extends YFunction
         let res: number;
         res = await this.set_command('a');
         if (!(res == this._yapi.SUCCESS)) {
-            return this._throw(this._yapi.IO_ERROR,'unable to trigger address detection',res);
+            return this._throw(this._yapi.IO_ERROR, 'unable to trigger address detection', res);
         }
         YAPI.Sleep(1000);
         res = await this.get_lastAddressDetected();
@@ -438,9 +438,9 @@ export class YMultiSensController extends YFunction
     nextMultiSensController(): YMultiSensController | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiSensController.FindMultiSensControllerInContext(this._yapi, next_hwid);
     }
 
@@ -456,7 +456,7 @@ export class YMultiSensController extends YFunction
     static FirstMultiSensController(): YMultiSensController | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('MultiSensController');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiSensController.FindMultiSensController(next_hwid);
     }
 
@@ -474,7 +474,7 @@ export class YMultiSensController extends YFunction
     static FirstMultiSensControllerInContext(yctx: YAPIContext): YMultiSensController | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('MultiSensController');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiSensController.FindMultiSensControllerInContext(yctx, next_hwid);
     }
 
@@ -483,12 +483,15 @@ export class YMultiSensController extends YFunction
 
 export namespace YMultiSensController {
     //--- (YMultiSensController definitions)
-    export const enum MAINTENANCEMODE {
+    export const enum MAINTENANCEMODE
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YMultiSensController, value: string): void }
+
+    export interface ValueCallback {(func: YMultiSensController, value: string): void}
+
     //--- (end of YMultiSensController definitions)
 }
 

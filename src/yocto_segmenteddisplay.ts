@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_segmenteddisplay.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_segmenteddisplay.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for SegmentedDisplay functions
  *
@@ -84,7 +84,7 @@ export class YSegmentedDisplay extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'displayedText':
             this._displayedText = <string> <string> val;
             return 1;
@@ -127,7 +127,7 @@ export class YSegmentedDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('displayedText',rest_val);
+        return await this._setAttr('displayedText', rest_val);
     }
 
     async get_displayMode(): Promise<YSegmentedDisplay.DISPLAYMODE>
@@ -146,7 +146,7 @@ export class YSegmentedDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('displayMode',rest_val);
+        return await this._setAttr('displayMode', rest_val);
     }
 
     /**
@@ -281,9 +281,9 @@ export class YSegmentedDisplay extends YFunction
     nextSegmentedDisplay(): YSegmentedDisplay | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YSegmentedDisplay.FindSegmentedDisplayInContext(this._yapi, next_hwid);
     }
 
@@ -299,7 +299,7 @@ export class YSegmentedDisplay extends YFunction
     static FirstSegmentedDisplay(): YSegmentedDisplay | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('SegmentedDisplay');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YSegmentedDisplay.FindSegmentedDisplay(next_hwid);
     }
 
@@ -317,7 +317,7 @@ export class YSegmentedDisplay extends YFunction
     static FirstSegmentedDisplayInContext(yctx: YAPIContext): YSegmentedDisplay | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('SegmentedDisplay');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YSegmentedDisplay.FindSegmentedDisplayInContext(yctx, next_hwid);
     }
 
@@ -326,14 +326,17 @@ export class YSegmentedDisplay extends YFunction
 
 export namespace YSegmentedDisplay {
     //--- (YSegmentedDisplay definitions)
-    export const enum DISPLAYMODE {
+    export const enum DISPLAYMODE
+    {
         DISCONNECTED = 0,
         MANUAL = 1,
         AUTO1 = 2,
         AUTO60 = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YSegmentedDisplay, value: string): void }
+
+    export interface ValueCallback {(func: YSegmentedDisplay, value: string): void}
+
     //--- (end of YSegmentedDisplay definitions)
 }
 

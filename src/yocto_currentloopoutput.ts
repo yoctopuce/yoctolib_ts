@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -90,7 +90,7 @@ export class YCurrentLoopOutput extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'current':
             this._current = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -122,7 +122,7 @@ export class YCurrentLoopOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('current',rest_val);
+        return await this._setAttr('current', rest_val);
     }
 
     /**
@@ -160,7 +160,7 @@ export class YCurrentLoopOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('currentTransition',rest_val);
+        return await this._setAttr('currentTransition', rest_val);
     }
 
     /**
@@ -177,7 +177,7 @@ export class YCurrentLoopOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentAtStartUp',rest_val);
+        return await this._setAttr('currentAtStartUp', rest_val);
     }
 
     /**
@@ -359,7 +359,7 @@ export class YCurrentLoopOutput extends YFunction
         if (mA_target > 21.0) {
             mA_target = 21.0;
         }
-        newval = String(Math.round(<number> Math.round(mA_target*65536)))+':'+String(Math.round(ms_duration));
+        newval = String(Math.round(<number> Math.round(mA_target*65536))) + ':' + String(Math.round(ms_duration));
 
         return await this.set_currentTransition(newval);
     }
@@ -377,9 +377,9 @@ export class YCurrentLoopOutput extends YFunction
     nextCurrentLoopOutput(): YCurrentLoopOutput | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCurrentLoopOutput.FindCurrentLoopOutputInContext(this._yapi, next_hwid);
     }
 
@@ -395,7 +395,7 @@ export class YCurrentLoopOutput extends YFunction
     static FirstCurrentLoopOutput(): YCurrentLoopOutput | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('CurrentLoopOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCurrentLoopOutput.FindCurrentLoopOutput(next_hwid);
     }
 
@@ -413,7 +413,7 @@ export class YCurrentLoopOutput extends YFunction
     static FirstCurrentLoopOutputInContext(yctx: YAPIContext): YCurrentLoopOutput | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('CurrentLoopOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCurrentLoopOutput.FindCurrentLoopOutputInContext(yctx, next_hwid);
     }
 
@@ -422,13 +422,16 @@ export class YCurrentLoopOutput extends YFunction
 
 export namespace YCurrentLoopOutput {
     //--- (YCurrentLoopOutput definitions)
-    export const enum LOOPPOWER {
+    export const enum LOOPPOWER
+    {
         NOPWR = 0,
         LOWPWR = 1,
         POWEROK = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YCurrentLoopOutput, value: string): void }
+
+    export interface ValueCallback {(func: YCurrentLoopOutput, value: string): void}
+
     //--- (end of YCurrentLoopOutput definitions)
 }
 

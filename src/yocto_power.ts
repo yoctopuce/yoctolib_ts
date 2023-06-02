@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 53420 2023-03-06 10:38:51Z mvuilleu $
+ *  $Id: yocto_power.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Power functions
  *
@@ -92,7 +92,7 @@ export class YPower extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'powerFactor':
             this._powerFactor = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -165,7 +165,7 @@ export class YPower extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('meter',rest_val);
+        return await this._setAttr('meter', rest_val);
     }
 
     /**
@@ -437,9 +437,9 @@ export class YPower extends YSensor
     nextPower(): YPower | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPower.FindPowerInContext(this._yapi, next_hwid);
     }
 
@@ -455,7 +455,7 @@ export class YPower extends YSensor
     static FirstPower(): YPower | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Power');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPower.FindPower(next_hwid);
     }
 
@@ -473,7 +473,7 @@ export class YPower extends YSensor
     static FirstPowerInContext(yctx: YAPIContext): YPower | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Power');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPower.FindPowerInContext(yctx, next_hwid);
     }
 
@@ -482,8 +482,10 @@ export class YPower extends YSensor
 
 export namespace YPower {
     //--- (YPower definitions)
-    export interface ValueCallback { (func: YPower, value: string): void }
-    export interface TimedReportCallback { (func: YPower, measure: YMeasure): void }
+    export interface ValueCallback {(func: YPower, value: string): void}
+
+    export interface TimedReportCallback {(func: YPower, measure: YMeasure): void}
+
     //--- (end of YPower definitions)
 }
 

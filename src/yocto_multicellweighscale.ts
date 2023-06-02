@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_multicellweighscale.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -116,7 +116,7 @@ export class YMultiCellWeighScale extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'cellCount':
             this._cellCount = <number> <number> val;
             return 1;
@@ -166,7 +166,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -202,7 +202,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('cellCount',rest_val);
+        return await this._setAttr('cellCount', rest_val);
     }
 
     /**
@@ -243,7 +243,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('externalSense',rest_val);
+        return await this._setAttr('externalSense', rest_val);
     }
 
     /**
@@ -283,7 +283,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('excitation',rest_val);
+        return await this._setAttr('excitation', rest_val);
     }
 
     /**
@@ -305,7 +305,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('tempAvgAdaptRatio',rest_val);
+        return await this._setAttr('tempAvgAdaptRatio', rest_val);
     }
 
     /**
@@ -349,7 +349,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('tempChgAdaptRatio',rest_val);
+        return await this._setAttr('tempChgAdaptRatio', rest_val);
     }
 
     /**
@@ -449,7 +449,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('zeroTracking',rest_val);
+        return await this._setAttr('zeroTracking', rest_val);
     }
 
     /**
@@ -489,7 +489,7 @@ export class YMultiCellWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -676,7 +676,7 @@ export class YMultiCellWeighScale extends YSensor
      */
     async setupSpan(currWeight: number, maxWeight: number): Promise<number>
     {
-        return await this.set_command('S'+String(Math.round(<number> Math.round(1000*currWeight)))+':'+String(Math.round(<number> Math.round(1000*maxWeight))));
+        return await this.set_command('S' + String(Math.round(<number> Math.round(1000*currWeight))) + ':' + String(Math.round(<number> Math.round(1000*maxWeight))));
     }
 
     /**
@@ -693,9 +693,9 @@ export class YMultiCellWeighScale extends YSensor
     nextMultiCellWeighScale(): YMultiCellWeighScale | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiCellWeighScale.FindMultiCellWeighScaleInContext(this._yapi, next_hwid);
     }
 
@@ -711,7 +711,7 @@ export class YMultiCellWeighScale extends YSensor
     static FirstMultiCellWeighScale(): YMultiCellWeighScale | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('MultiCellWeighScale');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiCellWeighScale.FindMultiCellWeighScale(next_hwid);
     }
 
@@ -729,7 +729,7 @@ export class YMultiCellWeighScale extends YSensor
     static FirstMultiCellWeighScaleInContext(yctx: YAPIContext): YMultiCellWeighScale | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('MultiCellWeighScale');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiCellWeighScale.FindMultiCellWeighScaleInContext(yctx, next_hwid);
     }
 
@@ -738,19 +738,25 @@ export class YMultiCellWeighScale extends YSensor
 
 export namespace YMultiCellWeighScale {
     //--- (YMultiCellWeighScale definitions)
-    export const enum EXTERNALSENSE {
+    export const enum EXTERNALSENSE
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum EXCITATION {
+
+    export const enum EXCITATION
+    {
         OFF = 0,
         DC = 1,
         AC = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YMultiCellWeighScale, value: string): void }
-    export interface TimedReportCallback { (func: YMultiCellWeighScale, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YMultiCellWeighScale, value: string): void}
+
+    export interface TimedReportCallback {(func: YMultiCellWeighScale, measure: YMeasure): void}
+
     //--- (end of YMultiCellWeighScale definitions)
 }
 

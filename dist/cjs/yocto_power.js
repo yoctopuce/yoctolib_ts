@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 53420 2023-03-06 10:38:51Z mvuilleu $
+ *  $Id: yocto_power.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Power functions
  *

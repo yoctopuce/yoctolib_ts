@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_arithmeticsensor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -81,7 +81,7 @@ export class YArithmeticSensor extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'description':
             this._description = <string> <string> val;
             return 1;
@@ -107,7 +107,7 @@ export class YArithmeticSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -145,7 +145,7 @@ export class YArithmeticSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -326,16 +326,16 @@ export class YArithmeticSensor extends YSensor
         let diags: string;
         let resval: number;
         id = await this.get_functionId();
-        id = (id).substr( 16, (id).length - 16);
-        fname = 'arithmExpr'+id+'.txt';
+        id = (id).substr(16, (id).length - 16);
+        fname = 'arithmExpr' + id + '.txt';
 
-        content = '// '+descr+'\n'+expr;
+        content = '// ' + descr + '\n' + expr;
         data = await this._uploadEx(fname, this._yapi.imm_str2bin(content));
         diags = this._yapi.imm_bin2str(data);
         if (!((diags).substr(0, 8) == 'Result: ')) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,diags,this._yapi.INVALID_DOUBLE);
+            return this._throw(this._yapi.INVALID_ARGUMENT, diags, this._yapi.INVALID_DOUBLE);
         }
-        resval = parseFloat((diags).substr( 8, (diags).length-8));
+        resval = parseFloat((diags).substr(8, (diags).length-8));
         return resval;
     }
 
@@ -354,13 +354,13 @@ export class YArithmeticSensor extends YSensor
         let content: string;
         let idx: number;
         id = await this.get_functionId();
-        id = (id).substr( 16, (id).length - 16);
-        fname = 'arithmExpr'+id+'.txt';
+        id = (id).substr(16, (id).length - 16);
+        fname = 'arithmExpr' + id + '.txt';
 
         content = this._yapi.imm_bin2str(await this._download(fname));
         idx = (content).indexOf('\n');
         if (idx > 0) {
-            content = (content).substr( idx+1, (content).length-(idx+1));
+            content = (content).substr(idx+1, (content).length-(idx+1));
         }
         return content;
     }
@@ -392,20 +392,20 @@ export class YArithmeticSensor extends YSensor
         let fname: string;
         siz = inputValues.length;
         if (!(siz > 1)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'auxiliary function must be defined by at least two points',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'auxiliary function must be defined by at least two points', this._yapi.INVALID_ARGUMENT);
         }
         if (!(siz == outputValues.length)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'table sizes mismatch',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'table sizes mismatch', this._yapi.INVALID_ARGUMENT);
         }
         defstr = '';
         idx = 0;
         while (idx < siz) {
             inputVal = inputValues[idx];
             outputVal = outputValues[idx];
-            defstr = defstr+''+String(Math.round(inputVal*1000)/1000)+':'+String(Math.round(outputVal*1000)/1000)+'\n';
+            defstr = defstr + '' + String(Math.round(inputVal * 1000) / 1000) + ':' + String(Math.round(outputVal * 1000) / 1000) + '\n';
             idx = idx + 1;
         }
-        fname = 'userMap'+name+'.txt';
+        fname = 'userMap' + name + '.txt';
 
         return await this._upload(fname, this._yapi.imm_str2bin(defstr));
     }
@@ -430,11 +430,11 @@ export class YArithmeticSensor extends YSensor
         let defbin: Uint8Array;
         let siz: number;
 
-        fname = 'userMap'+name+'.txt';
+        fname = 'userMap' + name + '.txt';
         defbin = await this._download(fname);
         siz = (defbin).length;
         if (!(siz > 0)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'auxiliary function does not exist',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'auxiliary function does not exist', this._yapi.INVALID_ARGUMENT);
         }
         inputValues.length = 0;
         outputValues.length = 0;
@@ -455,9 +455,9 @@ export class YArithmeticSensor extends YSensor
     nextArithmeticSensor(): YArithmeticSensor | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YArithmeticSensor.FindArithmeticSensorInContext(this._yapi, next_hwid);
     }
 
@@ -473,7 +473,7 @@ export class YArithmeticSensor extends YSensor
     static FirstArithmeticSensor(): YArithmeticSensor | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('ArithmeticSensor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YArithmeticSensor.FindArithmeticSensor(next_hwid);
     }
 
@@ -491,7 +491,7 @@ export class YArithmeticSensor extends YSensor
     static FirstArithmeticSensorInContext(yctx: YAPIContext): YArithmeticSensor | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('ArithmeticSensor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YArithmeticSensor.FindArithmeticSensorInContext(yctx, next_hwid);
     }
 
@@ -500,8 +500,10 @@ export class YArithmeticSensor extends YSensor
 
 export namespace YArithmeticSensor {
     //--- (YArithmeticSensor definitions)
-    export interface ValueCallback { (func: YArithmeticSensor, value: string): void }
-    export interface TimedReportCallback { (func: YArithmeticSensor, measure: YMeasure): void }
+    export interface ValueCallback {(func: YArithmeticSensor, value: string): void}
+
+    export interface TimedReportCallback {(func: YArithmeticSensor, measure: YMeasure): void}
+
     //--- (end of YArithmeticSensor definitions)
 }
 

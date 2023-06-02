@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorled.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_colorled.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -101,7 +101,7 @@ export class YColorLed extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'rgbColor':
             this._rgbColor = <number> <number> val;
             return 1;
@@ -165,7 +165,7 @@ export class YColorLed extends YFunction
     {
         let rest_val: string;
         rest_val = '0x'+newval.toString(16);
-        return await this._setAttr('rgbColor',rest_val);
+        return await this._setAttr('rgbColor', rest_val);
     }
 
     /**
@@ -200,7 +200,7 @@ export class YColorLed extends YFunction
     {
         let rest_val: string;
         rest_val = '0x'+newval.toString(16);
-        return await this._setAttr('hslColor',rest_val);
+        return await this._setAttr('hslColor', rest_val);
     }
 
     async get_rgbMove(): Promise<YColorLed.Move>
@@ -219,7 +219,7 @@ export class YColorLed extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
-        return await this._setAttr('rgbMove',rest_val);
+        return await this._setAttr('rgbMove', rest_val);
     }
 
     /**
@@ -255,7 +255,7 @@ export class YColorLed extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
-        return await this._setAttr('hslMove',rest_val);
+        return await this._setAttr('hslMove', rest_val);
     }
 
     /**
@@ -310,7 +310,7 @@ export class YColorLed extends YFunction
     {
         let rest_val: string;
         rest_val = '0x'+newval.toString(16);
-        return await this._setAttr('rgbColorAtPowerOn',rest_val);
+        return await this._setAttr('rgbColorAtPowerOn', rest_val);
     }
 
     /**
@@ -389,7 +389,7 @@ export class YColorLed extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -528,7 +528,7 @@ export class YColorLed extends YFunction
      */
     async addHslMoveToBlinkSeq(HSLcolor: number, msDelay: number): Promise<number>
     {
-        return await this.sendCommand('H'+String(Math.round(HSLcolor))+','+String(Math.round(msDelay)));
+        return await this.sendCommand('H' + String(Math.round(HSLcolor)) + ',' + String(Math.round(msDelay)));
     }
 
     /**
@@ -543,7 +543,7 @@ export class YColorLed extends YFunction
      */
     async addRgbMoveToBlinkSeq(RGBcolor: number, msDelay: number): Promise<number>
     {
-        return await this.sendCommand('R'+String(Math.round(RGBcolor))+','+String(Math.round(msDelay)));
+        return await this.sendCommand('R' + String(Math.round(RGBcolor)) + ',' + String(Math.round(msDelay)));
     }
 
     /**
@@ -594,9 +594,9 @@ export class YColorLed extends YFunction
     nextColorLed(): YColorLed | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YColorLed.FindColorLedInContext(this._yapi, next_hwid);
     }
 
@@ -612,7 +612,7 @@ export class YColorLed extends YFunction
     static FirstColorLed(): YColorLed | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('ColorLed');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YColorLed.FindColorLed(next_hwid);
     }
 
@@ -630,7 +630,7 @@ export class YColorLed extends YFunction
     static FirstColorLedInContext(yctx: YAPIContext): YColorLed | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('ColorLed');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YColorLed.FindColorLedInContext(yctx, next_hwid);
     }
 
@@ -639,8 +639,10 @@ export class YColorLed extends YFunction
 
 export namespace YColorLed {
     //--- (YColorLed definitions)
-    export interface Move { target?: number; ms?: number; moving?: number; }
-    export interface ValueCallback { (func: YColorLed, value: string): void }
+    export interface Move { target?: number; ms?: number; moving?: number;}
+
+    export interface ValueCallback {(func: YColorLed, value: string): void}
+
     //--- (end of YColorLed definitions)
 }
 

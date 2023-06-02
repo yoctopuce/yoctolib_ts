@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_compass.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -88,7 +88,7 @@ export class YCompass extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'bandwidth':
             this._bandwidth = <number> <number> val;
             return 1;
@@ -137,7 +137,7 @@ export class YCompass extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('bandwidth',rest_val);
+        return await this._setAttr('bandwidth', rest_val);
     }
 
     async get_axis(): Promise<YCompass.AXIS>
@@ -341,9 +341,9 @@ export class YCompass extends YSensor
     nextCompass(): YCompass | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCompass.FindCompassInContext(this._yapi, next_hwid);
     }
 
@@ -359,7 +359,7 @@ export class YCompass extends YSensor
     static FirstCompass(): YCompass | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Compass');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCompass.FindCompass(next_hwid);
     }
 
@@ -377,7 +377,7 @@ export class YCompass extends YSensor
     static FirstCompassInContext(yctx: YAPIContext): YCompass | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Compass');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCompass.FindCompassInContext(yctx, next_hwid);
     }
 
@@ -386,14 +386,18 @@ export class YCompass extends YSensor
 
 export namespace YCompass {
     //--- (YCompass definitions)
-    export const enum AXIS {
+    export const enum AXIS
+    {
         X = 0,
         Y = 1,
         Z = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YCompass, value: string): void }
-    export interface TimedReportCallback { (func: YCompass, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YCompass, value: string): void}
+
+    export interface TimedReportCallback {(func: YCompass, measure: YMeasure): void}
+
     //--- (end of YCompass definitions)
 }
 

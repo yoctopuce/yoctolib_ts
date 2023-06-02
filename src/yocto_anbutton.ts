@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_anbutton.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -127,7 +127,7 @@ export class YAnButton extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'calibratedValue':
             this._calibratedValue = <number> <number> val;
             return 1;
@@ -239,7 +239,7 @@ export class YAnButton extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('analogCalibration',rest_val);
+        return await this._setAttr('analogCalibration', rest_val);
     }
 
     /**
@@ -279,7 +279,7 @@ export class YAnButton extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('calibrationMax',rest_val);
+        return await this._setAttr('calibrationMax', rest_val);
     }
 
     /**
@@ -319,7 +319,7 @@ export class YAnButton extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('calibrationMin',rest_val);
+        return await this._setAttr('calibrationMin', rest_val);
     }
 
     /**
@@ -361,7 +361,7 @@ export class YAnButton extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('sensitivity',rest_val);
+        return await this._setAttr('sensitivity', rest_val);
     }
 
     /**
@@ -453,7 +453,7 @@ export class YAnButton extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pulseCounter',rest_val);
+        return await this._setAttr('pulseCounter', rest_val);
     }
 
     /**
@@ -512,7 +512,7 @@ export class YAnButton extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('inputType',rest_val);
+        return await this._setAttr('inputType', rest_val);
     }
 
     /**
@@ -659,9 +659,9 @@ export class YAnButton extends YFunction
     nextAnButton(): YAnButton | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAnButton.FindAnButtonInContext(this._yapi, next_hwid);
     }
 
@@ -677,7 +677,7 @@ export class YAnButton extends YFunction
     static FirstAnButton(): YAnButton | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('AnButton');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAnButton.FindAnButton(next_hwid);
     }
 
@@ -695,7 +695,7 @@ export class YAnButton extends YFunction
     static FirstAnButtonInContext(yctx: YAPIContext): YAnButton | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('AnButton');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAnButton.FindAnButtonInContext(yctx, next_hwid);
     }
 
@@ -704,23 +704,30 @@ export class YAnButton extends YFunction
 
 export namespace YAnButton {
     //--- (YAnButton definitions)
-    export const enum ANALOGCALIBRATION {
+    export const enum ANALOGCALIBRATION
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export const enum ISPRESSED {
+
+    export const enum ISPRESSED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum INPUTTYPE {
+
+    export const enum INPUTTYPE
+    {
         ANALOG_FAST = 0,
         DIGITAL4 = 1,
         ANALOG_SMOOTH = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YAnButton, value: string): void }
+
+    export interface ValueCallback {(func: YAnButton, value: string): void}
+
     //--- (end of YAnButton definitions)
 }
 

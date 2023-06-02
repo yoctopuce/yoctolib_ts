@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 54768 2023-05-26 06:46:41Z seb $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -57,12 +57,9 @@ class YPowerSupply extends yocto_api_js_1.YFunction {
         this._voltageSetPoint = YPowerSupply.VOLTAGESETPOINT_INVALID;
         this._currentLimit = YPowerSupply.CURRENTLIMIT_INVALID;
         this._powerOutput = YPowerSupply.POWEROUTPUT_INVALID;
-        this._voltageSense = YPowerSupply.VOLTAGESENSE_INVALID;
         this._measuredVoltage = YPowerSupply.MEASUREDVOLTAGE_INVALID;
         this._measuredCurrent = YPowerSupply.MEASUREDCURRENT_INVALID;
         this._inputVoltage = YPowerSupply.INPUTVOLTAGE_INVALID;
-        this._vInt = YPowerSupply.VINT_INVALID;
-        this._ldoTemperature = YPowerSupply.LDOTEMPERATURE_INVALID;
         this._voltageTransition = YPowerSupply.VOLTAGETRANSITION_INVALID;
         this._voltageAtStartUp = YPowerSupply.VOLTAGEATSTARTUP_INVALID;
         this._currentAtStartUp = YPowerSupply.CURRENTATSTARTUP_INVALID;
@@ -74,14 +71,9 @@ class YPowerSupply extends yocto_api_js_1.YFunction {
         this.POWEROUTPUT_OFF = 0;
         this.POWEROUTPUT_ON = 1;
         this.POWEROUTPUT_INVALID = -1;
-        this.VOLTAGESENSE_INT = 0;
-        this.VOLTAGESENSE_EXT = 1;
-        this.VOLTAGESENSE_INVALID = -1;
         this.MEASUREDVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.MEASUREDCURRENT_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.INPUTVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-        this.VINT_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-        this.LDOTEMPERATURE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.VOLTAGETRANSITION_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.VOLTAGEATSTARTUP_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this.CURRENTATSTARTUP_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
@@ -101,9 +93,6 @@ class YPowerSupply extends yocto_api_js_1.YFunction {
             case 'powerOutput':
                 this._powerOutput = val;
                 return 1;
-            case 'voltageSense':
-                this._voltageSense = val;
-                return 1;
             case 'measuredVoltage':
                 this._measuredVoltage = Math.round(val / 65.536) / 1000.0;
                 return 1;
@@ -112,12 +101,6 @@ class YPowerSupply extends yocto_api_js_1.YFunction {
                 return 1;
             case 'inputVoltage':
                 this._inputVoltage = Math.round(val / 65.536) / 1000.0;
-                return 1;
-            case 'vInt':
-                this._vInt = Math.round(val / 65.536) / 1000.0;
-                return 1;
-            case 'ldoTemperature':
-                this._ldoTemperature = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'voltageTransition':
                 this._voltageTransition = val;
@@ -230,39 +213,6 @@ class YPowerSupply extends yocto_api_js_1.YFunction {
         return await this._setAttr('powerOutput', rest_val);
     }
     /**
-     * Returns the output voltage control point.
-     *
-     * @return either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to the
-     * output voltage control point
-     *
-     * On failure, throws an exception or returns YPowerSupply.VOLTAGESENSE_INVALID.
-     */
-    async get_voltageSense() {
-        let res;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.VOLTAGESENSE_INVALID;
-            }
-        }
-        res = this._voltageSense;
-        return res;
-    }
-    /**
-     * Changes the voltage control point.
-     *
-     * @param newval : either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to
-     * the voltage control point
-     *
-     * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    async set_voltageSense(newval) {
-        let rest_val;
-        rest_val = String(newval);
-        return await this._setAttr('voltageSense', rest_val);
-    }
-    /**
      * Returns the measured output voltage, in V.
      *
      * @return a floating point number corresponding to the measured output voltage, in V
@@ -311,40 +261,6 @@ class YPowerSupply extends yocto_api_js_1.YFunction {
             }
         }
         res = this._inputVoltage;
-        return res;
-    }
-    /**
-     * Returns the internal voltage, in V.
-     *
-     * @return a floating point number corresponding to the internal voltage, in V
-     *
-     * On failure, throws an exception or returns YPowerSupply.VINT_INVALID.
-     */
-    async get_vInt() {
-        let res;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.VINT_INVALID;
-            }
-        }
-        res = this._vInt;
-        return res;
-    }
-    /**
-     * Returns the LDO temperature, in Celsius.
-     *
-     * @return a floating point number corresponding to the LDO temperature, in Celsius
-     *
-     * On failure, throws an exception or returns YPowerSupply.LDOTEMPERATURE_INVALID.
-     */
-    async get_ldoTemperature() {
-        let res;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.LDOTEMPERATURE_INVALID;
-            }
-        }
-        res = this._ldoTemperature;
         return res;
     }
     async get_voltageTransition() {
@@ -632,14 +548,9 @@ YPowerSupply.CURRENTLIMIT_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPowerSupply.POWEROUTPUT_OFF = 0;
 YPowerSupply.POWEROUTPUT_ON = 1;
 YPowerSupply.POWEROUTPUT_INVALID = -1;
-YPowerSupply.VOLTAGESENSE_INT = 0;
-YPowerSupply.VOLTAGESENSE_EXT = 1;
-YPowerSupply.VOLTAGESENSE_INVALID = -1;
 YPowerSupply.MEASUREDVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPowerSupply.MEASUREDCURRENT_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPowerSupply.INPUTVOLTAGE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-YPowerSupply.VINT_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
-YPowerSupply.LDOTEMPERATURE_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPowerSupply.VOLTAGETRANSITION_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YPowerSupply.VOLTAGEATSTARTUP_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 YPowerSupply.CURRENTATSTARTUP_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_pwmoutput.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -104,7 +104,7 @@ export class YPwmOutput extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'enabled':
             this._enabled = <YPwmOutput.ENABLED> <number> val;
             return 1;
@@ -165,7 +165,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -187,7 +187,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('frequency',rest_val);
+        return await this._setAttr('frequency', rest_val);
     }
 
     /**
@@ -226,7 +226,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('period',rest_val);
+        return await this._setAttr('period', rest_val);
     }
 
     /**
@@ -261,7 +261,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('dutyCycle',rest_val);
+        return await this._setAttr('dutyCycle', rest_val);
     }
 
     /**
@@ -297,7 +297,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('pulseDuration',rest_val);
+        return await this._setAttr('pulseDuration', rest_val);
     }
 
     /**
@@ -336,7 +336,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pwmTransition',rest_val);
+        return await this._setAttr('pwmTransition', rest_val);
     }
 
     /**
@@ -374,7 +374,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabledAtPowerOn',rest_val);
+        return await this._setAttr('enabledAtPowerOn', rest_val);
     }
 
     /**
@@ -391,7 +391,7 @@ export class YPwmOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('dutyCycleAtPowerOn',rest_val);
+        return await this._setAttr('dutyCycleAtPowerOn', rest_val);
     }
 
     /**
@@ -551,7 +551,7 @@ export class YPwmOutput extends YFunction
         if (ms_target < 0.0) {
             ms_target = 0.0;
         }
-        newval = String(Math.round(<number> Math.round(ms_target*65536)))+'ms:'+String(Math.round(ms_duration));
+        newval = String(Math.round(<number> Math.round(ms_target*65536))) + 'ms:' + String(Math.round(ms_duration));
         return await this.set_pwmTransition(newval);
     }
 
@@ -576,7 +576,7 @@ export class YPwmOutput extends YFunction
         if (target > 100.0) {
             target = 100.0;
         }
-        newval = String(Math.round(<number> Math.round(target*65536)))+':'+String(Math.round(ms_duration));
+        newval = String(Math.round(<number> Math.round(target*65536))) + ':' + String(Math.round(ms_duration));
         return await this.set_pwmTransition(newval);
     }
 
@@ -597,7 +597,7 @@ export class YPwmOutput extends YFunction
         if (target < 0.001) {
             target = 0.001;
         }
-        newval = String(Math.round(target*1000)/1000)+'Hz:'+String(Math.round(ms_duration));
+        newval = String(Math.round(target * 1000) / 1000) + 'Hz:' + String(Math.round(ms_duration));
         return await this.set_pwmTransition(newval);
     }
 
@@ -618,7 +618,7 @@ export class YPwmOutput extends YFunction
     async phaseMove(target: number, ms_duration: number): Promise<number>
     {
         let newval: string;
-        newval = String(Math.round(target*1000)/1000)+'ps:'+String(Math.round(ms_duration));
+        newval = String(Math.round(target * 1000) / 1000) + 'ps:' + String(Math.round(ms_duration));
         return await this.set_pwmTransition(newval);
     }
 
@@ -640,7 +640,7 @@ export class YPwmOutput extends YFunction
         if (ms_target < 0.0) {
             ms_target = 0.0;
         }
-        newval = String(Math.round(<number> Math.round(ms_target*65536)))+'ms*'+String(Math.round(n_pulses));
+        newval = String(Math.round(<number> Math.round(ms_target*65536))) + 'ms*' + String(Math.round(n_pulses));
         return await this.set_pwmTransition(newval);
     }
 
@@ -665,7 +665,7 @@ export class YPwmOutput extends YFunction
         if (target > 100.0) {
             target = 100.0;
         }
-        newval = String(Math.round(<number> Math.round(target*65536)))+'*'+String(Math.round(n_pulses));
+        newval = String(Math.round(<number> Math.round(target*65536))) + '*' + String(Math.round(n_pulses));
         return await this.set_pwmTransition(newval);
     }
 
@@ -686,7 +686,7 @@ export class YPwmOutput extends YFunction
         if (target < 0.001) {
             target = 0.001;
         }
-        newval = String(Math.round(target*1000)/1000)+'Hz*'+String(Math.round(n_pulses));
+        newval = String(Math.round(target * 1000) / 1000) + 'Hz*' + String(Math.round(n_pulses));
         return await this.set_pwmTransition(newval);
     }
 
@@ -713,9 +713,9 @@ export class YPwmOutput extends YFunction
     nextPwmOutput(): YPwmOutput | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmOutput.FindPwmOutputInContext(this._yapi, next_hwid);
     }
 
@@ -731,7 +731,7 @@ export class YPwmOutput extends YFunction
     static FirstPwmOutput(): YPwmOutput | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('PwmOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmOutput.FindPwmOutput(next_hwid);
     }
 
@@ -749,7 +749,7 @@ export class YPwmOutput extends YFunction
     static FirstPwmOutputInContext(yctx: YAPIContext): YPwmOutput | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('PwmOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmOutput.FindPwmOutputInContext(yctx, next_hwid);
     }
 
@@ -758,17 +758,22 @@ export class YPwmOutput extends YFunction
 
 export namespace YPwmOutput {
     //--- (YPwmOutput definitions)
-    export const enum ENABLED {
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum ENABLEDATPOWERON {
+
+    export const enum ENABLEDATPOWERON
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YPwmOutput, value: string): void }
+
+    export interface ValueCallback {(func: YPwmOutput, value: string): void}
+
     //--- (end of YPwmOutput definitions)
 }
 

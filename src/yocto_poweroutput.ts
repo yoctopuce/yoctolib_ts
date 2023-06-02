@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_poweroutput.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_poweroutput.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for PowerOutput functions
  *
@@ -85,7 +85,7 @@ export class YPowerOutput extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'voltage':
             this._voltage = <YPowerOutput.VOLTAGE> <number> val;
             return 1;
@@ -132,7 +132,7 @@ export class YPowerOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('voltage',rest_val);
+        return await this._setAttr('voltage', rest_val);
     }
 
     /**
@@ -267,9 +267,9 @@ export class YPowerOutput extends YFunction
     nextPowerOutput(): YPowerOutput | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPowerOutput.FindPowerOutputInContext(this._yapi, next_hwid);
     }
 
@@ -285,7 +285,7 @@ export class YPowerOutput extends YFunction
     static FirstPowerOutput(): YPowerOutput | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('PowerOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPowerOutput.FindPowerOutput(next_hwid);
     }
 
@@ -303,7 +303,7 @@ export class YPowerOutput extends YFunction
     static FirstPowerOutputInContext(yctx: YAPIContext): YPowerOutput | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('PowerOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPowerOutput.FindPowerOutputInContext(yctx, next_hwid);
     }
 
@@ -312,7 +312,8 @@ export class YPowerOutput extends YFunction
 
 export namespace YPowerOutput {
     //--- (YPowerOutput definitions)
-    export const enum VOLTAGE {
+    export const enum VOLTAGE
+    {
         OFF = 0,
         OUT3V3 = 1,
         OUT5V = 2,
@@ -320,7 +321,9 @@ export namespace YPowerOutput {
         OUT1V8 = 4,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YPowerOutput, value: string): void }
+
+    export interface ValueCallback {(func: YPowerOutput, value: string): void}
+
     //--- (end of YPowerOutput definitions)
 }
 

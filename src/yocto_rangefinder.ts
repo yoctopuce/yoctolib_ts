@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 52848 2023-01-20 15:49:48Z mvuilleu $
+ *  $Id: yocto_rangefinder.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -101,7 +101,7 @@ export class YRangeFinder extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'rangeFinderMode':
             this._rangeFinderMode = <YRangeFinder.RANGEFINDERMODE> <number> val;
             return 1;
@@ -141,7 +141,7 @@ export class YRangeFinder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -185,7 +185,7 @@ export class YRangeFinder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('rangeFinderMode',rest_val);
+        return await this._setAttr('rangeFinderMode', rest_val);
     }
 
     /**
@@ -227,7 +227,7 @@ export class YRangeFinder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('timeFrame',rest_val);
+        return await this._setAttr('timeFrame', rest_val);
     }
 
     /**
@@ -265,7 +265,7 @@ export class YRangeFinder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('hardwareCalibration',rest_val);
+        return await this._setAttr('hardwareCalibration', rest_val);
     }
 
     /**
@@ -303,7 +303,7 @@ export class YRangeFinder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -529,7 +529,7 @@ export class YRangeFinder extends YSensor
         } else {
             distmm = <number> Math.round(targetDist);
         }
-        return await this.set_command('O'+String(Math.round(distmm)));
+        return await this.set_command('O' + String(Math.round(distmm)));
     }
 
     /**
@@ -552,7 +552,7 @@ export class YRangeFinder extends YSensor
         } else {
             distmm = <number> Math.round(targetDist);
         }
-        return await this.set_command('X'+String(Math.round(distmm)));
+        return await this.set_command('X' + String(Math.round(distmm)));
     }
 
     /**
@@ -581,9 +581,9 @@ export class YRangeFinder extends YSensor
     nextRangeFinder(): YRangeFinder | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRangeFinder.FindRangeFinderInContext(this._yapi, next_hwid);
     }
 
@@ -599,7 +599,7 @@ export class YRangeFinder extends YSensor
     static FirstRangeFinder(): YRangeFinder | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('RangeFinder');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRangeFinder.FindRangeFinder(next_hwid);
     }
 
@@ -617,7 +617,7 @@ export class YRangeFinder extends YSensor
     static FirstRangeFinderInContext(yctx: YAPIContext): YRangeFinder | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('RangeFinder');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRangeFinder.FindRangeFinderInContext(yctx, next_hwid);
     }
 
@@ -626,15 +626,19 @@ export class YRangeFinder extends YSensor
 
 export namespace YRangeFinder {
     //--- (YRangeFinder definitions)
-    export const enum RANGEFINDERMODE {
+    export const enum RANGEFINDERMODE
+    {
         DEFAULT = 0,
         LONG_RANGE = 1,
         HIGH_ACCURACY = 2,
         HIGH_SPEED = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YRangeFinder, value: string): void }
-    export interface TimedReportCallback { (func: YRangeFinder, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YRangeFinder, value: string): void}
+
+    export interface TimedReportCallback {(func: YRangeFinder, measure: YMeasure): void}
+
     //--- (end of YRangeFinder definitions)
 }
 

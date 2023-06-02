@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 50281 2022-06-30 07:21:14Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -105,7 +105,7 @@ export class YColorLedCluster extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'activeLedCount':
             this._activeLedCount = <number> <number> val;
             return 1;
@@ -165,7 +165,7 @@ export class YColorLedCluster extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('activeLedCount',rest_val);
+        return await this._setAttr('activeLedCount', rest_val);
     }
 
     /**
@@ -204,7 +204,7 @@ export class YColorLedCluster extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('ledType',rest_val);
+        return await this._setAttr('ledType', rest_val);
     }
 
     /**
@@ -300,7 +300,7 @@ export class YColorLedCluster extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -441,7 +441,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_rgbColor(ledIndex: number, count: number, rgbValue: number): Promise<number>
     {
-        return await this.sendCommand('SR'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+(rgbValue).toString(16).toLowerCase());
+        return await this.sendCommand('SR' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (rgbValue).toString(16).toLowerCase());
     }
 
     /**
@@ -459,7 +459,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_rgbColorAtPowerOn(ledIndex: number, count: number, rgbValue: number): Promise<number>
     {
-        return await this.sendCommand('SC'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+(rgbValue).toString(16).toLowerCase());
+        return await this.sendCommand('SC' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (rgbValue).toString(16).toLowerCase());
     }
 
     /**
@@ -479,7 +479,7 @@ export class YColorLedCluster extends YFunction
     {
         let rgbValue: number;
         rgbValue = await this.hsl2rgb(hslValue);
-        return await this.sendCommand('SC'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+(rgbValue).toString(16).toLowerCase());
+        return await this.sendCommand('SC' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (rgbValue).toString(16).toLowerCase());
     }
 
     /**
@@ -496,7 +496,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_hslColor(ledIndex: number, count: number, hslValue: number): Promise<number>
     {
-        return await this.sendCommand('SH'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+(hslValue).toString(16).toLowerCase());
+        return await this.sendCommand('SH' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (hslValue).toString(16).toLowerCase());
     }
 
     /**
@@ -514,7 +514,7 @@ export class YColorLedCluster extends YFunction
      */
     async rgb_move(ledIndex: number, count: number, rgbValue: number, delay: number): Promise<number>
     {
-        return await this.sendCommand('MR'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+(rgbValue).toString(16).toLowerCase()+','+String(Math.round(delay)));
+        return await this.sendCommand('MR' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (rgbValue).toString(16).toLowerCase() + ',' + String(Math.round(delay)));
     }
 
     /**
@@ -536,7 +536,7 @@ export class YColorLedCluster extends YFunction
      */
     async hsl_move(ledIndex: number, count: number, hslValue: number, delay: number): Promise<number>
     {
-        return await this.sendCommand('MH'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+(hslValue).toString(16).toLowerCase()+','+String(Math.round(delay)));
+        return await this.sendCommand('MH' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (hslValue).toString(16).toLowerCase() + ',' + String(Math.round(delay)));
     }
 
     /**
@@ -554,7 +554,7 @@ export class YColorLedCluster extends YFunction
      */
     async addRgbMoveToBlinkSeq(seqIndex: number, rgbValue: number, delay: number): Promise<number>
     {
-        return await this.sendCommand('AR'+String(Math.round(seqIndex))+','+(rgbValue).toString(16).toLowerCase()+','+String(Math.round(delay)));
+        return await this.sendCommand('AR' + String(Math.round(seqIndex)) + ',' + (rgbValue).toString(16).toLowerCase() + ',' + String(Math.round(delay)));
     }
 
     /**
@@ -572,7 +572,7 @@ export class YColorLedCluster extends YFunction
      */
     async addHslMoveToBlinkSeq(seqIndex: number, hslValue: number, delay: number): Promise<number>
     {
-        return await this.sendCommand('AH'+String(Math.round(seqIndex))+','+(hslValue).toString(16).toLowerCase()+','+String(Math.round(delay)));
+        return await this.sendCommand('AH' + String(Math.round(seqIndex)) + ',' + (hslValue).toString(16).toLowerCase() + ',' + String(Math.round(delay)));
     }
 
     /**
@@ -590,7 +590,7 @@ export class YColorLedCluster extends YFunction
      */
     async addMirrorToBlinkSeq(seqIndex: number): Promise<number>
     {
-        return await this.sendCommand('AC'+String(Math.round(seqIndex))+',0,0');
+        return await this.sendCommand('AC' + String(Math.round(seqIndex)) + ',0,0');
     }
 
     /**
@@ -607,7 +607,7 @@ export class YColorLedCluster extends YFunction
      */
     async addJumpToBlinkSeq(seqIndex: number, linkSeqIndex: number): Promise<number>
     {
-        return await this.sendCommand('AC'+String(Math.round(seqIndex))+',100,'+String(Math.round(linkSeqIndex))+',1000');
+        return await this.sendCommand('AC' + String(Math.round(seqIndex)) + ',100,' + String(Math.round(linkSeqIndex)) + ',1000');
     }
 
     /**
@@ -623,7 +623,7 @@ export class YColorLedCluster extends YFunction
      */
     async addUnlinkToBlinkSeq(seqIndex: number): Promise<number>
     {
-        return await this.sendCommand('AC'+String(Math.round(seqIndex))+',100,-1,1000');
+        return await this.sendCommand('AC' + String(Math.round(seqIndex)) + ',100,-1,1000');
     }
 
     /**
@@ -643,7 +643,7 @@ export class YColorLedCluster extends YFunction
      */
     async linkLedToBlinkSeq(ledIndex: number, count: number, seqIndex: number, offset: number): Promise<number>
     {
-        return await this.sendCommand('LS'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+String(Math.round(seqIndex))+','+String(Math.round(offset)));
+        return await this.sendCommand('LS' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + String(Math.round(seqIndex)) + ',' + String(Math.round(offset)));
     }
 
     /**
@@ -663,7 +663,7 @@ export class YColorLedCluster extends YFunction
      */
     async linkLedToBlinkSeqAtPowerOn(ledIndex: number, count: number, seqIndex: number, offset: number): Promise<number>
     {
-        return await this.sendCommand('LO'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+String(Math.round(seqIndex))+','+String(Math.round(offset)));
+        return await this.sendCommand('LO' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + String(Math.round(seqIndex)) + ',' + String(Math.round(offset)));
     }
 
     /**
@@ -683,7 +683,7 @@ export class YColorLedCluster extends YFunction
      */
     async linkLedToPeriodicBlinkSeq(ledIndex: number, count: number, seqIndex: number, periods: number): Promise<number>
     {
-        return await this.sendCommand('LP'+String(Math.round(ledIndex))+','+String(Math.round(count))+','+String(Math.round(seqIndex))+','+String(Math.round(periods)));
+        return await this.sendCommand('LP' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + String(Math.round(seqIndex)) + ',' + String(Math.round(periods)));
     }
 
     /**
@@ -698,7 +698,7 @@ export class YColorLedCluster extends YFunction
      */
     async unlinkLedFromBlinkSeq(ledIndex: number, count: number): Promise<number>
     {
-        return await this.sendCommand('US'+String(Math.round(ledIndex))+','+String(Math.round(count)));
+        return await this.sendCommand('US' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)));
     }
 
     /**
@@ -713,7 +713,7 @@ export class YColorLedCluster extends YFunction
      */
     async startBlinkSeq(seqIndex: number): Promise<number>
     {
-        return await this.sendCommand('SS'+String(Math.round(seqIndex)));
+        return await this.sendCommand('SS' + String(Math.round(seqIndex)));
     }
 
     /**
@@ -728,7 +728,7 @@ export class YColorLedCluster extends YFunction
      */
     async stopBlinkSeq(seqIndex: number): Promise<number>
     {
-        return await this.sendCommand('XS'+String(Math.round(seqIndex)));
+        return await this.sendCommand('XS' + String(Math.round(seqIndex)));
     }
 
     /**
@@ -743,7 +743,7 @@ export class YColorLedCluster extends YFunction
      */
     async resetBlinkSeq(seqIndex: number): Promise<number>
     {
-        return await this.sendCommand('ZS'+String(Math.round(seqIndex)));
+        return await this.sendCommand('ZS' + String(Math.round(seqIndex)));
     }
 
     /**
@@ -761,7 +761,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_blinkSeqStateAtPowerOn(seqIndex: number, autostart: number): Promise<number>
     {
-        return await this.sendCommand('AS'+String(Math.round(seqIndex))+','+String(Math.round(autostart)));
+        return await this.sendCommand('AS' + String(Math.round(seqIndex)) + ',' + String(Math.round(autostart)));
     }
 
     /**
@@ -778,7 +778,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_blinkSeqSpeed(seqIndex: number, speed: number): Promise<number>
     {
-        return await this.sendCommand('CS'+String(Math.round(seqIndex))+','+String(Math.round(speed)));
+        return await this.sendCommand('CS' + String(Math.round(seqIndex)) + ',' + String(Math.round(speed)));
     }
 
     /**
@@ -813,7 +813,7 @@ export class YColorLedCluster extends YFunction
      */
     async saveBlinkSeq(seqIndex: number): Promise<number>
     {
-        return await this.sendCommand('WS'+String(Math.round(seqIndex)));
+        return await this.sendCommand('WS' + String(Math.round(seqIndex)));
     }
 
     /**
@@ -830,7 +830,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_rgbColorBuffer(ledIndex: number, buff: Uint8Array): Promise<number>
     {
-        return await this._upload('rgb:0:'+String(Math.round(ledIndex)), buff);
+        return await this._upload('rgb:0:' + String(Math.round(ledIndex)), buff);
     }
 
     /**
@@ -863,7 +863,7 @@ export class YColorLedCluster extends YFunction
             idx = idx + 1;
         }
 
-        res = await this._upload('rgb:0:'+String(Math.round(ledIndex)), buff);
+        res = await this._upload('rgb:0:' + String(Math.round(ledIndex)), buff);
         return res;
     }
 
@@ -898,7 +898,7 @@ export class YColorLedCluster extends YFunction
             idx = idx + 1;
         }
 
-        res = await this._upload('rgb:'+String(Math.round(delay))+':'+String(Math.round(ledIndex)), buff);
+        res = await this._upload('rgb:' + String(Math.round(delay)) + ':' + String(Math.round(ledIndex)), buff);
         return res;
     }
 
@@ -936,7 +936,7 @@ export class YColorLedCluster extends YFunction
      */
     async set_hslColorBuffer(ledIndex: number, buff: Uint8Array): Promise<number>
     {
-        return await this._upload('hsl:0:'+String(Math.round(ledIndex)), buff);
+        return await this._upload('hsl:0:' + String(Math.round(ledIndex)), buff);
     }
 
     /**
@@ -969,7 +969,7 @@ export class YColorLedCluster extends YFunction
             idx = idx + 1;
         }
 
-        res = await this._upload('hsl:0:'+String(Math.round(ledIndex)), buff);
+        res = await this._upload('hsl:0:' + String(Math.round(ledIndex)), buff);
         return res;
     }
 
@@ -1024,7 +1024,7 @@ export class YColorLedCluster extends YFunction
             idx = idx + 1;
         }
 
-        res = await this._upload('hsl:'+String(Math.round(delay))+':'+String(Math.round(ledIndex)), buff);
+        res = await this._upload('hsl:' + String(Math.round(delay)) + ':' + String(Math.round(ledIndex)), buff);
         return res;
     }
 
@@ -1042,7 +1042,7 @@ export class YColorLedCluster extends YFunction
      */
     async get_rgbColorBuffer(ledIndex: number, count: number): Promise<Uint8Array>
     {
-        return await this._download('rgb.bin?typ=0&pos='+String(Math.round(3*ledIndex))+'&len='+String(Math.round(3*count)));
+        return await this._download('rgb.bin?typ=0&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
     }
 
     /**
@@ -1066,7 +1066,7 @@ export class YColorLedCluster extends YFunction
         let g: number;
         let b: number;
 
-        buff = await this._download('rgb.bin?typ=0&pos='+String(Math.round(3*ledIndex))+'&len='+String(Math.round(3*count)));
+        buff = await this._download('rgb.bin?typ=0&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1100,7 +1100,7 @@ export class YColorLedCluster extends YFunction
         let g: number;
         let b: number;
 
-        buff = await this._download('rgb.bin?typ=4&pos='+String(Math.round(3*ledIndex))+'&len='+String(Math.round(3*count)));
+        buff = await this._download('rgb.bin?typ=4&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1132,7 +1132,7 @@ export class YColorLedCluster extends YFunction
         let idx: number;
         let seq: number;
 
-        buff = await this._download('rgb.bin?typ=1&pos='+String(Math.round(ledIndex))+'&len='+String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=1&pos=' + String(Math.round(ledIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1165,7 +1165,7 @@ export class YColorLedCluster extends YFunction
         let lh: number;
         let ll: number;
 
-        buff = await this._download('rgb.bin?typ=2&pos='+String(Math.round(4*seqIndex))+'&len='+String(Math.round(4*count)));
+        buff = await this._download('rgb.bin?typ=2&pos=' + String(Math.round(4*seqIndex)) + '&len=' + String(Math.round(4*count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1197,7 +1197,7 @@ export class YColorLedCluster extends YFunction
         let lh: number;
         let ll: number;
 
-        buff = await this._download('rgb.bin?typ=6&pos='+String(Math.round(seqIndex))+'&len='+String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=6&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1226,7 +1226,7 @@ export class YColorLedCluster extends YFunction
         let idx: number;
         let started: number;
 
-        buff = await this._download('rgb.bin?typ=5&pos='+String(Math.round(seqIndex))+'&len='+String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=5&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1254,7 +1254,7 @@ export class YColorLedCluster extends YFunction
         let idx: number;
         let started: number;
 
-        buff = await this._download('rgb.bin?typ=3&pos='+String(Math.round(seqIndex))+'&len='+String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=3&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1350,9 +1350,9 @@ export class YColorLedCluster extends YFunction
     nextColorLedCluster(): YColorLedCluster | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YColorLedCluster.FindColorLedClusterInContext(this._yapi, next_hwid);
     }
 
@@ -1368,7 +1368,7 @@ export class YColorLedCluster extends YFunction
     static FirstColorLedCluster(): YColorLedCluster | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('ColorLedCluster');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YColorLedCluster.FindColorLedCluster(next_hwid);
     }
 
@@ -1386,7 +1386,7 @@ export class YColorLedCluster extends YFunction
     static FirstColorLedClusterInContext(yctx: YAPIContext): YColorLedCluster | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('ColorLedCluster');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YColorLedCluster.FindColorLedClusterInContext(yctx, next_hwid);
     }
 
@@ -1395,13 +1395,16 @@ export class YColorLedCluster extends YFunction
 
 export namespace YColorLedCluster {
     //--- (YColorLedCluster definitions)
-    export const enum LEDTYPE {
+    export const enum LEDTYPE
+    {
         RGB = 0,
         RGBW = 1,
         WS2811 = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YColorLedCluster, value: string): void }
+
+    export interface ValueCallback {(func: YColorLedCluster, value: string): void}
+
     //--- (end of YColorLedCluster definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multiaxiscontroller.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_multiaxiscontroller.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for MultiAxisController functions
  *
@@ -92,7 +92,7 @@ export class YMultiAxisController extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'nAxis':
             this._nAxis = <number> <number> val;
             return 1;
@@ -138,7 +138,7 @@ export class YMultiAxisController extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('nAxis',rest_val);
+        return await this._setAttr('nAxis', rest_val);
     }
 
     /**
@@ -179,7 +179,7 @@ export class YMultiAxisController extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -306,17 +306,17 @@ export class YMultiAxisController extends YFunction
         let url: string;
         let retBin: Uint8Array;
         let res: number;
-        url = 'cmd.txt?X='+command;
+        url = 'cmd.txt?X=' + command;
         //may throw an exception
         retBin = await this._download(url);
         res = retBin[0];
         if (res < 58) {
             if (!(res == 48)) {
-                return this._throw(this._yapi.DEVICE_BUSY,'Motor command pipeline is full, try again later',this._yapi.DEVICE_BUSY);
+                return this._throw(this._yapi.DEVICE_BUSY, 'Motor command pipeline is full, try again later', this._yapi.DEVICE_BUSY);
             }
         } else {
             if (!(res == 48)) {
-                return this._throw(this._yapi.IO_ERROR,'Motor command failed permanently',this._yapi.IO_ERROR);
+                return this._throw(this._yapi.IO_ERROR, 'Motor command failed permanently', this._yapi.IO_ERROR);
             }
         }
         return this._yapi.SUCCESS;
@@ -347,10 +347,10 @@ export class YMultiAxisController extends YFunction
         let i: number;
         let ndim: number;
         ndim = speed.length;
-        cmd = 'H'+String(Math.round(<number> Math.round(1000*speed[0])));
+        cmd = 'H' + String(Math.round(<number> Math.round(1000*speed[0])));
         i = 1;
         while (i < ndim) {
-            cmd = cmd+','+String(Math.round(<number> Math.round(1000*speed[i])));
+            cmd = cmd + ',' + String(Math.round(<number> Math.round(1000*speed[i])));
             i = i + 1;
         }
         return await this.sendCommand(cmd);
@@ -373,10 +373,10 @@ export class YMultiAxisController extends YFunction
         let i: number;
         let ndim: number;
         ndim = absPos.length;
-        cmd = 'M'+String(Math.round(<number> Math.round(16*absPos[0])));
+        cmd = 'M' + String(Math.round(<number> Math.round(16*absPos[0])));
         i = 1;
         while (i < ndim) {
-            cmd = cmd+','+String(Math.round(<number> Math.round(16*absPos[i])));
+            cmd = cmd + ',' + String(Math.round(<number> Math.round(16*absPos[i])));
             i = i + 1;
         }
         return await this.sendCommand(cmd);
@@ -399,10 +399,10 @@ export class YMultiAxisController extends YFunction
         let i: number;
         let ndim: number;
         ndim = relPos.length;
-        cmd = 'm'+String(Math.round(<number> Math.round(16*relPos[0])));
+        cmd = 'm' + String(Math.round(<number> Math.round(16*relPos[0])));
         i = 1;
         while (i < ndim) {
-            cmd = cmd+','+String(Math.round(<number> Math.round(16*relPos[i])));
+            cmd = cmd + ',' + String(Math.round(<number> Math.round(16*relPos[i])));
             i = i + 1;
         }
         return await this.sendCommand(cmd);
@@ -418,7 +418,7 @@ export class YMultiAxisController extends YFunction
      */
     async pause(waitMs: number): Promise<number>
     {
-        return await this.sendCommand('_'+String(Math.round(waitMs)));
+        return await this.sendCommand('_' + String(Math.round(waitMs)));
     }
 
     /**
@@ -467,9 +467,9 @@ export class YMultiAxisController extends YFunction
     nextMultiAxisController(): YMultiAxisController | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiAxisController.FindMultiAxisControllerInContext(this._yapi, next_hwid);
     }
 
@@ -485,7 +485,7 @@ export class YMultiAxisController extends YFunction
     static FirstMultiAxisController(): YMultiAxisController | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('MultiAxisController');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiAxisController.FindMultiAxisController(next_hwid);
     }
 
@@ -503,7 +503,7 @@ export class YMultiAxisController extends YFunction
     static FirstMultiAxisControllerInContext(yctx: YAPIContext): YMultiAxisController | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('MultiAxisController');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMultiAxisController.FindMultiAxisControllerInContext(yctx, next_hwid);
     }
 
@@ -512,7 +512,8 @@ export class YMultiAxisController extends YFunction
 
 export namespace YMultiAxisController {
     //--- (YMultiAxisController definitions)
-    export const enum GLOBALSTATE {
+    export const enum GLOBALSTATE
+    {
         ABSENT = 0,
         ALERT = 1,
         HI_Z = 2,
@@ -521,7 +522,9 @@ export namespace YMultiAxisController {
         BATCH = 5,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YMultiAxisController, value: string): void }
+
+    export interface ValueCallback {(func: YMultiAxisController, value: string): void}
+
     //--- (end of YMultiAxisController definitions)
 }
 

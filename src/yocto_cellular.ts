@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 50494 2022-07-19 16:08:56Z mvuilleu $
+ *  $Id: yocto_cellular.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -276,7 +276,7 @@ export class YCellular extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'linkQuality':
             this._linkQuality = <number> <number> val;
             return 1;
@@ -499,7 +499,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pin',rest_val);
+        return await this._setAttr('pin', rest_val);
     }
 
     /**
@@ -546,7 +546,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('radioConfig',rest_val);
+        return await this._setAttr('radioConfig', rest_val);
     }
 
     /**
@@ -589,7 +589,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('lockedOperator',rest_val);
+        return await this._setAttr('lockedOperator', rest_val);
     }
 
     /**
@@ -626,7 +626,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('airplaneMode',rest_val);
+        return await this._setAttr('airplaneMode', rest_val);
     }
 
     /**
@@ -673,7 +673,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enableData',rest_val);
+        return await this._setAttr('enableData', rest_val);
     }
 
     /**
@@ -712,7 +712,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('apn',rest_val);
+        return await this._setAttr('apn', rest_val);
     }
 
     /**
@@ -741,7 +741,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('apnSecret',rest_val);
+        return await this._setAttr('apnSecret', rest_val);
     }
 
     /**
@@ -778,7 +778,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pingInterval',rest_val);
+        return await this._setAttr('pingInterval', rest_val);
     }
 
     /**
@@ -813,7 +813,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('dataSent',rest_val);
+        return await this._setAttr('dataSent', rest_val);
     }
 
     /**
@@ -848,7 +848,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('dataReceived',rest_val);
+        return await this._setAttr('dataReceived', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -867,7 +867,7 @@ export class YCellular extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -1008,12 +1008,12 @@ export class YCellular extends YFunction
         let gsmMsg: string;
         gsmMsg = await this.get_message();
         if (!((gsmMsg).substr(0, 13) == 'Enter SIM PUK')) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'PUK not expected at this time',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'PUK not expected at this time', this._yapi.INVALID_ARGUMENT);
         }
         if (newPin == '') {
-            return await this.set_command('AT+CPIN='+puk+',0000;+CLCK=SC,0,0000');
+            return await this.set_command('AT+CPIN=' + puk + ',0000;+CLCK=SC,0,0000');
         }
-        return await this.set_command('AT+CPIN='+puk+','+newPin);
+        return await this.set_command('AT+CPIN=' + puk + ',' + newPin);
     }
 
     /**
@@ -1029,7 +1029,7 @@ export class YCellular extends YFunction
      */
     async set_apnAuth(username: string, password: string): Promise<number>
     {
-        return await this.set_apnSecret(username+','+password);
+        return await this.set_apnSecret(username + ',' + password);
     }
 
     /**
@@ -1078,23 +1078,23 @@ export class YCellular extends YFunction
         cmdLen = (cmd).length;
         chrPos = (cmd).indexOf('#');
         while (chrPos >= 0) {
-            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'23'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '23' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('#');
         }
         chrPos = (cmd).indexOf('+');
         while (chrPos >= 0) {
-            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'2B'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '2B' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('+');
         }
         chrPos = (cmd).indexOf('=');
         while (chrPos >= 0) {
-            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'3D'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '3D' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('=');
         }
-        cmd = 'at.txt?cmd='+cmd;
+        cmd = 'at.txt?cmd=' + cmd;
         res = '';
         // max 2 minutes (each iteration may take up to 5 seconds if waiting)
         waitMore = 24;
@@ -1110,14 +1110,14 @@ export class YCellular extends YFunction
             if (buff[idx] == 64) {
                 // continuation detected
                 suffixlen = bufflen - idx;
-                cmd = 'at.txt?cmd='+(buffstr).substr( buffstrlen - suffixlen, suffixlen);
-                buffstr = (buffstr).substr( 0, buffstrlen - suffixlen);
+                cmd = 'at.txt?cmd=' + (buffstr).substr(buffstrlen - suffixlen, suffixlen);
+                buffstr = (buffstr).substr(0, buffstrlen - suffixlen);
                 waitMore = waitMore - 1;
             } else {
                 // request complete
                 waitMore = 0;
             }
-            res = res+''+buffstr;
+            res = res + '' + buffstr;
         }
         return res;
     }
@@ -1144,14 +1144,14 @@ export class YCellular extends YFunction
         idx = (cops).indexOf('(');
         while (idx >= 0) {
             slen = slen - (idx+1);
-            cops = (cops).substr( idx+1, slen);
+            cops = (cops).substr(idx+1, slen);
             idx = (cops).indexOf('"');
             if (idx > 0) {
                 slen = slen - (idx+1);
-                cops = (cops).substr( idx+1, slen);
+                cops = (cops).substr(idx+1, slen);
                 idx = (cops).indexOf('"');
                 if (idx > 0) {
-                    res.push((cops).substr( 0, idx));
+                    res.push((cops).substr(0, idx));
                 }
             }
             idx = (cops).indexOf('(');
@@ -5712,7 +5712,7 @@ export class YCellular extends YFunction
         lines = (profiles).split('\n');
         nlines = lines.length;
         if (!(nlines > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'fail to retrieve profile list',res);
+            return this._throw(this._yapi.IO_ERROR, 'fail to retrieve profile list', res);
         }
         res.length = 0;
         idx = 0;
@@ -5720,7 +5720,7 @@ export class YCellular extends YFunction
             line = lines[idx];
             cpos = (line).indexOf(':');
             if (cpos > 0) {
-                profno = this._yapi.imm_atoi((line).substr( 0, cpos));
+                profno = this._yapi.imm_atoi((line).substr(0, cpos));
                 if (profno > 1) {
                     res.push(line);
                 }
@@ -5743,9 +5743,9 @@ export class YCellular extends YFunction
     nextCellular(): YCellular | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCellular.FindCellularInContext(this._yapi, next_hwid);
     }
 
@@ -5761,7 +5761,7 @@ export class YCellular extends YFunction
     static FirstCellular(): YCellular | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Cellular');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCellular.FindCellular(next_hwid);
     }
 
@@ -5779,7 +5779,7 @@ export class YCellular extends YFunction
     static FirstCellularInContext(yctx: YAPIContext): YCellular | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Cellular');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCellular.FindCellularInContext(yctx, next_hwid);
     }
 
@@ -5789,7 +5789,8 @@ export class YCellular extends YFunction
 export namespace YCellular
 {
     //--- (generated code: YCellular definitions)
-    export const enum CELLTYPE {
+    export const enum CELLTYPE
+    {
         GPRS = 0,
         EGPRS = 1,
         WCDMA = 2,
@@ -5801,19 +5802,25 @@ export namespace YCellular
         EC_GSM_IOT = 8,
         INVALID = -1
     }
-    export const enum AIRPLANEMODE {
+
+    export const enum AIRPLANEMODE
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export const enum ENABLEDATA {
+
+    export const enum ENABLEDATA
+    {
         HOMENETWORK = 0,
         ROAMING = 1,
         NEVER = 2,
         NEUTRALITY = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YCellular, value: string): void }
+
+    export interface ValueCallback {(func: YCellular, value: string): void}
+
     //--- (end of generated code: YCellular definitions)
 }
 

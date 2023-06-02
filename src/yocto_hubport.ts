@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_hubport.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_hubport.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for HubPort functions
  *
@@ -97,7 +97,7 @@ export class YHubPort extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'enabled':
             this._enabled = <YHubPort.ENABLED> <number> val;
             return 1;
@@ -146,7 +146,7 @@ export class YHubPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -322,9 +322,9 @@ export class YHubPort extends YFunction
     nextHubPort(): YHubPort | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YHubPort.FindHubPortInContext(this._yapi, next_hwid);
     }
 
@@ -340,7 +340,7 @@ export class YHubPort extends YFunction
     static FirstHubPort(): YHubPort | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('HubPort');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YHubPort.FindHubPort(next_hwid);
     }
 
@@ -358,7 +358,7 @@ export class YHubPort extends YFunction
     static FirstHubPortInContext(yctx: YAPIContext): YHubPort | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('HubPort');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YHubPort.FindHubPortInContext(yctx, next_hwid);
     }
 
@@ -367,12 +367,15 @@ export class YHubPort extends YFunction
 
 export namespace YHubPort {
     //--- (YHubPort definitions)
-    export const enum ENABLED {
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum PORTSTATE {
+
+    export const enum PORTSTATE
+    {
         OFF = 0,
         OVRLD = 1,
         ON = 2,
@@ -380,7 +383,9 @@ export namespace YHubPort {
         PROG = 4,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YHubPort, value: string): void }
+
+    export interface ValueCallback {(func: YHubPort, value: string): void}
+
     //--- (end of YHubPort definitions)
 }
 

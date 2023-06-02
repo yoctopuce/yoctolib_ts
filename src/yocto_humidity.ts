@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_humidity.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -80,7 +80,7 @@ export class YHumidity extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'relHum':
             this._relHum = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -110,7 +110,7 @@ export class YHumidity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -321,9 +321,9 @@ export class YHumidity extends YSensor
     nextHumidity(): YHumidity | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YHumidity.FindHumidityInContext(this._yapi, next_hwid);
     }
 
@@ -339,7 +339,7 @@ export class YHumidity extends YSensor
     static FirstHumidity(): YHumidity | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Humidity');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YHumidity.FindHumidity(next_hwid);
     }
 
@@ -357,7 +357,7 @@ export class YHumidity extends YSensor
     static FirstHumidityInContext(yctx: YAPIContext): YHumidity | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Humidity');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YHumidity.FindHumidityInContext(yctx, next_hwid);
     }
 
@@ -366,8 +366,10 @@ export class YHumidity extends YSensor
 
 export namespace YHumidity {
     //--- (YHumidity definitions)
-    export interface ValueCallback { (func: YHumidity, value: string): void }
-    export interface TimedReportCallback { (func: YHumidity, measure: YMeasure): void }
+    export interface ValueCallback {(func: YHumidity, value: string): void}
+
+    export interface TimedReportCallback {(func: YHumidity, measure: YMeasure): void}
+
     //--- (end of YHumidity definitions)
 }
 

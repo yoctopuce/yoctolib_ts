@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_display.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -202,7 +202,7 @@ export class YDisplayLayer
      */
     async selectColorPen(color: number): Promise<number>
     {
-        return await this.command_push('c'+('000000'+(color).toString(16)).slice(-6).toLowerCase());
+        return await this.command_push('c' + ('000000'+(color).toString(16)).slice(-6).toLowerCase());
     }
 
     /**
@@ -221,7 +221,7 @@ export class YDisplayLayer
      */
     async selectGrayPen(graylevel: number): Promise<number>
     {
-        return await this.command_push('g'+String(Math.round(graylevel)));
+        return await this.command_push('g' + String(Math.round(graylevel)));
     }
 
     /**
@@ -257,7 +257,7 @@ export class YDisplayLayer
      */
     async setAntialiasingMode(mode: boolean): Promise<number>
     {
-        return await this.command_push('a'+(mode?"1":"0"));
+        return await this.command_push('a' + (mode?"1":"0"));
     }
 
     /**
@@ -272,7 +272,7 @@ export class YDisplayLayer
      */
     async drawPixel(x: number, y: number): Promise<number>
     {
-        return await this.command_flush('P'+String(Math.round(x))+','+String(Math.round(y)));
+        return await this.command_flush('P' + String(Math.round(x)) + ',' + String(Math.round(y)));
     }
 
     /**
@@ -289,7 +289,7 @@ export class YDisplayLayer
      */
     async drawRect(x1: number, y1: number, x2: number, y2: number): Promise<number>
     {
-        return await this.command_flush('R'+String(Math.round(x1))+','+String(Math.round(y1))+','+String(Math.round(x2))+','+String(Math.round(y2)));
+        return await this.command_flush('R' + String(Math.round(x1)) + ',' + String(Math.round(y1)) + ',' + String(Math.round(x2)) + ',' + String(Math.round(y2)));
     }
 
     /**
@@ -306,7 +306,7 @@ export class YDisplayLayer
      */
     async drawBar(x1: number, y1: number, x2: number, y2: number): Promise<number>
     {
-        return await this.command_flush('B'+String(Math.round(x1))+','+String(Math.round(y1))+','+String(Math.round(x2))+','+String(Math.round(y2)));
+        return await this.command_flush('B' + String(Math.round(x1)) + ',' + String(Math.round(y1)) + ',' + String(Math.round(x2)) + ',' + String(Math.round(y2)));
     }
 
     /**
@@ -322,7 +322,7 @@ export class YDisplayLayer
      */
     async drawCircle(x: number, y: number, r: number): Promise<number>
     {
-        return await this.command_flush('C'+String(Math.round(x))+','+String(Math.round(y))+','+String(Math.round(r)));
+        return await this.command_flush('C' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + String(Math.round(r)));
     }
 
     /**
@@ -338,7 +338,7 @@ export class YDisplayLayer
      */
     async drawDisc(x: number, y: number, r: number): Promise<number>
     {
-        return await this.command_flush('D'+String(Math.round(x))+','+String(Math.round(y))+','+String(Math.round(r)));
+        return await this.command_flush('D' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + String(Math.round(r)));
     }
 
     /**
@@ -357,7 +357,7 @@ export class YDisplayLayer
      */
     async selectFont(fontname: string): Promise<number>
     {
-        return await this.command_push('&'+fontname+''+String.fromCharCode(27));
+        return await this.command_push('&' + fontname + '' + String.fromCharCode(27));
     }
 
     /**
@@ -384,7 +384,7 @@ export class YDisplayLayer
      */
     async drawText(x: number, y: number, anchor: YDisplayLayer.ALIGN, text: string): Promise<number>
     {
-        return await this.command_flush('T'+String(Math.round(x))+','+String(Math.round(y))+','+String(anchor)+','+text+''+String.fromCharCode(27));
+        return await this.command_flush('T' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + String(anchor) + ',' + text + '' + String.fromCharCode(27));
     }
 
     /**
@@ -403,7 +403,7 @@ export class YDisplayLayer
      */
     async drawImage(x: number, y: number, imagename: string): Promise<number>
     {
-        return await this.command_flush('*'+String(Math.round(x))+','+String(Math.round(y))+','+imagename+''+String.fromCharCode(27));
+        return await this.command_flush('*' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + imagename + '' + String.fromCharCode(27));
     }
 
     /**
@@ -429,7 +429,7 @@ export class YDisplayLayer
     async drawBitmap(x: number, y: number, w: number, bitmap: Uint8Array, bgcol: number): Promise<number>
     {
         let destname: string;
-        destname = 'layer'+String(Math.round(this._id))+':'+String(Math.round(w))+','+String(Math.round(bgcol))+'@'+String(Math.round(x))+','+String(Math.round(y));
+        destname = 'layer' + String(Math.round(this._id)) + ':' + String(Math.round(w)) + ',' + String(Math.round(bgcol)) + '@' + String(Math.round(x)) + ',' + String(Math.round(y));
         return await this._display.upload(destname, bitmap);
     }
 
@@ -445,7 +445,7 @@ export class YDisplayLayer
      */
     async moveTo(x: number, y: number): Promise<number>
     {
-        return await this.command_push('@'+String(Math.round(x))+','+String(Math.round(y)));
+        return await this.command_push('@' + String(Math.round(x)) + ',' + String(Math.round(y)));
     }
 
     /**
@@ -462,7 +462,7 @@ export class YDisplayLayer
      */
     async lineTo(x: number, y: number): Promise<number>
     {
-        return await this.command_flush('-'+String(Math.round(x))+','+String(Math.round(y)));
+        return await this.command_flush('-' + String(Math.round(x)) + ',' + String(Math.round(y)));
     }
 
     /**
@@ -480,7 +480,7 @@ export class YDisplayLayer
      */
     async consoleOut(text: string): Promise<number>
     {
-        return await this.command_flush('!'+text+''+String.fromCharCode(27));
+        return await this.command_flush('!' + text + '' + String.fromCharCode(27));
     }
 
     /**
@@ -497,7 +497,7 @@ export class YDisplayLayer
      */
     async setConsoleMargins(x1: number, y1: number, x2: number, y2: number): Promise<number>
     {
-        return await this.command_push('m'+String(Math.round(x1))+','+String(Math.round(y1))+','+String(Math.round(x2))+','+String(Math.round(y2)));
+        return await this.command_push('m' + String(Math.round(x1)) + ',' + String(Math.round(y1)) + ',' + String(Math.round(x2)) + ',' + String(Math.round(y2)));
     }
 
     /**
@@ -513,7 +513,7 @@ export class YDisplayLayer
      */
     async setConsoleBackground(bgcol: number): Promise<number>
     {
-        return await this.command_push('b'+String(Math.round(bgcol)));
+        return await this.command_push('b' + String(Math.round(bgcol)));
     }
 
     /**
@@ -528,7 +528,7 @@ export class YDisplayLayer
      */
     async setConsoleWordWrap(wordwrap: boolean): Promise<number>
     {
-        return await this.command_push('w'+(wordwrap?"1":"0"));
+        return await this.command_push('w' + (wordwrap?"1":"0"));
     }
 
     /**
@@ -560,7 +560,7 @@ export class YDisplayLayer
      */
     async setLayerPosition(x: number, y: number, scrollTime: number): Promise<number>
     {
-        return await this.command_flush('#'+String(Math.round(x))+','+String(Math.round(y))+','+String(Math.round(scrollTime)));
+        return await this.command_flush('#' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + String(Math.round(scrollTime)));
     }
 
     /**
@@ -663,7 +663,8 @@ export class YDisplayLayer
 export namespace YDisplayLayer
 {
     //--- (generated code: YDisplayLayer definitions)
-    export const enum ALIGN {
+    export const enum ALIGN
+    {
         TOP_LEFT = 0,
         CENTER_LEFT = 1,
         BASELINE_LEFT = 2,
@@ -681,6 +682,7 @@ export namespace YDisplayLayer
         BASELINE_RIGHT = 14,
         BOTTOM_RIGHT = 15
     }
+
     //--- (end of generated code: YDisplayLayer definitions)
 }
 
@@ -780,7 +782,7 @@ export class YDisplay extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'enabled':
             this._enabled = <YDisplay.ENABLED> <number> val;
             return 1;
@@ -852,7 +854,7 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -889,7 +891,7 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('startupSeq',rest_val);
+        return await this._setAttr('startupSeq', rest_val);
     }
 
     /**
@@ -926,7 +928,7 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('brightness',rest_val);
+        return await this._setAttr('brightness', rest_val);
     }
 
     /**
@@ -965,7 +967,7 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('orientation',rest_val);
+        return await this._setAttr('orientation', rest_val);
     }
 
     /**
@@ -1099,7 +1101,7 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -1251,7 +1253,7 @@ export class YDisplay extends YFunction
     async fade(brightness: number, duration: number): Promise<number>
     {
         await this.flushLayers();
-        return await this.sendCommand('+'+String(Math.round(brightness))+','+String(Math.round(duration)));
+        return await this.sendCommand('+' + String(Math.round(brightness)) + ',' + String(Math.round(duration)));
     }
 
     /**
@@ -1305,7 +1307,7 @@ export class YDisplay extends YFunction
     async playSequence(sequenceName: string): Promise<number>
     {
         await this.flushLayers();
-        return await this.sendCommand('S'+sequenceName);
+        return await this.sendCommand('S' + sequenceName);
     }
 
     /**
@@ -1325,7 +1327,7 @@ export class YDisplay extends YFunction
     async pauseSequence(delay_ms: number): Promise<number>
     {
         await this.flushLayers();
-        return await this.sendCommand('W'+String(Math.round(delay_ms)));
+        return await this.sendCommand('W' + String(Math.round(delay_ms)));
     }
 
     /**
@@ -1376,7 +1378,7 @@ export class YDisplay extends YFunction
     async copyLayerContent(srcLayerId: number, dstLayerId: number): Promise<number>
     {
         await this.flushLayers();
-        return await this.sendCommand('o'+String(Math.round(srcLayerId))+','+String(Math.round(dstLayerId)));
+        return await this.sendCommand('o' + String(Math.round(srcLayerId)) + ',' + String(Math.round(dstLayerId)));
     }
 
     /**
@@ -1397,7 +1399,7 @@ export class YDisplay extends YFunction
     async swapLayerContent(layerIdA: number, layerIdB: number): Promise<number>
     {
         await this.flushLayers();
-        return await this.sendCommand('E'+String(Math.round(layerIdA))+','+String(Math.round(layerIdB)));
+        return await this.sendCommand('E' + String(Math.round(layerIdA)) + ',' + String(Math.round(layerIdB)));
     }
 
     /**
@@ -1417,7 +1419,7 @@ export class YDisplay extends YFunction
         let idx: number;
         layercount = await this.get_layerCount();
         if (!((layerId >= 0) && (layerId < layercount))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid DisplayLayer index',null);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid DisplayLayer index', null);
         }
         if (this._allDisplayLayers.length == 0) {
             idx = 0;
@@ -1442,9 +1444,9 @@ export class YDisplay extends YFunction
     nextDisplay(): YDisplay | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDisplay.FindDisplayInContext(this._yapi, next_hwid);
     }
 
@@ -1460,7 +1462,7 @@ export class YDisplay extends YFunction
     static FirstDisplay(): YDisplay | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Display');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDisplay.FindDisplay(next_hwid);
     }
 
@@ -1478,7 +1480,7 @@ export class YDisplay extends YFunction
     static FirstDisplayInContext(yctx: YAPIContext): YDisplay | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Display');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDisplay.FindDisplayInContext(yctx, next_hwid);
     }
 
@@ -1529,24 +1531,31 @@ export class YDisplay extends YFunction
 export namespace YDisplay
 {
     //--- (generated code: YDisplay definitions)
-    export const enum ENABLED {
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum ORIENTATION {
+
+    export const enum ORIENTATION
+    {
         LEFT = 0,
         UP = 1,
         RIGHT = 2,
         DOWN = 3,
         INVALID = -1
     }
-    export const enum DISPLAYTYPE {
+
+    export const enum DISPLAYTYPE
+    {
         MONO = 0,
         GRAY = 1,
         RGB = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YDisplay, value: string): void }
+
+    export interface ValueCallback {(func: YDisplay, value: string): void}
+
     //--- (end of generated code: YDisplay definitions)
 }

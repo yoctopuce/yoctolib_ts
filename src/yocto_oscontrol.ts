@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_oscontrol.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -75,7 +75,7 @@ export class YOsControl extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'shutdownCountdown':
             this._shutdownCountdown = <number> <number> val;
             return 1;
@@ -108,7 +108,7 @@ export class YOsControl extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('shutdownCountdown',rest_val);
+        return await this._setAttr('shutdownCountdown', rest_val);
     }
 
     /**
@@ -257,9 +257,9 @@ export class YOsControl extends YFunction
     nextOsControl(): YOsControl | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YOsControl.FindOsControlInContext(this._yapi, next_hwid);
     }
 
@@ -275,7 +275,7 @@ export class YOsControl extends YFunction
     static FirstOsControl(): YOsControl | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('OsControl');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YOsControl.FindOsControl(next_hwid);
     }
 
@@ -293,7 +293,7 @@ export class YOsControl extends YFunction
     static FirstOsControlInContext(yctx: YAPIContext): YOsControl | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('OsControl');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YOsControl.FindOsControlInContext(yctx, next_hwid);
     }
 
@@ -302,7 +302,8 @@ export class YOsControl extends YFunction
 
 export namespace YOsControl {
     //--- (YOsControl definitions)
-    export interface ValueCallback { (func: YOsControl, value: string): void }
+    export interface ValueCallback {(func: YOsControl, value: string): void}
+
     //--- (end of YOsControl definitions)
 }
 

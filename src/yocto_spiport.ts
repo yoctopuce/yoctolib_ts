@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
+ *  $Id: yocto_spiport.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -220,7 +220,7 @@ export class YSpiPort extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'rxCount':
             this._rxCount = <number> <number> val;
             return 1;
@@ -420,7 +420,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('currentJob',rest_val);
+        return await this._setAttr('currentJob', rest_val);
     }
 
     /**
@@ -457,7 +457,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('startupJob',rest_val);
+        return await this._setAttr('startupJob', rest_val);
     }
 
     /**
@@ -514,7 +514,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -561,7 +561,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('protocol',rest_val);
+        return await this._setAttr('protocol', rest_val);
     }
 
     /**
@@ -608,7 +608,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('voltageLevel',rest_val);
+        return await this._setAttr('voltageLevel', rest_val);
     }
 
     /**
@@ -651,7 +651,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('spiMode',rest_val);
+        return await this._setAttr('spiMode', rest_val);
     }
 
     /**
@@ -690,7 +690,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('ssPolarity',rest_val);
+        return await this._setAttr('ssPolarity', rest_val);
     }
 
     /**
@@ -731,7 +731,7 @@ export class YSpiPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('shiftSampling',rest_val);
+        return await this._setAttr('shiftSampling', rest_val);
     }
 
     /**
@@ -879,7 +879,7 @@ export class YSpiPort extends YFunction
         let msglen: number;
         let res: string;
 
-        url = 'rxmsg.json?pos='+String(Math.round(this._rxptr))+'&len=1&maxw=1';
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&len=1&maxw=1';
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -926,7 +926,7 @@ export class YSpiPort extends YFunction
         let res: string[] = [];
         let idx: number;
 
-        url = 'rxmsg.json?pos='+String(Math.round(this._rxptr))+'&maxw='+String(Math.round(maxWait))+'&pat='+pattern;
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&pat=' + pattern;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -982,10 +982,10 @@ export class YSpiPort extends YFunction
         let res: number;
         let databin: Uint8Array;
 
-        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr( 0, atPos));
+        res = this._yapi.imm_atoi((availPosStr).substr(0, atPos));
         return res;
     }
 
@@ -996,10 +996,10 @@ export class YSpiPort extends YFunction
         let res: number;
         let databin: Uint8Array;
 
-        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr( atPos+1, (availPosStr).length-atPos-1));
+        res = this._yapi.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -1025,12 +1025,12 @@ export class YSpiPort extends YFunction
         let res: string;
         if ((query).length <= 80) {
             // fast query
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=!'+this.imm_escapeAttr(query);
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=!' + this.imm_escapeAttr(query);
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload('txdata', this._yapi.imm_str2bin(query + '\r\n'));
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&pos=' + String(Math.round(prevpos));
         }
 
         msgbin = await this._download(url);
@@ -1072,12 +1072,12 @@ export class YSpiPort extends YFunction
         let res: string;
         if ((hexString).length <= 80) {
             // fast query
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=$'+hexString;
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=$' + hexString;
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload('txdata', this._yapi.imm_hexstr2bin(hexString));
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&pos=' + String(Math.round(prevpos));
         }
 
         msgbin = await this._download(url);
@@ -1157,7 +1157,7 @@ export class YSpiPort extends YFunction
      */
     async writeByte(code: number): Promise<number>
     {
-        return await this.sendCommand('$'+('00'+(code).toString(16)).slice(-2).toUpperCase());
+        return await this.sendCommand('$' + ('00'+(code).toString(16)).slice(-2).toUpperCase());
     }
 
     /**
@@ -1190,7 +1190,7 @@ export class YSpiPort extends YFunction
                 }
             }
             if (idx >= bufflen) {
-                return await this.sendCommand('+'+text);
+                return await this.sendCommand('+' + text);
             }
         }
         // send string using file upload
@@ -1258,13 +1258,13 @@ export class YSpiPort extends YFunction
         let res: number;
         bufflen = (hexString).length;
         if (bufflen < 100) {
-            return await this.sendCommand('$'+hexString);
+            return await this.sendCommand('$' + hexString);
         }
         bufflen = ((bufflen) >> (1));
         buff = new Uint8Array(bufflen);
         idx = 0;
         while (idx < bufflen) {
-            hexb = parseInt((hexString).substr( 2 * idx, 2), 16);
+            hexb = parseInt((hexString).substr(2 * idx, 2), 16);
             buff.set([hexb], idx);
             idx = idx + 1;
         }
@@ -1288,7 +1288,7 @@ export class YSpiPort extends YFunction
         let bufflen: number;
         let idx: number;
         let ch: number;
-        buff = this._yapi.imm_str2bin(text+'\r\n');
+        buff = this._yapi.imm_str2bin(text + '\r\n');
         bufflen = (buff).length-2;
         if (bufflen < 100) {
             // if string is pure text, we can send it as a simple command (faster)
@@ -1303,7 +1303,7 @@ export class YSpiPort extends YFunction
                 }
             }
             if (idx >= bufflen) {
-                return await this.sendCommand('!'+text);
+                return await this.sendCommand('!' + text);
             }
         }
         // send string using file upload
@@ -1362,7 +1362,7 @@ export class YSpiPort extends YFunction
         // still mixed, need to process character by character
         this._rxptr = currpos;
 
-        buff = await this._download('rxdata.bin?pos='+String(Math.round(this._rxptr))+'&len=1');
+        buff = await this._download('rxdata.bin?pos=' + String(Math.round(this._rxptr)) + '&len=1');
         bufflen = (buff).length - 1;
         endpos = 0;
         mult = 1;
@@ -1401,7 +1401,7 @@ export class YSpiPort extends YFunction
             nChars = 65535;
         }
 
-        buff = await this._download('rxdata.bin?pos='+String(Math.round(this._rxptr))+'&len='+String(Math.round(nChars)));
+        buff = await this._download('rxdata.bin?pos=' + String(Math.round(this._rxptr)) + '&len=' + String(Math.round(nChars)));
         bufflen = (buff).length - 1;
         endpos = 0;
         mult = 1;
@@ -1411,7 +1411,7 @@ export class YSpiPort extends YFunction
             bufflen = bufflen - 1;
         }
         this._rxptr = endpos;
-        res = (this._yapi.imm_bin2str(buff)).substr( 0, bufflen);
+        res = (this._yapi.imm_bin2str(buff)).substr(0, bufflen);
         return res;
     }
 
@@ -1438,7 +1438,7 @@ export class YSpiPort extends YFunction
             nChars = 65535;
         }
 
-        buff = await this._download('rxdata.bin?pos='+String(Math.round(this._rxptr))+'&len='+String(Math.round(nChars)));
+        buff = await this._download('rxdata.bin?pos=' + String(Math.round(this._rxptr)) + '&len=' + String(Math.round(nChars)));
         bufflen = (buff).length - 1;
         endpos = 0;
         mult = 1;
@@ -1481,7 +1481,7 @@ export class YSpiPort extends YFunction
             nChars = 65535;
         }
 
-        buff = await this._download('rxdata.bin?pos='+String(Math.round(this._rxptr))+'&len='+String(Math.round(nChars)));
+        buff = await this._download('rxdata.bin?pos=' + String(Math.round(this._rxptr)) + '&len=' + String(Math.round(nChars)));
         bufflen = (buff).length - 1;
         endpos = 0;
         mult = 1;
@@ -1524,7 +1524,7 @@ export class YSpiPort extends YFunction
             nBytes = 65535;
         }
 
-        buff = await this._download('rxdata.bin?pos='+String(Math.round(this._rxptr))+'&len='+String(Math.round(nBytes)));
+        buff = await this._download('rxdata.bin?pos=' + String(Math.round(this._rxptr)) + '&len=' + String(Math.round(nBytes)));
         bufflen = (buff).length - 1;
         endpos = 0;
         mult = 1;
@@ -1537,11 +1537,11 @@ export class YSpiPort extends YFunction
         res = '';
         ofs = 0;
         while (ofs + 3 < bufflen) {
-            res = res+''+('00'+(buff[ofs]).toString(16)).slice(-2).toUpperCase()+''+('00'+(buff[ofs + 1]).toString(16)).slice(-2).toUpperCase()+''+('00'+(buff[ofs + 2]).toString(16)).slice(-2).toUpperCase()+''+('00'+(buff[ofs + 3]).toString(16)).slice(-2).toUpperCase();
+            res = res + '' + ('00'+(buff[ofs]).toString(16)).slice(-2).toUpperCase() + '' + ('00'+(buff[ofs + 1]).toString(16)).slice(-2).toUpperCase() + '' + ('00'+(buff[ofs + 2]).toString(16)).slice(-2).toUpperCase() + '' + ('00'+(buff[ofs + 3]).toString(16)).slice(-2).toUpperCase();
             ofs = ofs + 4;
         }
         while (ofs < bufflen) {
-            res = res+''+('00'+(buff[ofs]).toString(16)).slice(-2).toUpperCase();
+            res = res + '' + ('00'+(buff[ofs]).toString(16)).slice(-2).toUpperCase();
             ofs = ofs + 1;
         }
         return res;
@@ -1559,7 +1559,7 @@ export class YSpiPort extends YFunction
      */
     async set_SS(val: number): Promise<number>
     {
-        return await this.sendCommand('S'+String(Math.round(val)));
+        return await this.sendCommand('S' + String(Math.round(val)));
     }
 
     /**
@@ -1584,7 +1584,7 @@ export class YSpiPort extends YFunction
         let res: YSpiSnoopingRecord[] = [];
         let idx: number;
 
-        url = 'rxmsg.json?pos='+String(Math.round(this._rxptr))+'&maxw='+String(Math.round(maxWait))+'&t=0';
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&t=0';
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1615,9 +1615,9 @@ export class YSpiPort extends YFunction
     nextSpiPort(): YSpiPort | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YSpiPort.FindSpiPortInContext(this._yapi, next_hwid);
     }
 
@@ -1633,7 +1633,7 @@ export class YSpiPort extends YFunction
     static FirstSpiPort(): YSpiPort | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('SpiPort');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YSpiPort.FindSpiPort(next_hwid);
     }
 
@@ -1651,7 +1651,7 @@ export class YSpiPort extends YFunction
     static FirstSpiPortInContext(yctx: YAPIContext): YSpiPort | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('SpiPort');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YSpiPort.FindSpiPortInContext(yctx, next_hwid);
     }
 
@@ -1661,7 +1661,8 @@ export class YSpiPort extends YFunction
 export namespace YSpiPort
 {
     //--- (generated code: YSpiPort definitions)
-    export const enum VOLTAGELEVEL {
+    export const enum VOLTAGELEVEL
+    {
         OFF = 0,
         TTL3V = 1,
         TTL3VR = 2,
@@ -1673,16 +1674,22 @@ export namespace YSpiPort
         SDI12 = 8,
         INVALID = -1
     }
-    export const enum SSPOLARITY {
+
+    export const enum SSPOLARITY
+    {
         ACTIVE_LOW = 0,
         ACTIVE_HIGH = 1,
         INVALID = -1
     }
-    export const enum SHIFTSAMPLING {
+
+    export const enum SHIFTSAMPLING
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YSpiPort, value: string): void }
+
+    export interface ValueCallback {(func: YSpiPort, value: string): void}
+
     //--- (end of generated code: YSpiPort definitions)
 }

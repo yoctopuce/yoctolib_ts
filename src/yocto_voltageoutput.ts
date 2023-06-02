@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_voltageoutput.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -79,7 +79,7 @@ export class YVoltageOutput extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'currentVoltage':
             this._currentVoltage = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -106,7 +106,7 @@ export class YVoltageOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentVoltage',rest_val);
+        return await this._setAttr('currentVoltage', rest_val);
     }
 
     /**
@@ -144,7 +144,7 @@ export class YVoltageOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('voltageTransition',rest_val);
+        return await this._setAttr('voltageTransition', rest_val);
     }
 
     /**
@@ -161,7 +161,7 @@ export class YVoltageOutput extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('voltageAtStartUp',rest_val);
+        return await this._setAttr('voltageAtStartUp', rest_val);
     }
 
     /**
@@ -321,7 +321,7 @@ export class YVoltageOutput extends YFunction
         if (V_target > 10.0) {
             V_target = 10.0;
         }
-        newval = String(Math.round(<number> Math.round(V_target*65536)))+':'+String(Math.round(ms_duration));
+        newval = String(Math.round(<number> Math.round(V_target*65536))) + ':' + String(Math.round(ms_duration));
 
         return await this.set_voltageTransition(newval);
     }
@@ -339,9 +339,9 @@ export class YVoltageOutput extends YFunction
     nextVoltageOutput(): YVoltageOutput | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoltageOutput.FindVoltageOutputInContext(this._yapi, next_hwid);
     }
 
@@ -357,7 +357,7 @@ export class YVoltageOutput extends YFunction
     static FirstVoltageOutput(): YVoltageOutput | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('VoltageOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoltageOutput.FindVoltageOutput(next_hwid);
     }
 
@@ -375,7 +375,7 @@ export class YVoltageOutput extends YFunction
     static FirstVoltageOutputInContext(yctx: YAPIContext): YVoltageOutput | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('VoltageOutput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoltageOutput.FindVoltageOutputInContext(yctx, next_hwid);
     }
 
@@ -384,7 +384,8 @@ export class YVoltageOutput extends YFunction
 
 export namespace YVoltageOutput {
     //--- (YVoltageOutput definitions)
-    export interface ValueCallback { (func: YVoltageOutput, value: string): void }
+    export interface ValueCallback {(func: YVoltageOutput, value: string): void}
+
     //--- (end of YVoltageOutput definitions)
 }
 

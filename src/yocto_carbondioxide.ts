@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_carbondioxide.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -80,7 +80,7 @@ export class YCarbonDioxide extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'abcPeriod':
             this._abcPeriod = <number> <number> val;
             return 1;
@@ -129,7 +129,7 @@ export class YCarbonDioxide extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('abcPeriod',rest_val);
+        return await this._setAttr('abcPeriod', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -148,7 +148,7 @@ export class YCarbonDioxide extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -322,7 +322,7 @@ export class YCarbonDioxide extends YSensor
      */
     async triggerForcedCalibration(refVal: number): Promise<number>
     {
-        return await this.set_command('F'+String(Math.round(<number> Math.round(1000*refVal)))+'C');
+        return await this.set_command('F' + String(Math.round(<number> Math.round(1000*refVal))) + 'C');
     }
 
     /**
@@ -390,9 +390,9 @@ export class YCarbonDioxide extends YSensor
     nextCarbonDioxide(): YCarbonDioxide | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCarbonDioxide.FindCarbonDioxideInContext(this._yapi, next_hwid);
     }
 
@@ -408,7 +408,7 @@ export class YCarbonDioxide extends YSensor
     static FirstCarbonDioxide(): YCarbonDioxide | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('CarbonDioxide');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCarbonDioxide.FindCarbonDioxide(next_hwid);
     }
 
@@ -426,7 +426,7 @@ export class YCarbonDioxide extends YSensor
     static FirstCarbonDioxideInContext(yctx: YAPIContext): YCarbonDioxide | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('CarbonDioxide');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCarbonDioxide.FindCarbonDioxideInContext(yctx, next_hwid);
     }
 
@@ -435,8 +435,10 @@ export class YCarbonDioxide extends YSensor
 
 export namespace YCarbonDioxide {
     //--- (YCarbonDioxide definitions)
-    export interface ValueCallback { (func: YCarbonDioxide, value: string): void }
-    export interface TimedReportCallback { (func: YCarbonDioxide, measure: YMeasure): void }
+    export interface ValueCallback {(func: YCarbonDioxide, value: string): void}
+
+    export interface TimedReportCallback {(func: YCarbonDioxide, measure: YMeasure): void}
+
     //--- (end of YCarbonDioxide definitions)
 }
 

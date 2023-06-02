@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_servo.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_servo.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -102,7 +102,7 @@ export class YServo extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'position':
             this._position = <number> <number> val;
             return 1;
@@ -160,7 +160,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('position',rest_val);
+        return await this._setAttr('position', rest_val);
     }
 
     /**
@@ -195,7 +195,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -236,7 +236,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('range',rest_val);
+        return await this._setAttr('range', rest_val);
     }
 
     /**
@@ -277,7 +277,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('neutral',rest_val);
+        return await this._setAttr('neutral', rest_val);
     }
 
     async get_move(): Promise<YServo.Move>
@@ -296,7 +296,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
-        return await this._setAttr('move',rest_val);
+        return await this._setAttr('move', rest_val);
     }
 
     /**
@@ -349,7 +349,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('positionAtPowerOn',rest_val);
+        return await this._setAttr('positionAtPowerOn', rest_val);
     }
 
     /**
@@ -386,7 +386,7 @@ export class YServo extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabledAtPowerOn',rest_val);
+        return await this._setAttr('enabledAtPowerOn', rest_val);
     }
 
     /**
@@ -521,9 +521,9 @@ export class YServo extends YFunction
     nextServo(): YServo | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YServo.FindServoInContext(this._yapi, next_hwid);
     }
 
@@ -539,7 +539,7 @@ export class YServo extends YFunction
     static FirstServo(): YServo | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Servo');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YServo.FindServo(next_hwid);
     }
 
@@ -557,7 +557,7 @@ export class YServo extends YFunction
     static FirstServoInContext(yctx: YAPIContext): YServo | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Servo');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YServo.FindServoInContext(yctx, next_hwid);
     }
 
@@ -566,18 +566,24 @@ export class YServo extends YFunction
 
 export namespace YServo {
     //--- (YServo definitions)
-    export const enum ENABLED {
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface Move { target?: number; ms?: number; moving?: number; }
-    export const enum ENABLEDATPOWERON {
+
+    export interface Move { target?: number; ms?: number; moving?: number;}
+
+    export const enum ENABLEDATPOWERON
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YServo, value: string): void }
+
+    export interface ValueCallback {(func: YServo, value: string): void}
+
     //--- (end of YServo definitions)
 }
 

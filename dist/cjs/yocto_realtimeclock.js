@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 53833 2023-04-04 08:12:55Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for RealTimeClock functions
  *

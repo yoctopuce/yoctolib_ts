@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_daisychain.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_daisychain.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for DaisyChain functions
  *
@@ -91,7 +91,7 @@ export class YDaisyChain extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'daisyState':
             this._daisyState = <YDaisyChain.DAISYSTATE> <number> val;
             return 1;
@@ -181,7 +181,7 @@ export class YDaisyChain extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('requiredChildCount',rest_val);
+        return await this._setAttr('requiredChildCount', rest_val);
     }
 
     /**
@@ -316,9 +316,9 @@ export class YDaisyChain extends YFunction
     nextDaisyChain(): YDaisyChain | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDaisyChain.FindDaisyChainInContext(this._yapi, next_hwid);
     }
 
@@ -334,7 +334,7 @@ export class YDaisyChain extends YFunction
     static FirstDaisyChain(): YDaisyChain | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('DaisyChain');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDaisyChain.FindDaisyChain(next_hwid);
     }
 
@@ -352,7 +352,7 @@ export class YDaisyChain extends YFunction
     static FirstDaisyChainInContext(yctx: YAPIContext): YDaisyChain | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('DaisyChain');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDaisyChain.FindDaisyChainInContext(yctx, next_hwid);
     }
 
@@ -361,7 +361,8 @@ export class YDaisyChain extends YFunction
 
 export namespace YDaisyChain {
     //--- (YDaisyChain definitions)
-    export const enum DAISYSTATE {
+    export const enum DAISYSTATE
+    {
         READY = 0,
         IS_CHILD = 1,
         FIRMWARE_MISMATCH = 2,
@@ -369,7 +370,9 @@ export namespace YDaisyChain {
         CHILD_LOST = 4,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YDaisyChain, value: string): void }
+
+    export interface ValueCallback {(func: YDaisyChain, value: string): void}
+
     //--- (end of YDaisyChain definitions)
 }
 

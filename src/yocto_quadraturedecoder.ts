@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_quadraturedecoder.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -87,7 +87,7 @@ export class YQuadratureDecoder extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'speed':
             this._speed = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -115,7 +115,7 @@ export class YQuadratureDecoder extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentValue',rest_val);
+        return await this._setAttr('currentValue', rest_val);
     }
 
     /**
@@ -173,7 +173,7 @@ export class YQuadratureDecoder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('decoding',rest_val);
+        return await this._setAttr('decoding', rest_val);
     }
 
     /**
@@ -210,7 +210,7 @@ export class YQuadratureDecoder extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('edgesPerCycle',rest_val);
+        return await this._setAttr('edgesPerCycle', rest_val);
     }
 
     /**
@@ -383,9 +383,9 @@ export class YQuadratureDecoder extends YSensor
     nextQuadratureDecoder(): YQuadratureDecoder | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YQuadratureDecoder.FindQuadratureDecoderInContext(this._yapi, next_hwid);
     }
 
@@ -401,7 +401,7 @@ export class YQuadratureDecoder extends YSensor
     static FirstQuadratureDecoder(): YQuadratureDecoder | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('QuadratureDecoder');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YQuadratureDecoder.FindQuadratureDecoder(next_hwid);
     }
 
@@ -419,7 +419,7 @@ export class YQuadratureDecoder extends YSensor
     static FirstQuadratureDecoderInContext(yctx: YAPIContext): YQuadratureDecoder | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('QuadratureDecoder');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YQuadratureDecoder.FindQuadratureDecoderInContext(yctx, next_hwid);
     }
 
@@ -428,13 +428,17 @@ export class YQuadratureDecoder extends YSensor
 
 export namespace YQuadratureDecoder {
     //--- (YQuadratureDecoder definitions)
-    export const enum DECODING {
+    export const enum DECODING
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YQuadratureDecoder, value: string): void }
-    export interface TimedReportCallback { (func: YQuadratureDecoder, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YQuadratureDecoder, value: string): void}
+
+    export interface TimedReportCallback {(func: YQuadratureDecoder, measure: YMeasure): void}
+
     //--- (end of YQuadratureDecoder definitions)
 }
 

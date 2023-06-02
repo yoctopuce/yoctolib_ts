@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 50144 2022-06-17 06:59:52Z seb $
+ *  $Id: yocto_messagebox.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Sms functions
  *

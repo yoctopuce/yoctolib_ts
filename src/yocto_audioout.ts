@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_audioout.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -89,7 +89,7 @@ export class YAudioOut extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'volume':
             this._volume = <number> <number> val;
             return 1;
@@ -143,7 +143,7 @@ export class YAudioOut extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('volume',rest_val);
+        return await this._setAttr('volume', rest_val);
     }
 
     /**
@@ -179,7 +179,7 @@ export class YAudioOut extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('mute',rest_val);
+        return await this._setAttr('mute', rest_val);
     }
 
     /**
@@ -374,9 +374,9 @@ export class YAudioOut extends YFunction
     nextAudioOut(): YAudioOut | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAudioOut.FindAudioOutInContext(this._yapi, next_hwid);
     }
 
@@ -392,7 +392,7 @@ export class YAudioOut extends YFunction
     static FirstAudioOut(): YAudioOut | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('AudioOut');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAudioOut.FindAudioOut(next_hwid);
     }
 
@@ -410,7 +410,7 @@ export class YAudioOut extends YFunction
     static FirstAudioOutInContext(yctx: YAPIContext): YAudioOut | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('AudioOut');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAudioOut.FindAudioOutInContext(yctx, next_hwid);
     }
 
@@ -419,12 +419,15 @@ export class YAudioOut extends YFunction
 
 export namespace YAudioOut {
     //--- (YAudioOut definitions)
-    export const enum MUTE {
+    export const enum MUTE
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YAudioOut, value: string): void }
+
+    export interface ValueCallback {(func: YAudioOut, value: string): void}
+
     //--- (end of YAudioOut definitions)
 }
 

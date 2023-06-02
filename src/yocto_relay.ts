@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_relay.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -114,7 +114,7 @@ export class YRelay extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'state':
             this._state = <YRelay.STATE> <number> val;
             return 1;
@@ -177,7 +177,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('state',rest_val);
+        return await this._setAttr('state', rest_val);
     }
 
     /**
@@ -220,7 +220,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('stateAtPowerOn',rest_val);
+        return await this._setAttr('stateAtPowerOn', rest_val);
     }
 
     /**
@@ -261,7 +261,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('maxTimeOnStateA',rest_val);
+        return await this._setAttr('maxTimeOnStateA', rest_val);
     }
 
     /**
@@ -302,7 +302,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('maxTimeOnStateB',rest_val);
+        return await this._setAttr('maxTimeOnStateB', rest_val);
     }
 
     /**
@@ -339,7 +339,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('output',rest_val);
+        return await this._setAttr('output', rest_val);
     }
 
     /**
@@ -368,7 +368,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pulseTimer',rest_val);
+        return await this._setAttr('pulseTimer', rest_val);
     }
 
     /**
@@ -404,7 +404,7 @@ export class YRelay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
-        return await this._setAttr('delayedPulseTimer',rest_val);
+        return await this._setAttr('delayedPulseTimer', rest_val);
     }
 
     /**
@@ -613,9 +613,9 @@ export class YRelay extends YFunction
     nextRelay(): YRelay | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRelay.FindRelayInContext(this._yapi, next_hwid);
     }
 
@@ -631,7 +631,7 @@ export class YRelay extends YFunction
     static FirstRelay(): YRelay | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Relay');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRelay.FindRelay(next_hwid);
     }
 
@@ -649,7 +649,7 @@ export class YRelay extends YFunction
     static FirstRelayInContext(yctx: YAPIContext): YRelay | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Relay');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRelay.FindRelayInContext(yctx, next_hwid);
     }
 
@@ -658,24 +658,32 @@ export class YRelay extends YFunction
 
 export namespace YRelay {
     //--- (YRelay definitions)
-    export const enum STATE {
+    export const enum STATE
+    {
         A = 0,
         B = 1,
         INVALID = -1
     }
-    export const enum STATEATPOWERON {
+
+    export const enum STATEATPOWERON
+    {
         UNCHANGED = 0,
         A = 1,
         B = 2,
         INVALID = -1
     }
-    export const enum OUTPUT {
+
+    export const enum OUTPUT
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface DelayedPulse { target?: number; ms?: number; moving?: number; }
-    export interface ValueCallback { (func: YRelay, value: string): void }
+
+    export interface DelayedPulse { target?: number; ms?: number; moving?: number;}
+
+    export interface ValueCallback {(func: YRelay, value: string): void}
+
     //--- (end of YRelay definitions)
 }
 

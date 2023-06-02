@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_motor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -117,7 +117,7 @@ export class YMotor extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'motorStatus':
             this._motorStatus = <YMotor.MOTORSTATUS> <number> val;
             return 1;
@@ -185,7 +185,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('motorStatus',rest_val);
+        return await this._setAttr('motorStatus', rest_val);
     }
 
     /**
@@ -205,7 +205,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('drivingForce',rest_val);
+        return await this._setAttr('drivingForce', rest_val);
     }
 
     /**
@@ -244,7 +244,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('brakingForce',rest_val);
+        return await this._setAttr('brakingForce', rest_val);
     }
 
     /**
@@ -288,7 +288,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('cutOffVoltage',rest_val);
+        return await this._setAttr('cutOffVoltage', rest_val);
     }
 
     /**
@@ -354,7 +354,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('overCurrentLimit',rest_val);
+        return await this._setAttr('overCurrentLimit', rest_val);
     }
 
     /**
@@ -374,7 +374,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('frequency',rest_val);
+        return await this._setAttr('frequency', rest_val);
     }
 
     /**
@@ -435,7 +435,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('starterTime',rest_val);
+        return await this._setAttr('starterTime', rest_val);
     }
 
     /**
@@ -482,7 +482,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('failSafeTimeout',rest_val);
+        return await this._setAttr('failSafeTimeout', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -501,7 +501,7 @@ export class YMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -655,7 +655,7 @@ export class YMotor extends YFunction
      */
     async drivingForceMove(targetPower: number, delay: number): Promise<number>
     {
-        return await this.set_command('P'+String(Math.round(<number> Math.round(targetPower*10)))+','+String(Math.round(delay)));
+        return await this.set_command('P' + String(Math.round(<number> Math.round(targetPower*10))) + ',' + String(Math.round(delay)));
     }
 
     /**
@@ -670,7 +670,7 @@ export class YMotor extends YFunction
      */
     async brakingForceMove(targetPower: number, delay: number): Promise<number>
     {
-        return await this.set_command('B'+String(Math.round(<number> Math.round(targetPower*10)))+','+String(Math.round(delay)));
+        return await this.set_command('B' + String(Math.round(<number> Math.round(targetPower*10))) + ',' + String(Math.round(delay)));
     }
 
     /**
@@ -686,9 +686,9 @@ export class YMotor extends YFunction
     nextMotor(): YMotor | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMotor.FindMotorInContext(this._yapi, next_hwid);
     }
 
@@ -704,7 +704,7 @@ export class YMotor extends YFunction
     static FirstMotor(): YMotor | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Motor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMotor.FindMotor(next_hwid);
     }
 
@@ -722,7 +722,7 @@ export class YMotor extends YFunction
     static FirstMotorInContext(yctx: YAPIContext): YMotor | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Motor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMotor.FindMotorInContext(yctx, next_hwid);
     }
 
@@ -731,7 +731,8 @@ export class YMotor extends YFunction
 
 export namespace YMotor {
     //--- (YMotor definitions)
-    export const enum MOTORSTATUS {
+    export const enum MOTORSTATUS
+    {
         IDLE = 0,
         BRAKE = 1,
         FORWD = 2,
@@ -742,7 +743,9 @@ export namespace YMotor {
         FAILSF = 7,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YMotor, value: string): void }
+
+    export interface ValueCallback {(func: YMotor, value: string): void}
+
     //--- (end of YMotor definitions)
 }
 

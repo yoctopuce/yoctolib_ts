@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 51903 2022-11-29 17:25:59Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for GenericSensor functions
  *

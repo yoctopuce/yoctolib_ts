@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_refframe.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -148,7 +148,7 @@ export class YRefFrame extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'mountPos':
             this._mountPos = <number> <number> val;
             return 1;
@@ -181,7 +181,7 @@ export class YRefFrame extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('mountPos',rest_val);
+        return await this._setAttr('mountPos', rest_val);
     }
 
     /**
@@ -210,7 +210,7 @@ export class YRefFrame extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('bearing',rest_val);
+        return await this._setAttr('bearing', rest_val);
     }
 
     /**
@@ -250,7 +250,7 @@ export class YRefFrame extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('calibrationParam',rest_val);
+        return await this._setAttr('calibrationParam', rest_val);
     }
 
     /**
@@ -292,7 +292,7 @@ export class YRefFrame extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('fusionMode',rest_val);
+        return await this._setAttr('fusionMode', rest_val);
     }
 
     /**
@@ -779,7 +779,7 @@ export class YRefFrame extends YFunction
         intpos = (this._calibStage - 1) * this._calibCount;
         await this._calibSort(intpos, intpos + this._calibCount);
         intpos = intpos + (((this._calibCount) / (2)) >> 0);
-        this._calibLogMsg = 'Stage '+String(Math.round(this._calibStage))+': median is '+String(Math.round(<number> Math.round(1000*this._calibDataAccX[intpos])))+','+String(Math.round(<number> Math.round(1000*this._calibDataAccY[intpos])))+','+String(Math.round(<number> Math.round(1000*this._calibDataAccZ[intpos])));
+        this._calibLogMsg = 'Stage ' + String(Math.round(this._calibStage)) + ': median is ' + String(Math.round(<number> Math.round(1000*this._calibDataAccX[intpos]))) + ',' + String(Math.round(<number> Math.round(1000*this._calibDataAccY[intpos]))) + ',' + String(Math.round(<number> Math.round(1000*this._calibDataAccZ[intpos])));
         // move to next stage
         this._calibStage = this._calibStage + 1;
         if (this._calibStage < 7) {
@@ -1048,7 +1048,7 @@ export class YRefFrame extends YFunction
         scaleLo = ((((scaleY) & (15))) << (12)) + ((scaleX) << (2)) + scaleExp;
         scaleHi = ((scaleZ) << (6)) + ((scaleY) >> (4));
         // Save calibration parameters
-        newcalib = '5,'+String(Math.round(shiftX))+','+String(Math.round(shiftY))+','+String(Math.round(shiftZ))+','+String(Math.round(scaleLo))+','+String(Math.round(scaleHi));
+        newcalib = '5,' + String(Math.round(shiftX)) + ',' + String(Math.round(shiftY)) + ',' + String(Math.round(shiftZ)) + ',' + String(Math.round(scaleLo)) + ',' + String(Math.round(scaleHi));
         this._calibStage = 0;
         return await this.set_calibrationParam(newcalib);
     }
@@ -1086,9 +1086,9 @@ export class YRefFrame extends YFunction
     nextRefFrame(): YRefFrame | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRefFrame.FindRefFrameInContext(this._yapi, next_hwid);
     }
 
@@ -1104,7 +1104,7 @@ export class YRefFrame extends YFunction
     static FirstRefFrame(): YRefFrame | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('RefFrame');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRefFrame.FindRefFrame(next_hwid);
     }
 
@@ -1122,7 +1122,7 @@ export class YRefFrame extends YFunction
     static FirstRefFrameInContext(yctx: YAPIContext): YRefFrame | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('RefFrame');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRefFrame.FindRefFrameInContext(yctx, next_hwid);
     }
 
@@ -1131,7 +1131,8 @@ export class YRefFrame extends YFunction
 
 export namespace YRefFrame {
     //--- (YRefFrame definitions)
-    export const enum FUSIONMODE {
+    export const enum FUSIONMODE
+    {
         NDOF = 0,
         NDOF_FMC_OFF = 1,
         M4G = 2,
@@ -1142,7 +1143,9 @@ export namespace YRefFrame {
         INCLIN_10DEG = 7,
         INVALID = -1
     }
-    export const enum MOUNTPOSITION {
+
+    export const enum MOUNTPOSITION
+    {
         BOTTOM = 0,
         TOP = 1,
         FRONT = 2,
@@ -1151,14 +1154,16 @@ export namespace YRefFrame {
         LEFT = 5,
         INVALID = 6
     }
-    export const enum MOUNTORIENTATION {
+    export const enum MOUNTORIENTATION
+    {
         TWELVE = 0,
         THREE = 1,
         SIX = 2,
         NINE = 3,
         INVALID = 4
     }
-    export interface ValueCallback { (func: YRefFrame, value: string): void }
+    export interface ValueCallback {(func: YRefFrame, value: string): void}
+
     //--- (end of YRefFrame definitions)
 }
 

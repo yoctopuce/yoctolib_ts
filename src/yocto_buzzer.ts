@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -91,7 +91,7 @@ export class YBuzzer extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'frequency':
             this._frequency = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -127,7 +127,7 @@ export class YBuzzer extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('frequency',rest_val);
+        return await this._setAttr('frequency', rest_val);
     }
 
     /**
@@ -182,7 +182,7 @@ export class YBuzzer extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('volume',rest_val);
+        return await this._setAttr('volume', rest_val);
     }
 
     /**
@@ -261,7 +261,7 @@ export class YBuzzer extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -399,7 +399,7 @@ export class YBuzzer extends YFunction
      */
     async addFreqMoveToPlaySeq(freq: number, msDelay: number): Promise<number>
     {
-        return await this.sendCommand('A'+String(Math.round(freq))+','+String(Math.round(msDelay)));
+        return await this.sendCommand('A' + String(Math.round(freq)) + ',' + String(Math.round(msDelay)));
     }
 
     /**
@@ -413,7 +413,7 @@ export class YBuzzer extends YFunction
      */
     async addPulseToPlaySeq(freq: number, msDuration: number): Promise<number>
     {
-        return await this.sendCommand('B'+String(Math.round(freq))+','+String(Math.round(msDuration)));
+        return await this.sendCommand('B' + String(Math.round(freq)) + ',' + String(Math.round(msDuration)));
     }
 
     /**
@@ -428,7 +428,7 @@ export class YBuzzer extends YFunction
      */
     async addVolMoveToPlaySeq(volume: number, msDuration: number): Promise<number>
     {
-        return await this.sendCommand('C'+String(Math.round(volume))+','+String(Math.round(msDuration)));
+        return await this.sendCommand('C' + String(Math.round(volume)) + ',' + String(Math.round(msDuration)));
     }
 
     /**
@@ -684,7 +684,7 @@ export class YBuzzer extends YFunction
      */
     async pulse(frequency: number, duration: number): Promise<number>
     {
-        return await this.set_command('P'+String(Math.round(frequency))+','+String(Math.round(duration)));
+        return await this.set_command('P' + String(Math.round(frequency)) + ',' + String(Math.round(duration)));
     }
 
     /**
@@ -699,7 +699,7 @@ export class YBuzzer extends YFunction
      */
     async freqMove(frequency: number, duration: number): Promise<number>
     {
-        return await this.set_command('F'+String(Math.round(frequency))+','+String(Math.round(duration)));
+        return await this.set_command('F' + String(Math.round(frequency)) + ',' + String(Math.round(duration)));
     }
 
     /**
@@ -714,7 +714,7 @@ export class YBuzzer extends YFunction
      */
     async volumeMove(volume: number, duration: number): Promise<number>
     {
-        return await this.set_command('V'+String(Math.round(volume))+','+String(Math.round(duration)));
+        return await this.set_command('V' + String(Math.round(volume)) + ',' + String(Math.round(duration)));
     }
 
     /**
@@ -750,9 +750,9 @@ export class YBuzzer extends YFunction
     nextBuzzer(): YBuzzer | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YBuzzer.FindBuzzerInContext(this._yapi, next_hwid);
     }
 
@@ -768,7 +768,7 @@ export class YBuzzer extends YFunction
     static FirstBuzzer(): YBuzzer | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Buzzer');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YBuzzer.FindBuzzer(next_hwid);
     }
 
@@ -786,7 +786,7 @@ export class YBuzzer extends YFunction
     static FirstBuzzerInContext(yctx: YAPIContext): YBuzzer | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Buzzer');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YBuzzer.FindBuzzerInContext(yctx, next_hwid);
     }
 
@@ -795,7 +795,8 @@ export class YBuzzer extends YFunction
 
 export namespace YBuzzer {
     //--- (YBuzzer definitions)
-    export interface ValueCallback { (func: YBuzzer, value: string): void }
+    export interface ValueCallback {(func: YBuzzer, value: string): void}
+
     //--- (end of YBuzzer definitions)
 }
 

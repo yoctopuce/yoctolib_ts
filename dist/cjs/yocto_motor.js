@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_motor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Motor functions
  *

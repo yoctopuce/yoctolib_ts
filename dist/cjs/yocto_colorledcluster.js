@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 50281 2022-06-30 07:21:14Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *

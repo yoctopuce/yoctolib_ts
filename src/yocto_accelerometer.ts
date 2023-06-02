@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_accelerometer.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -95,7 +95,7 @@ export class YAccelerometer extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'bandwidth':
             this._bandwidth = <number> <number> val;
             return 1;
@@ -150,7 +150,7 @@ export class YAccelerometer extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('bandwidth',rest_val);
+        return await this._setAttr('bandwidth', rest_val);
     }
 
     /**
@@ -226,7 +226,7 @@ export class YAccelerometer extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('gravityCancellation',rest_val);
+        return await this._setAttr('gravityCancellation', rest_val);
     }
 
     /**
@@ -399,9 +399,9 @@ export class YAccelerometer extends YSensor
     nextAccelerometer(): YAccelerometer | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAccelerometer.FindAccelerometerInContext(this._yapi, next_hwid);
     }
 
@@ -417,7 +417,7 @@ export class YAccelerometer extends YSensor
     static FirstAccelerometer(): YAccelerometer | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Accelerometer');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAccelerometer.FindAccelerometer(next_hwid);
     }
 
@@ -435,7 +435,7 @@ export class YAccelerometer extends YSensor
     static FirstAccelerometerInContext(yctx: YAPIContext): YAccelerometer | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Accelerometer');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YAccelerometer.FindAccelerometerInContext(yctx, next_hwid);
     }
 
@@ -444,13 +444,17 @@ export class YAccelerometer extends YSensor
 
 export namespace YAccelerometer {
     //--- (YAccelerometer definitions)
-    export const enum GRAVITYCANCELLATION {
+    export const enum GRAVITYCANCELLATION
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YAccelerometer, value: string): void }
-    export interface TimedReportCallback { (func: YAccelerometer, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YAccelerometer, value: string): void}
+
+    export interface TimedReportCallback {(func: YAccelerometer, measure: YMeasure): void}
+
     //--- (end of YAccelerometer definitions)
 }
 

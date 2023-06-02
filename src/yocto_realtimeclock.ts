@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 53833 2023-04-04 08:12:55Z mvuilleu $
+ *  $Id: yocto_realtimeclock.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -98,7 +98,7 @@ export class YRealTimeClock extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'unixTime':
             this._unixTime = <number> <number> val;
             return 1;
@@ -151,7 +151,7 @@ export class YRealTimeClock extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unixTime',rest_val);
+        return await this._setAttr('unixTime', rest_val);
     }
 
     /**
@@ -208,7 +208,7 @@ export class YRealTimeClock extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('utcOffset',rest_val);
+        return await this._setAttr('utcOffset', rest_val);
     }
 
     /**
@@ -272,7 +272,7 @@ export class YRealTimeClock extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('disableHostSync',rest_val);
+        return await this._setAttr('disableHostSync', rest_val);
     }
 
     /**
@@ -407,9 +407,9 @@ export class YRealTimeClock extends YFunction
     nextRealTimeClock(): YRealTimeClock | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRealTimeClock.FindRealTimeClockInContext(this._yapi, next_hwid);
     }
 
@@ -425,7 +425,7 @@ export class YRealTimeClock extends YFunction
     static FirstRealTimeClock(): YRealTimeClock | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('RealTimeClock');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRealTimeClock.FindRealTimeClock(next_hwid);
     }
 
@@ -443,7 +443,7 @@ export class YRealTimeClock extends YFunction
     static FirstRealTimeClockInContext(yctx: YAPIContext): YRealTimeClock | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('RealTimeClock');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YRealTimeClock.FindRealTimeClockInContext(yctx, next_hwid);
     }
 
@@ -452,17 +452,22 @@ export class YRealTimeClock extends YFunction
 
 export namespace YRealTimeClock {
     //--- (YRealTimeClock definitions)
-    export const enum TIMESET {
+    export const enum TIMESET
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum DISABLEHOSTSYNC {
+
+    export const enum DISABLEHOSTSYNC
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YRealTimeClock, value: string): void }
+
+    export interface ValueCallback {(func: YRealTimeClock, value: string): void}
+
     //--- (end of YRealTimeClock definitions)
 }
 

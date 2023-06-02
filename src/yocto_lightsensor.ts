@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_lightsensor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -93,7 +93,7 @@ export class YLightSensor extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'measureType':
             this._measureType = <YLightSensor.MEASURETYPE> <number> val;
             return 1;
@@ -105,7 +105,7 @@ export class YLightSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentValue',rest_val);
+        return await this._setAttr('currentValue', rest_val);
     }
 
     /**
@@ -170,7 +170,7 @@ export class YLightSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('measureType',rest_val);
+        return await this._setAttr('measureType', rest_val);
     }
 
     /**
@@ -343,9 +343,9 @@ export class YLightSensor extends YSensor
     nextLightSensor(): YLightSensor | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLightSensor.FindLightSensorInContext(this._yapi, next_hwid);
     }
 
@@ -361,7 +361,7 @@ export class YLightSensor extends YSensor
     static FirstLightSensor(): YLightSensor | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('LightSensor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLightSensor.FindLightSensor(next_hwid);
     }
 
@@ -379,7 +379,7 @@ export class YLightSensor extends YSensor
     static FirstLightSensorInContext(yctx: YAPIContext): YLightSensor | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('LightSensor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLightSensor.FindLightSensorInContext(yctx, next_hwid);
     }
 
@@ -388,7 +388,8 @@ export class YLightSensor extends YSensor
 
 export namespace YLightSensor {
     //--- (YLightSensor definitions)
-    export const enum MEASURETYPE {
+    export const enum MEASURETYPE
+    {
         HUMAN_EYE = 0,
         WIDE_SPECTRUM = 1,
         INFRARED = 2,
@@ -397,8 +398,11 @@ export namespace YLightSensor {
         HIGH_RESOLUTION = 5,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YLightSensor, value: string): void }
-    export interface TimedReportCallback { (func: YLightSensor, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YLightSensor, value: string): void}
+
+    export interface TimedReportCallback {(func: YLightSensor, measure: YMeasure): void}
+
     //--- (end of YLightSensor definitions)
 }
 

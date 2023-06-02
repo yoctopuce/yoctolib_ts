@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_led.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_led.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Led functions
  *
@@ -98,7 +98,7 @@ export class YLed extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'power':
             this._power = <YLed.POWER> <number> val;
             return 1;
@@ -144,7 +144,7 @@ export class YLed extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('power',rest_val);
+        return await this._setAttr('power', rest_val);
     }
 
     /**
@@ -180,7 +180,7 @@ export class YLed extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('luminosity',rest_val);
+        return await this._setAttr('luminosity', rest_val);
     }
 
     /**
@@ -217,7 +217,7 @@ export class YLed extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('blinking',rest_val);
+        return await this._setAttr('blinking', rest_val);
     }
 
     /**
@@ -352,9 +352,9 @@ export class YLed extends YFunction
     nextLed(): YLed | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLed.FindLedInContext(this._yapi, next_hwid);
     }
 
@@ -370,7 +370,7 @@ export class YLed extends YFunction
     static FirstLed(): YLed | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Led');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLed.FindLed(next_hwid);
     }
 
@@ -388,7 +388,7 @@ export class YLed extends YFunction
     static FirstLedInContext(yctx: YAPIContext): YLed | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Led');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLed.FindLedInContext(yctx, next_hwid);
     }
 
@@ -397,12 +397,15 @@ export class YLed extends YFunction
 
 export namespace YLed {
     //--- (YLed definitions)
-    export const enum POWER {
+    export const enum POWER
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export const enum BLINKING {
+
+    export const enum BLINKING
+    {
         STILL = 0,
         RELAX = 1,
         AWARE = 2,
@@ -411,7 +414,9 @@ export namespace YLed {
         PANIC = 5,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YLed, value: string): void }
+
+    export interface ValueCallback {(func: YLed, value: string): void}
+
     //--- (end of YLed definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_temperature.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -124,7 +124,7 @@ export class YTemperature extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'sensorType':
             this._sensorType = <YTemperature.SENSORTYPE> <number> val;
             return 1;
@@ -162,7 +162,7 @@ export class YTemperature extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -217,7 +217,7 @@ export class YTemperature extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('sensorType',rest_val);
+        return await this._setAttr('sensorType', rest_val);
     }
 
     /**
@@ -275,7 +275,7 @@ export class YTemperature extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -495,15 +495,15 @@ export class YTemperature extends YSensor
         let idxres: number;
         siz = tempValues.length;
         if (!(siz >= 2)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'thermistor response table must have at least two points',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'thermistor response table must have at least two points', this._yapi.INVALID_ARGUMENT);
         }
         if (!(siz == resValues.length)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'table sizes mismatch',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'table sizes mismatch', this._yapi.INVALID_ARGUMENT);
         }
 
         res = await this.set_command('Z');
         if (!(res==this._yapi.SUCCESS)) {
-            return this._throw(this._yapi.IO_ERROR,'unable to reset thermistor parameters',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'unable to reset thermistor parameters', this._yapi.IO_ERROR);
         }
         // add records in growing resistance value
         found = 1;
@@ -523,9 +523,9 @@ export class YTemperature extends YSensor
                 idx = idx + 1;
             }
             if (found > 0) {
-                res = await this.set_command('m'+String(Math.round(<number> Math.round(1000*curr)))+':'+String(Math.round(<number> Math.round(1000*currTemp))));
+                res = await this.set_command('m' + String(Math.round(<number> Math.round(1000*curr))) + ':' + String(Math.round(<number> Math.round(1000*currTemp))));
                 if (!(res==this._yapi.SUCCESS)) {
-                    return this._throw(this._yapi.IO_ERROR,'unable to reset thermistor parameters',this._yapi.IO_ERROR);
+                    return this._throw(this._yapi.IO_ERROR, 'unable to reset thermistor parameters', this._yapi.IO_ERROR);
                 }
                 prev = curr;
             }
@@ -566,11 +566,11 @@ export class YTemperature extends YSensor
         resValues.length = 0;
 
         id = await this.get_functionId();
-        id = (id).substr( 11, (id).length - 11);
+        id = (id).substr(11, (id).length - 11);
         if (id == '') {
             id = '1';
         }
-        bin_json = await this._download('extra.json?page='+id);
+        bin_json = await this._download('extra.json?page=' + id);
         paramlist = this.imm_json_get_array(bin_json);
         // first convert all temperatures to float
         siz = ((paramlist.length) >> (1));
@@ -622,9 +622,9 @@ export class YTemperature extends YSensor
     nextTemperature(): YTemperature | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTemperature.FindTemperatureInContext(this._yapi, next_hwid);
     }
 
@@ -640,7 +640,7 @@ export class YTemperature extends YSensor
     static FirstTemperature(): YTemperature | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Temperature');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTemperature.FindTemperature(next_hwid);
     }
 
@@ -658,7 +658,7 @@ export class YTemperature extends YSensor
     static FirstTemperatureInContext(yctx: YAPIContext): YTemperature | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Temperature');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTemperature.FindTemperatureInContext(yctx, next_hwid);
     }
 
@@ -667,7 +667,8 @@ export class YTemperature extends YSensor
 
 export namespace YTemperature {
     //--- (YTemperature definitions)
-    export const enum SENSORTYPE {
+    export const enum SENSORTYPE
+    {
         DIGITAL = 0,
         TYPE_K = 1,
         TYPE_E = 2,
@@ -688,8 +689,11 @@ export namespace YTemperature {
         CHANNEL_OFF = 17,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YTemperature, value: string): void }
-    export interface TimedReportCallback { (func: YTemperature, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YTemperature, value: string): void}
+
+    export interface TimedReportCallback {(func: YTemperature, measure: YMeasure): void}
+
     //--- (end of YTemperature definitions)
 }
 

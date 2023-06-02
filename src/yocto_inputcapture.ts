@@ -140,23 +140,23 @@ export class YInputCaptureData
 
         buffSize = (sdata).length;
         if (!(buffSize >= 24)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Invalid snapshot data (too short)',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid snapshot data (too short)', this._yapi.INVALID_ARGUMENT);
         }
         this._fmt = sdata[0];
         this._var1size = sdata[1] - 48;
         this._var2size = sdata[2] - 48;
         this._var3size = sdata[3] - 48;
         if (!(this._fmt == 83)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Unsupported snapshot format',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Unsupported snapshot format', this._yapi.INVALID_ARGUMENT);
         }
         if (!((this._var1size >= 2) && (this._var1size <= 4))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Invalid sample size',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid sample size', this._yapi.INVALID_ARGUMENT);
         }
         if (!((this._var2size >= 0) && (this._var1size <= 4))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Invalid sample size',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid sample size', this._yapi.INVALID_ARGUMENT);
         }
         if (!((this._var3size >= 0) && (this._var1size <= 4))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Invalid sample size',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid sample size', this._yapi.INVALID_ARGUMENT);
         }
         if (this._var2size == 0) {
             this._nVars = 1;
@@ -179,20 +179,20 @@ export class YInputCaptureData
         this._trigUTC = this._trigUTC + (ms / 1000.0);
         recOfs = 24;
         while (sdata[recOfs] >= 32) {
-            this._var1unit = this._var1unit+''+String.fromCharCode(sdata[recOfs]);
+            this._var1unit = this._var1unit + '' + String.fromCharCode(sdata[recOfs]);
             recOfs = recOfs + 1;
         }
         if (this._var2size > 0) {
             recOfs = recOfs + 1;
             while (sdata[recOfs] >= 32) {
-                this._var2unit = this._var2unit+''+String.fromCharCode(sdata[recOfs]);
+                this._var2unit = this._var2unit + '' + String.fromCharCode(sdata[recOfs]);
                 recOfs = recOfs + 1;
             }
         }
         if (this._var3size > 0) {
             recOfs = recOfs + 1;
             while (sdata[recOfs] >= 32) {
-                this._var3unit = this._var3unit+''+String.fromCharCode(sdata[recOfs]);
+                this._var3unit = this._var3unit + '' + String.fromCharCode(sdata[recOfs]);
                 recOfs = recOfs + 1;
             }
         }
@@ -337,7 +337,7 @@ export class YInputCaptureData
     get_serie2Unit(): string
     {
         if (!(this._nVars >= 2)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'There is no serie 2 in this capture data','');
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 2 in this capture data', '');
         }
         return this._var2unit;
     }
@@ -352,7 +352,7 @@ export class YInputCaptureData
     get_serie3Unit(): string
     {
         if (!(this._nVars >= 3)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'There is no serie 3 in this capture data','');
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 3 in this capture data', '');
         }
         return this._var3unit;
     }
@@ -385,7 +385,7 @@ export class YInputCaptureData
     get_serie2Values(): number[]
     {
         if (!(this._nVars >= 2)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'There is no serie 2 in this capture data',this._var2samples);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 2 in this capture data', this._var2samples);
         }
         return this._var2samples;
     }
@@ -403,7 +403,7 @@ export class YInputCaptureData
     get_serie3Values(): number[]
     {
         if (!(this._nVars >= 3)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'There is no serie 3 in this capture data',this._var3samples);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 3 in this capture data', this._var3samples);
         }
         return this._var3samples;
     }
@@ -413,7 +413,8 @@ export class YInputCaptureData
 
 export namespace YInputCaptureData {
     //--- (generated code: YInputCapture definitions)
-    export const enum CAPTURETYPE {
+    export const enum CAPTURETYPE
+    {
         NONE = 0,
         TIMED = 1,
         V_MAX = 2,
@@ -436,7 +437,9 @@ export namespace YInputCaptureData {
         DPF_MIN = 19,
         INVALID = -1
     }
-    export const enum CAPTURETYPEATSTARTUP {
+
+    export const enum CAPTURETYPEATSTARTUP
+    {
         NONE = 0,
         TIMED = 1,
         V_MAX = 2,
@@ -459,7 +462,9 @@ export namespace YInputCaptureData {
         DPF_MIN = 19,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YInputCapture, value: string): void }
+
+    export interface ValueCallback {(func: YInputCapture, value: string): void}
+
     //--- (end of generated code: YInputCapture definitions)
 }
 
@@ -600,7 +605,7 @@ export class YInputCapture extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'lastCaptureTime':
             this._lastCaptureTime = <number> <number> val;
             return 1;
@@ -686,7 +691,7 @@ export class YInputCapture extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('nSamples',rest_val);
+        return await this._setAttr('nSamples', rest_val);
     }
 
     /**
@@ -758,7 +763,7 @@ export class YInputCapture extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('captureType',rest_val);
+        return await this._setAttr('captureType', rest_val);
     }
 
     /**
@@ -775,7 +780,7 @@ export class YInputCapture extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('condValue',rest_val);
+        return await this._setAttr('condValue', rest_val);
     }
 
     /**
@@ -835,7 +840,7 @@ export class YInputCapture extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('condAlign',rest_val);
+        return await this._setAttr('condAlign', rest_val);
     }
 
     /**
@@ -897,7 +902,7 @@ export class YInputCapture extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('captureTypeAtStartup',rest_val);
+        return await this._setAttr('captureTypeAtStartup', rest_val);
     }
 
     /**
@@ -918,7 +923,7 @@ export class YInputCapture extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('condValueAtStartup',rest_val);
+        return await this._setAttr('condValueAtStartup', rest_val);
     }
 
     /**
@@ -1098,7 +1103,7 @@ export class YInputCapture extends YSensor
             msDuration = 1000;
         }
         snapStart = (((-msDuration) / (2)) >> 0);
-        snapUrl = 'snap.bin?t='+String(Math.round(snapStart))+'&d='+String(Math.round(msDuration));
+        snapUrl = 'snap.bin?t=' + String(Math.round(snapStart)) + '&d=' + String(Math.round(msDuration));
 
         snapData = await this._download(snapUrl);
         return new YInputCaptureData(this, snapData);
@@ -1112,9 +1117,9 @@ export class YInputCapture extends YSensor
     nextInputCapture(): YInputCapture | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YInputCapture.FindInputCaptureInContext(this._yapi, next_hwid);
     }
 
@@ -1126,7 +1131,7 @@ export class YInputCapture extends YSensor
     static FirstInputCapture(): YInputCapture | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('InputCapture');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YInputCapture.FindInputCapture(next_hwid);
     }
 
@@ -1140,7 +1145,7 @@ export class YInputCapture extends YSensor
     static FirstInputCaptureInContext(yctx: YAPIContext): YInputCapture | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('InputCapture');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YInputCapture.FindInputCaptureInContext(yctx, next_hwid);
     }
 
@@ -1149,7 +1154,8 @@ export class YInputCapture extends YSensor
 
 export namespace YInputCapture {
     //--- (generated code: YInputCapture definitions)
-    export const enum CAPTURETYPE {
+    export const enum CAPTURETYPE
+    {
         NONE = 0,
         TIMED = 1,
         V_MAX = 2,
@@ -1172,7 +1178,9 @@ export namespace YInputCapture {
         DPF_MIN = 19,
         INVALID = -1
     }
-    export const enum CAPTURETYPEATSTARTUP {
+
+    export const enum CAPTURETYPEATSTARTUP
+    {
         NONE = 0,
         TIMED = 1,
         V_MAX = 2,
@@ -1195,7 +1203,9 @@ export namespace YInputCapture {
         DPF_MIN = 19,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YInputCapture, value: string): void }
+
+    export interface ValueCallback {(func: YInputCapture, value: string): void}
+
     //--- (end of generated code: YInputCapture definitions)
 }
 

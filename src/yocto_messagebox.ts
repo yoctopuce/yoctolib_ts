@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 50144 2022-06-17 06:59:52Z seb $
+ *  $Id: yocto_messagebox.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -685,12 +685,12 @@ export class YSms
             i = 0;
             while (i < siz) {
                 byt = addr[ofs+i+1];
-                res = res+''+(((byt) & (15))).toString(16).toLowerCase()+''+(((byt) >> (4))).toString(16).toLowerCase();
+                res = res + '' + (((byt) & (15))).toString(16).toLowerCase() + '' + (((byt) >> (4))).toString(16).toLowerCase();
                 i = i + 1;
             }
             // remove padding digit if needed
             if (((addr[ofs+siz]) >> (4)) == 15) {
-                res = (res).substr( 0, (res).length-1);
+                res = (res).substr(0, (res).length-1);
             }
             return res;
         }
@@ -734,7 +734,7 @@ export class YSms
         }
         if ((exp).substr(4, 1) == '-' || (exp).substr(4, 1) == '/') {
             // ignore century
-            exp = (exp).substr( 2, explen-2);
+            exp = (exp).substr(2, explen-2);
             explen = (exp).length;
         }
         expasc = this._yapi.imm_str2bin(exp);
@@ -807,22 +807,22 @@ export class YSms
                     }
                 }
             }
-            return '+'+String(Math.round(n));
+            return '+' + String(Math.round(n));
         }
         res = '20';
         i = 0;
         while ((i < siz) && (i < 6)) {
             byt = exp[ofs+i];
-            res = res+''+(((byt) & (15))).toString(16).toLowerCase()+''+(((byt) >> (4))).toString(16).toLowerCase();
+            res = res + '' + (((byt) & (15))).toString(16).toLowerCase() + '' + (((byt) >> (4))).toString(16).toLowerCase();
             if (i < 3) {
                 if (i < 2) {
-                    res = res+'-';
+                    res = res + '-';
                 } else {
-                    res = res+' ';
+                    res = res + ' ';
                 }
             } else {
                 if (i < 5) {
-                    res = res+':';
+                    res = res + ':';
                 }
             }
             i = i + 1;
@@ -838,12 +838,12 @@ export class YSms
             hh = String(Math.round(((byt) >> (2))));
             ss = String(Math.round(15*(((byt) & (3)))));
             if ((hh).length<2) {
-                hh = '0'+hh;
+                hh = '0' + hh;
             }
             if ((ss).length<2) {
-                ss = '0'+ss;
+                ss = '0' + ss;
             }
-            res = res+''+sign+''+hh+':'+ss;
+            res = res + '' + sign + '' + hh + ':' + ss;
         }
         return res;
     }
@@ -1110,14 +1110,14 @@ export class YSms
             if (i + ielen <= udhlen) {
                 if ((iei == 0) && (ielen == 3)) {
                     // concatenated SMS, 8-bit ref
-                    sig = this._orig+'-'+this._dest+'-'+('00'+(this._mref).toString(16)).slice(-2).toLowerCase()+'-'+('00'+(this._udh[i]).toString(16)).slice(-2).toLowerCase();
+                    sig = this._orig + '-' + this._dest + '-' + ('00'+(this._mref).toString(16)).slice(-2).toLowerCase() + '-' + ('00'+(this._udh[i]).toString(16)).slice(-2).toLowerCase();
                     this._aggSig = sig;
                     this._aggCnt = this._udh[i+1];
                     this._aggIdx = this._udh[i+2];
                 }
                 if ((iei == 8) && (ielen == 4)) {
                     // concatenated SMS, 16-bit ref
-                    sig = this._orig+'-'+this._dest+'-'+('00'+(this._mref).toString(16)).slice(-2).toLowerCase()+'-'+('00'+(this._udh[i]).toString(16)).slice(-2).toLowerCase()+''+('00'+(this._udh[i+1]).toString(16)).slice(-2).toLowerCase();
+                    sig = this._orig + '-' + this._dest + '-' + ('00'+(this._mref).toString(16)).slice(-2).toLowerCase() + '-' + ('00'+(this._udh[i]).toString(16)).slice(-2).toLowerCase() + '' + ('00'+(this._udh[i+1]).toString(16)).slice(-2).toLowerCase();
                     this._aggSig = sig;
                     this._aggCnt = this._udh[i+2];
                     this._aggIdx = this._udh[i+3];
@@ -1362,7 +1362,7 @@ export class YMessageBox extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'slotsInUse':
             this._slotsInUse = <number> <number> val;
             return 1;
@@ -1467,7 +1467,7 @@ export class YMessageBox extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pduSent',rest_val);
+        return await this._setAttr('pduSent', rest_val);
     }
 
     /**
@@ -1502,7 +1502,7 @@ export class YMessageBox extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pduReceived',rest_val);
+        return await this._setAttr('pduReceived', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -1521,7 +1521,7 @@ export class YMessageBox extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -1669,7 +1669,7 @@ export class YMessageBox extends YFunction
                 bitVal = ((1) << ((((slot) & (7)))));
                 if ((((newBitmap[idx]) & (bitVal))) != 0) {
                     this._prevBitmapStr = '';
-                    int_res = await this.set_command('DS'+String(Math.round(slot)));
+                    int_res = await this.set_command('DS' + String(Math.round(slot)));
                     if (int_res < 0) {
                         return int_res;
                     }
@@ -1702,23 +1702,23 @@ export class YMessageBox extends YFunction
         cmdLen = (cmd).length;
         chrPos = (cmd).indexOf('#');
         while (chrPos >= 0) {
-            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'23'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '23' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('#');
         }
         chrPos = (cmd).indexOf('+');
         while (chrPos >= 0) {
-            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'2B'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '2B' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('+');
         }
         chrPos = (cmd).indexOf('=');
         while (chrPos >= 0) {
-            cmd = (cmd).substr( 0, chrPos)+''+String.fromCharCode(37)+'3D'+(cmd).substr( chrPos+1, cmdLen-chrPos-1);
+            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '3D' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('=');
         }
-        cmd = 'at.txt?cmd='+cmd;
+        cmd = 'at.txt?cmd=' + cmd;
         res = '';
         // max 2 minutes (each iteration may take up to 5 seconds if waiting)
         waitMore = 24;
@@ -1734,14 +1734,14 @@ export class YMessageBox extends YFunction
             if (buff[idx] == 64) {
                 // continuation detected
                 suffixlen = bufflen - idx;
-                cmd = 'at.txt?cmd='+(buffstr).substr( buffstrlen - suffixlen, suffixlen);
-                buffstr = (buffstr).substr( 0, buffstrlen - suffixlen);
+                cmd = 'at.txt?cmd=' + (buffstr).substr(buffstrlen - suffixlen, suffixlen);
+                buffstr = (buffstr).substr(0, buffstrlen - suffixlen);
                 waitMore = waitMore - 1;
             } else {
                 // request complete
                 waitMore = 0;
             }
-            res = res+''+buffstr;
+            res = res + '' + buffstr;
         }
         return res;
     }
@@ -1753,7 +1753,7 @@ export class YMessageBox extends YFunction
         let hexPdu: string;
         let sms: YSms | null;
 
-        binPdu = await this._download('sms.json?pos='+String(Math.round(slot))+'&len=1');
+        binPdu = await this._download('sms.json?pos=' + String(Math.round(slot)) + '&len=1');
         arrPdu = this.imm_json_get_array(binPdu);
         hexPdu = this.imm_decode_json_string(arrPdu[0]);
         sms = new YSms(this);
@@ -2346,9 +2346,9 @@ export class YMessageBox extends YFunction
     nextMessageBox(): YMessageBox | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMessageBox.FindMessageBoxInContext(this._yapi, next_hwid);
     }
 
@@ -2364,7 +2364,7 @@ export class YMessageBox extends YFunction
     static FirstMessageBox(): YMessageBox | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('MessageBox');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMessageBox.FindMessageBox(next_hwid);
     }
 
@@ -2382,7 +2382,7 @@ export class YMessageBox extends YFunction
     static FirstMessageBoxInContext(yctx: YAPIContext): YMessageBox | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('MessageBox');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YMessageBox.FindMessageBoxInContext(yctx, next_hwid);
     }
 
@@ -2392,6 +2392,7 @@ export class YMessageBox extends YFunction
 export namespace YMessageBox
 {
     //--- (generated code: YMessageBox definitions)
-    export interface ValueCallback { (func: YMessageBox, value: string): void }
+    export interface ValueCallback {(func: YMessageBox, value: string): void}
+
     //--- (end of generated code: YMessageBox definitions)
 }

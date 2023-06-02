@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 51903 2022-11-29 17:25:59Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -113,7 +113,7 @@ export class YGenericSensor extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'signalValue':
             this._signalValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -154,7 +154,7 @@ export class YGenericSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -239,7 +239,7 @@ export class YGenericSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('signalRange',rest_val);
+        return await this._setAttr('signalRange', rest_val);
     }
 
     /**
@@ -282,7 +282,7 @@ export class YGenericSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('valueRange',rest_val);
+        return await this._setAttr('valueRange', rest_val);
     }
 
     /**
@@ -302,7 +302,7 @@ export class YGenericSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('signalBias',rest_val);
+        return await this._setAttr('signalBias', rest_val);
     }
 
     /**
@@ -376,7 +376,7 @@ export class YGenericSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('signalSampling',rest_val);
+        return await this._setAttr('signalSampling', rest_val);
     }
 
     /**
@@ -417,7 +417,7 @@ export class YGenericSensor extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -608,9 +608,9 @@ export class YGenericSensor extends YSensor
     nextGenericSensor(): YGenericSensor | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGenericSensor.FindGenericSensorInContext(this._yapi, next_hwid);
     }
 
@@ -626,7 +626,7 @@ export class YGenericSensor extends YSensor
     static FirstGenericSensor(): YGenericSensor | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('GenericSensor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGenericSensor.FindGenericSensor(next_hwid);
     }
 
@@ -644,7 +644,7 @@ export class YGenericSensor extends YSensor
     static FirstGenericSensorInContext(yctx: YAPIContext): YGenericSensor | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('GenericSensor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGenericSensor.FindGenericSensorInContext(yctx, next_hwid);
     }
 
@@ -653,7 +653,8 @@ export class YGenericSensor extends YSensor
 
 export namespace YGenericSensor {
     //--- (YGenericSensor definitions)
-    export const enum SIGNALSAMPLING {
+    export const enum SIGNALSAMPLING
+    {
         HIGH_RATE = 0,
         HIGH_RATE_FILTERED = 1,
         LOW_NOISE = 2,
@@ -662,13 +663,18 @@ export namespace YGenericSensor {
         AC = 5,
         INVALID = -1
     }
-    export const enum ENABLED {
+
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YGenericSensor, value: string): void }
-    export interface TimedReportCallback { (func: YGenericSensor, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YGenericSensor, value: string): void}
+
+    export interface TimedReportCallback {(func: YGenericSensor, measure: YMeasure): void}
+
     //--- (end of YGenericSensor definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_longitude.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_longitude.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -239,9 +239,9 @@ export class YLongitude extends YSensor
     nextLongitude(): YLongitude | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLongitude.FindLongitudeInContext(this._yapi, next_hwid);
     }
 
@@ -257,7 +257,7 @@ export class YLongitude extends YSensor
     static FirstLongitude(): YLongitude | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Longitude');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLongitude.FindLongitude(next_hwid);
     }
 
@@ -275,7 +275,7 @@ export class YLongitude extends YSensor
     static FirstLongitudeInContext(yctx: YAPIContext): YLongitude | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Longitude');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YLongitude.FindLongitudeInContext(yctx, next_hwid);
     }
 
@@ -284,8 +284,10 @@ export class YLongitude extends YSensor
 
 export namespace YLongitude {
     //--- (YLongitude definitions)
-    export interface ValueCallback { (func: YLongitude, value: string): void }
-    export interface TimedReportCallback { (func: YLongitude, measure: YMeasure): void }
+    export interface ValueCallback {(func: YLongitude, value: string): void}
+
+    export interface TimedReportCallback {(func: YLongitude, measure: YMeasure): void}
+
     //--- (end of YLongitude definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_bluetoothlink.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -117,7 +117,7 @@ export class YBluetoothLink extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'ownAddress':
             this._ownAddress = <string> <string> val;
             return 1;
@@ -210,7 +210,7 @@ export class YBluetoothLink extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pairingPin',rest_val);
+        return await this._setAttr('pairingPin', rest_val);
     }
 
     /**
@@ -247,7 +247,7 @@ export class YBluetoothLink extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('remoteAddress',rest_val);
+        return await this._setAttr('remoteAddress', rest_val);
     }
 
     /**
@@ -304,7 +304,7 @@ export class YBluetoothLink extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('mute',rest_val);
+        return await this._setAttr('mute', rest_val);
     }
 
     /**
@@ -341,7 +341,7 @@ export class YBluetoothLink extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('preAmplifier',rest_val);
+        return await this._setAttr('preAmplifier', rest_val);
     }
 
     /**
@@ -376,7 +376,7 @@ export class YBluetoothLink extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('volume',rest_val);
+        return await this._setAttr('volume', rest_val);
     }
 
     /**
@@ -436,7 +436,7 @@ export class YBluetoothLink extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -595,9 +595,9 @@ export class YBluetoothLink extends YFunction
     nextBluetoothLink(): YBluetoothLink | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YBluetoothLink.FindBluetoothLinkInContext(this._yapi, next_hwid);
     }
 
@@ -613,7 +613,7 @@ export class YBluetoothLink extends YFunction
     static FirstBluetoothLink(): YBluetoothLink | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('BluetoothLink');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YBluetoothLink.FindBluetoothLink(next_hwid);
     }
 
@@ -631,7 +631,7 @@ export class YBluetoothLink extends YFunction
     static FirstBluetoothLinkInContext(yctx: YAPIContext): YBluetoothLink | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('BluetoothLink');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YBluetoothLink.FindBluetoothLinkInContext(yctx, next_hwid);
     }
 
@@ -640,12 +640,15 @@ export class YBluetoothLink extends YFunction
 
 export namespace YBluetoothLink {
     //--- (YBluetoothLink definitions)
-    export const enum MUTE {
+    export const enum MUTE
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum LINKSTATE {
+
+    export const enum LINKSTATE
+    {
         DOWN = 0,
         FREE = 1,
         SEARCH = 2,
@@ -654,7 +657,9 @@ export namespace YBluetoothLink {
         PLAY = 5,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YBluetoothLink, value: string): void }
+
+    export interface ValueCallback {(func: YBluetoothLink, value: string): void}
+
     //--- (end of YBluetoothLink definitions)
 }
 

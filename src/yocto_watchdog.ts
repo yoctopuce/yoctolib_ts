@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_watchdog.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -138,7 +138,7 @@ export class YWatchdog extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'state':
             this._state = <YWatchdog.STATE> <number> val;
             return 1;
@@ -216,7 +216,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('state',rest_val);
+        return await this._setAttr('state', rest_val);
     }
 
     /**
@@ -261,7 +261,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('stateAtPowerOn',rest_val);
+        return await this._setAttr('stateAtPowerOn', rest_val);
     }
 
     /**
@@ -302,7 +302,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('maxTimeOnStateA',rest_val);
+        return await this._setAttr('maxTimeOnStateA', rest_val);
     }
 
     /**
@@ -343,7 +343,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('maxTimeOnStateB',rest_val);
+        return await this._setAttr('maxTimeOnStateB', rest_val);
     }
 
     /**
@@ -380,7 +380,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('output',rest_val);
+        return await this._setAttr('output', rest_val);
     }
 
     /**
@@ -409,7 +409,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pulseTimer',rest_val);
+        return await this._setAttr('pulseTimer', rest_val);
     }
 
     /**
@@ -445,7 +445,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval.target)+':'+String(newval.ms);
-        return await this._setAttr('delayedPulseTimer',rest_val);
+        return await this._setAttr('delayedPulseTimer', rest_val);
     }
 
     /**
@@ -521,7 +521,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('autoStart',rest_val);
+        return await this._setAttr('autoStart', rest_val);
     }
 
     /**
@@ -557,7 +557,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('running',rest_val);
+        return await this._setAttr('running', rest_val);
     }
 
     /**
@@ -612,7 +612,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('triggerDelay',rest_val);
+        return await this._setAttr('triggerDelay', rest_val);
     }
 
     /**
@@ -649,7 +649,7 @@ export class YWatchdog extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('triggerDuration',rest_val);
+        return await this._setAttr('triggerDuration', rest_val);
     }
 
     /**
@@ -839,9 +839,9 @@ export class YWatchdog extends YFunction
     nextWatchdog(): YWatchdog | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWatchdog.FindWatchdogInContext(this._yapi, next_hwid);
     }
 
@@ -857,7 +857,7 @@ export class YWatchdog extends YFunction
     static FirstWatchdog(): YWatchdog | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Watchdog');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWatchdog.FindWatchdog(next_hwid);
     }
 
@@ -875,7 +875,7 @@ export class YWatchdog extends YFunction
     static FirstWatchdogInContext(yctx: YAPIContext): YWatchdog | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Watchdog');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWatchdog.FindWatchdogInContext(yctx, next_hwid);
     }
 
@@ -884,34 +884,46 @@ export class YWatchdog extends YFunction
 
 export namespace YWatchdog {
     //--- (YWatchdog definitions)
-    export const enum STATE {
+    export const enum STATE
+    {
         A = 0,
         B = 1,
         INVALID = -1
     }
-    export const enum STATEATPOWERON {
+
+    export const enum STATEATPOWERON
+    {
         UNCHANGED = 0,
         A = 1,
         B = 2,
         INVALID = -1
     }
-    export const enum OUTPUT {
+
+    export const enum OUTPUT
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface DelayedPulse { target?: number; ms?: number; moving?: number; }
-    export const enum AUTOSTART {
+
+    export interface DelayedPulse { target?: number; ms?: number; moving?: number;}
+
+    export const enum AUTOSTART
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export const enum RUNNING {
+
+    export const enum RUNNING
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YWatchdog, value: string): void }
+
+    export interface ValueCallback {(func: YWatchdog, value: string): void}
+
     //--- (end of YWatchdog definitions)
 }
 

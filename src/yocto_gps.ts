@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_gps.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -147,7 +147,7 @@ export class YGps extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'isFixed':
             this._isFixed = <YGps.ISFIXED> <number> val;
             return 1;
@@ -317,7 +317,7 @@ export class YGps extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('coordSystem',rest_val);
+        return await this._setAttr('coordSystem', rest_val);
     }
 
     /**
@@ -362,7 +362,7 @@ export class YGps extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('constellation',rest_val);
+        return await this._setAttr('constellation', rest_val);
     }
 
     /**
@@ -560,7 +560,7 @@ export class YGps extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('utcOffset',rest_val);
+        return await this._setAttr('utcOffset', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -579,7 +579,7 @@ export class YGps extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -714,9 +714,9 @@ export class YGps extends YFunction
     nextGps(): YGps | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGps.FindGpsInContext(this._yapi, next_hwid);
     }
 
@@ -732,7 +732,7 @@ export class YGps extends YFunction
     static FirstGps(): YGps | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Gps');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGps.FindGps(next_hwid);
     }
 
@@ -750,7 +750,7 @@ export class YGps extends YFunction
     static FirstGpsInContext(yctx: YAPIContext): YGps | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Gps');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGps.FindGpsInContext(yctx, next_hwid);
     }
 
@@ -759,18 +759,23 @@ export class YGps extends YFunction
 
 export namespace YGps {
     //--- (YGps definitions)
-    export const enum ISFIXED {
+    export const enum ISFIXED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum COORDSYSTEM {
+
+    export const enum COORDSYSTEM
+    {
         GPS_DMS = 0,
         GPS_DM = 1,
         GPS_D = 2,
         INVALID = -1
     }
-    export const enum CONSTELLATION {
+
+    export const enum CONSTELLATION
+    {
         GNSS = 0,
         GPS = 1,
         GLONASS = 2,
@@ -780,7 +785,9 @@ export namespace YGps {
         GLONASS_GALILEO = 6,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YGps, value: string): void }
+
+    export interface ValueCallback {(func: YGps, value: string): void}
+
     //--- (end of YGps definitions)
 }
 

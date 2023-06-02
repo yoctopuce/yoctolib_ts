@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_digitalio.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -109,7 +109,7 @@ export class YDigitalIO extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'portState':
             this._portState = <number> <number> val;
             return 1;
@@ -188,7 +188,7 @@ export class YDigitalIO extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('portState',rest_val);
+        return await this._setAttr('portState', rest_val);
     }
 
     /**
@@ -226,7 +226,7 @@ export class YDigitalIO extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('portDirection',rest_val);
+        return await this._setAttr('portDirection', rest_val);
     }
 
     /**
@@ -265,7 +265,7 @@ export class YDigitalIO extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('portOpenDrain',rest_val);
+        return await this._setAttr('portOpenDrain', rest_val);
     }
 
     /**
@@ -305,7 +305,7 @@ export class YDigitalIO extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('portPolarity',rest_val);
+        return await this._setAttr('portPolarity', rest_val);
     }
 
     /**
@@ -383,7 +383,7 @@ export class YDigitalIO extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('outputVoltage',rest_val);
+        return await this._setAttr('outputVoltage', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -402,7 +402,7 @@ export class YDigitalIO extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -537,12 +537,12 @@ export class YDigitalIO extends YFunction
     async set_bitState(bitno: number, bitstate: number): Promise<number>
     {
         if (!(bitstate >= 0)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid bit state',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid bit state', this._yapi.INVALID_ARGUMENT);
         }
         if (!(bitstate <= 1)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid bit state',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid bit state', this._yapi.INVALID_ARGUMENT);
         }
-        return await this.set_command(String.fromCharCode(82+bitstate)+''+String(Math.round(bitno)));
+        return await this.set_command(String.fromCharCode(82+bitstate) + '' + String(Math.round(bitno)));
     }
 
     /**
@@ -572,7 +572,7 @@ export class YDigitalIO extends YFunction
      */
     async toggle_bitState(bitno: number): Promise<number>
     {
-        return await this.set_command('T'+String(Math.round(bitno)));
+        return await this.set_command('T' + String(Math.round(bitno)));
     }
 
     /**
@@ -589,12 +589,12 @@ export class YDigitalIO extends YFunction
     async set_bitDirection(bitno: number, bitdirection: number): Promise<number>
     {
         if (!(bitdirection >= 0)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid direction',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid direction', this._yapi.INVALID_ARGUMENT);
         }
         if (!(bitdirection <= 1)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid direction',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid direction', this._yapi.INVALID_ARGUMENT);
         }
-        return await this.set_command(String.fromCharCode(73+6*bitdirection)+''+String(Math.round(bitno)));
+        return await this.set_command(String.fromCharCode(73+6*bitdirection) + '' + String(Math.round(bitno)));
     }
 
     /**
@@ -629,12 +629,12 @@ export class YDigitalIO extends YFunction
     async set_bitPolarity(bitno: number, bitpolarity: number): Promise<number>
     {
         if (!(bitpolarity >= 0)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid bit polarity',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid bit polarity', this._yapi.INVALID_ARGUMENT);
         }
         if (!(bitpolarity <= 1)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid bit polarity',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid bit polarity', this._yapi.INVALID_ARGUMENT);
         }
-        return await this.set_command(String.fromCharCode(110+4*bitpolarity)+''+String(Math.round(bitno)));
+        return await this.set_command(String.fromCharCode(110+4*bitpolarity) + '' + String(Math.round(bitno)));
     }
 
     /**
@@ -669,12 +669,12 @@ export class YDigitalIO extends YFunction
     async set_bitOpenDrain(bitno: number, opendrain: number): Promise<number>
     {
         if (!(opendrain >= 0)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid state',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid state', this._yapi.INVALID_ARGUMENT);
         }
         if (!(opendrain <= 1)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'invalid state',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'invalid state', this._yapi.INVALID_ARGUMENT);
         }
-        return await this.set_command(String.fromCharCode(100-32*opendrain)+''+String(Math.round(bitno)));
+        return await this.set_command(String.fromCharCode(100-32*opendrain) + '' + String(Math.round(bitno)));
     }
 
     /**
@@ -709,7 +709,7 @@ export class YDigitalIO extends YFunction
      */
     async pulse(bitno: number, ms_duration: number): Promise<number>
     {
-        return await this.set_command('Z'+String(Math.round(bitno))+',0,'+String(Math.round(ms_duration)));
+        return await this.set_command('Z' + String(Math.round(bitno)) + ',0,' + String(Math.round(ms_duration)));
     }
 
     /**
@@ -727,7 +727,7 @@ export class YDigitalIO extends YFunction
      */
     async delayedPulse(bitno: number, ms_delay: number, ms_duration: number): Promise<number>
     {
-        return await this.set_command('Z'+String(Math.round(bitno))+','+String(Math.round(ms_delay))+','+String(Math.round(ms_duration)));
+        return await this.set_command('Z' + String(Math.round(bitno)) + ',' + String(Math.round(ms_delay)) + ',' + String(Math.round(ms_duration)));
     }
 
     /**
@@ -743,9 +743,9 @@ export class YDigitalIO extends YFunction
     nextDigitalIO(): YDigitalIO | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDigitalIO.FindDigitalIOInContext(this._yapi, next_hwid);
     }
 
@@ -761,7 +761,7 @@ export class YDigitalIO extends YFunction
     static FirstDigitalIO(): YDigitalIO | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('DigitalIO');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDigitalIO.FindDigitalIO(next_hwid);
     }
 
@@ -779,7 +779,7 @@ export class YDigitalIO extends YFunction
     static FirstDigitalIOInContext(yctx: YAPIContext): YDigitalIO | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('DigitalIO');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDigitalIO.FindDigitalIOInContext(yctx, next_hwid);
     }
 
@@ -788,13 +788,16 @@ export class YDigitalIO extends YFunction
 
 export namespace YDigitalIO {
     //--- (YDigitalIO definitions)
-    export const enum OUTPUTVOLTAGE {
+    export const enum OUTPUTVOLTAGE
+    {
         USB_5V = 0,
         USB_3V = 1,
         EXT_V = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YDigitalIO, value: string): void }
+
+    export interface ValueCallback {(func: YDigitalIO, value: string): void}
+
     //--- (end of YDigitalIO definitions)
 }
 

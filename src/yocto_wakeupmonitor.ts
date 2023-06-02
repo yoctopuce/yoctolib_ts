@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_wakeupmonitor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -107,7 +107,7 @@ export class YWakeUpMonitor extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'powerDuration':
             this._powerDuration = <number> <number> val;
             return 1;
@@ -165,7 +165,7 @@ export class YWakeUpMonitor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('powerDuration',rest_val);
+        return await this._setAttr('powerDuration', rest_val);
     }
 
     /**
@@ -200,7 +200,7 @@ export class YWakeUpMonitor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('sleepCountdown',rest_val);
+        return await this._setAttr('sleepCountdown', rest_val);
     }
 
     /**
@@ -235,7 +235,7 @@ export class YWakeUpMonitor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('nextWakeUp',rest_val);
+        return await this._setAttr('nextWakeUp', rest_val);
     }
 
     /**
@@ -284,7 +284,7 @@ export class YWakeUpMonitor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('wakeUpState',rest_val);
+        return await this._setAttr('wakeUpState', rest_val);
     }
 
     async get_rtcTime(): Promise<number>
@@ -441,7 +441,7 @@ export class YWakeUpMonitor extends YFunction
         let currTime: number;
         currTime = await this.get_rtcTime();
         if (!(currTime != 0)) {
-            return this._throw(this._yapi.RTC_NOT_READY,'RTC time not set',this._yapi.RTC_NOT_READY);
+            return this._throw(this._yapi.RTC_NOT_READY, 'RTC time not set', this._yapi.RTC_NOT_READY);
         }
         await this.set_nextWakeUp(this._endOfTime);
         await this.set_sleepCountdown(secBeforeSleep);
@@ -465,7 +465,7 @@ export class YWakeUpMonitor extends YFunction
         let currTime: number;
         currTime = await this.get_rtcTime();
         if (!(currTime != 0)) {
-            return this._throw(this._yapi.RTC_NOT_READY,'RTC time not set',this._yapi.RTC_NOT_READY);
+            return this._throw(this._yapi.RTC_NOT_READY, 'RTC time not set', this._yapi.RTC_NOT_READY);
         }
         await this.set_nextWakeUp(currTime+secUntilWakeUp);
         await this.set_sleepCountdown(secBeforeSleep);
@@ -489,7 +489,7 @@ export class YWakeUpMonitor extends YFunction
         let currTime: number;
         currTime = await this.get_rtcTime();
         if (!(currTime != 0)) {
-            return this._throw(this._yapi.RTC_NOT_READY,'RTC time not set',this._yapi.RTC_NOT_READY);
+            return this._throw(this._yapi.RTC_NOT_READY, 'RTC time not set', this._yapi.RTC_NOT_READY);
         }
         await this.set_nextWakeUp(wakeUpTime);
         await this.set_sleepCountdown(secBeforeSleep);
@@ -522,9 +522,9 @@ export class YWakeUpMonitor extends YFunction
     nextWakeUpMonitor(): YWakeUpMonitor | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWakeUpMonitor.FindWakeUpMonitorInContext(this._yapi, next_hwid);
     }
 
@@ -540,7 +540,7 @@ export class YWakeUpMonitor extends YFunction
     static FirstWakeUpMonitor(): YWakeUpMonitor | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('WakeUpMonitor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWakeUpMonitor.FindWakeUpMonitor(next_hwid);
     }
 
@@ -558,7 +558,7 @@ export class YWakeUpMonitor extends YFunction
     static FirstWakeUpMonitorInContext(yctx: YAPIContext): YWakeUpMonitor | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('WakeUpMonitor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWakeUpMonitor.FindWakeUpMonitorInContext(yctx, next_hwid);
     }
 
@@ -567,7 +567,8 @@ export class YWakeUpMonitor extends YFunction
 
 export namespace YWakeUpMonitor {
     //--- (YWakeUpMonitor definitions)
-    export const enum WAKEUPREASON {
+    export const enum WAKEUPREASON
+    {
         USBPOWER = 0,
         EXTPOWER = 1,
         ENDOFSLEEP = 2,
@@ -576,12 +577,16 @@ export namespace YWakeUpMonitor {
         SCHEDULE2 = 5,
         INVALID = -1
     }
-    export const enum WAKEUPSTATE {
+
+    export const enum WAKEUPSTATE
+    {
         SLEEPING = 0,
         AWAKE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YWakeUpMonitor, value: string): void }
+
+    export interface ValueCallback {(func: YWakeUpMonitor, value: string): void}
+
     //--- (end of YWakeUpMonitor definitions)
 }
 

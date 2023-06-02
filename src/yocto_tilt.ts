@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tilt.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_tilt.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Tilt functions
  *
@@ -91,7 +91,7 @@ export class YTilt extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'bandwidth':
             this._bandwidth = <number> <number> val;
             return 1;
@@ -137,7 +137,7 @@ export class YTilt extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('bandwidth',rest_val);
+        return await this._setAttr('bandwidth', rest_val);
     }
 
     async get_axis(): Promise<YTilt.AXIS>
@@ -358,9 +358,9 @@ export class YTilt extends YSensor
     nextTilt(): YTilt | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTilt.FindTiltInContext(this._yapi, next_hwid);
     }
 
@@ -376,7 +376,7 @@ export class YTilt extends YSensor
     static FirstTilt(): YTilt | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Tilt');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTilt.FindTilt(next_hwid);
     }
 
@@ -394,7 +394,7 @@ export class YTilt extends YSensor
     static FirstTiltInContext(yctx: YAPIContext): YTilt | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Tilt');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTilt.FindTiltInContext(yctx, next_hwid);
     }
 
@@ -403,14 +403,18 @@ export class YTilt extends YSensor
 
 export namespace YTilt {
     //--- (YTilt definitions)
-    export const enum AXIS {
+    export const enum AXIS
+    {
         X = 0,
         Y = 1,
         Z = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YTilt, value: string): void }
-    export interface TimedReportCallback { (func: YTilt, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YTilt, value: string): void}
+
+    export interface TimedReportCallback {(func: YTilt, measure: YMeasure): void}
+
     //--- (end of YTilt definitions)
 }
 

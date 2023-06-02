@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 54768 2023-05-26 06:46:41Z seb $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -49,12 +49,9 @@ export declare class YPowerSupply extends YFunction {
     _voltageSetPoint: number;
     _currentLimit: number;
     _powerOutput: YPowerSupply.POWEROUTPUT;
-    _voltageSense: YPowerSupply.VOLTAGESENSE;
     _measuredVoltage: number;
     _measuredCurrent: number;
     _inputVoltage: number;
-    _vInt: number;
-    _ldoTemperature: number;
     _voltageTransition: string;
     _voltageAtStartUp: number;
     _currentAtStartUp: number;
@@ -65,14 +62,9 @@ export declare class YPowerSupply extends YFunction {
     readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT;
     readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT;
     readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT;
-    readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE;
-    readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE;
-    readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE;
     readonly MEASUREDVOLTAGE_INVALID: number;
     readonly MEASUREDCURRENT_INVALID: number;
     readonly INPUTVOLTAGE_INVALID: number;
-    readonly VINT_INVALID: number;
-    readonly LDOTEMPERATURE_INVALID: number;
     readonly VOLTAGETRANSITION_INVALID: string;
     readonly VOLTAGEATSTARTUP_INVALID: number;
     readonly CURRENTATSTARTUP_INVALID: number;
@@ -82,14 +74,9 @@ export declare class YPowerSupply extends YFunction {
     static readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT;
     static readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT;
     static readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT;
-    static readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE;
-    static readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE;
-    static readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE;
     static readonly MEASUREDVOLTAGE_INVALID: number;
     static readonly MEASUREDCURRENT_INVALID: number;
     static readonly INPUTVOLTAGE_INVALID: number;
-    static readonly VINT_INVALID: number;
-    static readonly LDOTEMPERATURE_INVALID: number;
     static readonly VOLTAGETRANSITION_INVALID: string;
     static readonly VOLTAGEATSTARTUP_INVALID: number;
     static readonly CURRENTATSTARTUP_INVALID: number;
@@ -153,26 +140,6 @@ export declare class YPowerSupply extends YFunction {
      */
     set_powerOutput(newval: YPowerSupply.POWEROUTPUT): Promise<number>;
     /**
-     * Returns the output voltage control point.
-     *
-     * @return either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to the
-     * output voltage control point
-     *
-     * On failure, throws an exception or returns YPowerSupply.VOLTAGESENSE_INVALID.
-     */
-    get_voltageSense(): Promise<YPowerSupply.VOLTAGESENSE>;
-    /**
-     * Changes the voltage control point.
-     *
-     * @param newval : either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to
-     * the voltage control point
-     *
-     * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    set_voltageSense(newval: YPowerSupply.VOLTAGESENSE): Promise<number>;
-    /**
      * Returns the measured output voltage, in V.
      *
      * @return a floating point number corresponding to the measured output voltage, in V
@@ -196,22 +163,6 @@ export declare class YPowerSupply extends YFunction {
      * On failure, throws an exception or returns YPowerSupply.INPUTVOLTAGE_INVALID.
      */
     get_inputVoltage(): Promise<number>;
-    /**
-     * Returns the internal voltage, in V.
-     *
-     * @return a floating point number corresponding to the internal voltage, in V
-     *
-     * On failure, throws an exception or returns YPowerSupply.VINT_INVALID.
-     */
-    get_vInt(): Promise<number>;
-    /**
-     * Returns the LDO temperature, in Celsius.
-     *
-     * @return a floating point number corresponding to the LDO temperature, in Celsius
-     *
-     * On failure, throws an exception or returns YPowerSupply.LDOTEMPERATURE_INVALID.
-     */
-    get_ldoTemperature(): Promise<number>;
     get_voltageTransition(): Promise<string>;
     set_voltageTransition(newval: string): Promise<number>;
     /**
@@ -371,11 +322,6 @@ export declare namespace YPowerSupply {
     const enum POWEROUTPUT {
         OFF = 0,
         ON = 1,
-        INVALID = -1
-    }
-    const enum VOLTAGESENSE {
-        INT = 0,
-        EXT = 1,
         INVALID = -1
     }
     interface ValueCallback {

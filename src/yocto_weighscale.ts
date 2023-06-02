@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_weighscale.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -106,7 +106,7 @@ export class YWeighScale extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'excitation':
             this._excitation = <YWeighScale.EXCITATION> <number> val;
             return 1;
@@ -150,7 +150,7 @@ export class YWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -189,7 +189,7 @@ export class YWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('excitation',rest_val);
+        return await this._setAttr('excitation', rest_val);
     }
 
     /**
@@ -211,7 +211,7 @@ export class YWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('tempAvgAdaptRatio',rest_val);
+        return await this._setAttr('tempAvgAdaptRatio', rest_val);
     }
 
     /**
@@ -255,7 +255,7 @@ export class YWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('tempChgAdaptRatio',rest_val);
+        return await this._setAttr('tempChgAdaptRatio', rest_val);
     }
 
     /**
@@ -355,7 +355,7 @@ export class YWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('zeroTracking',rest_val);
+        return await this._setAttr('zeroTracking', rest_val);
     }
 
     /**
@@ -395,7 +395,7 @@ export class YWeighScale extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -582,7 +582,7 @@ export class YWeighScale extends YSensor
      */
     async setupSpan(currWeight: number, maxWeight: number): Promise<number>
     {
-        return await this.set_command('S'+String(Math.round(<number> Math.round(1000*currWeight)))+':'+String(Math.round(<number> Math.round(1000*maxWeight))));
+        return await this.set_command('S' + String(Math.round(<number> Math.round(1000*currWeight))) + ':' + String(Math.round(<number> Math.round(1000*maxWeight))));
     }
 
     async setCompensationTable(tableIndex: number, tempValues: number[], compValues: number[]): Promise<number>
@@ -597,15 +597,15 @@ export class YWeighScale extends YSensor
         let idxTemp: number;
         siz = tempValues.length;
         if (!(siz != 1)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'thermal compensation table must have at least two points',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'thermal compensation table must have at least two points', this._yapi.INVALID_ARGUMENT);
         }
         if (!(siz == compValues.length)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'table sizes mismatch',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'table sizes mismatch', this._yapi.INVALID_ARGUMENT);
         }
 
-        res = await this.set_command(String(Math.round(tableIndex))+'Z');
+        res = await this.set_command(String(Math.round(tableIndex)) + 'Z');
         if (!(res==this._yapi.SUCCESS)) {
-            return this._throw(this._yapi.IO_ERROR,'unable to reset thermal compensation table',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'unable to reset thermal compensation table', this._yapi.IO_ERROR);
         }
         // add records in growing temperature value
         found = 1;
@@ -625,9 +625,9 @@ export class YWeighScale extends YSensor
                 idx = idx + 1;
             }
             if (found > 0) {
-                res = await this.set_command(String(Math.round(tableIndex))+'m'+String(Math.round(<number> Math.round(1000*curr)))+':'+String(Math.round(<number> Math.round(1000*currComp))));
+                res = await this.set_command(String(Math.round(tableIndex)) + 'm' + String(Math.round(<number> Math.round(1000*curr))) + ':' + String(Math.round(<number> Math.round(1000*currComp))));
                 if (!(res==this._yapi.SUCCESS)) {
-                    return this._throw(this._yapi.IO_ERROR,'unable to set thermal compensation table',this._yapi.IO_ERROR);
+                    return this._throw(this._yapi.IO_ERROR, 'unable to set thermal compensation table', this._yapi.IO_ERROR);
                 }
                 prev = curr;
             }
@@ -646,8 +646,8 @@ export class YWeighScale extends YSensor
         let comp: number;
 
         id = await this.get_functionId();
-        id = (id).substr( 10, (id).length - 10);
-        bin_json = await this._download('extra.json?page='+String(Math.round((4*this._yapi.imm_atoi(id))+tableIndex)));
+        id = (id).substr(10, (id).length - 10);
+        bin_json = await this._download('extra.json?page=' + String(Math.round((4*this._yapi.imm_atoi(id))+tableIndex)));
         paramlist = this.imm_json_get_array(bin_json);
         // convert all values to float and append records
         siz = ((paramlist.length) >> (1));
@@ -837,9 +837,9 @@ export class YWeighScale extends YSensor
     nextWeighScale(): YWeighScale | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWeighScale.FindWeighScaleInContext(this._yapi, next_hwid);
     }
 
@@ -855,7 +855,7 @@ export class YWeighScale extends YSensor
     static FirstWeighScale(): YWeighScale | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('WeighScale');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWeighScale.FindWeighScale(next_hwid);
     }
 
@@ -873,7 +873,7 @@ export class YWeighScale extends YSensor
     static FirstWeighScaleInContext(yctx: YAPIContext): YWeighScale | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('WeighScale');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWeighScale.FindWeighScaleInContext(yctx, next_hwid);
     }
 
@@ -882,14 +882,18 @@ export class YWeighScale extends YSensor
 
 export namespace YWeighScale {
     //--- (YWeighScale definitions)
-    export const enum EXCITATION {
+    export const enum EXCITATION
+    {
         OFF = 0,
         DC = 1,
         AC = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YWeighScale, value: string): void }
-    export interface TimedReportCallback { (func: YWeighScale, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YWeighScale, value: string): void}
+
+    export interface TimedReportCallback {(func: YWeighScale, measure: YMeasure): void}
+
     //--- (end of YWeighScale definitions)
 }
 

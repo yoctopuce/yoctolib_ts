@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_gyro.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -245,9 +245,9 @@ export class YQt extends YSensor
     nextQt(): YQt | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YQt.FindQtInContext(this._yapi, next_hwid);
     }
 
@@ -263,7 +263,7 @@ export class YQt extends YSensor
     static FirstQt(): YQt | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Qt');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YQt.FindQt(next_hwid);
     }
 
@@ -281,7 +281,7 @@ export class YQt extends YSensor
     static FirstQtInContext(yctx: YAPIContext): YQt | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Qt');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YQt.FindQtInContext(yctx, next_hwid);
     }
 
@@ -299,8 +299,10 @@ async function yInternalGyroCallback(YQt_obj: YQt, str_value: string)
 export namespace YQt
 {
     //--- (generated code: YQt definitions)
-    export interface ValueCallback { (func: YQt, value: string): void }
-    export interface TimedReportCallback { (func: YQt, measure: YMeasure): void }
+    export interface ValueCallback {(func: YQt, value: string): void}
+
+    export interface TimedReportCallback {(func: YQt, measure: YMeasure): void}
+
     //--- (end of generated code: YQt definitions)
 }
 
@@ -373,7 +375,7 @@ export class YGyro extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'bandwidth':
             this._bandwidth = <number> <number> val;
             return 1;
@@ -425,7 +427,7 @@ export class YGyro extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('bandwidth',rest_val);
+        return await this._setAttr('bandwidth', rest_val);
     }
 
     /**
@@ -656,10 +658,10 @@ export class YGyro extends YSensor
                 return this._yapi.DEVICE_NOT_FOUND;
             }
             if (this._qt_stamp == 0) {
-                this._qt_w = YQt.FindQtInContext(this._yapi, this._serial+'.qt1');
-                this._qt_x = YQt.FindQtInContext(this._yapi, this._serial+'.qt2');
-                this._qt_y = YQt.FindQtInContext(this._yapi, this._serial+'.qt3');
-                this._qt_z = YQt.FindQtInContext(this._yapi, this._serial+'.qt4');
+                this._qt_w = YQt.FindQtInContext(this._yapi, this._serial + '.qt1');
+                this._qt_x = YQt.FindQtInContext(this._yapi, this._serial + '.qt2');
+                this._qt_y = YQt.FindQtInContext(this._yapi, this._serial + '.qt3');
+                this._qt_z = YQt.FindQtInContext(this._yapi, this._serial + '.qt4');
             }
             if (await this._qt_w.load(9) != this._yapi.SUCCESS) {
                 return this._yapi.DEVICE_NOT_FOUND;
@@ -919,7 +921,7 @@ export class YGyro extends YSensor
 
     async _invokeGyroCallbacks(qtIndex: number, qtValue: number): Promise<number>
     {
-        switch(qtIndex - 1) {
+        switch (qtIndex - 1) {
         case 0:
             this._w = qtValue;
             break;
@@ -968,9 +970,9 @@ export class YGyro extends YSensor
     nextGyro(): YGyro | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGyro.FindGyroInContext(this._yapi, next_hwid);
     }
 
@@ -986,7 +988,7 @@ export class YGyro extends YSensor
     static FirstGyro(): YGyro | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Gyro');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGyro.FindGyro(next_hwid);
     }
 
@@ -1004,7 +1006,7 @@ export class YGyro extends YSensor
     static FirstGyroInContext(yctx: YAPIContext): YGyro | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Gyro');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YGyro.FindGyroInContext(yctx, next_hwid);
     }
 
@@ -1014,8 +1016,10 @@ export class YGyro extends YSensor
 export namespace YGyro
 {
     //--- (generated code: YGyro definitions)
-    export interface ValueCallback { (func: YGyro, value: string): void }
-    export interface TimedReportCallback { (func: YGyro, measure: YMeasure): void }
+    export interface ValueCallback {(func: YGyro, value: string): void}
+
+    export interface TimedReportCallback {(func: YGyro, measure: YMeasure): void}
+
     //--- (end of generated code: YGyro definitions)
     export interface YQuatCallback{ (func: YGyro, w: number, x: number, y:number, z: number): void }
     export interface YAnglesCallback{ (func: YGyro, roll: number, pitch: number, head:number): void }

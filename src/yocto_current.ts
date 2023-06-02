@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_current.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Current functions
  *
@@ -81,7 +81,7 @@ export class YCurrent extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'enabled':
             this._enabled = <YCurrent.ENABLED> <number> val;
             return 1;
@@ -127,7 +127,7 @@ export class YCurrent extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -300,9 +300,9 @@ export class YCurrent extends YSensor
     nextCurrent(): YCurrent | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCurrent.FindCurrentInContext(this._yapi, next_hwid);
     }
 
@@ -318,7 +318,7 @@ export class YCurrent extends YSensor
     static FirstCurrent(): YCurrent | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Current');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCurrent.FindCurrent(next_hwid);
     }
 
@@ -336,7 +336,7 @@ export class YCurrent extends YSensor
     static FirstCurrentInContext(yctx: YAPIContext): YCurrent | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Current');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YCurrent.FindCurrentInContext(yctx, next_hwid);
     }
 
@@ -345,13 +345,17 @@ export class YCurrent extends YSensor
 
 export namespace YCurrent {
     //--- (YCurrent definitions)
-    export const enum ENABLED {
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YCurrent, value: string): void }
-    export interface TimedReportCallback { (func: YCurrent, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YCurrent, value: string): void}
+
+    export interface TimedReportCallback {(func: YCurrent, measure: YMeasure): void}
+
     //--- (end of YCurrent definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_steppermotor.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -137,7 +137,7 @@ export class YStepperMotor extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'motorState':
             this._motorState = <YStepperMotor.MOTORSTATE> <number> val;
             return 1;
@@ -245,7 +245,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(<number>newval * 100.0)/100.0);
-        return await this._setAttr('stepPos',rest_val);
+        return await this._setAttr('stepPos', rest_val);
     }
 
     /**
@@ -302,7 +302,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('pullinSpeed',rest_val);
+        return await this._setAttr('pullinSpeed', rest_val);
     }
 
     /**
@@ -339,7 +339,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('maxAccel',rest_val);
+        return await this._setAttr('maxAccel', rest_val);
     }
 
     /**
@@ -374,7 +374,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('maxSpeed',rest_val);
+        return await this._setAttr('maxSpeed', rest_val);
     }
 
     /**
@@ -433,7 +433,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('stepping',rest_val);
+        return await this._setAttr('stepping', rest_val);
     }
 
     /**
@@ -468,7 +468,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('overcurrent',rest_val);
+        return await this._setAttr('overcurrent', rest_val);
     }
 
     /**
@@ -504,7 +504,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('tCurrStop',rest_val);
+        return await this._setAttr('tCurrStop', rest_val);
     }
 
     /**
@@ -540,7 +540,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('tCurrRun',rest_val);
+        return await this._setAttr('tCurrRun', rest_val);
     }
 
     async get_alertMode(): Promise<string>
@@ -559,7 +559,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('alertMode',rest_val);
+        return await this._setAttr('alertMode', rest_val);
     }
 
     async get_auxMode(): Promise<string>
@@ -578,7 +578,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('auxMode',rest_val);
+        return await this._setAttr('auxMode', rest_val);
     }
 
     /**
@@ -614,7 +614,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('auxSignal',rest_val);
+        return await this._setAttr('auxSignal', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -633,7 +633,7 @@ export class YStepperMotor extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -762,18 +762,18 @@ export class YStepperMotor extends YFunction
         let retBin: Uint8Array;
         let res: number;
         id = await this.get_functionId();
-        id = (id).substr( 12, 1);
-        url = 'cmd.txt?'+id+'='+command;
+        id = (id).substr(12, 1);
+        url = 'cmd.txt?' + id + '=' + command;
         //may throw an exception
         retBin = await this._download(url);
         res = retBin[0];
         if (res < 58) {
             if (!(res == 48)) {
-                return this._throw(this._yapi.DEVICE_BUSY,'Motor command pipeline is full, try again later',this._yapi.DEVICE_BUSY);
+                return this._throw(this._yapi.DEVICE_BUSY, 'Motor command pipeline is full, try again later', this._yapi.DEVICE_BUSY);
             }
         } else {
             if (!(res == 48)) {
-                return this._throw(this._yapi.IO_ERROR,'Motor command failed permanently',this._yapi.IO_ERROR);
+                return this._throw(this._yapi.IO_ERROR, 'Motor command failed permanently', this._yapi.IO_ERROR);
             }
         }
         return this._yapi.SUCCESS;
@@ -800,7 +800,7 @@ export class YStepperMotor extends YFunction
      */
     async findHomePosition(speed: number): Promise<number>
     {
-        return await this.sendCommand('H'+String(Math.round(<number> Math.round(1000*speed))));
+        return await this.sendCommand('H' + String(Math.round(<number> Math.round(1000*speed))));
     }
 
     /**
@@ -815,7 +815,7 @@ export class YStepperMotor extends YFunction
      */
     async changeSpeed(speed: number): Promise<number>
     {
-        return await this.sendCommand('R'+String(Math.round(<number> Math.round(1000*speed))));
+        return await this.sendCommand('R' + String(Math.round(<number> Math.round(1000*speed))));
     }
 
     /**
@@ -830,7 +830,7 @@ export class YStepperMotor extends YFunction
      */
     async moveTo(absPos: number): Promise<number>
     {
-        return await this.sendCommand('M'+String(Math.round(<number> Math.round(16*absPos))));
+        return await this.sendCommand('M' + String(Math.round(<number> Math.round(16*absPos))));
     }
 
     /**
@@ -845,7 +845,7 @@ export class YStepperMotor extends YFunction
      */
     async moveRel(relPos: number): Promise<number>
     {
-        return await this.sendCommand('m'+String(Math.round(<number> Math.round(16*relPos))));
+        return await this.sendCommand('m' + String(Math.round(<number> Math.round(16*relPos))));
     }
 
     /**
@@ -861,7 +861,7 @@ export class YStepperMotor extends YFunction
      */
     async moveRelSlow(relPos: number, maxSpeed: number): Promise<number>
     {
-        return await this.sendCommand('m'+String(Math.round(<number> Math.round(16*relPos)))+'@'+String(Math.round(<number> Math.round(1000*maxSpeed))));
+        return await this.sendCommand('m' + String(Math.round(<number> Math.round(16*relPos))) + '@' + String(Math.round(<number> Math.round(1000*maxSpeed))));
     }
 
     /**
@@ -874,7 +874,7 @@ export class YStepperMotor extends YFunction
      */
     async pause(waitMs: number): Promise<number>
     {
-        return await this.sendCommand('_'+String(Math.round(waitMs)));
+        return await this.sendCommand('_' + String(Math.round(waitMs)));
     }
 
     /**
@@ -914,7 +914,7 @@ export class YStepperMotor extends YFunction
     async alertStepDir(dir: number): Promise<number>
     {
         if (!(dir != 0)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'direction must be +1 or -1',this._yapi.INVALID_ARGUMENT);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'direction must be +1 or -1', this._yapi.INVALID_ARGUMENT);
         }
         if (dir > 0) {
             return await this.set_command('.+');
@@ -957,9 +957,9 @@ export class YStepperMotor extends YFunction
     nextStepperMotor(): YStepperMotor | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YStepperMotor.FindStepperMotorInContext(this._yapi, next_hwid);
     }
 
@@ -975,7 +975,7 @@ export class YStepperMotor extends YFunction
     static FirstStepperMotor(): YStepperMotor | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('StepperMotor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YStepperMotor.FindStepperMotor(next_hwid);
     }
 
@@ -993,7 +993,7 @@ export class YStepperMotor extends YFunction
     static FirstStepperMotorInContext(yctx: YAPIContext): YStepperMotor | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('StepperMotor');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YStepperMotor.FindStepperMotorInContext(yctx, next_hwid);
     }
 
@@ -1002,7 +1002,8 @@ export class YStepperMotor extends YFunction
 
 export namespace YStepperMotor {
     //--- (YStepperMotor definitions)
-    export const enum MOTORSTATE {
+    export const enum MOTORSTATE
+    {
         ABSENT = 0,
         ALERT = 1,
         HI_Z = 2,
@@ -1011,7 +1012,9 @@ export namespace YStepperMotor {
         BATCH = 5,
         INVALID = -1
     }
-    export const enum STEPPING {
+
+    export const enum STEPPING
+    {
         MICROSTEP16 = 0,
         MICROSTEP8 = 1,
         MICROSTEP4 = 2,
@@ -1019,7 +1022,9 @@ export namespace YStepperMotor {
         FULLSTEP = 4,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YStepperMotor, value: string): void }
+
+    export interface ValueCallback {(func: YStepperMotor, value: string): void}
+
     //--- (end of YStepperMotor definitions)
 }
 

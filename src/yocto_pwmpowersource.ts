@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmpowersource.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_pwmpowersource.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -82,7 +82,7 @@ export class YPwmPowerSource extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'powerMode':
             this._powerMode = <YPwmPowerSource.POWERMODE> <number> val;
             return 1;
@@ -131,7 +131,7 @@ export class YPwmPowerSource extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('powerMode',rest_val);
+        return await this._setAttr('powerMode', rest_val);
     }
 
     /**
@@ -266,9 +266,9 @@ export class YPwmPowerSource extends YFunction
     nextPwmPowerSource(): YPwmPowerSource | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmPowerSource.FindPwmPowerSourceInContext(this._yapi, next_hwid);
     }
 
@@ -284,7 +284,7 @@ export class YPwmPowerSource extends YFunction
     static FirstPwmPowerSource(): YPwmPowerSource | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('PwmPowerSource');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmPowerSource.FindPwmPowerSource(next_hwid);
     }
 
@@ -302,7 +302,7 @@ export class YPwmPowerSource extends YFunction
     static FirstPwmPowerSourceInContext(yctx: YAPIContext): YPwmPowerSource | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('PwmPowerSource');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmPowerSource.FindPwmPowerSourceInContext(yctx, next_hwid);
     }
 
@@ -311,14 +311,17 @@ export class YPwmPowerSource extends YFunction
 
 export namespace YPwmPowerSource {
     //--- (YPwmPowerSource definitions)
-    export const enum POWERMODE {
+    export const enum POWERMODE
+    {
         USB_5V = 0,
         USB_3V = 1,
         EXT_V = 2,
         OPNDRN = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YPwmPowerSource, value: string): void }
+
+    export interface ValueCallback {(func: YPwmPowerSource, value: string): void}
+
     //--- (end of YPwmPowerSource definitions)
 }
 

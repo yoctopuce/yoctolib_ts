@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 53894 2023-04-05 10:33:42Z mvuilleu $
+ * $Id: yocto_api.ts 54721 2023-05-23 09:58:57Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -345,8 +345,9 @@ class YFunctionType {
             }
         }
         else if (currname != str_name) {
-            if (this._hwIdByName[currname] == str_hwid)
+            if (this._hwIdByName[currname] == str_hwid) {
                 delete this._hwIdByName[currname];
+            }
             if (str_name != '') {
                 this._nameByHwId[str_hwid] = str_name;
             }
@@ -409,9 +410,11 @@ class YFunctionType {
             // First case: str_func is the logicalname of a function
             res = this._hwIdByName[str_func];
             if (res != undefined) {
-                return { errorType: exports.YAPI_SUCCESS,
+                return {
+                    errorType: exports.YAPI_SUCCESS,
                     errorMsg: 'no error',
-                    result: String(res) };
+                    result: String(res)
+                };
             }
             // fallback to assuming that str_func is a logicalname or serial number of a module
             // with an implicit function name (like serial.module for instance)
@@ -421,9 +424,11 @@ class YFunctionType {
         // Second case: str_func is in the form: device_id.function_id
         // quick lookup for a known pure hardware id
         if (this._valueByHwId[str_func] != undefined) {
-            return { errorType: exports.YAPI_SUCCESS,
+            return {
+                errorType: exports.YAPI_SUCCESS,
                 errorMsg: 'no error',
-                result: String(str_func) };
+                result: String(str_func)
+            };
         }
         let serial = '';
         let funcid;
@@ -433,16 +438,20 @@ class YFunctionType {
             funcid = str_func.substr(dotpos + 1);
             let dev = this._yapi.imm_getDevice(devid);
             if (!dev) {
-                return { errorType: exports.YAPI_DEVICE_NOT_FOUND,
+                return {
+                    errorType: exports.YAPI_DEVICE_NOT_FOUND,
                     errorMsg: 'Device [' + devid + '] not online',
-                    result: '' };
+                    result: ''
+                };
             }
             serial = dev.imm_getSerialNumber();
             res = serial + '.' + funcid;
             if (this._valueByHwId[res] != undefined) {
-                return { errorType: exports.YAPI_SUCCESS,
+                return {
+                    errorType: exports.YAPI_SUCCESS,
                     errorMsg: 'no error',
-                    result: String(res) };
+                    result: String(res)
+                };
             }
             // not found neither, may be funcid is a function logicalname
             let i, nfun = dev.imm_functionCount();
@@ -450,9 +459,11 @@ class YFunctionType {
                 res = serial + '.' + dev.imm_functionId(i);
                 let name = this._nameByHwId[res];
                 if (name != undefined && name == funcid) {
-                    return { errorType: exports.YAPI_SUCCESS,
+                    return {
+                        errorType: exports.YAPI_SUCCESS,
                         errorMsg: 'no error',
-                        result: String(res) };
+                        result: String(res)
+                    };
                 }
             }
         }
@@ -462,15 +473,19 @@ class YFunctionType {
                 let pos = hwid_str.indexOf('.');
                 let str_function = hwid_str.substr(pos + 1);
                 if (str_function == funcid) {
-                    return { errorType: exports.YAPI_SUCCESS,
+                    return {
+                        errorType: exports.YAPI_SUCCESS,
                         errorMsg: 'no error',
-                        result: String(hwid_str) };
+                        result: String(hwid_str)
+                    };
                 }
             }
         }
-        return { errorType: exports.YAPI_DEVICE_NOT_FOUND,
+        return {
+            errorType: exports.YAPI_DEVICE_NOT_FOUND,
             errorMsg: 'No function [' + funcid + '] found on device [' + serial + ']',
-            result: '' };
+            result: ''
+        };
     }
     /** Find the friendly name (use logical name if available) of the specified function, if currently connected
      * If device is not known as connected, return a clean error
@@ -492,9 +507,11 @@ class YFunctionType {
             if (name != undefined && name != '') {
                 friend = this._nameByHwId[friend];
             }
-            return { errorType: exports.YAPI_SUCCESS,
+            return {
+                errorType: exports.YAPI_SUCCESS,
                 errorMsg: 'no error',
-                result: String(friend) };
+                result: String(friend)
+            };
         }
         else {
             let pos = hwId.indexOf('.');
@@ -507,9 +524,11 @@ class YFunctionType {
             if (name != undefined && name != '') {
                 str_friendFunc = name;
             }
-            return { errorType: exports.YAPI_SUCCESS,
+            return {
+                errorType: exports.YAPI_SUCCESS,
                 errorMsg: 'no error',
-                result: String(str_friendMod + '.' + str_friendFunc) };
+                result: String(str_friendMod + '.' + str_friendFunc)
+            };
         }
     }
     /** Associates a given function object to a function id
@@ -596,8 +615,9 @@ class YFunctionType {
     imm_getFirstHardwareId() {
         let res = null;
         //noinspection LoopStatementThatDoesntLoopJS
-        for (res in this._valueByHwId)
+        for (res in this._valueByHwId) {
             break;
+        }
         return res;
     }
     /** Find the hardwareId for the next instance of a given function class
@@ -607,10 +627,12 @@ class YFunctionType {
      */
     imm_getNextHardwareId(str_hwid) {
         for (let iter_hwid in this._valueByHwId) {
-            if (str_hwid == '!')
+            if (str_hwid == '!') {
                 return iter_hwid;
-            if (str_hwid == iter_hwid)
+            }
+            if (str_hwid == iter_hwid) {
                 str_hwid = '!';
+            }
         }
         return null; // no more instance found
     }
@@ -2625,8 +2647,9 @@ class YFirmwareFile {
         });
         let getString = ((maxlen) => {
             let end = pos + maxlen;
-            while (end > pos && data[end - 1] == 0)
+            while (end > pos && data[end - 1] == 0) {
                 end--;
+            }
             let res = exports.YAPI.imm_bin2str(data.subarray(pos, end));
             pos += maxlen;
             return res;
@@ -2833,8 +2856,9 @@ class YFirmwareUpdate {
             let dev = this._yapi.imm_getDevice(this._serial);
             let baseUrl = dev.imm_getRootUrl();
             let byPos = baseUrl.indexOf('/bySerial/');
-            if (byPos >= 0)
+            if (byPos >= 0) {
                 baseUrl = baseUrl.slice(0, byPos + 1);
+            }
             else if (baseUrl.slice(-1) != '/')
                 baseUrl = baseUrl + '/';
             let urlInfo = this._yapi.imm_parseRegisteredUrl(baseUrl);
@@ -2894,7 +2918,7 @@ class YFirmwareUpdate {
         /***
          * FIXME: move recursion to yocto_api_nodejs
          ***
-        if(YAPI.system_env.isNodeJS) {
+         if(YAPI.system_env.isNodeJS) {
             // Node.js can recurse into directory
             let stats = fs.statSync(file);
             if(stats.isDirectory()) {
@@ -2976,10 +3000,12 @@ class YFirmwareUpdate {
             }
         }
         if (minrelease != 0) {
-            if (minrelease < best_rev)
+            if (minrelease < best_rev) {
                 return link;
-            else
+            }
+            else {
                 return '';
+            }
         }
         return link;
     }
@@ -3628,9 +3654,9 @@ class YFunction {
      ** Helpers for built-in classes
      **
 
-    // Helper for initializing standard attributes (used in particular by built-in classes)
-    async _i(): Promise<void>
-    {
+     // Helper for initializing standard attributes (used in particular by built-in classes)
+     async _i(): Promise<void>
+     {
         let arr_attrNames: string[] = this.constructor._attrList;
         this._className = this.constructor.name.slice(1);
         for(let i = 0; i < arr_attrNames.length; i++) {
@@ -3638,9 +3664,9 @@ class YFunction {
         }
     }
 
-    // Helper for simple accessors (used in particular by built-in classes)
-    async _g(str_attr): Promise<object>
-    {
+     // Helper for simple accessors (used in particular by built-in classes)
+     async _g(str_attr): Promise<object>
+     {
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != YAPI_SUCCESS) {
                 return this.constructor[str_attr.toLocaleUpperCase()+'_INVALID'];
@@ -3649,15 +3675,15 @@ class YFunction {
         return this['_'+str_attr];
     }
 
-    // Helper for simple accessors (used in particular by built-in classes)
-    async _s(str_attr, obj_val): Promise<number>
-    {
+     // Helper for simple accessors (used in particular by built-in classes)
+     async _s(str_attr, obj_val): Promise<number>
+     {
         return this._setAttr(str_attr, String(obj_val));
     }
 
-    // Helper for completing and exporting the class; used by built-in classes
-    static _E(arr_attrlist)
-    {
+     // Helper for completing and exporting the class; used by built-in classes
+     static _E(arr_attrlist)
+     {
         let className = this.name.slice(1);
         this._attrList = arr_attrlist;
         for(let i = 0; i < arr_attrlist.length; i++) {
@@ -3691,7 +3717,7 @@ class YFunction {
         this.imm_Init();
     }
 
-    ********/
+     ********/
     // Backward-compatibility helper
     isOnline_async(func, ctx) {
         this.isOnline()
@@ -3990,8 +4016,9 @@ class YFunction {
     imm_findDataStream(obj_dataset, str_def) {
         /** @type {string} **/
         let key = obj_dataset.imm_get_functionId() + ':' + str_def;
-        if (this._dataStreams[key])
+        if (this._dataStreams[key]) {
             return this._dataStreams[key];
+        }
         let words = this._yapi.imm_decodeWords(str_def);
         if (words.length < 14) {
             this._throw(exports.YAPI.VERSION_MISMATCH, "device firwmare is too old", null);
@@ -4434,8 +4461,9 @@ class YModule extends YFunction {
         let decoded = JSON.parse(this._yapi.imm_bin2str(jsoncomplex));
         let attrs = [];
         for (let function_name in decoded) {
-            if (function_name == 'services')
+            if (function_name == 'services') {
                 continue;
+            }
             let function_attrs = decoded[function_name];
             for (let attr_name in function_attrs) {
                 let attr_value = function_attrs[attr_name];
@@ -7896,9 +7924,12 @@ class YGenericHub {
         this.missing = {}; // used during UpdateDeviceList
         this._firstArrivalCallback = true; // indicates that this is the first time we see this device
         this._missing = {}; // hash table by serial number, used during UpdateDeviceList
+        this._knownUrls = []; // the list of url that can be use for this hub
         this._yapi = yapi;
         this.urlInfo = urlInfo;
         this.stalledTimeoutMs = yapi._networkTimeoutMs;
+        this._hubRef = YGenericHub.globalHubRefCounter++;
+        this._knownUrls.push(urlInfo.orgUrl);
     }
     _throw(int_errType, str_errMsg, obj_retVal) {
         this._lastErrorType = int_errType;
@@ -7961,18 +7992,15 @@ class YGenericHub {
         return false;
     }
     imm_updateUrl(urlInfo) {
+        if (!this._knownUrls.includes(urlInfo.orgUrl)) {
+            this._knownUrls.push(urlInfo.orgUrl);
+        }
         if (this.urlInfo.authUrl == urlInfo.authUrl) {
+            this.urlInfo = urlInfo;
             return;
         }
         this.urlInfo = urlInfo;
-        if (this._currentState >= -1 /* HUB_CONNECTING */) {
-            // force a disconnection to reconnect with new credentials
-            if (this._yapi._logLevel >= 4) {
-                this._yapi.imm_log("Disconnecting to update auth credentials for " + this.urlInfo.rootUrl);
-            }
-            this.imm_disconnectNow();
-        }
-        else {
+        if (this._currentState < -1 /* HUB_CONNECTING */) {
             if (this._yapi._logLevel >= 4) {
                 this._yapi.imm_log("Updating auth credentials for " + this.urlInfo.rootUrl);
             }
@@ -8012,6 +8040,11 @@ class YGenericHub {
         }
         otherHub.imm_commonDisconnect('inherit', exports.YAPI_SUCCESS, 'Hub ' + this.hubSerial + ' is already connected via ' + this.urlInfo.rootUrl);
         otherHub.imm_disconnectNow();
+        for (const url of otherHub.get_knownUrls()) {
+            if (!this._knownUrls.includes(url)) {
+                this._knownUrls.push(url);
+            }
+        }
     }
     imm_getNewConnID() {
         let time = new Date();
@@ -8685,8 +8718,19 @@ class YGenericHub {
         }
         return this._rwAccess;
     }
+    getHubRef() {
+        return this._hubRef;
+    }
+    get_knownUrls() {
+        let res = this._knownUrls.slice();
+        return res;
+    }
+    imm_forgetUrls() {
+        this._knownUrls = [];
+    }
 }
 exports.YGenericHub = YGenericHub;
+YGenericHub.globalHubRefCounter = 0;
 /*
  * HTTP interface, compatible with browser XMLHTTPRequest and Node.js ClientRequest
  */
@@ -9569,8 +9613,9 @@ class YWebSocketHub extends YGenericHub {
             }
             // synchronous request pending, cannot do more for now
             let pendingCount = 1;
-            for (let yr = yreq; yr.next; yr = yr.next)
+            for (let yr = yreq; yr.next; yr = yr.next) {
                 pendingCount++;
+            }
             if (!yreq.toBeSent) {
                 // request already sent
                 if (yreq.asyncId == 0) {
@@ -9744,8 +9789,9 @@ class YWebSocketHub extends YGenericHub {
             this.imm_webSocketSend(frame);
             if (this._yapi._logLevel >= 4) {
                 let pendingCount = 1;
-                for (let yr = yreq; yr.next; yr = yr.next)
+                for (let yr = yreq; yr.next; yr = yr.next) {
                     pendingCount++;
+                }
                 this._yapi.imm_log(pendingCount.toString() + ' req pending, @' + yreq._creat + ' is in timeout');
             }
             // device is still expected to send a close to remove request from queue
@@ -10045,8 +10091,9 @@ class YGenericSSDPManager {
             return null;
         }
         u += 8;
-        while (str_uuid.charAt(u) === '0')
+        while (str_uuid.charAt(u) === '0') {
             u++;
+        }
         if (s.substr(0, 8) === "VIRTHUB0") {
             pad = '0000000000';
         }
@@ -10176,26 +10223,80 @@ exports.YGenericSSDPManager = YGenericSSDPManager;
 class YHub {
     // API symbols as static members
     //--- (end of generated code: YHub attributes declaration)
-    constructor(obj_yapi, hub, regUrl) {
-        //--- (generated code: YHub attributes declaration)
-        this._regUrl = "";
-        this._knownUrls = [];
-        this._yapi = obj_yapi;
-        this._hub = hub;
-        this._regUrl = regUrl;
-        this._knownUrls = [regUrl];
+    constructor(obj_yapi, hubref) {
+        this._hubref = 0;
         //--- (generated code: YHub constructor)
         //--- (end of generated code: YHub constructor)
+        this._ctx = obj_yapi;
+        this._hubref = hubref;
     }
-    _imm_getHub() {
-        return this._hub;
+    async _getStrAttr_internal(attrName) {
+        let hub = this._ctx.getGenHub(this._hubref);
+        if (hub == null) {
+            return "";
+        }
+        switch (attrName) {
+            case "registeredUrl":
+                return hub.urlInfo.orgUrl;
+            case "connectionUrl":
+                return hub.urlInfo.rootUrl;
+            case "serialNumber":
+                return hub.hubSerial;
+            case "errorMessage":
+                return hub.get_errorMessage();
+            default:
+                return "";
+        }
+    }
+    async _getIntAttr_internal(attrName) {
+        let hub = this._ctx.getGenHub(this._hubref);
+        if (attrName == "isInUse") {
+            return hub != null ? 1 : 0;
+        }
+        if (hub == null) {
+            return -1;
+        }
+        switch (attrName) {
+            case "isOnline":
+                return hub.imm_isOnline() ? 1 : 0;
+            case "isReadOnly":
+                return hub.hasRwAccess() ? 0 : 1;
+            case "networkTimeout":
+                return hub.stalledTimeoutMs;
+            case "errorType":
+                return hub.get_errorType();
+            default:
+                return -1;
+        }
+    }
+    async _setIntAttr_internal(attrName, value) {
+        let hub = this._ctx.getGenHub(this._hubref);
+        if (hub != null && attrName == "networkTimeout") {
+            hub.stalledTimeoutMs = value;
+        }
+    }
+    get_knownUrls_internal() {
+        let hub = this._ctx.getGenHub(this._hubref);
+        if (hub != null) {
+            return hub.get_knownUrls();
+        }
+        return [];
     }
     //--- (generated code: YHub implementation)
+    async _getStrAttr(attrName) {
+        return await this._getStrAttr_internal(attrName);
+    }
+    async _getIntAttr(attrName) {
+        return await this._getIntAttr_internal(attrName);
+    }
+    async _setIntAttr(attrName, value) {
+        return await this._setIntAttr_internal(attrName, value);
+    }
     /**
      * Returns the URL that has been used first to register this hub.
      */
     async get_registeredUrl() {
-        return this._regUrl;
+        return await this._getStrAttr('registeredUrl');
     }
     /**
      * Returns all known URLs that have been used to register this hub.
@@ -10203,17 +10304,89 @@ class YHub {
      * are sharing the same serial number.
      */
     async get_knownUrls() {
-        let knownUrls = [];
-        knownUrls.length = 0;
-        for (let ii in this._knownUrls) {
-            knownUrls.push(this._knownUrls[ii]);
-        }
-        return knownUrls;
+        return await this.get_knownUrls_internal();
     }
-    imm_inheritFrom(otherHub) {
-        for (let ii in otherHub._knownUrls) {
-            this._knownUrls.push(otherHub._knownUrls[ii]);
-        }
+    /**
+     * Returns the URL currently in use to communicate with this hub.
+     */
+    async get_connectionUrl() {
+        return await this._getStrAttr('connectionUrl');
+    }
+    /**
+     * Returns the hub serial number, if the hub was already connected once.
+     */
+    async get_serialNumber() {
+        return await this._getStrAttr('serialNumber');
+    }
+    /**
+     * Tells if this hub is still registered within the API.
+     *
+     * @return true if the hub has not been unregistered.
+     */
+    async isInUse() {
+        return await this._getIntAttr('isInUse') > 0;
+    }
+    /**
+     * Tells if there is an active communication channel with this hub.
+     *
+     * @return true if the hub is currently connected.
+     */
+    async isOnline() {
+        return await this._getIntAttr('isOnline') > 0;
+    }
+    /**
+     * Tells if write access on this hub is blocked. Return true if it
+     * is not possible to change attributes on this hub
+     *
+     * @return true if it is not possible to change attributes on this hub.
+     */
+    async isReadOnly() {
+        return await this._getIntAttr('isReadOnly') > 0;
+    }
+    /**
+     * Modifies tthe network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
+     *
+     * @param networkMsTimeout : the network connection delay in milliseconds.
+     * @noreturn
+     */
+    async set_networkTimeout(networkMsTimeout) {
+        await this._setIntAttr('networkTimeout', networkMsTimeout);
+    }
+    /**
+     * Returns the network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
+     *
+     * @return the network connection delay in milliseconds.
+     */
+    async get_networkTimeout() {
+        return await this._getIntAttr('networkTimeout');
+    }
+    /**
+     * Returns the numerical error code of the latest error with the hub.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a number corresponding to the code of the latest error that occurred while
+     *         using the hub object
+     */
+    async get_errorType() {
+        return await this._getIntAttr('errorType');
+    }
+    /**
+     * Returns the error message of the latest error with the hub.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a string corresponding to the latest error message that occured while
+     *         using the hub object
+     */
+    async get_errorMessage() {
+        return await this._getStrAttr('errorMessage');
     }
     /**
      * Returns the value of the userData attribute, as previously stored
@@ -10238,109 +10411,6 @@ class YHub {
     async set_userData(data) {
         this._userData = data;
     }
-    //--- (end of generated code: YHub implementation)
-    /**
-     * Returns the URL currently in use to communicate with this hub.
-     */
-    async get_connectionUrl() {
-        return this._hub.urlInfo.rootUrl;
-    }
-    /**
-     * Returns the hub serial number, if the hub was already connected once.
-     */
-    async get_serialNumber() {
-        return this._hub.hubSerial;
-    }
-    /**
-     * Tells if this hub is still registered within the API.
-     *
-     * @return true if the hub has not been unregistered.
-     */
-    async isInUse() {
-        return this._hub.imm_isPreOrRegistered();
-    }
-    /**
-     * Tells if there is an active communication channel with this hub.
-     *
-     * @return true if the hub is currently connected.
-     */
-    async isOnline() {
-        return this._hub.imm_isOnline();
-    }
-    /**
-     * Tells if write access on this hub is blocked. Return true if it
-     * is not possible to change attributes on this hub
-     *
-     * @return true if it is not possible to change attributes on this hub.
-     */
-    async isReadOnly() {
-        return !this._hub.hasRwAccess();
-    }
-    /**
-     * Returns the numerical error code of the latest error with the hub.
-     * This method is mostly useful when using the Yoctopuce library with
-     * exceptions disabled.
-     *
-     * @return a number corresponding to the code of the latest error that occurred while
-     *         using the hub object
-     */
-    get_errorType() {
-        return this._hub.get_errorType();
-    }
-    /**
-     * Returns the error message of the latest error with the hub.
-     * This method is mostly useful when using the Yoctopuce library with
-     * exceptions disabled.
-     *
-     * @return a string corresponding to the latest error message that occured while
-     *         using the hub object
-     */
-    get_errorMessage() {
-        return this._hub.get_errorMessage();
-    }
-    /**
-     * Returns the network connection delay for this hub.
-     * The default value is inherited from ySetNetworkTimeout
-     * at the time when the hub is registered, but it can be updated
-     * afterwards for each specific hub if necessary.
-     *
-     * @return the network connection delay in milliseconds.
-     */
-    async get_networkTimeout() {
-        return this._hub.stalledTimeoutMs;
-    }
-    /**
-     * Modifies tthe network connection delay for this hub.
-     * The default value is inherited from ySetNetworkTimeout
-     * at the time when the hub is registered, but it can be updated
-     * afterwards for each specific hub if necessary.
-     *
-     * @param networkMsTimeout : the network connection delay in milliseconds.
-     * @noreturn
-     */
-    async set_networkTimeout(networkMsTimeout) {
-        this._hub.stalledTimeoutMs = networkMsTimeout;
-    }
-    /**
-     * Continues the module enumeration started using YHub.FirstHubInUse().
-     * Caution: You can't make any assumption about the order of returned hubs.
-     *
-     * @return a pointer to a YHub object, corresponding to
-     *         the next hub currenlty in use, or a null pointer
-     *         if there are no more hubs to enumerate.
-     */
-    nextHubInUse() {
-        let found = false;
-        for (let rootUrl in this._yapi._yHubsInUse) {
-            if (found) {
-                return exports.YAPI._yHubsInUse[rootUrl];
-            }
-            if (exports.YAPI._yHubsInUse[rootUrl] == this) {
-                found = true;
-            }
-        }
-        return null;
-    }
     /**
      * Starts the enumeration of hubs currently in use by the API.
      * Use the method YHub.nextHubInUse() to iterate on the
@@ -10351,10 +10421,7 @@ class YHub {
      *         null pointer if none has been registered.
      */
     static FirstHubInUse() {
-        for (let rootUrl in exports.YAPI._yHubsInUse) {
-            return exports.YAPI._yHubsInUse[rootUrl];
-        }
-        return null;
+        return exports.YAPI.nextHubInUseInternal(-1);
     }
     /**
      * Starts the enumeration of hubs currently in use by the API
@@ -10369,10 +10436,18 @@ class YHub {
      *         null pointer if none has been registered.
      */
     static FirstHubInUseInContext(yctx) {
-        for (let rootUrl in yctx._yHubsInUse) {
-            return yctx._yHubsInUse[rootUrl];
-        }
-        return null;
+        return yctx.nextHubInUseInternal(-1);
+    }
+    /**
+     * Continues the module enumeration started using YHub.FirstHubInUse().
+     * Caution: You can't make any assumption about the order of returned hubs.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the next hub currenlty in use, or a null pointer
+     *         if there are no more hubs to enumerate.
+     */
+    nextHubInUse() {
+        return this._ctx.nextHubInUseInternal(this._hubref);
     }
 }
 exports.YHub = YHub;
@@ -10389,7 +10464,7 @@ class YAPIContext {
         this._knownHubsBySerial = {}; // hash table by serial number
         this._knownHubsByUrl = {}; // hash table by connection URL
         this._connectedHubs = [];
-        this._yHubsInUse = {};
+        this._yhub_cache = {};
         this._ssdpManager = null;
         this._devs = {}; // hash table of known devices, by serial number
         this._snByUrl = {}; // serial number for each known device, by URL
@@ -10497,6 +10572,14 @@ class YAPIContext {
         }
         return obj_retVal;
     }
+    imm_setErr(errmsg, int_errType, str_errMsg, obj_retVal) {
+        if (errmsg) {
+            errmsg.msg = str_errMsg;
+        }
+        this._lastErrorType = int_errType;
+        this._lastErrorMsg = str_errMsg;
+        return obj_retVal;
+    }
     imm_setSystemEnv(env) {
         this.system_env = env;
         this._isNodeJS = env.isNodeJS;
@@ -10578,23 +10661,11 @@ class YAPIContext {
             // Existing hub is already "better" connected, keep it as primary hub
             // Remember alias URL and update target state if needed
             primaryHub.imm_inheritFrom(hub);
-            let priYHub = this._yHubsInUse[primaryHub.urlInfo.rootUrl];
-            let altYHub = this._yHubsInUse[hub.urlInfo.rootUrl];
-            if (priYHub && altYHub) {
-                priYHub.imm_inheritFrom(altYHub);
-                delete this._yHubsInUse[hub.urlInfo.rootUrl];
-            }
             return primaryHub;
         }
         // Existing hub is not actively connected, set the new hub as primary
         this._knownHubsBySerial[hub.hubSerial] = hub;
         hub.imm_inheritFrom(primaryHub);
-        let priYHub = this._yHubsInUse[primaryHub.urlInfo.rootUrl];
-        let altYHub = this._yHubsInUse[hub.urlInfo.rootUrl];
-        if (priYHub && altYHub) {
-            altYHub.imm_inheritFrom(priYHub);
-            delete this._yHubsInUse[primaryHub.urlInfo.rootUrl];
-        }
         return hub;
     }
     // Add a hub object to the list of actively attached hub
@@ -11075,8 +11146,9 @@ class YAPIContext {
         ch &= 0x3f;
         while (len < YOCTO_PUBVAL_SIZE) {
             p_ofs++;
-            if (p_ofs >= p.length)
+            if (p_ofs >= p.length) {
                 break;
+            }
             let newCh = p.charCodeAt(p_ofs) & 0xff;
             if (newCh == NOTIFY_NETPKT_STOP) {
                 break;
@@ -11177,8 +11249,9 @@ class YAPIContext {
             let len = 0;
             buffer = '';
             while (len < YOCTO_PUBVAL_SIZE && len < int_funcvalen) {
-                if (arr_funcval[len] == 0)
+                if (arr_funcval[len] == 0) {
                     break;
+                }
                 buffer += String.fromCharCode(arr_funcval[len]);
                 len++;
             }
@@ -11325,12 +11398,15 @@ class YAPIContext {
                 }
             }
             if (dec < 3) {
-                if (dec == 0)
+                if (dec == 0) {
                     val *= 1000;
-                else if (dec == 1)
+                }
+                else if (dec == 1) {
                     val *= 100;
-                else
+                }
+                else {
                     val *= 10;
+                }
             }
             idata.push(sign * val);
         }
@@ -11485,11 +11561,13 @@ class YAPIContext {
         if (dotpos >= 0)
             str_funcid = str_funcid.substr(dotpos + 1);
         let classlen = str_funcid.length;
-        while (str_funcid.substr(classlen - 1, 1) <= '9')
+        while (str_funcid.substr(classlen - 1, 1) <= '9') {
             classlen--;
+        }
         let classname = str_funcid.substr(0, 1).toUpperCase() + str_funcid.substr(1, classlen - 1);
-        if (this._fnByType[classname] == undefined)
+        if (this._fnByType[classname] == undefined) {
             this._fnByType[classname] = new YFunctionType(this, classname);
+        }
         return classname;
     }
     // Reindex a device in YAPI after a name change detected by device refresh
@@ -11536,8 +11614,9 @@ class YAPIContext {
     imm_resolveFunction(str_className, str_func) {
         if (Y_BASETYPES[str_className] == undefined) {
             // using a regular function type
-            if (this._fnByType[str_className] == undefined)
+            if (this._fnByType[str_className] == undefined) {
                 this._fnByType[str_className] = new YFunctionType(this, str_className);
+            }
             return this._fnByType[str_className].imm_resolve(str_func);
         }
         // using an abstract baseType
@@ -11559,8 +11638,9 @@ class YAPIContext {
     imm_getFriendlyNameFunction(str_className, str_func) {
         if (Y_BASETYPES[str_className] == undefined) {
             // using a regular function type
-            if (this._fnByType[str_className] == undefined)
+            if (this._fnByType[str_className] == undefined) {
                 this._fnByType[str_className] = new YFunctionType(this, str_className);
+            }
             return this._fnByType[str_className].imm_getFriendlyName(str_func);
         }
         // using an abstract baseType
@@ -11580,14 +11660,16 @@ class YAPIContext {
     }
     // Retrieve a function object by hardware id, updating the indexes on the fly if needed
     imm_setFunction(str_className, str_func, obj_func) {
-        if (this._fnByType[str_className] == undefined)
+        if (this._fnByType[str_className] == undefined) {
             this._fnByType[str_className] = new YFunctionType(this, str_className);
+        }
         this._fnByType[str_className].imm_setFunction(str_func, obj_func);
     }
     // Retrieve a function object by hardware id, updating the indexes on the fly if needed
     imm_getFunction(str_className, str_func) {
-        if (this._fnByType[str_className] == undefined)
+        if (this._fnByType[str_className] == undefined) {
             this._fnByType[str_className] = new YFunctionType(this, str_className);
+        }
         return this._fnByType[str_className].imm_getFunction(str_func);
     }
     // Set a function advertised value by hardware id
@@ -11654,8 +11736,9 @@ class YAPIContext {
     imm_getFirstHardwareId(str_className) {
         if (Y_BASETYPES[str_className] == undefined) {
             // enumeration of a regular function type
-            if (this._fnByType[str_className] == undefined)
+            if (this._fnByType[str_className] == undefined) {
                 this._fnByType[str_className] = new YFunctionType(this, str_className);
+            }
             return this._fnByType[str_className].imm_getFirstHardwareId();
         }
         // enumeration of an abstract class
@@ -12098,6 +12181,18 @@ class YAPIContext {
     async GetCacheValidity() {
         return this.defaultCacheValidity;
     }
+    nextHubInUseInternal(hubref) {
+        return this.nextHubInUseInternal_internal(hubref);
+    }
+    getYHubObj(hubref) {
+        let obj;
+        obj = this._findYHubFromCache(hubref);
+        if (obj == null) {
+            obj = new YHub(this, hubref);
+            this._addYHubToCache(hubref, obj);
+        }
+        return obj;
+    }
     //--- (end of generated code: YAPIContext implementation)
     /**
      * Returns the version identifier for the Yoctopuce library in use.
@@ -12119,7 +12214,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.54037';
+        return /* version number patched automatically */ '1.10.54821';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -12139,7 +12234,7 @@ class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     async InitAPI(mode, errmsg) {
         this._detectType = mode;
@@ -12228,8 +12323,7 @@ class YAPIContext {
      * Re-enables the use of exceptions for runtime error handling.
      * Be aware than when exceptions are enabled, every function that fails
      * triggers an exception. If the exception is not caught by the user code,
-     * it  either fires the debugger or aborts (i.e. crash) the program.
-     * On failure, throws an exception or returns a negative error code.
+     * it either fires the debugger or aborts (i.e. crash) the program.
      */
     async EnableExceptions() {
         this.exceptionsDisabled = false;
@@ -12248,6 +12342,7 @@ class YAPIContext {
     }
     // Parse a hub URL
     imm_parseRegisteredUrl(str_url) {
+        let org_url = str_url;
         let proto = 'ws://';
         let user = '';
         let pass = '';
@@ -12279,8 +12374,9 @@ class YAPIContext {
         let pos = str_url.indexOf('/');
         if (pos > 0) {
             dom = str_url.slice(pos + 1);
-            if (dom.length > 0 && dom.slice(-1) != '/')
+            if (dom.length > 0 && dom.slice(-1) != '/') {
                 dom += '/';
+            }
             str_url = str_url.slice(0, pos);
         }
         url = proto;
@@ -12322,7 +12418,7 @@ class YAPIContext {
         }
         return {
             'proto': proto, 'user': user, 'pass': pass, 'host': host, 'port': port, 'domain': dom,
-            'authUrl': url, 'rootUrl': rooturl
+            'authUrl': url, 'rootUrl': rooturl, 'orgUrl': org_url
         };
     }
     imm_registerHub_internal(urlInfo) {
@@ -12389,7 +12485,7 @@ class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     async RegisterHub(url, errmsg) {
         if (url === "net") {
@@ -12398,11 +12494,11 @@ class YAPIContext {
                 return this.TriggerHubDiscovery();
             }
             else {
-                return this._throw(exports.YAPI_NOT_SUPPORTED, 'Network discovery is not possible in a browser', exports.YAPI_NOT_SUPPORTED);
+                return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Network discovery is not possible in a browser', exports.YAPI_NOT_SUPPORTED);
             }
         }
         if (url === "usb") {
-            return this._throw(exports.YAPI_NOT_SUPPORTED, 'Use the VirtualHub on 127.0.0.1 to access USB devices', exports.YAPI_NOT_SUPPORTED);
+            return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Use the VirtualHub on 127.0.0.1 to access USB devices', exports.YAPI_NOT_SUPPORTED);
         }
         let urlInfo = this.imm_parseRegisteredUrl(url);
         let hub = this.imm_getHub(urlInfo);
@@ -12412,7 +12508,7 @@ class YAPIContext {
             }
             hub = this.imm_registerHub_internal(urlInfo);
             if (!hub) {
-                return this._throw(exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
+                return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
             }
         }
         else {
@@ -12421,29 +12517,20 @@ class YAPIContext {
             }
             hub.imm_updateUrl(urlInfo);
         }
-        if (!this._yHubsInUse[urlInfo.rootUrl]) {
-            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
-        }
         await hub.attach(2 /* HUB_REGISTERED */);
         let sub_errmsg = new YErrorMsg();
         let retcode = await hub.waitForConnection(this._networkTimeoutMs, sub_errmsg);
         if (retcode != exports.YAPI_SUCCESS) {
             this.imm_dropConnectedHub(hub);
             await hub.detach(retcode, sub_errmsg.msg);
-            if (errmsg) {
-                errmsg.msg = sub_errmsg.msg;
-            }
-            return this._throw(retcode, sub_errmsg.msg, retcode);
+            return this.imm_setErr(errmsg, retcode, sub_errmsg.msg, retcode);
         }
         // Update known device list immediately after connection
         let yreq = await this._updateDeviceList_internal(true, false);
         if (yreq.errorType != exports.YAPI_SUCCESS) {
             this.imm_dropConnectedHub(hub);
             await hub.detach(yreq.errorType, yreq.errorMsg);
-            if (errmsg) {
-                errmsg.msg = yreq.errorMsg;
-            }
-            return this._throw(yreq.errorType, yreq.errorMsg, yreq.errorType);
+            return this.imm_setErr(errmsg, yreq.errorType, yreq.errorMsg, yreq.errorType);
         }
         return exports.YAPI_SUCCESS;
     }
@@ -12461,7 +12548,7 @@ class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     async PreregisterHub(url, errmsg) {
         let urlInfo = this.imm_parseRegisteredUrl(url);
@@ -12472,7 +12559,7 @@ class YAPIContext {
             }
             hub = this.imm_registerHub_internal(urlInfo);
             if (!hub) {
-                return this._throw(exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
+                return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
             }
         }
         else {
@@ -12480,9 +12567,6 @@ class YAPIContext {
                 this.imm_log('Preregistering existing hub: ' + urlInfo.rootUrl);
             }
             hub.imm_updateUrl(urlInfo);
-        }
-        if (!this._yHubsInUse[urlInfo.rootUrl]) {
-            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
         }
         await hub.attach(1 /* HUB_PREREGISTERED */);
         return exports.YAPI_SUCCESS;
@@ -12506,11 +12590,8 @@ class YAPIContext {
         if (!hub) {
             hub = this.system_env.getHttpCallbackHub(this, urlInfo, incomingMessage, serverResponse);
             if (!hub) {
-                return this._throw(exports.YAPI_NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', exports.YAPI_NOT_SUPPORTED);
+                return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', exports.YAPI_NOT_SUPPORTED);
             }
-        }
-        if (!this._yHubsInUse[urlInfo.rootUrl]) {
-            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
         }
         await hub.attach(3 /* HUB_CALLBACK */);
         let sub_errmsg = new YErrorMsg();
@@ -12518,19 +12599,13 @@ class YAPIContext {
         if (retcode != exports.YAPI_SUCCESS) {
             this.imm_dropConnectedHub(hub);
             await hub.detach(retcode, sub_errmsg.msg);
-            if (errmsg) {
-                errmsg.msg = sub_errmsg.msg;
-            }
-            return this._throw(retcode, sub_errmsg.msg, retcode);
+            return this.imm_setErr(errmsg, retcode, sub_errmsg.msg, retcode);
         }
         // Update known device list
         let yreq = await this._updateDeviceList_internal(true, false);
         if (yreq.errorType != exports.YAPI_SUCCESS) {
-            if (errmsg) {
-                errmsg.msg = yreq.errorMsg;
-                hub.reportFailure(errmsg.msg);
-            }
-            return this._throw(yreq.errorType, yreq.errorMsg, yreq.errorType);
+            hub.reportFailure(yreq.errorMsg);
+            return this.imm_setErr(errmsg, yreq.errorType, yreq.errorMsg, yreq.errorType);
         }
         return exports.YAPI_SUCCESS;
     }
@@ -12554,11 +12629,8 @@ class YAPIContext {
         if (!hub) {
             hub = this.system_env.getWebSocketCallbackHub(this, urlInfo, ws);
             if (!hub) {
-                return this._throw(exports.YAPI_NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', exports.YAPI_NOT_SUPPORTED);
+                return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', exports.YAPI_NOT_SUPPORTED);
             }
-        }
-        if (!this._yHubsInUse[urlInfo.rootUrl]) {
-            this._yHubsInUse[urlInfo.rootUrl] = new YHub(this, hub, url);
         }
         await hub.attach(3 /* HUB_CALLBACK */);
         let sub_errmsg = new YErrorMsg();
@@ -12566,20 +12638,14 @@ class YAPIContext {
         if (retcode != exports.YAPI_SUCCESS) {
             this.imm_dropConnectedHub(hub);
             await hub.detach(retcode, sub_errmsg.msg);
-            if (errmsg) {
-                errmsg.msg = sub_errmsg.msg;
-            }
-            return this._throw(retcode, sub_errmsg.msg, retcode);
+            return this.imm_setErr(errmsg, retcode, sub_errmsg.msg, retcode);
         }
         // Update known device list
         let yreq = await this._updateDeviceList_internal(true, false);
         if (yreq.errorType != exports.YAPI_SUCCESS) {
             this.imm_dropConnectedHub(hub);
             await hub.detach(yreq.errorType, yreq.errorMsg);
-            if (errmsg) {
-                errmsg.msg = yreq.errorMsg;
-            }
-            return this._throw(yreq.errorType, yreq.errorMsg, yreq.errorType);
+            return this.imm_setErr(errmsg, yreq.errorType, yreq.errorMsg, yreq.errorType);
         }
         return exports.YAPI_SUCCESS;
     }
@@ -12604,22 +12670,13 @@ class YAPIContext {
                 // Make sure to work on the latest active "alias" hub
                 let activeHub = this._knownHubsBySerial[hub.hubSerial];
                 if (activeHub) {
+                    hub.imm_forgetUrls();
                     hub = activeHub;
                     urlInfo = hub.urlInfo;
                 }
             }
             if (this._logLevel >= 3) {
                 this.imm_log('Unregistering hub ' + url + ' (' + urlInfo.rootUrl + ')');
-            }
-            let removeKeys = [];
-            for (let rootUrl in this._yHubsInUse) {
-                let yhub = this._yHubsInUse[rootUrl];
-                if (yhub._imm_getHub() == hub || (await yhub.get_serialNumber()) == hub.hubSerial) {
-                    removeKeys.push(rootUrl);
-                }
-            }
-            for (let rootUrl of removeKeys) {
-                delete this._yHubsInUse[rootUrl];
             }
             this.imm_dropConnectedHub(hub);
             if (hub.imm_isDisconnected()) {
@@ -12639,6 +12696,7 @@ class YAPIContext {
                 await hub.detach(exports.YAPI.IO_ERROR, 'Hub has been unregistered');
             }
             await disconnected;
+            hub.imm_forgetUrls();
             if (this._logLevel >= 4) {
                 this.imm_log("Disconnected after " + (this.GetTickCount() - before) + " ms");
             }
@@ -12668,7 +12726,7 @@ class YAPIContext {
             }
             hub = this.imm_registerHub_internal(urlInfo);
             if (!hub) {
-                return this._throw(exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
+                return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
             }
         }
         else {
@@ -12680,11 +12738,9 @@ class YAPIContext {
         let sub_errmsg = new YErrorMsg();
         let retcode = await hub.waitForConnection(mstimeout, sub_errmsg);
         if (retcode != exports.YAPI_SUCCESS) {
-            if (errmsg) {
-                errmsg.msg = sub_errmsg.msg;
-            }
+            return this.imm_setErr(errmsg, retcode, sub_errmsg.msg, retcode);
         }
-        return retcode;
+        return exports.YAPI_SUCCESS;
     }
     /**
      * Triggers a (re)detection of connected Yoctopuce modules.
@@ -12701,14 +12757,12 @@ class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     async UpdateDeviceList(errmsg = null) {
         let yreq = await this._updateDeviceList_internal(false, true);
         if (yreq.errorType !== exports.YAPI_SUCCESS) {
-            if (errmsg)
-                errmsg.msg = yreq.errorMsg;
-            return this._throw(yreq.errorType, yreq.errorMsg, yreq.errorType);
+            return this.imm_setErr(errmsg, yreq.errorType, yreq.errorMsg, yreq.errorType);
         }
         return exports.YAPI_SUCCESS;
     }
@@ -12737,7 +12791,7 @@ class YAPIContext {
      * @param errmsg : a string passed by reference to receive any error message.
      *
      * @return YAPI.SUCCESS when the call succeeds.
-     *         On failure, throws an exception or returns a negative error code.
+     *         On failure returns a negative error code.
      */
     async TriggerHubDiscovery(errmsg = null) {
         if (!this._ssdpManager) {
@@ -12768,7 +12822,7 @@ class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     async HandleEvents(errmsg = null) {
         // In Typescript, value change callbacks and timed reports don't need HandleEvents
@@ -12793,7 +12847,7 @@ class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     async Sleep(ms_duration, errmsg = null) {
         // In Typescript, value change callbacks and timed reports don't need HandleEvents
@@ -12831,9 +12885,7 @@ class YAPIContext {
      *         callback function can be provided, if needed
      *         (not supported on Microsoft Internet Explorer).
      *
-     * @return YAPI.SUCCESS when the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
+     * @return YAPI.SUCCESS
      */
     SetTimeout(callback, ms_timeout, args) {
         // - In Typescript, value change callbacks and timed reports don't need HandleEvents
@@ -13001,8 +13053,9 @@ class YAPIContext {
                         c = int_pad;
                 }
                 else {
-                    if (i == n + 3)
+                    if (i == n + 3) {
                         c = int_pad;
+                    }
                     else if (i == n + 4)
                         c = 0x80;
                 }
@@ -13123,17 +13176,20 @@ class YAPIContext {
         _shaw = new Uint32Array(80);
         this.imm_initshaw(pass, 0, 0, 0x3636, _shaw);
         this.imm_itershaw(sha1_init, _shaw);
-        for (k = 0; k < 5; k++)
+        for (k = 0; k < 5; k++) {
             inner[k] = _shaw[k];
+        }
         _shaw = new Uint32Array(80);
         this.imm_initshaw(pass, 0, 0, 0x5c5c, _shaw);
         this.imm_itershaw(sha1_init, _shaw);
-        for (k = 0; k < 5; k++)
+        for (k = 0; k < 5; k++) {
             outer[k] = _shaw[k];
+        }
         // prepare to compute first 20 bytes
         pos = 0;
-        for (k = 0; k < 5; k++)
+        for (k = 0; k < 5; k++) {
             shau[k] = 0;
+        }
         _shaw = new Uint32Array(80);
         this.imm_initshaw(ssid, 0, 1, 0, _shaw);
         for (iter = 0; iter < 8192;) {
@@ -13159,8 +13215,9 @@ class YAPIContext {
                     res[pos++] = shau[k] & 0xff;
                 }
                 if (iter == 4096) {
-                    for (k = 0; k < 5; k++)
+                    for (k = 0; k < 5; k++) {
                         shau[k] = 0;
+                    }
                     _shaw = new Uint32Array(80);
                     this.imm_initshaw(ssid, 0, 2, 0, _shaw);
                 }
@@ -13171,6 +13228,36 @@ class YAPIContext {
             hex += ('0' + Number(res[k]).toString(16)).slice(-2);
         }
         return hex;
+    }
+    nextHubInUseInternal_internal(hubref) {
+        let nextref = hubref < 0 ? 0 : hubref + 1;
+        for (let url in this._knownHubsByUrl) {
+            let hub = this._knownHubsByUrl[url];
+            if (hub.getHubRef() == nextref) {
+                if (hub.imm_isPreOrRegistered()) {
+                    return this.getYHubObj(nextref);
+                }
+                else {
+                    nextref++;
+                }
+            }
+        }
+        return null;
+    }
+    getGenHub(hubref) {
+        for (let url in this._knownHubsByUrl) {
+            let hub = this._knownHubsByUrl[url];
+            if (hub.getHubRef() == hubref && hub.imm_isPreOrRegistered()) {
+                return hub;
+            }
+        }
+        return null;
+    }
+    _findYHubFromCache(hubref) {
+        return this._yhub_cache[hubref];
+    }
+    _addYHubToCache(hubref, obj) {
+        this._yhub_cache[hubref] = obj;
     }
 }
 exports.YAPIContext = YAPIContext;

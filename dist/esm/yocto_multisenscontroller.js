@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 49501 2022-04-21 07:09:25Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for MultiSensController functions
  *

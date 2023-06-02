@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voc.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_voc.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Voc functions
  *
@@ -239,9 +239,9 @@ export class YVoc extends YSensor
     nextVoc(): YVoc | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoc.FindVocInContext(this._yapi, next_hwid);
     }
 
@@ -257,7 +257,7 @@ export class YVoc extends YSensor
     static FirstVoc(): YVoc | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Voc');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoc.FindVoc(next_hwid);
     }
 
@@ -275,7 +275,7 @@ export class YVoc extends YSensor
     static FirstVocInContext(yctx: YAPIContext): YVoc | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Voc');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoc.FindVocInContext(yctx, next_hwid);
     }
 
@@ -284,8 +284,10 @@ export class YVoc extends YSensor
 
 export namespace YVoc {
     //--- (YVoc definitions)
-    export interface ValueCallback { (func: YVoc, value: string): void }
-    export interface TimedReportCallback { (func: YVoc, measure: YMeasure): void }
+    export interface ValueCallback {(func: YVoc, value: string): void}
+
+    export interface TimedReportCallback {(func: YVoc, measure: YMeasure): void}
+
     //--- (end of YVoc definitions)
 }
 

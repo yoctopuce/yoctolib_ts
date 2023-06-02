@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 53894 2023-04-05 10:33:42Z mvuilleu $
+ * $Id: yocto_api.ts 54721 2023-05-23 09:58:57Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -100,6 +100,7 @@ export interface _YY_UrlInfo {
     domain: string;
     authUrl: string;
     rootUrl: string;
+    orgUrl: string;
 }
 export interface YConditionalResult {
     errorType: number;
@@ -1398,9 +1399,9 @@ export declare class YFunction {
      ** Helpers for built-in classes
      **
 
-    // Helper for initializing standard attributes (used in particular by built-in classes)
-    async _i(): Promise<void>
-    {
+     // Helper for initializing standard attributes (used in particular by built-in classes)
+     async _i(): Promise<void>
+     {
         let arr_attrNames: string[] = this.constructor._attrList;
         this._className = this.constructor.name.slice(1);
         for(let i = 0; i < arr_attrNames.length; i++) {
@@ -1408,9 +1409,9 @@ export declare class YFunction {
         }
     }
 
-    // Helper for simple accessors (used in particular by built-in classes)
-    async _g(str_attr): Promise<object>
-    {
+     // Helper for simple accessors (used in particular by built-in classes)
+     async _g(str_attr): Promise<object>
+     {
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != YAPI_SUCCESS) {
                 return this.constructor[str_attr.toLocaleUpperCase()+'_INVALID'];
@@ -1419,15 +1420,15 @@ export declare class YFunction {
         return this['_'+str_attr];
     }
 
-    // Helper for simple accessors (used in particular by built-in classes)
-    async _s(str_attr, obj_val): Promise<number>
-    {
+     // Helper for simple accessors (used in particular by built-in classes)
+     async _s(str_attr, obj_val): Promise<number>
+     {
         return this._setAttr(str_attr, String(obj_val));
     }
 
-    // Helper for completing and exporting the class; used by built-in classes
-    static _E(arr_attrlist)
-    {
+     // Helper for completing and exporting the class; used by built-in classes
+     static _E(arr_attrlist)
+     {
         let className = this.name.slice(1);
         this._attrList = arr_attrlist;
         for(let i = 0; i < arr_attrlist.length; i++) {
@@ -1461,7 +1462,7 @@ export declare class YFunction {
         this.imm_Init();
     }
 
-    ********/
+     ********/
     isOnline_async(func: Function, ctx: object): void;
     load_async(ms_validiy: number, func: Function, ctx: object): void;
     /** Return the value of an attribute from function cache, after reloading it from device if needed
@@ -3244,6 +3245,8 @@ export declare const enum Y_YHubConnType {
     HUB_CALLBACK = 3
 }
 export declare abstract class YGenericHub {
+    private static globalHubRefCounter;
+    _hubRef: number;
     _yapi: YAPIContext;
     _lastErrorType: number;
     _lastErrorMsg: string;
@@ -3270,6 +3273,7 @@ export declare abstract class YGenericHub {
     missing: object;
     _firstArrivalCallback: boolean;
     _missing: YBoolDict;
+    _knownUrls: string[];
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
     /**
@@ -3393,6 +3397,9 @@ export declare abstract class YGenericHub {
     firmwareUpdate(serial: string, firmware: YFirmwareFile, settings: Uint8Array, progress: YProgressCallback): Promise<string[] | null>;
     reportFailure(message: string): Promise<void>;
     hasRwAccess(): Promise<boolean>;
+    getHubRef(): number;
+    get_knownUrls(): string[];
+    imm_forgetUrls(): void;
 }
 export declare class YHttpHub extends YGenericHub {
     infoJson: any;
@@ -3613,13 +3620,17 @@ export declare abstract class YGenericSSDPManager {
  *
  */
 export declare class YHub {
-    _yapi: YAPIContext;
-    _hub: YGenericHub;
-    _regUrl: string;
-    _knownUrls: string[];
+    _ctx: YAPIContext;
+    _hubref: number;
     _userData: any;
-    constructor(obj_yapi: YAPIContext, hub: YGenericHub, regUrl: string);
-    _imm_getHub(): YGenericHub;
+    constructor(obj_yapi: YAPIContext, hubref: number);
+    private _getStrAttr_internal;
+    private _getIntAttr_internal;
+    private _setIntAttr_internal;
+    get_knownUrls_internal(): string[];
+    _getStrAttr(attrName: string): Promise<string>;
+    _getIntAttr(attrName: string): Promise<number>;
+    _setIntAttr(attrName: string, value: number): Promise<void>;
     /**
      * Returns the URL that has been used first to register this hub.
      */
@@ -3630,26 +3641,6 @@ export declare class YHub {
      * are sharing the same serial number.
      */
     get_knownUrls(): Promise<string[]>;
-    imm_inheritFrom(otherHub: YHub): void;
-    /**
-     * Returns the value of the userData attribute, as previously stored
-     * using method set_userData.
-     * This attribute is never touched directly by the API, and is at
-     * disposal of the caller to store a context.
-     *
-     * @return the object stored previously by the caller.
-     */
-    get_userData(): Promise<any>;
-    /**
-     * Stores a user context provided as argument in the userData
-     * attribute of the function.
-     * This attribute is never touched by the API, and is at
-     * disposal of the caller to store a context.
-     *
-     * @param data : any kind of object to be stored
-     * @noreturn
-     */
-    set_userData(data: any): Promise<void>;
     /**
      * Returns the URL currently in use to communicate with this hub.
      */
@@ -3678,33 +3669,6 @@ export declare class YHub {
      */
     isReadOnly(): Promise<boolean>;
     /**
-     * Returns the numerical error code of the latest error with the hub.
-     * This method is mostly useful when using the Yoctopuce library with
-     * exceptions disabled.
-     *
-     * @return a number corresponding to the code of the latest error that occurred while
-     *         using the hub object
-     */
-    get_errorType(): number;
-    /**
-     * Returns the error message of the latest error with the hub.
-     * This method is mostly useful when using the Yoctopuce library with
-     * exceptions disabled.
-     *
-     * @return a string corresponding to the latest error message that occured while
-     *         using the hub object
-     */
-    get_errorMessage(): string;
-    /**
-     * Returns the network connection delay for this hub.
-     * The default value is inherited from ySetNetworkTimeout
-     * at the time when the hub is registered, but it can be updated
-     * afterwards for each specific hub if necessary.
-     *
-     * @return the network connection delay in milliseconds.
-     */
-    get_networkTimeout(): Promise<number>;
-    /**
      * Modifies tthe network connection delay for this hub.
      * The default value is inherited from ySetNetworkTimeout
      * at the time when the hub is registered, but it can be updated
@@ -3715,14 +3679,51 @@ export declare class YHub {
      */
     set_networkTimeout(networkMsTimeout: number): Promise<void>;
     /**
-     * Continues the module enumeration started using YHub.FirstHubInUse().
-     * Caution: You can't make any assumption about the order of returned hubs.
+     * Returns the network connection delay for this hub.
+     * The default value is inherited from ySetNetworkTimeout
+     * at the time when the hub is registered, but it can be updated
+     * afterwards for each specific hub if necessary.
      *
-     * @return a pointer to a YHub object, corresponding to
-     *         the next hub currenlty in use, or a null pointer
-     *         if there are no more hubs to enumerate.
+     * @return the network connection delay in milliseconds.
      */
-    nextHubInUse(): YHub | null;
+    get_networkTimeout(): Promise<number>;
+    /**
+     * Returns the numerical error code of the latest error with the hub.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a number corresponding to the code of the latest error that occurred while
+     *         using the hub object
+     */
+    get_errorType(): Promise<number>;
+    /**
+     * Returns the error message of the latest error with the hub.
+     * This method is mostly useful when using the Yoctopuce library with
+     * exceptions disabled.
+     *
+     * @return a string corresponding to the latest error message that occured while
+     *         using the hub object
+     */
+    get_errorMessage(): Promise<string>;
+    /**
+     * Returns the value of the userData attribute, as previously stored
+     * using method set_userData.
+     * This attribute is never touched directly by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @return the object stored previously by the caller.
+     */
+    get_userData(): Promise<any>;
+    /**
+     * Stores a user context provided as argument in the userData
+     * attribute of the function.
+     * This attribute is never touched by the API, and is at
+     * disposal of the caller to store a context.
+     *
+     * @param data : any kind of object to be stored
+     * @noreturn
+     */
+    set_userData(data: any): Promise<void>;
     /**
      * Starts the enumeration of hubs currently in use by the API.
      * Use the method YHub.nextHubInUse() to iterate on the
@@ -3746,6 +3747,15 @@ export declare class YHub {
      *         null pointer if none has been registered.
      */
     static FirstHubInUseInContext(yctx: YAPIContext): YHub | null;
+    /**
+     * Continues the module enumeration started using YHub.FirstHubInUse().
+     * Caution: You can't make any assumption about the order of returned hubs.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the next hub currenlty in use, or a null pointer
+     *         if there are no more hubs to enumerate.
+     */
+    nextHubInUse(): YHub | null;
 }
 interface DeviceUpdateEvent {
     event: string;
@@ -3764,7 +3774,7 @@ export declare class YAPIContext {
     _knownHubsBySerial: YGenericHubDict;
     _knownHubsByUrl: YGenericHubDict;
     _connectedHubs: YGenericHub[];
-    _yHubsInUse: YHubDict;
+    _yhub_cache: YHubDict;
     _ssdpManager: YGenericSSDPManager | null;
     _devs: YDeviceDict;
     _snByUrl: YStringDict;
@@ -3838,6 +3848,7 @@ export declare class YAPIContext {
     constructor(system_env?: YSystemEnv);
     imm_ResetToDefaults(): void;
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
+    imm_setErr(errmsg: YErrorMsg | null, int_errType: number, str_errMsg: string, obj_retVal?: any): any;
     imm_setSystemEnv(env: YSystemEnv): void;
     imm_log(msg: string, ...moreArgs: any[]): void;
     /**
@@ -4076,6 +4087,8 @@ export declare class YAPIContext {
      *         loaded function parameters, in milliseconds
      */
     GetCacheValidity(): Promise<number>;
+    nextHubInUseInternal(hubref: number): YHub | null;
+    getYHubObj(hubref: number): YHub;
     /**
      * Returns the version identifier for the Yoctopuce library in use.
      * The version is a string in the form "Major.Minor.Build",
@@ -4112,7 +4125,7 @@ export declare class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     InitAPI(mode: number, errmsg: YErrorMsg): Promise<number>;
     /**
@@ -4154,8 +4167,7 @@ export declare class YAPIContext {
      * Re-enables the use of exceptions for runtime error handling.
      * Be aware than when exceptions are enabled, every function that fails
      * triggers an exception. If the exception is not caught by the user code,
-     * it  either fires the debugger or aborts (i.e. crash) the program.
-     * On failure, throws an exception or returns a negative error code.
+     * it either fires the debugger or aborts (i.e. crash) the program.
      */
     EnableExceptions(): Promise<void>;
     /**
@@ -4219,7 +4231,7 @@ export declare class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     RegisterHub(url: string, errmsg: YErrorMsg): Promise<number>;
     /**
@@ -4236,7 +4248,7 @@ export declare class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     PreregisterHub(url: string, errmsg: YErrorMsg): Promise<number>;
     /**
@@ -4305,7 +4317,7 @@ export declare class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     UpdateDeviceList(errmsg?: YErrorMsg | null): Promise<number>;
     _hubDiscoveryCallback_internal(serial: string, urlToRegister: string | null, urlToUnregister: string | null): Promise<void>;
@@ -4316,7 +4328,7 @@ export declare class YAPIContext {
      * @param errmsg : a string passed by reference to receive any error message.
      *
      * @return YAPI.SUCCESS when the call succeeds.
-     *         On failure, throws an exception or returns a negative error code.
+     *         On failure returns a negative error code.
      */
     TriggerHubDiscovery(errmsg?: YErrorMsg | null): Promise<number>;
     /**
@@ -4334,7 +4346,7 @@ export declare class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     HandleEvents(errmsg?: YErrorMsg | null): Promise<number>;
     /**
@@ -4354,7 +4366,7 @@ export declare class YAPIContext {
      *
      * @return YAPI.SUCCESS when the call succeeds.
      *
-     * On failure, throws an exception or returns a negative error code.
+     * On failure returns a negative error code.
      */
     Sleep(ms_duration: number, errmsg?: YErrorMsg | null): Promise<number>;
     _microSleep_internal(): Promise<void>;
@@ -4374,9 +4386,7 @@ export declare class YAPIContext {
      *         callback function can be provided, if needed
      *         (not supported on Microsoft Internet Explorer).
      *
-     * @return YAPI.SUCCESS when the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
+     * @return YAPI.SUCCESS
      */
     SetTimeout(callback: Function, ms_timeout: number, args?: any): number;
     /**
@@ -4459,6 +4469,10 @@ export declare class YAPIContext {
      * @return {string} an hexadecimal string for the preshared key
      */
     ComputePSK(ssid: string, pass: string): Promise<string>;
+    private nextHubInUseInternal_internal;
+    getGenHub(hubref: number): YGenericHub | null;
+    private _findYHubFromCache;
+    private _addYHubToCache;
 }
 export declare var YAPI: YAPIContext;
 export {};

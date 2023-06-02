@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 50494 2022-07-19 16:08:56Z mvuilleu $
+ *  $Id: yocto_cellular.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *

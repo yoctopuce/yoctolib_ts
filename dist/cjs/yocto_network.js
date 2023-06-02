@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 53886 2023-04-05 08:06:39Z mvuilleu $
+ *  $Id: yocto_network.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Network functions
  *

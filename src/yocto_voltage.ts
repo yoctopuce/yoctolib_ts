@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltage.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_voltage.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -81,7 +81,7 @@ export class YVoltage extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'enabled':
             this._enabled = <YVoltage.ENABLED> <number> val;
             return 1;
@@ -127,7 +127,7 @@ export class YVoltage extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('enabled',rest_val);
+        return await this._setAttr('enabled', rest_val);
     }
 
     /**
@@ -300,9 +300,9 @@ export class YVoltage extends YSensor
     nextVoltage(): YVoltage | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoltage.FindVoltageInContext(this._yapi, next_hwid);
     }
 
@@ -318,7 +318,7 @@ export class YVoltage extends YSensor
     static FirstVoltage(): YVoltage | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Voltage');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoltage.FindVoltage(next_hwid);
     }
 
@@ -336,7 +336,7 @@ export class YVoltage extends YSensor
     static FirstVoltageInContext(yctx: YAPIContext): YVoltage | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Voltage');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YVoltage.FindVoltageInContext(yctx, next_hwid);
     }
 
@@ -345,13 +345,17 @@ export class YVoltage extends YSensor
 
 export namespace YVoltage {
     //--- (YVoltage definitions)
-    export const enum ENABLED {
+    export const enum ENABLED
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YVoltage, value: string): void }
-    export interface TimedReportCallback { (func: YVoltage, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YVoltage, value: string): void}
+
+    export interface TimedReportCallback {(func: YVoltage, measure: YMeasure): void}
+
     //--- (end of YVoltage definitions)
 }
 

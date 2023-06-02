@@ -119,7 +119,7 @@ export class YInputChain extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'expectedNodes':
             this._expectedNodes = <number> <number> val;
             return 1;
@@ -202,7 +202,7 @@ export class YInputChain extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('expectedNodes',rest_val);
+        return await this._setAttr('expectedNodes', rest_val);
     }
 
     /**
@@ -265,7 +265,7 @@ export class YInputChain extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('loopbackTest',rest_val);
+        return await this._setAttr('loopbackTest', rest_val);
     }
 
     /**
@@ -306,7 +306,7 @@ export class YInputChain extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('refreshRate',rest_val);
+        return await this._setAttr('refreshRate', rest_val);
     }
 
     /**
@@ -500,7 +500,7 @@ export class YInputChain extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('watchdogPeriod',rest_val);
+        return await this._setAttr('watchdogPeriod', rest_val);
     }
 
     /**
@@ -742,19 +742,19 @@ export class YInputChain extends YFunction
             this._eventChains.push(await this.get_bitChain7());
             return this._yapi.SUCCESS;
         }
-        url = 'events.txt?pos='+String(Math.round(this._eventPos));
+        url = 'events.txt?pos=' + String(Math.round(this._eventPos));
 
         content = await this._download(url);
         contentStr = this._yapi.imm_bin2str(content);
         eventArr = (contentStr).split('\n');
         arrLen = eventArr.length;
         if (!(arrLen > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'fail to download events',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'fail to download events', this._yapi.IO_ERROR);
         }
         // last element of array is the new position preceeded by '@'
         arrLen = arrLen - 1;
         lenStr = eventArr[arrLen];
-        lenStr = (lenStr).substr( 1, (lenStr).length-1);
+        lenStr = (lenStr).substr(1, (lenStr).length-1);
         // update processed event position pointer
         this._eventPos = this._yapi.imm_atoi(lenStr);
         // now generate callbacks for each event received
@@ -763,17 +763,17 @@ export class YInputChain extends YFunction
             eventStr = eventArr[arrPos];
             eventLen = (eventStr).length;
             if (eventLen >= 1) {
-                hexStamp = (eventStr).substr( 0, 8);
+                hexStamp = (eventStr).substr(0, 8);
                 evtStamp = parseInt(hexStamp, 16);
                 typePos = (eventStr).indexOf(':')+1;
                 if ((evtStamp >= this._eventStamp) && (typePos > 8)) {
                     this._eventStamp = evtStamp;
                     dataPos = (eventStr).indexOf('=')+1;
-                    evtType = (eventStr).substr( typePos, 1);
+                    evtType = (eventStr).substr(typePos, 1);
                     evtData = '';
                     evtChange = '';
                     if (dataPos > 10) {
-                        evtData = (eventStr).substr( dataPos, (eventStr).length-dataPos);
+                        evtData = (eventStr).substr(dataPos, (eventStr).length-dataPos);
                         if (('1234567').indexOf(evtType) >= 0) {
                             chainIdx = this._yapi.imm_atoi(evtType) - 1;
                             evtChange = await this._strXor(evtData, this._eventChains[chainIdx]);
@@ -804,19 +804,19 @@ export class YInputChain extends YFunction
         lenA = (a).length;
         lenB = (b).length;
         if (lenA > lenB) {
-            res = (a).substr( 0, lenA-lenB);
-            a = (a).substr( lenA-lenB, lenB);
+            res = (a).substr(0, lenA-lenB);
+            a = (a).substr(lenA-lenB, lenB);
             lenA = lenB;
         } else {
             res = '';
-            b = (b).substr( lenA-lenB, lenA);
+            b = (b).substr(lenA-lenB, lenA);
         }
         // scan strings and compare digit by digit
         idx = 0;
         while (idx < lenA) {
-            digitA = parseInt((a).substr( idx, 1), 16);
-            digitB = parseInt((b).substr( idx, 1), 16);
-            res = res+''+(((digitA) ^ (digitB))).toString(16).toLowerCase();
+            digitA = parseInt((a).substr(idx, 1), 16);
+            digitB = parseInt((b).substr(idx, 1), 16);
+            res = res + '' + (((digitA) ^ (digitB))).toString(16).toLowerCase();
             idx = idx + 1;
         }
         return res;
@@ -833,7 +833,7 @@ export class YInputChain extends YFunction
         idx = hexlen;
         while (idx > 0) {
             idx = idx - 1;
-            digit = parseInt((hexstr).substr( idx, 1), 16);
+            digit = parseInt((hexstr).substr(idx, 1), 16);
             res.push(((digit) & (1)));
             res.push(((((digit) >> (1))) & (1)));
             res.push(((((digit) >> (2))) & (1)));
@@ -855,9 +855,9 @@ export class YInputChain extends YFunction
     nextInputChain(): YInputChain | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YInputChain.FindInputChainInContext(this._yapi, next_hwid);
     }
 
@@ -873,7 +873,7 @@ export class YInputChain extends YFunction
     static FirstInputChain(): YInputChain | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('InputChain');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YInputChain.FindInputChain(next_hwid);
     }
 
@@ -891,7 +891,7 @@ export class YInputChain extends YFunction
     static FirstInputChainInContext(yctx: YAPIContext): YInputChain | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('InputChain');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YInputChain.FindInputChainInContext(yctx, next_hwid);
     }
 
@@ -900,13 +900,17 @@ export class YInputChain extends YFunction
 
 export namespace YInputChain {
     //--- (YInputChain definitions)
-    export const enum LOOPBACKTEST {
+    export const enum LOOPBACKTEST
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YInputChain, value: string): void }
-    export interface EventCallback { (func: YInputChain, timestampr:number, evtType:string, eventData:string, eventChange: string): void }
+
+    export interface ValueCallback {(func: YInputChain, value: string): void}
+
+    export interface EventCallback {(func: YInputChain, timestampr:number, evtType:string, eventData:string, eventChange: string): void}
+
     //--- (end of YInputChain definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 53900 2023-04-05 11:42:04Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -193,7 +193,7 @@ export class YI2cPort extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'rxCount':
             this._rxCount = <number> <number> val;
             return 1;
@@ -387,7 +387,7 @@ export class YI2cPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('currentJob',rest_val);
+        return await this._setAttr('currentJob', rest_val);
     }
 
     /**
@@ -424,7 +424,7 @@ export class YI2cPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('startupJob',rest_val);
+        return await this._setAttr('startupJob', rest_val);
     }
 
     /**
@@ -481,7 +481,7 @@ export class YI2cPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -526,7 +526,7 @@ export class YI2cPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('protocol',rest_val);
+        return await this._setAttr('protocol', rest_val);
     }
 
     /**
@@ -565,7 +565,7 @@ export class YI2cPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('i2cVoltageLevel',rest_val);
+        return await this._setAttr('i2cVoltageLevel', rest_val);
     }
 
     /**
@@ -612,7 +612,7 @@ export class YI2cPort extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('i2cMode',rest_val);
+        return await this._setAttr('i2cMode', rest_val);
     }
 
     /**
@@ -760,7 +760,7 @@ export class YI2cPort extends YFunction
         let msglen: number;
         let res: string;
 
-        url = 'rxmsg.json?pos='+String(Math.round(this._rxptr))+'&len=1&maxw=1';
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&len=1&maxw=1';
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -807,7 +807,7 @@ export class YI2cPort extends YFunction
         let res: string[] = [];
         let idx: number;
 
-        url = 'rxmsg.json?pos='+String(Math.round(this._rxptr))+'&maxw='+String(Math.round(maxWait))+'&pat='+pattern;
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&pat=' + pattern;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -863,10 +863,10 @@ export class YI2cPort extends YFunction
         let res: number;
         let databin: Uint8Array;
 
-        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr( 0, atPos));
+        res = this._yapi.imm_atoi((availPosStr).substr(0, atPos));
         return res;
     }
 
@@ -877,10 +877,10 @@ export class YI2cPort extends YFunction
         let res: number;
         let databin: Uint8Array;
 
-        databin = await this._download('rxcnt.bin?pos='+String(Math.round(this._rxptr)));
+        databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr( atPos+1, (availPosStr).length-atPos-1));
+        res = this._yapi.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -906,12 +906,12 @@ export class YI2cPort extends YFunction
         let res: string;
         if ((query).length <= 80) {
             // fast query
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=!'+this.imm_escapeAttr(query);
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=!' + this.imm_escapeAttr(query);
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload('txdata', this._yapi.imm_str2bin(query + '\r\n'));
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&pos=' + String(Math.round(prevpos));
         }
 
         msgbin = await this._download(url);
@@ -953,12 +953,12 @@ export class YI2cPort extends YFunction
         let res: string;
         if ((hexString).length <= 80) {
             // fast query
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&cmd=$'+hexString;
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&cmd=$' + hexString;
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload('txdata', this._yapi.imm_hexstr2bin(hexString));
-            url = 'rxmsg.json?len=1&maxw='+String(Math.round(maxWait))+'&pos='+String(Math.round(prevpos));
+            url = 'rxmsg.json?len=1&maxw=' + String(Math.round(maxWait)) + '&pos=' + String(Math.round(prevpos));
         }
 
         msgbin = await this._download(url);
@@ -1044,26 +1044,26 @@ export class YI2cPort extends YFunction
         let val: number;
         let msg: string;
         let reply: string;
-        msg = '@'+('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase()+':';
+        msg = '@' + ('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase() + ':';
         nBytes = (buff).length;
         idx = 0;
         while (idx < nBytes) {
             val = buff[idx];
-            msg = msg+''+('00'+(val).toString(16)).slice(-2).toLowerCase();
+            msg = msg + '' + ('00'+(val).toString(16)).slice(-2).toLowerCase();
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
         if (!((reply).length > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No response from I2C device',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'No response from I2C device', this._yapi.IO_ERROR);
         }
         idx = (reply).indexOf('[N]!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No I2C ACK received',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'No I2C ACK received', this._yapi.IO_ERROR);
         }
         idx = (reply).indexOf('!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'I2C protocol error',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', this._yapi.IO_ERROR);
         }
         return this._yapi.SUCCESS;
     }
@@ -1086,26 +1086,26 @@ export class YI2cPort extends YFunction
         let val: number;
         let msg: string;
         let reply: string;
-        msg = '@'+('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase()+':';
+        msg = '@' + ('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase() + ':';
         nBytes = values.length;
         idx = 0;
         while (idx < nBytes) {
             val = values[idx];
-            msg = msg+''+('00'+(val).toString(16)).slice(-2).toLowerCase();
+            msg = msg + '' + ('00'+(val).toString(16)).slice(-2).toLowerCase();
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
         if (!((reply).length > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No response from I2C device',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'No response from I2C device', this._yapi.IO_ERROR);
         }
         idx = (reply).indexOf('[N]!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No I2C ACK received',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'No I2C ACK received', this._yapi.IO_ERROR);
         }
         idx = (reply).indexOf('!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'I2C protocol error',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', this._yapi.IO_ERROR);
         }
         return this._yapi.SUCCESS;
     }
@@ -1133,45 +1133,45 @@ export class YI2cPort extends YFunction
         let rcvbytes: Uint8Array;
         rcvbytes = new Uint8Array(0);
         if (!(rcvCount<=512)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Cannot read more than 512 bytes',rcvbytes);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Cannot read more than 512 bytes', rcvbytes);
         }
-        msg = '@'+('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase()+':';
+        msg = '@' + ('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase() + ':';
         nBytes = (buff).length;
         idx = 0;
         while (idx < nBytes) {
             val = buff[idx];
-            msg = msg+''+('00'+(val).toString(16)).slice(-2).toLowerCase();
+            msg = msg + '' + ('00'+(val).toString(16)).slice(-2).toLowerCase();
             idx = idx + 1;
         }
         idx = 0;
         if (rcvCount > 54) {
             while (rcvCount - idx > 255) {
-                msg = msg+'xx*FF';
+                msg = msg + 'xx*FF';
                 idx = idx + 255;
             }
             if (rcvCount - idx > 2) {
-                msg = msg+'xx*'+('00'+((rcvCount - idx)).toString(16)).slice(-2).toUpperCase();
+                msg = msg + 'xx*' + ('00'+((rcvCount - idx)).toString(16)).slice(-2).toUpperCase();
                 idx = rcvCount;
             }
         }
         while (idx < rcvCount) {
-            msg = msg+'xx';
+            msg = msg + 'xx';
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
         if (!((reply).length > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No response from I2C device',rcvbytes);
+            return this._throw(this._yapi.IO_ERROR, 'No response from I2C device', rcvbytes);
         }
         idx = (reply).indexOf('[N]!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No I2C ACK received',rcvbytes);
+            return this._throw(this._yapi.IO_ERROR, 'No I2C ACK received', rcvbytes);
         }
         idx = (reply).indexOf('!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'I2C protocol error',rcvbytes);
+            return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', rcvbytes);
         }
-        reply = (reply).substr( (reply).length-2*rcvCount, 2*rcvCount);
+        reply = (reply).substr((reply).length-2*rcvCount, 2*rcvCount);
         rcvbytes = this._yapi.imm_hexstr2bin(reply);
         return rcvbytes;
     }
@@ -1200,45 +1200,45 @@ export class YI2cPort extends YFunction
         let res: number[] = [];
         res.length = 0;
         if (!(rcvCount<=512)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT,'Cannot read more than 512 bytes',res);
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'Cannot read more than 512 bytes', res);
         }
-        msg = '@'+('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase()+':';
+        msg = '@' + ('00'+(slaveAddr).toString(16)).slice(-2).toLowerCase() + ':';
         nBytes = values.length;
         idx = 0;
         while (idx < nBytes) {
             val = values[idx];
-            msg = msg+''+('00'+(val).toString(16)).slice(-2).toLowerCase();
+            msg = msg + '' + ('00'+(val).toString(16)).slice(-2).toLowerCase();
             idx = idx + 1;
         }
         idx = 0;
         if (rcvCount > 54) {
             while (rcvCount - idx > 255) {
-                msg = msg+'xx*FF';
+                msg = msg + 'xx*FF';
                 idx = idx + 255;
             }
             if (rcvCount - idx > 2) {
-                msg = msg+'xx*'+('00'+((rcvCount - idx)).toString(16)).slice(-2).toUpperCase();
+                msg = msg + 'xx*' + ('00'+((rcvCount - idx)).toString(16)).slice(-2).toUpperCase();
                 idx = rcvCount;
             }
         }
         while (idx < rcvCount) {
-            msg = msg+'xx';
+            msg = msg + 'xx';
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
         if (!((reply).length > 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No response from I2C device',res);
+            return this._throw(this._yapi.IO_ERROR, 'No response from I2C device', res);
         }
         idx = (reply).indexOf('[N]!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'No I2C ACK received',res);
+            return this._throw(this._yapi.IO_ERROR, 'No I2C ACK received', res);
         }
         idx = (reply).indexOf('!');
         if (!(idx < 0)) {
-            return this._throw(this._yapi.IO_ERROR,'I2C protocol error',res);
+            return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', res);
         }
-        reply = (reply).substr( (reply).length-2*rcvCount, 2*rcvCount);
+        reply = (reply).substr((reply).length-2*rcvCount, 2*rcvCount);
         rcvbytes = this._yapi.imm_hexstr2bin(reply);
         res.length = 0;
         idx = 0;
@@ -1291,7 +1291,7 @@ export class YI2cPort extends YFunction
                 }
             }
             if (idx >= bufflen) {
-                return await this.sendCommand('+'+codes);
+                return await this.sendCommand('+' + codes);
             }
         }
         // send string using file upload
@@ -1324,10 +1324,10 @@ export class YI2cPort extends YFunction
         let buff: Uint8Array;
         bufflen = (codes).length;
         if (bufflen < 100) {
-            return await this.sendCommand('!'+codes);
+            return await this.sendCommand('!' + codes);
         }
         // send string using file upload
-        buff = this._yapi.imm_str2bin(codes+'\n');
+        buff = this._yapi.imm_str2bin(codes + '\n');
         return await this._upload('txdata', buff);
     }
 
@@ -1343,7 +1343,7 @@ export class YI2cPort extends YFunction
      */
     async writeByte(code: number): Promise<number>
     {
-        return await this.sendCommand('+'+('00'+(code).toString(16)).slice(-2).toUpperCase());
+        return await this.sendCommand('+' + ('00'+(code).toString(16)).slice(-2).toUpperCase());
     }
 
     /**
@@ -1363,7 +1363,7 @@ export class YI2cPort extends YFunction
         let buff: Uint8Array;
         bufflen = (hexString).length;
         if (bufflen < 100) {
-            return await this.sendCommand('+'+hexString);
+            return await this.sendCommand('+' + hexString);
         }
         buff = this._yapi.imm_str2bin(hexString);
 
@@ -1392,7 +1392,7 @@ export class YI2cPort extends YFunction
         idx = 0;
         while (idx < nBytes) {
             val = buff[idx];
-            msg = msg+''+('00'+(val).toString(16)).slice(-2).toLowerCase();
+            msg = msg + '' + ('00'+(val).toString(16)).slice(-2).toLowerCase();
             idx = idx + 1;
         }
 
@@ -1421,7 +1421,7 @@ export class YI2cPort extends YFunction
         idx = 0;
         while (idx < nBytes) {
             val = byteList[idx];
-            msg = msg+''+('00'+(val).toString(16)).slice(-2).toLowerCase();
+            msg = msg + '' + ('00'+(val).toString(16)).slice(-2).toLowerCase();
             idx = idx + 1;
         }
 
@@ -1450,7 +1450,7 @@ export class YI2cPort extends YFunction
         let res: YI2cSnoopingRecord[] = [];
         let idx: number;
 
-        url = 'rxmsg.json?pos='+String(Math.round(this._rxptr))+'&maxw='+String(Math.round(maxWait))+'&t=0';
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&t=0';
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1481,9 +1481,9 @@ export class YI2cPort extends YFunction
     nextI2cPort(): YI2cPort | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YI2cPort.FindI2cPortInContext(this._yapi, next_hwid);
     }
 
@@ -1499,7 +1499,7 @@ export class YI2cPort extends YFunction
     static FirstI2cPort(): YI2cPort | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('I2cPort');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YI2cPort.FindI2cPort(next_hwid);
     }
 
@@ -1517,7 +1517,7 @@ export class YI2cPort extends YFunction
     static FirstI2cPortInContext(yctx: YAPIContext): YI2cPort | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('I2cPort');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YI2cPort.FindI2cPortInContext(yctx, next_hwid);
     }
 
@@ -1527,12 +1527,15 @@ export class YI2cPort extends YFunction
 export namespace YI2cPort
 {
     //--- (generated code: YI2cPort definitions)
-    export const enum I2CVOLTAGELEVEL {
+    export const enum I2CVOLTAGELEVEL
+    {
         OFF = 0,
         _3V3 = 1,
         _1V8 = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YI2cPort, value: string): void }
+
+    export interface ValueCallback {(func: YI2cPort, value: string): void}
+
     //--- (end of generated code: YI2cPort definitions)
 }

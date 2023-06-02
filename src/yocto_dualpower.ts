@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_dualpower.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_dualpower.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -97,7 +97,7 @@ export class YDualPower extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'powerState':
             this._powerState = <YDualPower.POWERSTATE> <number> val;
             return 1;
@@ -169,7 +169,7 @@ export class YDualPower extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('powerControl',rest_val);
+        return await this._setAttr('powerControl', rest_val);
     }
 
     /**
@@ -323,9 +323,9 @@ export class YDualPower extends YFunction
     nextDualPower(): YDualPower | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDualPower.FindDualPowerInContext(this._yapi, next_hwid);
     }
 
@@ -341,7 +341,7 @@ export class YDualPower extends YFunction
     static FirstDualPower(): YDualPower | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('DualPower');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDualPower.FindDualPower(next_hwid);
     }
 
@@ -359,7 +359,7 @@ export class YDualPower extends YFunction
     static FirstDualPowerInContext(yctx: YAPIContext): YDualPower | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('DualPower');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YDualPower.FindDualPowerInContext(yctx, next_hwid);
     }
 
@@ -368,20 +368,25 @@ export class YDualPower extends YFunction
 
 export namespace YDualPower {
     //--- (YDualPower definitions)
-    export const enum POWERSTATE {
+    export const enum POWERSTATE
+    {
         OFF = 0,
         FROM_USB = 1,
         FROM_EXT = 2,
         INVALID = -1
     }
-    export const enum POWERCONTROL {
+
+    export const enum POWERCONTROL
+    {
         AUTO = 0,
         FROM_USB = 1,
         FROM_EXT = 2,
         OFF = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YDualPower, value: string): void }
+
+    export interface ValueCallback {(func: YDualPower, value: string): void}
+
     //--- (end of YDualPower definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_wireless.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -195,7 +195,7 @@ export class YWireless extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'linkQuality':
             this._linkQuality = <number> <number> val;
             return 1;
@@ -335,7 +335,7 @@ export class YWireless extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('wlanConfig',rest_val);
+        return await this._setAttr('wlanConfig', rest_val);
     }
 
     /**
@@ -523,7 +523,7 @@ export class YWireless extends YFunction
      */
     async joinNetwork(ssid: string, securityKey: string): Promise<number>
     {
-        return await this.set_wlanConfig('INFRA:'+ssid+'\\'+securityKey);
+        return await this.set_wlanConfig('INFRA:' + ssid + '\\' + securityKey);
     }
 
     /**
@@ -549,7 +549,7 @@ export class YWireless extends YFunction
      */
     async adhocNetwork(ssid: string, securityKey: string): Promise<number>
     {
-        return await this.set_wlanConfig('ADHOC:'+ssid+'\\'+securityKey);
+        return await this.set_wlanConfig('ADHOC:' + ssid + '\\' + securityKey);
     }
 
     /**
@@ -576,7 +576,7 @@ export class YWireless extends YFunction
      */
     async softAPNetwork(ssid: string, securityKey: string): Promise<number>
     {
-        return await this.set_wlanConfig('SOFTAP:'+ssid+'\\'+securityKey);
+        return await this.set_wlanConfig('SOFTAP:' + ssid + '\\' + securityKey);
     }
 
     /**
@@ -618,9 +618,9 @@ export class YWireless extends YFunction
     nextWireless(): YWireless | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWireless.FindWirelessInContext(this._yapi, next_hwid);
     }
 
@@ -636,7 +636,7 @@ export class YWireless extends YFunction
     static FirstWireless(): YWireless | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Wireless');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWireless.FindWireless(next_hwid);
     }
 
@@ -654,7 +654,7 @@ export class YWireless extends YFunction
     static FirstWirelessInContext(yctx: YAPIContext): YWireless | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Wireless');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YWireless.FindWirelessInContext(yctx, next_hwid);
     }
 
@@ -664,7 +664,8 @@ export class YWireless extends YFunction
 export namespace YWireless
 {
     //--- (generated code: YWireless definitions)
-    export const enum SECURITY {
+    export const enum SECURITY
+    {
         UNKNOWN = 0,
         OPEN = 1,
         WEP = 2,
@@ -672,14 +673,18 @@ export namespace YWireless
         WPA2 = 4,
         INVALID = -1
     }
-    export const enum WLANSTATE {
+
+    export const enum WLANSTATE
+    {
         DOWN = 0,
         SCANNING = 1,
         CONNECTED = 2,
         REJECTED = 3,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YWireless, value: string): void }
+
+    export interface ValueCallback {(func: YWireless, value: string): void}
+
     //--- (end of generated code: YWireless definitions)
 }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 53900 2023-04-05 11:42:04Z mvuilleu $
+ *  $Id: yocto_files.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -148,7 +148,7 @@ export class YFiles extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'filesCount':
             this._filesCount = <number> <number> val;
             return 1;
@@ -319,7 +319,7 @@ export class YFiles extends YFunction
     async sendCommand(command: string): Promise<Uint8Array>
     {
         let url: string;
-        url = 'files.json?a='+command;
+        url = 'files.json?a=' + command;
 
         return await this._download(url);
     }
@@ -339,7 +339,7 @@ export class YFiles extends YFunction
         json = await this.sendCommand('format');
         res = this.imm_json_get_key(json, 'res');
         if (!(res == 'ok')) {
-            return this._throw(this._yapi.IO_ERROR,'format failed',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'format failed', this._yapi.IO_ERROR);
         }
         return this._yapi.SUCCESS;
     }
@@ -362,7 +362,7 @@ export class YFiles extends YFunction
         let json: Uint8Array;
         let filelist: string[] = [];
         let res: YFileRecord[] = [];
-        json = await this.sendCommand('dir&f='+pattern);
+        json = await this.sendCommand('dir&f=' + pattern);
         filelist = this.imm_json_get_array(json);
         res.length = 0;
         for (let ii in filelist) {
@@ -387,7 +387,7 @@ export class YFiles extends YFunction
         if ((filename).length == 0) {
             return false;
         }
-        json = await this.sendCommand('dir&f='+filename);
+        json = await this.sendCommand('dir&f=' + filename);
         filelist = this.imm_json_get_array(json);
         if (filelist.length > 0) {
             return true;
@@ -443,10 +443,10 @@ export class YFiles extends YFunction
     {
         let json: Uint8Array;
         let res: string;
-        json = await this.sendCommand('del&f='+pathname);
+        json = await this.sendCommand('del&f=' + pathname);
         res  = this.imm_json_get_key(json, 'res');
         if (!(res == 'ok')) {
-            return this._throw(this._yapi.IO_ERROR,'unable to remove file',this._yapi.IO_ERROR);
+            return this._throw(this._yapi.IO_ERROR, 'unable to remove file', this._yapi.IO_ERROR);
         }
         return this._yapi.SUCCESS;
     }
@@ -464,9 +464,9 @@ export class YFiles extends YFunction
     nextFiles(): YFiles | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YFiles.FindFilesInContext(this._yapi, next_hwid);
     }
 
@@ -482,7 +482,7 @@ export class YFiles extends YFunction
     static FirstFiles(): YFiles | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Files');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YFiles.FindFiles(next_hwid);
     }
 
@@ -500,7 +500,7 @@ export class YFiles extends YFunction
     static FirstFilesInContext(yctx: YAPIContext): YFiles | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Files');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YFiles.FindFilesInContext(yctx, next_hwid);
     }
 
@@ -509,7 +509,8 @@ export class YFiles extends YFunction
 
 export namespace YFiles {
     //--- (generated code: YFiles definitions)
-    export interface ValueCallback { (func: YFiles, value: string): void }
+    export interface ValueCallback {(func: YFiles, value: string): void}
+
     //--- (end of generated code: YFiles definitions)
 }
 

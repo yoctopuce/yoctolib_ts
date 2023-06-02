@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_proximity.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -118,7 +118,7 @@ export class YProximity extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'signalValue':
             this._signalValue = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -214,7 +214,7 @@ export class YProximity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('detectionThreshold',rest_val);
+        return await this._setAttr('detectionThreshold', rest_val);
     }
 
     /**
@@ -256,7 +256,7 @@ export class YProximity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('detectionHysteresis',rest_val);
+        return await this._setAttr('detectionHysteresis', rest_val);
     }
 
     /**
@@ -294,7 +294,7 @@ export class YProximity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('presenceMinTime',rest_val);
+        return await this._setAttr('presenceMinTime', rest_val);
     }
 
     /**
@@ -332,7 +332,7 @@ export class YProximity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('removalMinTime',rest_val);
+        return await this._setAttr('removalMinTime', rest_val);
     }
 
     /**
@@ -426,7 +426,7 @@ export class YProximity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pulseCounter',rest_val);
+        return await this._setAttr('pulseCounter', rest_val);
     }
 
     /**
@@ -490,7 +490,7 @@ export class YProximity extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('proximityReportMode',rest_val);
+        return await this._setAttr('proximityReportMode', rest_val);
     }
 
     /**
@@ -675,9 +675,9 @@ export class YProximity extends YSensor
     nextProximity(): YProximity | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YProximity.FindProximityInContext(this._yapi, next_hwid);
     }
 
@@ -693,7 +693,7 @@ export class YProximity extends YSensor
     static FirstProximity(): YProximity | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Proximity');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YProximity.FindProximity(next_hwid);
     }
 
@@ -711,7 +711,7 @@ export class YProximity extends YSensor
     static FirstProximityInContext(yctx: YAPIContext): YProximity | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Proximity');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YProximity.FindProximityInContext(yctx, next_hwid);
     }
 
@@ -720,19 +720,25 @@ export class YProximity extends YSensor
 
 export namespace YProximity {
     //--- (YProximity definitions)
-    export const enum ISPRESENT {
+    export const enum ISPRESENT
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum PROXIMITYREPORTMODE {
+
+    export const enum PROXIMITYREPORTMODE
+    {
         NUMERIC = 0,
         PRESENCE = 1,
         PULSECOUNT = 2,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YProximity, value: string): void }
-    export interface TimedReportCallback { (func: YProximity, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YProximity, value: string): void}
+
+    export interface TimedReportCallback {(func: YProximity, measure: YMeasure): void}
+
     //--- (end of YProximity definitions)
 }
 

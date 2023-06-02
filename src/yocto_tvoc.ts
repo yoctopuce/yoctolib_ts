@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 48520 2022-02-03 10:51:20Z seb $
+ *  $Id: yocto_tvoc.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -240,9 +240,9 @@ export class YTvoc extends YSensor
     nextTvoc(): YTvoc | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTvoc.FindTvocInContext(this._yapi, next_hwid);
     }
 
@@ -258,7 +258,7 @@ export class YTvoc extends YSensor
     static FirstTvoc(): YTvoc | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Tvoc');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTvoc.FindTvoc(next_hwid);
     }
 
@@ -276,7 +276,7 @@ export class YTvoc extends YSensor
     static FirstTvocInContext(yctx: YAPIContext): YTvoc | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Tvoc');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YTvoc.FindTvocInContext(yctx, next_hwid);
     }
 
@@ -285,8 +285,10 @@ export class YTvoc extends YSensor
 
 export namespace YTvoc {
     //--- (YTvoc definitions)
-    export interface ValueCallback { (func: YTvoc, value: string): void }
-    export interface TimedReportCallback { (func: YTvoc, measure: YMeasure): void }
+    export interface ValueCallback {(func: YTvoc, value: string): void}
+
+    export interface TimedReportCallback {(func: YTvoc, measure: YMeasure): void}
+
     //--- (end of YTvoc definitions)
 }
 

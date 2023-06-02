@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 54768 2023-05-26 06:46:41Z seb $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -56,12 +56,9 @@ export class YPowerSupply extends YFunction
     _voltageSetPoint: number = YPowerSupply.VOLTAGESETPOINT_INVALID;
     _currentLimit: number = YPowerSupply.CURRENTLIMIT_INVALID;
     _powerOutput: YPowerSupply.POWEROUTPUT = YPowerSupply.POWEROUTPUT_INVALID;
-    _voltageSense: YPowerSupply.VOLTAGESENSE = YPowerSupply.VOLTAGESENSE_INVALID;
     _measuredVoltage: number = YPowerSupply.MEASUREDVOLTAGE_INVALID;
     _measuredCurrent: number = YPowerSupply.MEASUREDCURRENT_INVALID;
     _inputVoltage: number = YPowerSupply.INPUTVOLTAGE_INVALID;
-    _vInt: number = YPowerSupply.VINT_INVALID;
-    _ldoTemperature: number = YPowerSupply.LDOTEMPERATURE_INVALID;
     _voltageTransition: string = YPowerSupply.VOLTAGETRANSITION_INVALID;
     _voltageAtStartUp: number = YPowerSupply.VOLTAGEATSTARTUP_INVALID;
     _currentAtStartUp: number = YPowerSupply.CURRENTATSTARTUP_INVALID;
@@ -74,14 +71,9 @@ export class YPowerSupply extends YFunction
     public readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT = 0;
     public readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT = 1;
     public readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT = -1;
-    public readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE = 0;
-    public readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE = 1;
-    public readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE = -1;
     public readonly MEASUREDVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly MEASUREDCURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly INPUTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly VINT_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly LDOTEMPERATURE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly VOLTAGETRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public readonly VOLTAGEATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -93,14 +85,9 @@ export class YPowerSupply extends YFunction
     public static readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT = 0;
     public static readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT = 1;
     public static readonly POWEROUTPUT_INVALID: YPowerSupply.POWEROUTPUT = -1;
-    public static readonly VOLTAGESENSE_INT: YPowerSupply.VOLTAGESENSE = 0;
-    public static readonly VOLTAGESENSE_EXT: YPowerSupply.VOLTAGESENSE = 1;
-    public static readonly VOLTAGESENSE_INVALID: YPowerSupply.VOLTAGESENSE = -1;
     public static readonly MEASUREDVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly MEASUREDCURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly INPUTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly VINT_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly LDOTEMPERATURE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly VOLTAGETRANSITION_INVALID: string = YAPI.INVALID_STRING;
     public static readonly VOLTAGEATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
@@ -119,7 +106,7 @@ export class YPowerSupply extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'voltageSetPoint':
             this._voltageSetPoint = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -129,9 +116,6 @@ export class YPowerSupply extends YFunction
         case 'powerOutput':
             this._powerOutput = <YPowerSupply.POWEROUTPUT> <number> val;
             return 1;
-        case 'voltageSense':
-            this._voltageSense = <YPowerSupply.VOLTAGESENSE> <number> val;
-            return 1;
         case 'measuredVoltage':
             this._measuredVoltage = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -140,12 +124,6 @@ export class YPowerSupply extends YFunction
             return 1;
         case 'inputVoltage':
             this._inputVoltage = <number> Math.round(<number>val / 65.536) / 1000.0;
-            return 1;
-        case 'vInt':
-            this._vInt = <number> Math.round(<number>val / 65.536) / 1000.0;
-            return 1;
-        case 'ldoTemperature':
-            this._ldoTemperature = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'voltageTransition':
             this._voltageTransition = <string> <string> val;
@@ -176,7 +154,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('voltageSetPoint',rest_val);
+        return await this._setAttr('voltageSetPoint', rest_val);
     }
 
     /**
@@ -211,7 +189,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentLimit',rest_val);
+        return await this._setAttr('currentLimit', rest_val);
     }
 
     /**
@@ -267,44 +245,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('powerOutput',rest_val);
-    }
-
-    /**
-     * Returns the output voltage control point.
-     *
-     * @return either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to the
-     * output voltage control point
-     *
-     * On failure, throws an exception or returns YPowerSupply.VOLTAGESENSE_INVALID.
-     */
-    async get_voltageSense(): Promise<YPowerSupply.VOLTAGESENSE>
-    {
-        let res: number;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.VOLTAGESENSE_INVALID;
-            }
-        }
-        res = this._voltageSense;
-        return res;
-    }
-
-    /**
-     * Changes the voltage control point.
-     *
-     * @param newval : either YPowerSupply.VOLTAGESENSE_INT or YPowerSupply.VOLTAGESENSE_EXT, according to
-     * the voltage control point
-     *
-     * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    async set_voltageSense(newval: YPowerSupply.VOLTAGESENSE): Promise<number>
-    {
-        let rest_val: string;
-        rest_val = String(newval);
-        return await this._setAttr('voltageSense',rest_val);
+        return await this._setAttr('powerOutput', rest_val);
     }
 
     /**
@@ -364,44 +305,6 @@ export class YPowerSupply extends YFunction
         return res;
     }
 
-    /**
-     * Returns the internal voltage, in V.
-     *
-     * @return a floating point number corresponding to the internal voltage, in V
-     *
-     * On failure, throws an exception or returns YPowerSupply.VINT_INVALID.
-     */
-    async get_vInt(): Promise<number>
-    {
-        let res: number;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.VINT_INVALID;
-            }
-        }
-        res = this._vInt;
-        return res;
-    }
-
-    /**
-     * Returns the LDO temperature, in Celsius.
-     *
-     * @return a floating point number corresponding to the LDO temperature, in Celsius
-     *
-     * On failure, throws an exception or returns YPowerSupply.LDOTEMPERATURE_INVALID.
-     */
-    async get_ldoTemperature(): Promise<number>
-    {
-        let res: number;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.LDOTEMPERATURE_INVALID;
-            }
-        }
-        res = this._ldoTemperature;
-        return res;
-    }
-
     async get_voltageTransition(): Promise<string>
     {
         let res: string;
@@ -418,7 +321,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('voltageTransition',rest_val);
+        return await this._setAttr('voltageTransition', rest_val);
     }
 
     /**
@@ -435,7 +338,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('voltageAtStartUp',rest_val);
+        return await this._setAttr('voltageAtStartUp', rest_val);
     }
 
     /**
@@ -471,7 +374,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentAtStartUp',rest_val);
+        return await this._setAttr('currentAtStartUp', rest_val);
     }
 
     /**
@@ -509,7 +412,7 @@ export class YPowerSupply extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('command',rest_val);
+        return await this._setAttr('command', rest_val);
     }
 
     /**
@@ -647,7 +550,7 @@ export class YPowerSupply extends YFunction
         if (V_target < 0.0) {
             V_target  = 0.0;
         }
-        newval = String(Math.round(<number> Math.round(V_target*65536)))+':'+String(Math.round(ms_duration));
+        newval = String(Math.round(<number> Math.round(V_target*65536))) + ':' + String(Math.round(ms_duration));
 
         return await this.set_voltageTransition(newval);
     }
@@ -665,9 +568,9 @@ export class YPowerSupply extends YFunction
     nextPowerSupply(): YPowerSupply | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPowerSupply.FindPowerSupplyInContext(this._yapi, next_hwid);
     }
 
@@ -683,7 +586,7 @@ export class YPowerSupply extends YFunction
     static FirstPowerSupply(): YPowerSupply | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('PowerSupply');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPowerSupply.FindPowerSupply(next_hwid);
     }
 
@@ -701,7 +604,7 @@ export class YPowerSupply extends YFunction
     static FirstPowerSupplyInContext(yctx: YAPIContext): YPowerSupply | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('PowerSupply');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPowerSupply.FindPowerSupplyInContext(yctx, next_hwid);
     }
 
@@ -710,17 +613,15 @@ export class YPowerSupply extends YFunction
 
 export namespace YPowerSupply {
     //--- (YPowerSupply definitions)
-    export const enum POWEROUTPUT {
+    export const enum POWEROUTPUT
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export const enum VOLTAGESENSE {
-        INT = 0,
-        EXT = 1,
-        INVALID = -1
-    }
-    export interface ValueCallback { (func: YPowerSupply, value: string): void }
+
+    export interface ValueCallback {(func: YPowerSupply, value: string): void}
+
     //--- (end of YPowerSupply definitions)
 }
 

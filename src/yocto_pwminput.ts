@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: yocto_pwminput.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -127,7 +127,7 @@ export class YPwmInput extends YSensor
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'dutyCycle':
             this._dutyCycle = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
@@ -179,7 +179,7 @@ export class YPwmInput extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('unit',rest_val);
+        return await this._setAttr('unit', rest_val);
     }
 
     /**
@@ -284,7 +284,7 @@ export class YPwmInput extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pulseCounter',rest_val);
+        return await this._setAttr('pulseCounter', rest_val);
     }
 
     /**
@@ -356,7 +356,7 @@ export class YPwmInput extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('pwmReportMode',rest_val);
+        return await this._setAttr('pwmReportMode', rest_val);
     }
 
     /**
@@ -392,7 +392,7 @@ export class YPwmInput extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('debouncePeriod',rest_val);
+        return await this._setAttr('debouncePeriod', rest_val);
     }
 
     /**
@@ -431,7 +431,7 @@ export class YPwmInput extends YSensor
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('bandwidth',rest_val);
+        return await this._setAttr('bandwidth', rest_val);
     }
 
     /**
@@ -636,9 +636,9 @@ export class YPwmInput extends YSensor
     nextPwmInput(): YPwmInput | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmInput.FindPwmInputInContext(this._yapi, next_hwid);
     }
 
@@ -654,7 +654,7 @@ export class YPwmInput extends YSensor
     static FirstPwmInput(): YPwmInput | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('PwmInput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmInput.FindPwmInput(next_hwid);
     }
 
@@ -672,7 +672,7 @@ export class YPwmInput extends YSensor
     static FirstPwmInputInContext(yctx: YAPIContext): YPwmInput | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('PwmInput');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YPwmInput.FindPwmInputInContext(yctx, next_hwid);
     }
 
@@ -681,7 +681,8 @@ export class YPwmInput extends YSensor
 
 export namespace YPwmInput {
     //--- (YPwmInput definitions)
-    export const enum PWMREPORTMODE {
+    export const enum PWMREPORTMODE
+    {
         PWM_DUTYCYCLE = 0,
         PWM_FREQUENCY = 1,
         PWM_PULSEDURATION = 2,
@@ -695,8 +696,11 @@ export namespace YPwmInput {
         PWM_PERIODCOUNT = 10,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YPwmInput, value: string): void }
-    export interface TimedReportCallback { (func: YPwmInput, measure: YMeasure): void }
+
+    export interface ValueCallback {(func: YPwmInput, value: string): void}
+
+    export interface TimedReportCallback {(func: YPwmInput, measure: YMeasure): void}
+
     //--- (end of YPwmInput definitions)
 }
 

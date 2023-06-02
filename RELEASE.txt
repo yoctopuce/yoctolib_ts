@@ -1,4 +1,6 @@
-TypeScript v1.10.54037
+TypeScript v1.10.54821
 
-- Add YInputCapture class
-- Change trivial accessors as immediate rather than async
+- Improve implementation of YHub
+- Prevent exception to be triggered by YAPI functions that take an errmsg as argument
+- Fix documentation of YAPI class
+- Fix YHub.isOnline method that could returning false positive after YAPI:UnregisterHub

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 53886 2023-04-05 08:06:39Z mvuilleu $
+ *  $Id: yocto_network.ts 54279 2023-04-28 10:11:03Z seb $
  *
  *  Implements the high-level API for Network functions
  *
@@ -200,7 +200,7 @@ export class YNetwork extends YFunction
 
     imm_parseAttr(name: string, val: any)
     {
-        switch(name) {
+        switch (name) {
         case 'readiness':
             this._readiness = <YNetwork.READINESS> <number> val;
             return 1;
@@ -449,7 +449,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('ipConfig',rest_val);
+        return await this._setAttr('ipConfig', rest_val);
     }
 
     /**
@@ -486,7 +486,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('primaryDNS',rest_val);
+        return await this._setAttr('primaryDNS', rest_val);
     }
 
     /**
@@ -523,7 +523,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('secondaryDNS',rest_val);
+        return await this._setAttr('secondaryDNS', rest_val);
     }
 
     /**
@@ -560,7 +560,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('ntpServer',rest_val);
+        return await this._setAttr('ntpServer', rest_val);
     }
 
     /**
@@ -604,7 +604,7 @@ export class YNetwork extends YFunction
             return this._throw(YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, YAPI.INVALID_ARGUMENT);
         }
         rest_val = String(newval);
-        return await this._setAttr('userPassword',rest_val);
+        return await this._setAttr('userPassword', rest_val);
     }
 
     /**
@@ -648,7 +648,7 @@ export class YNetwork extends YFunction
             return this._throw(YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, YAPI.INVALID_ARGUMENT);
         }
         rest_val = String(newval);
-        return await this._setAttr('adminPassword',rest_val);
+        return await this._setAttr('adminPassword', rest_val);
     }
 
     /**
@@ -687,7 +687,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('httpPort',rest_val);
+        return await this._setAttr('httpPort', rest_val);
     }
 
     /**
@@ -726,7 +726,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('defaultPage',rest_val);
+        return await this._setAttr('defaultPage', rest_val);
     }
 
     /**
@@ -769,7 +769,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('discoverable',rest_val);
+        return await this._setAttr('discoverable', rest_val);
     }
 
     /**
@@ -814,7 +814,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('wwwWatchdogDelay',rest_val);
+        return await this._setAttr('wwwWatchdogDelay', rest_val);
     }
 
     /**
@@ -850,7 +850,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackUrl',rest_val);
+        return await this._setAttr('callbackUrl', rest_val);
     }
 
     /**
@@ -891,7 +891,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackMethod',rest_val);
+        return await this._setAttr('callbackMethod', rest_val);
     }
 
     /**
@@ -942,7 +942,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackEncoding',rest_val);
+        return await this._setAttr('callbackEncoding', rest_val);
     }
 
     /**
@@ -987,7 +987,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackTemplate',rest_val);
+        return await this._setAttr('callbackTemplate', rest_val);
     }
 
     /**
@@ -1032,7 +1032,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackCredentials',rest_val);
+        return await this._setAttr('callbackCredentials', rest_val);
     }
 
     /**
@@ -1089,7 +1089,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackInitialDelay',rest_val);
+        return await this._setAttr('callbackInitialDelay', rest_val);
     }
 
     /**
@@ -1126,7 +1126,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackSchedule',rest_val);
+        return await this._setAttr('callbackSchedule', rest_val);
     }
 
     /**
@@ -1162,7 +1162,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackMinDelay',rest_val);
+        return await this._setAttr('callbackMinDelay', rest_val);
     }
 
     /**
@@ -1199,7 +1199,7 @@ export class YNetwork extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('callbackMaxDelay',rest_val);
+        return await this._setAttr('callbackMaxDelay', rest_val);
     }
 
     /**
@@ -1360,7 +1360,7 @@ export class YNetwork extends YFunction
      */
     async useDHCP(fallbackIpAddr: string, fallbackSubnetMaskLen: number, fallbackRouter: string): Promise<number>
     {
-        return await this.set_ipConfig('DHCP:'+fallbackIpAddr+'/'+String(Math.round(fallbackSubnetMaskLen))+'/'+fallbackRouter);
+        return await this.set_ipConfig('DHCP:' + fallbackIpAddr + '/' + String(Math.round(fallbackSubnetMaskLen)) + '/' + fallbackRouter);
     }
 
     /**
@@ -1392,7 +1392,7 @@ export class YNetwork extends YFunction
      */
     async useStaticIP(ipAddress: string, subnetMaskLen: number, router: string): Promise<number>
     {
-        return await this.set_ipConfig('STATIC:'+ipAddress+'/'+String(Math.round(subnetMaskLen))+'/'+router);
+        return await this.set_ipConfig('STATIC:' + ipAddress + '/' + String(Math.round(subnetMaskLen)) + '/' + router);
     }
 
     /**
@@ -1408,7 +1408,7 @@ export class YNetwork extends YFunction
     {
         let content: Uint8Array;
 
-        content = await this._download('ping.txt?host='+host);
+        content = await this._download('ping.txt?host=' + host);
         return this._yapi.imm_bin2str(content);
     }
 
@@ -1442,7 +1442,7 @@ export class YNetwork extends YFunction
      */
     async set_periodicCallbackSchedule(interval: string, offset: number): Promise<number>
     {
-        return await this.set_callbackSchedule('every '+interval+'+'+String(Math.round(offset)));
+        return await this.set_callbackSchedule('every ' + interval + '+' + String(Math.round(offset)));
     }
 
     /**
@@ -1458,9 +1458,9 @@ export class YNetwork extends YFunction
     nextNetwork(): YNetwork | null
     {
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-        if(resolve.errorType != YAPI.SUCCESS) return null;
+        if (resolve.errorType != YAPI.SUCCESS) return null;
         let next_hwid = this._yapi.imm_getNextHardwareId(this._className, <string> resolve.result);
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YNetwork.FindNetworkInContext(this._yapi, next_hwid);
     }
 
@@ -1476,7 +1476,7 @@ export class YNetwork extends YFunction
     static FirstNetwork(): YNetwork | null
     {
         let next_hwid = YAPI.imm_getFirstHardwareId('Network');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YNetwork.FindNetwork(next_hwid);
     }
 
@@ -1494,7 +1494,7 @@ export class YNetwork extends YFunction
     static FirstNetworkInContext(yctx: YAPIContext): YNetwork | null
     {
         let next_hwid = yctx.imm_getFirstHardwareId('Network');
-        if(next_hwid == null) return null;
+        if (next_hwid == null) return null;
         return YNetwork.FindNetworkInContext(yctx, next_hwid);
     }
 
@@ -1503,7 +1503,8 @@ export class YNetwork extends YFunction
 
 export namespace YNetwork {
     //--- (YNetwork definitions)
-    export const enum READINESS {
+    export const enum READINESS
+    {
         DOWN = 0,
         EXISTS = 1,
         LINKED = 2,
@@ -1511,18 +1512,24 @@ export namespace YNetwork {
         WWW_OK = 4,
         INVALID = -1
     }
-    export const enum DISCOVERABLE {
+
+    export const enum DISCOVERABLE
+    {
         FALSE = 0,
         TRUE = 1,
         INVALID = -1
     }
-    export const enum CALLBACKMETHOD {
+
+    export const enum CALLBACKMETHOD
+    {
         POST = 0,
         GET = 1,
         PUT = 2,
         INVALID = -1
     }
-    export const enum CALLBACKENCODING {
+
+    export const enum CALLBACKENCODING
+    {
         FORM = 0,
         JSON = 1,
         JSON_ARRAY = 2,
@@ -1538,12 +1545,16 @@ export namespace YNetwork {
         INFLUXDB_V2 = 12,
         INVALID = -1
     }
-    export const enum CALLBACKTEMPLATE {
+
+    export const enum CALLBACKTEMPLATE
+    {
         OFF = 0,
         ON = 1,
         INVALID = -1
     }
-    export interface ValueCallback { (func: YNetwork, value: string): void }
+
+    export interface ValueCallback {(func: YNetwork, value: string): void}
+
     //--- (end of YNetwork definitions)
 }
 
