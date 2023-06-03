@@ -13736,7 +13736,7 @@ export class YAPIContext
 
     imm_GetAPIVersion()
     {
-        return /* version number patched automatically */'1.10.54821';
+        return /* version number patched automatically */'1.10.54852';
     }
 
     /**

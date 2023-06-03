@@ -1,4 +1,4 @@
-TypeScript v1.10.54821
+TypeScript v1.10.54852
 
 - Improve implementation of YHub
 - Prevent exception to be triggered by YAPI functions that take an errmsg as argument
