@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_multisenscontroller.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -322,7 +322,7 @@ export class YMultiSensController extends YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -349,7 +349,7 @@ export class YMultiSensController extends YFunction {
         if (!(res == this._yapi.SUCCESS)) {
             return this._throw(this._yapi.IO_ERROR, 'unable to trigger address change', this._yapi.IO_ERROR);
         }
-        YAPI.Sleep(1500);
+        await YAPI.Sleep(1500);
         res = await this.get_lastAddressDetected();
         if (!(res > 0)) {
             return this._throw(this._yapi.IO_ERROR, 'IR sensor not found', this._yapi.IO_ERROR);
@@ -374,7 +374,7 @@ export class YMultiSensController extends YFunction {
         if (!(res == this._yapi.SUCCESS)) {
             return this._throw(this._yapi.IO_ERROR, 'unable to trigger address detection', res);
         }
-        YAPI.Sleep(1000);
+        await YAPI.Sleep(1000);
         res = await this.get_lastAddressDetected();
         return res;
     }

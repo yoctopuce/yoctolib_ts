@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_spiport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -53,12 +53,14 @@ class YSpiSnoopingRecord {
     constructor(str_json) {
         //--- (generated code: YSpiSnoopingRecord attributes declaration)
         this._tim = 0;
+        this._pos = 0;
         this._dir = 0;
         this._msg = '';
         //--- (generated code: YSpiSnoopingRecord constructor)
         //--- (end of generated code: YSpiSnoopingRecord constructor)
-        var loadval = JSON.parse(str_json);
+        const loadval = JSON.parse(str_json);
         this._tim = loadval.t;
+        this._pos = loadval.p;
         this._dir = (loadval.m[0] == '<' ? 1 : 0);
         this._msg = loadval.m.slice(1);
     }
@@ -70,6 +72,14 @@ class YSpiSnoopingRecord {
      */
     get_time() {
         return this._tim;
+    }
+    /**
+     * Returns the absolute position of the message end.
+     *
+     * @return the absolute position of the message end.
+     */
+    get_pos() {
+        return this._pos;
     }
     /**
      * Returns the message direction (RX=0, TX=1).
@@ -737,7 +747,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -772,7 +782,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -816,7 +826,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
@@ -859,7 +869,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr(0, atPos));
+        res = yocto_api_js_1.YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
         return res;
     }
     async end_tell() {
@@ -870,7 +880,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
+        res = yocto_api_js_1.YAPIContext.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
         return res;
     }
     /**
@@ -910,7 +920,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -955,7 +965,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -1421,7 +1431,7 @@ class YSpiPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             res.push(new YSpiSnoopingRecord(msgarr[idx]));

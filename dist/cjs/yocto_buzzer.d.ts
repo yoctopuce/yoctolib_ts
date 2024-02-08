@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_buzzer.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -67,7 +67,7 @@ export declare class YBuzzer extends YFunction {
     static readonly PLAYSEQSIGNATURE_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the frequency of the signal sent to the buzzer. A zero value stops the buzzer.
      *

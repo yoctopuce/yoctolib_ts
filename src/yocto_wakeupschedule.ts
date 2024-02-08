@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_wakeupschedule.ts 56230 2023-08-21 15:20:59Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -60,6 +60,7 @@ export class YWakeUpSchedule extends YFunction
     _weekDays: number = YWakeUpSchedule.WEEKDAYS_INVALID;
     _monthDays: number = YWakeUpSchedule.MONTHDAYS_INVALID;
     _months: number = YWakeUpSchedule.MONTHS_INVALID;
+    _secondsBefore: number = YWakeUpSchedule.SECONDSBEFORE_INVALID;
     _nextOccurence: number = YWakeUpSchedule.NEXTOCCURENCE_INVALID;
     _valueCallbackWakeUpSchedule: YWakeUpSchedule.ValueCallback | null = null;
 
@@ -70,6 +71,7 @@ export class YWakeUpSchedule extends YFunction
     public readonly WEEKDAYS_INVALID: number = YAPI.INVALID_UINT;
     public readonly MONTHDAYS_INVALID: number = YAPI.INVALID_UINT;
     public readonly MONTHS_INVALID: number = YAPI.INVALID_UINT;
+    public readonly SECONDSBEFORE_INVALID: number = YAPI.INVALID_UINT;
     public readonly NEXTOCCURENCE_INVALID: number = YAPI.INVALID_LONG;
 
     // API symbols as static members
@@ -79,6 +81,7 @@ export class YWakeUpSchedule extends YFunction
     public static readonly WEEKDAYS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly MONTHDAYS_INVALID: number = YAPI.INVALID_UINT;
     public static readonly MONTHS_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly SECONDSBEFORE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly NEXTOCCURENCE_INVALID: number = YAPI.INVALID_LONG;
     //--- (end of YWakeUpSchedule attributes declaration)
 
@@ -92,7 +95,7 @@ export class YWakeUpSchedule extends YFunction
 
     //--- (YWakeUpSchedule implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'minutesA':
@@ -112,6 +115,9 @@ export class YWakeUpSchedule extends YFunction
             return 1;
         case 'months':
             this._months = <number> <number> val;
+            return 1;
+        case 'secondsBefore':
+            this._secondsBefore = <number> <number> val;
             return 1;
         case 'nextOccurence':
             this._nextOccurence = <number> <number> val;
@@ -343,6 +349,47 @@ export class YWakeUpSchedule extends YFunction
     }
 
     /**
+     * Returns the number of seconds to anticipate wake-up time to allow
+     * the system to power-up.
+     *
+     * @return an integer corresponding to the number of seconds to anticipate wake-up time to allow
+     *         the system to power-up
+     *
+     * On failure, throws an exception or returns YWakeUpSchedule.SECONDSBEFORE_INVALID.
+     */
+    async get_secondsBefore(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YWakeUpSchedule.SECONDSBEFORE_INVALID;
+            }
+        }
+        res = this._secondsBefore;
+        return res;
+    }
+
+    /**
+     * Changes the number of seconds to anticipate wake-up time to allow
+     * the system to power-up.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
+     *
+     * @param newval : an integer corresponding to the number of seconds to anticipate wake-up time to allow
+     *         the system to power-up
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_secondsBefore(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('secondsBefore', rest_val);
+    }
+
+    /**
      * Returns the date/time (seconds) of the next wake up occurrence.
      *
      * @return an integer corresponding to the date/time (seconds) of the next wake up occurrence
@@ -475,7 +522,7 @@ export class YWakeUpSchedule extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

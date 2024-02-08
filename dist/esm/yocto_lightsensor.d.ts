@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_lightsensor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -69,7 +69,7 @@ export declare class YLightSensor extends YSensor {
     static readonly MEASURETYPE_HIGH_RESOLUTION: YLightSensor.MEASURETYPE;
     static readonly MEASURETYPE_INVALID: YLightSensor.MEASURETYPE;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     set_currentValue(newval: number): Promise<number>;
     /**
      * Changes the sensor-specific calibration parameter so that the current value

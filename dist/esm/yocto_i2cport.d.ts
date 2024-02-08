@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_i2cport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -44,6 +44,7 @@ import { YAPIContext, YFunction } from './yocto_api.js';
  */
 export declare class YI2cSnoopingRecord {
     _tim: number;
+    _pos: number;
     _dir: number;
     _msg: string;
     constructor(str_json: string);
@@ -53,6 +54,12 @@ export declare class YI2cSnoopingRecord {
      * @return the elapsed time, in ms, since the beginning of the preceding message.
      */
     get_time(): number;
+    /**
+     * Returns the absolute position of the message end.
+     *
+     * @return the absolute position of the message end.
+     */
+    get_pos(): number;
     /**
      * Returns the message direction (RX=0, TX=1).
      *
@@ -133,7 +140,7 @@ export declare class YI2cPort extends YFunction {
     static readonly I2CVOLTAGELEVEL_INVALID: YI2cPort.I2CVOLTAGELEVEL;
     static readonly I2CMODE_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the total number of bytes received since last reset.
      *

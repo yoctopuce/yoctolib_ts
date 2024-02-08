@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_i2cport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -51,6 +51,7 @@ export class YI2cSnoopingRecord
 {
     //--- (generated code: YI2cSnoopingRecord attributes declaration)
     _tim: number = 0;
+    _pos: number = 0;
     _dir: number = 0;
     _msg: string = '';
 
@@ -61,8 +62,9 @@ export class YI2cSnoopingRecord
     {
         //--- (generated code: YI2cSnoopingRecord constructor)
         //--- (end of generated code: YI2cSnoopingRecord constructor)
-        var loadval = JSON.parse(str_json);
+        const loadval = JSON.parse(str_json);
         this._tim = loadval.t;
+        this._pos = loadval.p;
         this._dir = (loadval.m[0] == '<' ? 1 : 0);
         this._msg = loadval.m.slice(1);
     }
@@ -77,6 +79,16 @@ export class YI2cSnoopingRecord
     get_time(): number
     {
         return this._tim;
+    }
+
+    /**
+     * Returns the absolute position of the message end.
+     *
+     * @return the absolute position of the message end.
+     */
+    get_pos(): number
+    {
+        return this._pos;
     }
 
     /**
@@ -191,7 +203,7 @@ export class YI2cPort extends YFunction
 
     //--- (generated code: YI2cPort implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'rxCount':
@@ -729,7 +741,7 @@ export class YI2cPort extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -769,7 +781,7 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -816,7 +828,7 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
@@ -866,7 +878,7 @@ export class YI2cPort extends YFunction
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr(0, atPos));
+        res = YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
         return res;
     }
 
@@ -880,7 +892,7 @@ export class YI2cPort extends YFunction
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
+        res = YAPIContext.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -922,7 +934,7 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -969,7 +981,7 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -1459,7 +1471,7 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             res.push(new YI2cSnoopingRecord(msgarr[idx]));

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_currentloopoutput.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -88,7 +88,7 @@ export class YCurrentLoopOutput extends YFunction
 
     //--- (YCurrentLoopOutput implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'current':
@@ -335,7 +335,7 @@ export class YCurrentLoopOutput extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

@@ -120,26 +120,29 @@ class YInputCaptureData {
         let ms;
         let recSize;
         let count;
+        let mult1;
+        let mult2;
+        let mult3;
         let v;
         buffSize = (sdata).length;
         if (!(buffSize >= 24)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid snapshot data (too short)', this._yapi.INVALID_ARGUMENT);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid snapshot data (too short)', yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         this._fmt = sdata[0];
         this._var1size = sdata[1] - 48;
         this._var2size = sdata[2] - 48;
         this._var3size = sdata[3] - 48;
         if (!(this._fmt == 83)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Unsupported snapshot format', this._yapi.INVALID_ARGUMENT);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Unsupported snapshot format', yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         if (!((this._var1size >= 2) && (this._var1size <= 4))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid sample size', this._yapi.INVALID_ARGUMENT);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid sample size', yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         if (!((this._var2size >= 0) && (this._var1size <= 4))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid sample size', this._yapi.INVALID_ARGUMENT);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid sample size', yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         if (!((this._var3size >= 0) && (this._var1size <= 4))) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid sample size', this._yapi.INVALID_ARGUMENT);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid sample size', yocto_api_js_1.YAPI.INVALID_ARGUMENT);
         }
         if (this._var2size == 0) {
             this._nVars = 1;
@@ -181,11 +184,31 @@ class YInputCaptureData {
                 recOfs = recOfs + 1;
             }
         }
+        if (((recOfs) & (1)) == 1) {
+            // align to next word
+            recOfs = recOfs + 1;
+        }
+        mult1 = 1;
+        mult2 = 1;
+        mult3 = 1;
+        if (recOfs < this._recOfs) {
+            // load optional value multiplier
+            mult1 = this.imm_decodeU16(sdata, this._recOfs);
+            recOfs = recOfs + 2;
+            if (this._var2size > 0) {
+                mult2 = this.imm_decodeU16(sdata, this._recOfs);
+                recOfs = recOfs + 2;
+            }
+            if (this._var3size > 0) {
+                mult3 = this.imm_decodeU16(sdata, this._recOfs);
+                recOfs = recOfs + 2;
+            }
+        }
         recOfs = this._recOfs;
         count = this._nRecs;
         while ((count > 0) && (recOfs + this._var1size <= buffSize)) {
             v = this.imm_decodeVal(sdata, recOfs, this._var1size) / 1000.0;
-            this._var1samples.push(v);
+            this._var1samples.push(v * mult1);
             recOfs = recOfs + recSize;
         }
         if (this._var2size > 0) {
@@ -193,7 +216,7 @@ class YInputCaptureData {
             count = this._nRecs;
             while ((count > 0) && (recOfs + this._var2size <= buffSize)) {
                 v = this.imm_decodeVal(sdata, recOfs, this._var2size) / 1000.0;
-                this._var2samples.push(v);
+                this._var2samples.push(v * mult2);
                 recOfs = recOfs + recSize;
             }
         }
@@ -202,11 +225,11 @@ class YInputCaptureData {
             count = this._nRecs;
             while ((count > 0) && (recOfs + this._var3size <= buffSize)) {
                 v = this.imm_decodeVal(sdata, recOfs, this._var3size) / 1000.0;
-                this._var3samples.push(v);
+                this._var3samples.push(v * mult3);
                 recOfs = recOfs + recSize;
             }
         }
-        return this._yapi.SUCCESS;
+        return yocto_api_js_1.YAPI.SUCCESS;
     }
     /**
      * Returns the number of series available in the capture.
@@ -304,7 +327,7 @@ class YInputCaptureData {
      */
     get_serie2Unit() {
         if (!(this._nVars >= 2)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 2 in this capture data', '');
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'There is no serie 2 in this capture data', '');
         }
         return this._var2unit;
     }
@@ -317,7 +340,7 @@ class YInputCaptureData {
      */
     get_serie3Unit() {
         if (!(this._nVars >= 3)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 3 in this capture data', '');
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'There is no serie 3 in this capture data', '');
         }
         return this._var3unit;
     }
@@ -346,7 +369,7 @@ class YInputCaptureData {
      */
     get_serie2Values() {
         if (!(this._nVars >= 2)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 2 in this capture data', this._var2samples);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'There is no serie 2 in this capture data', this._var2samples);
         }
         return this._var2samples;
     }
@@ -362,7 +385,7 @@ class YInputCaptureData {
      */
     get_serie3Values() {
         if (!(this._nVars >= 3)) {
-            return this._throw(this._yapi.INVALID_ARGUMENT, 'There is no serie 3 in this capture data', this._var3samples);
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'There is no serie 3 in this capture data', this._var3samples);
         }
         return this._var3samples;
     }
@@ -868,7 +891,7 @@ class YInputCapture extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_genericsensor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -89,7 +89,7 @@ export declare class YGenericSensor extends YSensor {
     static readonly ENABLED_TRUE: YGenericSensor.ENABLED;
     static readonly ENABLED_INVALID: YGenericSensor.ENABLED;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the measuring unit for the measured value.
      * Remember to call the saveToFlash() method of the module if the

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_weighscale.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -457,7 +457,7 @@ class YWeighScale extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -494,7 +494,7 @@ class YWeighScale extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }
@@ -581,7 +581,7 @@ class YWeighScale extends yocto_api_js_1.YSensor {
         let comp;
         id = await this.get_functionId();
         id = (id).substr(10, (id).length - 10);
-        bin_json = await this._download('extra.json?page=' + String(Math.round((4 * this._yapi.imm_atoi(id)) + tableIndex)));
+        bin_json = await this._download('extra.json?page=' + String(Math.round((4 * yocto_api_js_1.YAPIContext.imm_atoi(id)) + tableIndex)));
         paramlist = this.imm_json_get_array(bin_json);
         // convert all values to float and append records
         siz = ((paramlist.length) >> (1));

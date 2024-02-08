@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_files.ts 56027 2023-08-14 09:32:59Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -71,7 +71,7 @@ export declare namespace YFileRecord {
 }
 /**
  * YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
- * Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-Wireless-n
+ * Yocto-SPI, the YoctoHub-Ethernet or the YoctoHub-GSM-4G
  *
  * The YFiles class is used to access the filesystem embedded on
  * some Yoctopuce devices. This filesystem makes it
@@ -89,7 +89,7 @@ export declare class YFiles extends YFunction {
     static readonly FILESCOUNT_INVALID: number;
     static readonly FREESPACE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the number of files currently loaded in the filesystem.
      *

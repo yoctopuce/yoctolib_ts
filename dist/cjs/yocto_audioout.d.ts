@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_audioout.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -65,7 +65,7 @@ export declare class YAudioOut extends YFunction {
     static readonly SIGNAL_INVALID: number;
     static readonly NOSIGNALFOR_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns audio output volume, in per cents.
      *

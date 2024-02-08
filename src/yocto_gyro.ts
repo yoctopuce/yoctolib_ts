@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_gyro.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -189,7 +189,7 @@ export class YQt extends YSensor
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -227,7 +227,7 @@ export class YQt extends YSensor
                 this._yapi.imm_log('Exception in timedReportCallback:', e);
             }
         } else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }
@@ -288,12 +288,12 @@ export class YQt extends YSensor
     //--- (end of generated code: YQt implementation)
 }
 
-async function yInternalGyroCallback(YQt_obj: YQt, str_value: string)
+async function yInternalGyroCallback(YQt_obj: YQt, str_value: string):Promise<void>
 {
-    var gyro: YGyro = <YGyro>await YQt_obj.get_userData();
+    const gyro: YGyro = <YGyro>await YQt_obj.get_userData();
     if(!gyro) return;
-    var idx = parseInt(YQt_obj.imm_get_functionId().slice(2));
-    gyro._invokeGyroCallbacks(idx, parseInt(str_value));
+    const idx = parseInt(YQt_obj.imm_get_functionId().slice(2));
+    await gyro._invokeGyroCallbacks(idx, parseInt(str_value));
 }
 
 export namespace YQt
@@ -373,7 +373,7 @@ export class YGyro extends YSensor
 
     //--- (generated code: YGyro implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'bandwidth':
@@ -604,7 +604,7 @@ export class YGyro extends YSensor
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -642,7 +642,7 @@ export class YGyro extends YSensor
                 this._yapi.imm_log('Exception in timedReportCallback:', e);
             }
         } else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }

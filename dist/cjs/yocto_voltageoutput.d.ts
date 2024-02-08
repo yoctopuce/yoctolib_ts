@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_voltageoutput.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -55,7 +55,7 @@ export declare class YVoltageOutput extends YFunction {
     static readonly VOLTAGETRANSITION_INVALID: string;
     static readonly VOLTAGEATSTARTUP_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the output voltage, in V. Valid range is from 0 to 10V.
      *

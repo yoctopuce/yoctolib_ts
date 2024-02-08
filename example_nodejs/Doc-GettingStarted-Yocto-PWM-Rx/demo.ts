@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  An example that show how to use a  Yocto-PWM-Rx
+ *  An example that shows how to use a  Yocto-PWM-Rx
  *
  *  You can find more information on our web site:
  *   Yocto-PWM-Rx documentation:

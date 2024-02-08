@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_motor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -549,7 +549,7 @@ class YMotor extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

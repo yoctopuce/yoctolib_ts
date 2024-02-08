@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_serialport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -44,6 +44,7 @@ import { YAPIContext, YFunction } from './yocto_api.js';
  */
 export declare class YSnoopingRecord {
     _tim: number;
+    _pos: number;
     _dir: number;
     _msg: string;
     constructor(str_json: string);
@@ -53,6 +54,12 @@ export declare class YSnoopingRecord {
      * @return the elapsed time, in ms, since the beginning of the preceding message.
      */
     get_time(): number;
+    /**
+     * Returns the absolute position of the message end.
+     *
+     * @return the absolute position of the message end.
+     */
+    get_pos(): number;
     /**
      * Returns the message direction (RX=0, TX=1).
      *
@@ -148,7 +155,7 @@ export declare class YSerialPort extends YFunction {
     static readonly VOLTAGELEVEL_INVALID: YSerialPort.VOLTAGELEVEL;
     static readonly SERIALMODE_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     _internalEventCallback(YSerialPort_obj: YSerialPort, str_value: string): Promise<void>;
     /**
      * Returns the total number of bytes received since last reset.

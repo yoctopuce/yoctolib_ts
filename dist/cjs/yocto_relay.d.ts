@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_relay.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -90,7 +90,7 @@ export declare class YRelay extends YFunction {
     static readonly PULSETIMER_INVALID: number;
     static readonly COUNTDOWN_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the state of the relays (A for the idle position, B for the active position).
      *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_rangefinder.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -77,7 +77,7 @@ export declare class YRangeFinder extends YSensor {
     static readonly CURRENTTEMPERATURE_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the measuring unit for the measured range. That unit is a string.
      * String value can be " or mm. Any other value is ignored.

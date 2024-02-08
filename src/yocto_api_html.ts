@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 53821 2023-04-03 14:31:23Z mvuilleu $
+ * $Id: yocto_api_html.ts 55358 2023-06-28 09:00:27Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -65,9 +65,9 @@ export class YSystemEnvHtml extends YSystemEnv
     isNodeJS: boolean = false;
     hasSSDP: boolean = false;
 
-    hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback)
+    hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback):void
     {
-        window.addEventListener('onunhandledrejection', (event: Event) => {
+        window.addEventListener('onunhandledrejection', (event: Event):void => {
             let promiseRejectionEvent = <PromiseRejectionEvent>event;
             handler(promiseRejectionEvent.reason, promiseRejectionEvent.promise);
         });
@@ -100,13 +100,13 @@ export class YSystemEnvHtml extends YSystemEnv
 
     loadfile(file: string | Blob): Promise<Uint8Array>
     {
-        return new Promise((resolve: Function, reject: Function) => {
+        return new Promise((resolve: Function, reject: Function):void => {
             let reader = new FileReader();
-            reader.onerror = function (evt) {
+            reader.onerror = function (evt):void {
                 // @ts-ignore
                 reject(evt.target.error);
             };
-            reader.onload = function (evt) {
+            reader.onload = function (evt):void {
                 // @ts-ignore
                 resolve(new Uint8Array(evt.target.result));
             };
@@ -116,11 +116,11 @@ export class YSystemEnvHtml extends YSystemEnv
 
     downloadfile(url: string): Promise<Uint8Array>
     {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject):void => {
             let httpRequest = new XMLHttpRequest();
             httpRequest.open('GET', url, true);
             httpRequest.overrideMimeType('text/plain; charset=x-user-defined');
-            httpRequest.onreadystatechange = (() => {
+            httpRequest.onreadystatechange = (():void => {
                 if (httpRequest.readyState == 4) {
                     if(httpRequest.status != 200 && httpRequest.status != 304) {
                         if(httpRequest.status) {
@@ -161,7 +161,7 @@ class YHttpHtmlHub extends YHttpHub
         // Send the request using text/plain POST, to avoid CORS checks
         xhr.setRequestHeader('Content-Type', contentType);
         xhr.overrideMimeType('text/plain; charset=x-user-defined');
-        xhr.onreadystatechange = () => {
+        xhr.onreadystatechange = ():void => {
             if(xhr.readyState >= 3) {
                 let httpStatus: number = xhr.status >> 0;
                 if(xhr.readyState == 4 && httpStatus != 200 && httpStatus != 304) {
@@ -197,7 +197,7 @@ class YHttpHtmlHub extends YHttpHub
                 }
             }
         }
-        xhr.onerror = () => {
+        xhr.onerror = ():void => {
             onError(YAPI.IO_ERROR, 'HTTP request failed without status');
         };
         xhr.send(body);

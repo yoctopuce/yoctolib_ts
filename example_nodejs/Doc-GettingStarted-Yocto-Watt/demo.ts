@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  An example that show how to use a  Yocto-Watt
+ *  An example that shows how to use a  Yocto-Watt
  *
  *  You can find more information on our web site:
  *   Yocto-Watt documentation:

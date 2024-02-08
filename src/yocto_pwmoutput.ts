@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_pwmoutput.ts 58892 2024-01-11 11:11:28Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -59,6 +59,7 @@ export class YPwmOutput extends YFunction
     _dutyCycle: number = YPwmOutput.DUTYCYCLE_INVALID;
     _pulseDuration: number = YPwmOutput.PULSEDURATION_INVALID;
     _pwmTransition: string = YPwmOutput.PWMTRANSITION_INVALID;
+    _invertedOutput: YPwmOutput.INVERTEDOUTPUT = YPwmOutput.INVERTEDOUTPUT_INVALID;
     _enabledAtPowerOn: YPwmOutput.ENABLEDATPOWERON = YPwmOutput.ENABLEDATPOWERON_INVALID;
     _dutyCycleAtPowerOn: number = YPwmOutput.DUTYCYCLEATPOWERON_INVALID;
     _valueCallbackPwmOutput: YPwmOutput.ValueCallback | null = null;
@@ -72,6 +73,9 @@ export class YPwmOutput extends YFunction
     public readonly DUTYCYCLE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PULSEDURATION_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly PWMTRANSITION_INVALID: string = YAPI.INVALID_STRING;
+    public readonly INVERTEDOUTPUT_FALSE: YPwmOutput.INVERTEDOUTPUT = 0;
+    public readonly INVERTEDOUTPUT_TRUE: YPwmOutput.INVERTEDOUTPUT = 1;
+    public readonly INVERTEDOUTPUT_INVALID: YPwmOutput.INVERTEDOUTPUT = -1;
     public readonly ENABLEDATPOWERON_FALSE: YPwmOutput.ENABLEDATPOWERON = 0;
     public readonly ENABLEDATPOWERON_TRUE: YPwmOutput.ENABLEDATPOWERON = 1;
     public readonly ENABLEDATPOWERON_INVALID: YPwmOutput.ENABLEDATPOWERON = -1;
@@ -86,6 +90,9 @@ export class YPwmOutput extends YFunction
     public static readonly DUTYCYCLE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PULSEDURATION_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly PWMTRANSITION_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly INVERTEDOUTPUT_FALSE: YPwmOutput.INVERTEDOUTPUT = 0;
+    public static readonly INVERTEDOUTPUT_TRUE: YPwmOutput.INVERTEDOUTPUT = 1;
+    public static readonly INVERTEDOUTPUT_INVALID: YPwmOutput.INVERTEDOUTPUT = -1;
     public static readonly ENABLEDATPOWERON_FALSE: YPwmOutput.ENABLEDATPOWERON = 0;
     public static readonly ENABLEDATPOWERON_TRUE: YPwmOutput.ENABLEDATPOWERON = 1;
     public static readonly ENABLEDATPOWERON_INVALID: YPwmOutput.ENABLEDATPOWERON = -1;
@@ -102,7 +109,7 @@ export class YPwmOutput extends YFunction
 
     //--- (YPwmOutput implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'enabled':
@@ -122,6 +129,9 @@ export class YPwmOutput extends YFunction
             return 1;
         case 'pwmTransition':
             this._pwmTransition = <string> <string> val;
+            return 1;
+        case 'invertedOutput':
+            this._invertedOutput = <YPwmOutput.INVERTEDOUTPUT> <number> val;
             return 1;
         case 'enabledAtPowerOn':
             this._enabledAtPowerOn = <YPwmOutput.ENABLEDATPOWERON> <number> val;
@@ -340,6 +350,45 @@ export class YPwmOutput extends YFunction
     }
 
     /**
+     * Returns true if the output signal is configured as inverted, and false otherwise.
+     *
+     * @return either YPwmOutput.INVERTEDOUTPUT_FALSE or YPwmOutput.INVERTEDOUTPUT_TRUE, according to true
+     * if the output signal is configured as inverted, and false otherwise
+     *
+     * On failure, throws an exception or returns YPwmOutput.INVERTEDOUTPUT_INVALID.
+     */
+    async get_invertedOutput(): Promise<YPwmOutput.INVERTEDOUTPUT>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YPwmOutput.INVERTEDOUTPUT_INVALID;
+            }
+        }
+        res = this._invertedOutput;
+        return res;
+    }
+
+    /**
+     * Changes the inversion mode of the output signal.
+     * Remember to call the matching module saveToFlash() method if you want
+     * the change to be kept after power cycle.
+     *
+     * @param newval : either YPwmOutput.INVERTEDOUTPUT_FALSE or YPwmOutput.INVERTEDOUTPUT_TRUE, according
+     * to the inversion mode of the output signal
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_invertedOutput(newval: YPwmOutput.INVERTEDOUTPUT): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('invertedOutput', rest_val);
+    }
+
+    /**
      * Returns the state of the PWM at device power on.
      *
      * @return either YPwmOutput.ENABLEDATPOWERON_FALSE or YPwmOutput.ENABLEDATPOWERON_TRUE, according to
@@ -528,7 +577,7 @@ export class YPwmOutput extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -759,6 +808,13 @@ export class YPwmOutput extends YFunction
 export namespace YPwmOutput {
     //--- (YPwmOutput definitions)
     export const enum ENABLED
+    {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+
+    export const enum INVERTEDOUTPUT
     {
         FALSE = 0,
         TRUE = 1,

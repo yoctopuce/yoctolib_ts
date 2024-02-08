@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_watchdog.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -114,7 +114,7 @@ export declare class YWatchdog extends YFunction {
     static readonly TRIGGERDURATION_INVALID: number;
     static readonly LASTTRIGGER_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the state of the watchdog (A for the idle position, B for the active position).
      *

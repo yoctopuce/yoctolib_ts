@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_audioout.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_audioout.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for AudioOut functions
  *
@@ -319,7 +319,7 @@ class YAudioOut extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

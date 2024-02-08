@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_steppermotor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -113,7 +113,7 @@ export declare class YStepperMotor extends YFunction {
     static readonly AUXSIGNAL_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the motor working state.
      *

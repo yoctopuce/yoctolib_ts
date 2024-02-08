@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_relay.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -112,7 +112,7 @@ export class YRelay extends YFunction
 
     //--- (YRelay implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'state':
@@ -559,7 +559,7 @@ export class YRelay extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -582,7 +582,7 @@ export class YRelay extends YFunction
             if (fw == YModule.FIRMWARERELEASE_INVALID) {
                 return YRelay.STATE_INVALID;
             }
-            this._firm = this._yapi.imm_atoi(fw);
+            this._firm = YAPIContext.imm_atoi(fw);
         }
         if (this._firm < 34921) {
             sta = await this.get_state();

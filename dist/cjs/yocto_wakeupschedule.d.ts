@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_wakeupschedule.ts 56230 2023-08-21 15:20:59Z mvuilleu $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -53,6 +53,7 @@ export declare class YWakeUpSchedule extends YFunction {
     _weekDays: number;
     _monthDays: number;
     _months: number;
+    _secondsBefore: number;
     _nextOccurence: number;
     _valueCallbackWakeUpSchedule: YWakeUpSchedule.ValueCallback | null;
     readonly MINUTESA_INVALID: number;
@@ -61,6 +62,7 @@ export declare class YWakeUpSchedule extends YFunction {
     readonly WEEKDAYS_INVALID: number;
     readonly MONTHDAYS_INVALID: number;
     readonly MONTHS_INVALID: number;
+    readonly SECONDSBEFORE_INVALID: number;
     readonly NEXTOCCURENCE_INVALID: number;
     static readonly MINUTESA_INVALID: number;
     static readonly MINUTESB_INVALID: number;
@@ -68,9 +70,10 @@ export declare class YWakeUpSchedule extends YFunction {
     static readonly WEEKDAYS_INVALID: number;
     static readonly MONTHDAYS_INVALID: number;
     static readonly MONTHS_INVALID: number;
+    static readonly SECONDSBEFORE_INVALID: number;
     static readonly NEXTOCCURENCE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the minutes in the 00-29 interval of each hour scheduled for wake up.
      *
@@ -191,6 +194,30 @@ export declare class YWakeUpSchedule extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_months(newval: number): Promise<number>;
+    /**
+     * Returns the number of seconds to anticipate wake-up time to allow
+     * the system to power-up.
+     *
+     * @return an integer corresponding to the number of seconds to anticipate wake-up time to allow
+     *         the system to power-up
+     *
+     * On failure, throws an exception or returns YWakeUpSchedule.SECONDSBEFORE_INVALID.
+     */
+    get_secondsBefore(): Promise<number>;
+    /**
+     * Changes the number of seconds to anticipate wake-up time to allow
+     * the system to power-up.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
+     *
+     * @param newval : an integer corresponding to the number of seconds to anticipate wake-up time to allow
+     *         the system to power-up
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_secondsBefore(newval: number): Promise<number>;
     /**
      * Returns the date/time (seconds) of the next wake up occurrence.
      *

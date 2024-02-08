@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_audioin.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_audioin.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for AudioIn functions
  *
@@ -316,7 +316,7 @@ export class YAudioIn extends YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_quadraturedecoder.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for QuadratureDecoder functions
  *
@@ -63,7 +63,7 @@ export declare class YQuadratureDecoder extends YSensor {
     static readonly DECODING_INVALID: YQuadratureDecoder.DECODING;
     static readonly EDGESPERCYCLE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the current expected position of the quadrature decoder.
      * Invoking this function implicitly activates the quadrature decoder.

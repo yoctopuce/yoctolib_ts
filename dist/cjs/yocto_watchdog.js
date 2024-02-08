@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_watchdog.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -691,7 +691,7 @@ class YWatchdog extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -712,7 +712,7 @@ class YWatchdog extends yocto_api_js_1.YFunction {
             if (fw == yocto_api_js_1.YModule.FIRMWARERELEASE_INVALID) {
                 return YWatchdog.STATE_INVALID;
             }
-            this._firm = this._yapi.imm_atoi(fw);
+            this._firm = yocto_api_js_1.YAPIContext.imm_atoi(fw);
         }
         if (this._firm < 34921) {
             sta = await this.get_state();

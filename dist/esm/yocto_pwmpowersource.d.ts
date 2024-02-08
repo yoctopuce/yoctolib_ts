@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmpowersource.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_pwmpowersource.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for PwmPowerSource functions
  *
@@ -58,7 +58,7 @@ export declare class YPwmPowerSource extends YFunction {
     static readonly POWERMODE_OPNDRN: YPwmPowerSource.POWERMODE;
     static readonly POWERMODE_INVALID: YPwmPowerSource.POWERMODE;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the selected power source for the PWM on the same device.
      *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 53821 2023-04-03 14:31:23Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 55358 2023-06-28 09:00:27Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -172,7 +172,7 @@ class YHttpCallbackHub extends YGenericHub {
                 return;
             }
         }
-        if (this._currentState < 0 /* HUB_CONNECTED */) {
+        if (this._currentState < 0 /* Y_YHubConnType.HUB_CONNECTED */) {
             if (this._callbackCache.serial) {
                 this.hubSerial = this._callbackCache.serial;
             }

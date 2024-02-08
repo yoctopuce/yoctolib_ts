@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_pwminput.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -103,7 +103,7 @@ export declare class YPwmInput extends YSensor {
     static readonly BANDWIDTH_INVALID: number;
     static readonly EDGESPERPERIOD_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the measuring unit for the measured quantity. That unit
      * is just a string which is automatically initialized each time

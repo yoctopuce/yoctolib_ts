@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 53821 2023-04-03 14:31:23Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 55358 2023-06-28 09:00:27Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -39,7 +39,11 @@
  *********************************************************************/
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -201,7 +205,7 @@ class YHttpCallbackHub extends yocto_api_js_1.YGenericHub {
                 return;
             }
         }
-        if (this._currentState < 0 /* HUB_CONNECTED */) {
+        if (this._currentState < 0 /* Y_YHubConnType.HUB_CONNECTED */) {
             if (this._callbackCache.serial) {
                 this.hubSerial = this._callbackCache.serial;
             }

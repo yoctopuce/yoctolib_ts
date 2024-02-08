@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_bluetoothlink.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -93,7 +93,7 @@ export declare class YBluetoothLink extends YFunction {
     static readonly LINKQUALITY_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the MAC-48 address of the bluetooth interface, which is unique on the bluetooth network.
      *

@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_anbutton.ts 56268 2023-08-25 17:43:56Z mvuilleu $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -91,6 +91,7 @@ class YAnButton extends yocto_api_js_1.YFunction {
         this.INPUTTYPE_ANALOG_FAST = 0;
         this.INPUTTYPE_DIGITAL4 = 1;
         this.INPUTTYPE_ANALOG_SMOOTH = 2;
+        this.INPUTTYPE_DIGITAL_FAST = 3;
         this.INPUTTYPE_INVALID = -1;
         this._className = 'AnButton';
         //--- (end of YAnButton constructor)
@@ -415,9 +416,9 @@ class YAnButton extends yocto_api_js_1.YFunction {
     /**
      * Returns the decoding method applied to the input (analog or multiplexed binary switches).
      *
-     * @return a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4 and
-     * YAnButton.INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog
-     * or multiplexed binary switches)
+     * @return a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4,
+     * YAnButton.INPUTTYPE_ANALOG_SMOOTH and YAnButton.INPUTTYPE_DIGITAL_FAST corresponding to the
+     * decoding method applied to the input (analog or multiplexed binary switches)
      *
      * On failure, throws an exception or returns YAnButton.INPUTTYPE_INVALID.
      */
@@ -435,9 +436,9 @@ class YAnButton extends yocto_api_js_1.YFunction {
      * Changes the decoding method applied to the input (analog or multiplexed binary switches).
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4 and
-     * YAnButton.INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog
-     * or multiplexed binary switches)
+     * @param newval : a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4,
+     * YAnButton.INPUTTYPE_ANALOG_SMOOTH and YAnButton.INPUTTYPE_DIGITAL_FAST corresponding to the
+     * decoding method applied to the input (analog or multiplexed binary switches)
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -558,7 +559,7 @@ class YAnButton extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -644,5 +645,6 @@ YAnButton.PULSETIMER_INVALID = yocto_api_js_1.YAPI.INVALID_LONG;
 YAnButton.INPUTTYPE_ANALOG_FAST = 0;
 YAnButton.INPUTTYPE_DIGITAL4 = 1;
 YAnButton.INPUTTYPE_ANALOG_SMOOTH = 2;
+YAnButton.INPUTTYPE_DIGITAL_FAST = 3;
 YAnButton.INPUTTYPE_INVALID = -1;
 //# sourceMappingURL=yocto_anbutton.js.map

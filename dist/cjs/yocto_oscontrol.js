@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_oscontrol.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -204,7 +204,7 @@ class YOsControl extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

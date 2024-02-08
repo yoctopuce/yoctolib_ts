@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_cellular.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -197,7 +197,7 @@ export declare class YCellular extends YFunction {
     static readonly DATARECEIVED_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the link quality, expressed in percent.
      *

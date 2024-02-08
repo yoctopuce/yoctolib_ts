@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_files.ts 56027 2023-08-14 09:32:59Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -55,7 +55,7 @@ export class YFileRecord {
         this._crc = 0;
         //--- (generated code: YFileRecord constructor)
         //--- (end of generated code: YFileRecord constructor)
-        var loadval = JSON.parse(str_json);
+        const loadval = JSON.parse(str_json);
         this._name = loadval.name;
         this._size = loadval.size;
         this._crc = loadval.crc;
@@ -86,9 +86,10 @@ export class YFileRecord {
         return this._crc;
     }
 }
+//--- (generated code: YFiles class start)
 /**
  * YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
- * Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-Wireless-n
+ * Yocto-SPI, the YoctoHub-Ethernet or the YoctoHub-GSM-4G
  *
  * The YFiles class is used to access the filesystem embedded on
  * some Yoctopuce devices. This filesystem makes it
@@ -267,7 +268,7 @@ export class YFiles extends YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

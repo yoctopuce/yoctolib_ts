@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_altitude.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -58,7 +58,7 @@ export declare class YAltitude extends YSensor {
     static readonly QNH_INVALID: number;
     static readonly TECHNOLOGY_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the current estimated altitude. This allows one to compensate for
      * ambient pressure variations and to work in relative mode.

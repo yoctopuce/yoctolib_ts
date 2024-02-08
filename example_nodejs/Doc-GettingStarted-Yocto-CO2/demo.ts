@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  An example that show how to use a  Yocto-CO2
+ *  An example that shows how to use a  Yocto-CO2
  *
  *  You can find more information on our web site:
  *   Yocto-CO2 documentation:

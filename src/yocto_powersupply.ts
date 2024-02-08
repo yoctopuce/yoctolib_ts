@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 54768 2023-05-26 06:46:41Z seb $
+ *  $Id: yocto_powersupply.ts 55576 2023-07-25 06:26:34Z mvuilleu $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -44,8 +44,8 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
  * YPowerSupply Class: regulated power supply control interface
  *
  * The YPowerSupply class allows you to drive a Yoctopuce power supply.
- * It can be use to change the voltage set point,
- * the current limit and the enable/disable the output.
+ * It can be use to change the voltage and current limits, and to enable/disable
+ * the output.
  */
 //--- (end of YPowerSupply class start)
 
@@ -53,20 +53,21 @@ export class YPowerSupply extends YFunction
 {
     //--- (YPowerSupply attributes declaration)
     _className: string;
-    _voltageSetPoint: number = YPowerSupply.VOLTAGESETPOINT_INVALID;
+    _voltageLimit: number = YPowerSupply.VOLTAGELIMIT_INVALID;
     _currentLimit: number = YPowerSupply.CURRENTLIMIT_INVALID;
     _powerOutput: YPowerSupply.POWEROUTPUT = YPowerSupply.POWEROUTPUT_INVALID;
     _measuredVoltage: number = YPowerSupply.MEASUREDVOLTAGE_INVALID;
     _measuredCurrent: number = YPowerSupply.MEASUREDCURRENT_INVALID;
     _inputVoltage: number = YPowerSupply.INPUTVOLTAGE_INVALID;
     _voltageTransition: string = YPowerSupply.VOLTAGETRANSITION_INVALID;
-    _voltageAtStartUp: number = YPowerSupply.VOLTAGEATSTARTUP_INVALID;
-    _currentAtStartUp: number = YPowerSupply.CURRENTATSTARTUP_INVALID;
+    _voltageLimitAtStartUp: number = YPowerSupply.VOLTAGELIMITATSTARTUP_INVALID;
+    _currentLimitAtStartUp: number = YPowerSupply.CURRENTLIMITATSTARTUP_INVALID;
+    _powerOutputAtStartUp: YPowerSupply.POWEROUTPUTATSTARTUP = YPowerSupply.POWEROUTPUTATSTARTUP_INVALID;
     _command: string = YPowerSupply.COMMAND_INVALID;
     _valueCallbackPowerSupply: YPowerSupply.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly VOLTAGESETPOINT_INVALID: number = YAPI.INVALID_DOUBLE;
+    public readonly VOLTAGELIMIT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly CURRENTLIMIT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT = 0;
     public readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT = 1;
@@ -75,12 +76,15 @@ export class YPowerSupply extends YFunction
     public readonly MEASUREDCURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly INPUTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly VOLTAGETRANSITION_INVALID: string = YAPI.INVALID_STRING;
-    public readonly VOLTAGEATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
-    public readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
+    public readonly VOLTAGELIMITATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
+    public readonly CURRENTLIMITATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
+    public readonly POWEROUTPUTATSTARTUP_OFF: YPowerSupply.POWEROUTPUTATSTARTUP = 0;
+    public readonly POWEROUTPUTATSTARTUP_ON: YPowerSupply.POWEROUTPUTATSTARTUP = 1;
+    public readonly POWEROUTPUTATSTARTUP_INVALID: YPowerSupply.POWEROUTPUTATSTARTUP = -1;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly VOLTAGESETPOINT_INVALID: number = YAPI.INVALID_DOUBLE;
+    public static readonly VOLTAGELIMIT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly CURRENTLIMIT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly POWEROUTPUT_OFF: YPowerSupply.POWEROUTPUT = 0;
     public static readonly POWEROUTPUT_ON: YPowerSupply.POWEROUTPUT = 1;
@@ -89,8 +93,11 @@ export class YPowerSupply extends YFunction
     public static readonly MEASUREDCURRENT_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly INPUTVOLTAGE_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly VOLTAGETRANSITION_INVALID: string = YAPI.INVALID_STRING;
-    public static readonly VOLTAGEATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
-    public static readonly CURRENTATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
+    public static readonly VOLTAGELIMITATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
+    public static readonly CURRENTLIMITATSTARTUP_INVALID: number = YAPI.INVALID_DOUBLE;
+    public static readonly POWEROUTPUTATSTARTUP_OFF: YPowerSupply.POWEROUTPUTATSTARTUP = 0;
+    public static readonly POWEROUTPUTATSTARTUP_ON: YPowerSupply.POWEROUTPUTATSTARTUP = 1;
+    public static readonly POWEROUTPUTATSTARTUP_INVALID: YPowerSupply.POWEROUTPUTATSTARTUP = -1;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YPowerSupply attributes declaration)
 
@@ -104,11 +111,11 @@ export class YPowerSupply extends YFunction
 
     //--- (YPowerSupply implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
-        case 'voltageSetPoint':
-            this._voltageSetPoint = <number> Math.round(<number>val / 65.536) / 1000.0;
+        case 'voltageLimit':
+            this._voltageLimit = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'currentLimit':
             this._currentLimit = <number> Math.round(<number>val / 65.536) / 1000.0;
@@ -128,11 +135,14 @@ export class YPowerSupply extends YFunction
         case 'voltageTransition':
             this._voltageTransition = <string> <string> val;
             return 1;
-        case 'voltageAtStartUp':
-            this._voltageAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
+        case 'voltageLimitAtStartUp':
+            this._voltageLimitAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
-        case 'currentAtStartUp':
-            this._currentAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
+        case 'currentLimitAtStartUp':
+            this._currentLimitAtStartUp = <number> Math.round(<number>val / 65.536) / 1000.0;
+            return 1;
+        case 'powerOutputAtStartUp':
+            this._powerOutputAtStartUp = <YPowerSupply.POWEROUTPUTATSTARTUP> <number> val;
             return 1;
         case 'command':
             this._command = <string> <string> val;
@@ -142,37 +152,37 @@ export class YPowerSupply extends YFunction
     }
 
     /**
-     * Changes the voltage set point, in V.
+     * Changes the voltage limit, in V.
      *
-     * @param newval : a floating point number corresponding to the voltage set point, in V
+     * @param newval : a floating point number corresponding to the voltage limit, in V
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_voltageSetPoint(newval: number): Promise<number>
+    async set_voltageLimit(newval: number): Promise<number>
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('voltageSetPoint', rest_val);
+        return await this._setAttr('voltageLimit', rest_val);
     }
 
     /**
-     * Returns the voltage set point, in V.
+     * Returns the voltage limit, in V.
      *
-     * @return a floating point number corresponding to the voltage set point, in V
+     * @return a floating point number corresponding to the voltage limit, in V
      *
-     * On failure, throws an exception or returns YPowerSupply.VOLTAGESETPOINT_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.VOLTAGELIMIT_INVALID.
      */
-    async get_voltageSetPoint(): Promise<number>
+    async get_voltageLimit(): Promise<number>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.VOLTAGESETPOINT_INVALID;
+                return YPowerSupply.VOLTAGELIMIT_INVALID;
             }
         }
-        res = this._voltageSetPoint;
+        res = this._voltageLimit;
         return res;
     }
 
@@ -334,29 +344,29 @@ export class YPowerSupply extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_voltageAtStartUp(newval: number): Promise<number>
+    async set_voltageLimitAtStartUp(newval: number): Promise<number>
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('voltageAtStartUp', rest_val);
+        return await this._setAttr('voltageLimitAtStartUp', rest_val);
     }
 
     /**
-     * Returns the selected voltage set point at device startup, in V.
+     * Returns the selected voltage limit at device startup, in V.
      *
-     * @return a floating point number corresponding to the selected voltage set point at device startup, in V
+     * @return a floating point number corresponding to the selected voltage limit at device startup, in V
      *
-     * On failure, throws an exception or returns YPowerSupply.VOLTAGEATSTARTUP_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.VOLTAGELIMITATSTARTUP_INVALID.
      */
-    async get_voltageAtStartUp(): Promise<number>
+    async get_voltageLimitAtStartUp(): Promise<number>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.VOLTAGEATSTARTUP_INVALID;
+                return YPowerSupply.VOLTAGELIMITATSTARTUP_INVALID;
             }
         }
-        res = this._voltageAtStartUp;
+        res = this._voltageLimitAtStartUp;
         return res;
     }
 
@@ -370,11 +380,11 @@ export class YPowerSupply extends YFunction
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async set_currentAtStartUp(newval: number): Promise<number>
+    async set_currentLimitAtStartUp(newval: number): Promise<number>
     {
         let rest_val: string;
         rest_val = String(Math.round(newval * 65536.0));
-        return await this._setAttr('currentAtStartUp', rest_val);
+        return await this._setAttr('currentLimitAtStartUp', rest_val);
     }
 
     /**
@@ -382,18 +392,56 @@ export class YPowerSupply extends YFunction
      *
      * @return a floating point number corresponding to the selected current limit at device startup, in mA
      *
-     * On failure, throws an exception or returns YPowerSupply.CURRENTATSTARTUP_INVALID.
+     * On failure, throws an exception or returns YPowerSupply.CURRENTLIMITATSTARTUP_INVALID.
      */
-    async get_currentAtStartUp(): Promise<number>
+    async get_currentLimitAtStartUp(): Promise<number>
     {
         let res: number;
         if (this._cacheExpiration <= this._yapi.GetTickCount()) {
             if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YPowerSupply.CURRENTATSTARTUP_INVALID;
+                return YPowerSupply.CURRENTLIMITATSTARTUP_INVALID;
             }
         }
-        res = this._currentAtStartUp;
+        res = this._currentLimitAtStartUp;
         return res;
+    }
+
+    /**
+     * Returns the power supply output switch state.
+     *
+     * @return either YPowerSupply.POWEROUTPUTATSTARTUP_OFF or YPowerSupply.POWEROUTPUTATSTARTUP_ON,
+     * according to the power supply output switch state
+     *
+     * On failure, throws an exception or returns YPowerSupply.POWEROUTPUTATSTARTUP_INVALID.
+     */
+    async get_powerOutputAtStartUp(): Promise<YPowerSupply.POWEROUTPUTATSTARTUP>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YPowerSupply.POWEROUTPUTATSTARTUP_INVALID;
+            }
+        }
+        res = this._powerOutputAtStartUp;
+        return res;
+    }
+
+    /**
+     * Changes the power supply output switch state at device start up. Remember to call the matching
+     * module saveToFlash() method, otherwise this call has no effect.
+     *
+     * @param newval : either YPowerSupply.POWEROUTPUTATSTARTUP_OFF or
+     * YPowerSupply.POWEROUTPUTATSTARTUP_ON, according to the power supply output switch state at device start up
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_powerOutputAtStartUp(newval: YPowerSupply.POWEROUTPUTATSTARTUP): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('powerOutputAtStartUp', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -529,7 +577,7 @@ export class YPowerSupply extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -614,6 +662,13 @@ export class YPowerSupply extends YFunction
 export namespace YPowerSupply {
     //--- (YPowerSupply definitions)
     export const enum POWEROUTPUT
+    {
+        OFF = 0,
+        ON = 1,
+        INVALID = -1
+    }
+
+    export const enum POWEROUTPUTATSTARTUP
     {
         OFF = 0,
         ON = 1,

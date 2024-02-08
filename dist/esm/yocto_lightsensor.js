@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_lightsensor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -253,7 +253,7 @@ export class YLightSensor extends YSensor {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -290,7 +290,7 @@ export class YLightSensor extends YSensor {
             }
         }
         else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }

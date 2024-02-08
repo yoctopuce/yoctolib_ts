@@ -66,7 +66,7 @@ export class YInputChain extends YFunction
     _watchdogPeriod: number = YInputChain.WATCHDOGPERIOD_INVALID;
     _chainDiags: number = YInputChain.CHAINDIAGS_INVALID;
     _valueCallbackInputChain: YInputChain.ValueCallback | null = null;
-    _eventCallback: YInputChain.EventCallback | null = null;
+    _stateChangeCallback: YInputChain.YStateChangeCallback | null = null;
     _prevPos: number = 0;
     _eventPos: number = 0;
     _eventStamp: number = 0;
@@ -117,7 +117,7 @@ export class YInputChain extends YFunction
 
     //--- (YInputChain implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'expectedNodes':
@@ -164,7 +164,7 @@ export class YInputChain extends YFunction
     }
 
 
-    async _internalEventCallback(YInputChain_obj: YInputChain, str_value: string)
+    async _internalEventCallback(YInputChain_obj: YInputChain, str_value: string): Promise<void>
     {
         await YInputChain_obj._internalEventHandler(str_value);
     }
@@ -638,7 +638,7 @@ export class YInputChain extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -688,7 +688,7 @@ export class YInputChain extends YFunction
      *         the type of event and a character string with the event data.
      *         On failure, throws an exception or returns a negative error code.
      */
-    async registerEventCallback(callback: YInputChain.EventCallback | null): Promise<number>
+    async registerStateChangeCallback(callback: YInputChain.YStateChangeCallback | null): Promise<number>
     {
         if (callback != null) {
             await this.registerValueCallback(this._internalEventCallback);
@@ -697,7 +697,7 @@ export class YInputChain extends YFunction
         }
         // register user callback AFTER the internal pseudo-event,
         // to make sure we start with future events only
-        this._eventCallback = callback;
+        this._stateChangeCallback = callback;
         return 0;
     }
 
@@ -721,7 +721,7 @@ export class YInputChain extends YFunction
         let evtData: string;
         let evtChange: string;
         let chainIdx: number;
-        newPos = this._yapi.imm_atoi(cbpos);
+        newPos = YAPIContext.imm_atoi(cbpos);
         if (newPos < this._prevPos) {
             this._eventPos = 0;
         }
@@ -729,7 +729,7 @@ export class YInputChain extends YFunction
         if (newPos < this._eventPos) {
             return this._yapi.SUCCESS;
         }
-        if (!(this._eventCallback != null)) {
+        if (!(this._stateChangeCallback != null)) {
             // first simulated event, use it to initialize reference values
             this._eventPos = newPos;
             this._eventChains.length = 0;
@@ -756,7 +756,7 @@ export class YInputChain extends YFunction
         lenStr = eventArr[arrLen];
         lenStr = (lenStr).substr(1, (lenStr).length-1);
         // update processed event position pointer
-        this._eventPos = this._yapi.imm_atoi(lenStr);
+        this._eventPos = YAPIContext.imm_atoi(lenStr);
         // now generate callbacks for each event received
         arrPos = 0;
         while (arrPos < arrLen) {
@@ -775,15 +775,15 @@ export class YInputChain extends YFunction
                     if (dataPos > 10) {
                         evtData = (eventStr).substr(dataPos, (eventStr).length-dataPos);
                         if (('1234567').indexOf(evtType) >= 0) {
-                            chainIdx = this._yapi.imm_atoi(evtType) - 1;
+                            chainIdx = YAPIContext.imm_atoi(evtType) - 1;
                             evtChange = await this._strXor(evtData, this._eventChains[chainIdx]);
                             this._eventChains[chainIdx] = evtData;
                         }
                     }
                     try {
-                        await this._eventCallback(this, evtStamp, evtType, evtData, evtChange);
+                        await this._stateChangeCallback(this, evtStamp, evtType, evtData, evtChange);
                     } catch (e) {
-                        this._yapi.imm_log('Exception in eventCallback:', e);
+                        this._yapi.imm_log('Exception in stateChangeCallback:', e);
                     }
                 }
             }
@@ -909,7 +909,7 @@ export namespace YInputChain {
 
     export interface ValueCallback {(func: YInputChain, value: string): void}
 
-    export interface EventCallback {(func: YInputChain, timestampr:number, evtType:string, eventData:string, eventChange: string): void}
+    export interface YStateChangeCallback {(func: YInputChain, timestampr:number, evtType:string, eventData:string, eventChange: string): void}
 
     //--- (end of YInputChain definitions)
 }

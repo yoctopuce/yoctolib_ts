@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_watchdog.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -136,7 +136,7 @@ export class YWatchdog extends YFunction
 
     //--- (YWatchdog implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'state':
@@ -785,7 +785,7 @@ export class YWatchdog extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -808,7 +808,7 @@ export class YWatchdog extends YFunction
             if (fw == YModule.FIRMWARERELEASE_INVALID) {
                 return YWatchdog.STATE_INVALID;
             }
-            this._firm = this._yapi.imm_atoi(fw);
+            this._firm = YAPIContext.imm_atoi(fw);
         }
         if (this._firm < 34921) {
             sta = await this.get_state();

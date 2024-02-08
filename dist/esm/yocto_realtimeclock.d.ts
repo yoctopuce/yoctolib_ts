@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_realtimeclock.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_realtimeclock.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for RealTimeClock functions
  *
@@ -74,7 +74,7 @@ export declare class YRealTimeClock extends YFunction {
     static readonly DISABLEHOSTSYNC_TRUE: YRealTimeClock.DISABLEHOSTSYNC;
     static readonly DISABLEHOSTSYNC_INVALID: YRealTimeClock.DISABLEHOSTSYNC;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the current time in Unix format (number of elapsed seconds since Jan 1st, 1970).
      *

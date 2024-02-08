@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_gps.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -145,7 +145,7 @@ export class YGps extends YFunction
 
     //--- (YGps implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'isFixed':
@@ -696,7 +696,7 @@ export class YGps extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

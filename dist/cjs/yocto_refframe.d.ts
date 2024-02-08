@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_refframe.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -124,7 +124,7 @@ export declare class YRefFrame extends YFunction {
     static readonly MOUNTORIENTATION_NINE: YRefFrame.MOUNTORIENTATION;
     static readonly MOUNTORIENTATION_INVALID: YRefFrame.MOUNTORIENTATION;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     get_mountPos(): Promise<number>;
     set_mountPos(newval: number): Promise<number>;
     /**

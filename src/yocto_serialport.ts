@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_serialport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -51,6 +51,7 @@ export class YSnoopingRecord
 {
     //--- (generated code: YSnoopingRecord attributes declaration)
     _tim: number = 0;
+    _pos: number = 0;
     _dir: number = 0;
     _msg: string = '';
 
@@ -61,8 +62,9 @@ export class YSnoopingRecord
     {
         //--- (generated code: YSnoopingRecord constructor)
         //--- (end of generated code: YSnoopingRecord constructor)
-        var loadval = JSON.parse(str_json);
+        const loadval = JSON.parse(str_json);
         this._tim = loadval.t;
+        this._pos = loadval.p;
         this._dir = (loadval.m[0] == '<' ? 1 : 0);
         this._msg = loadval.m.slice(1);
     }
@@ -77,6 +79,16 @@ export class YSnoopingRecord
     get_time(): number
     {
         return this._tim;
+    }
+
+    /**
+     * Returns the absolute position of the message end.
+     *
+     * @return the absolute position of the message end.
+     */
+    get_pos(): number
+    {
+        return this._pos;
     }
 
     /**
@@ -206,7 +218,7 @@ export class YSerialPort extends YFunction
 
     //--- (generated code: YSerialPort implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'rxCount':
@@ -256,7 +268,7 @@ export class YSerialPort extends YFunction
     }
 
 
-    async _internalEventCallback(YSerialPort_obj: YSerialPort, str_value: string)
+    async _internalEventCallback(YSerialPort_obj: YSerialPort, str_value: string): Promise<void>
     {
         await YSerialPort_obj._internalEventHandler(str_value);
     }
@@ -771,7 +783,7 @@ export class YSerialPort extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -811,7 +823,7 @@ export class YSerialPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -858,7 +870,7 @@ export class YSerialPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
@@ -908,7 +920,7 @@ export class YSerialPort extends YFunction
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr(0, atPos));
+        res = YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
         return res;
     }
 
@@ -922,7 +934,7 @@ export class YSerialPort extends YFunction
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = this._yapi.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
+        res = YAPIContext.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -964,7 +976,7 @@ export class YSerialPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -1011,7 +1023,7 @@ export class YSerialPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
@@ -1557,7 +1569,7 @@ export class YSerialPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = this._yapi.imm_atoi(msgarr[msglen]);
+        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             res.push(new YSnoopingRecord(msgarr[idx]));
@@ -1616,10 +1628,10 @@ export class YSerialPort extends YFunction
         msglen = msglen - 1;
         if (!(this._eventCallback != null)) {
             // first simulated event, use it only to initialize reference values
-            this._eventPos = this._yapi.imm_atoi(msgarr[msglen]);
+            this._eventPos = YAPIContext.imm_atoi(msgarr[msglen]);
             return this._yapi.SUCCESS;
         }
-        this._eventPos = this._yapi.imm_atoi(msgarr[msglen]);
+        this._eventPos = YAPIContext.imm_atoi(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             try {

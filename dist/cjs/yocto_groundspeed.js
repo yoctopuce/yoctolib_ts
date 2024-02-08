@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_groundspeed.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_groundspeed.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for GroundSpeed functions
  *
@@ -171,7 +171,7 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -208,7 +208,7 @@ class YGroundSpeed extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }

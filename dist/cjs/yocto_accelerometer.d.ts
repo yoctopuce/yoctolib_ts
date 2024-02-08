@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_accelerometer.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -71,7 +71,7 @@ export declare class YAccelerometer extends YSensor {
     static readonly GRAVITYCANCELLATION_ON: YAccelerometer.GRAVITYCANCELLATION;
     static readonly GRAVITYCANCELLATION_INVALID: YAccelerometer.GRAVITYCANCELLATION;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the measure update frequency, measured in Hz.
      *

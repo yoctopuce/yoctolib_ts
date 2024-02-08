@@ -67,7 +67,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
         this._watchdogPeriod = YInputChain.WATCHDOGPERIOD_INVALID;
         this._chainDiags = YInputChain.CHAINDIAGS_INVALID;
         this._valueCallbackInputChain = null;
-        this._eventCallback = null;
+        this._stateChangeCallback = null;
         this._prevPos = 0;
         this._eventPos = 0;
         this._eventStamp = 0;
@@ -571,7 +571,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -615,7 +615,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
      *         the type of event and a character string with the event data.
      *         On failure, throws an exception or returns a negative error code.
      */
-    async registerEventCallback(callback) {
+    async registerStateChangeCallback(callback) {
         if (callback != null) {
             await this.registerValueCallback(this._internalEventCallback);
         }
@@ -624,7 +624,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
         }
         // register user callback AFTER the internal pseudo-event,
         // to make sure we start with future events only
-        this._eventCallback = callback;
+        this._stateChangeCallback = callback;
         return 0;
     }
     async _internalEventHandler(cbpos) {
@@ -646,7 +646,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
         let evtData;
         let evtChange;
         let chainIdx;
-        newPos = this._yapi.imm_atoi(cbpos);
+        newPos = yocto_api_js_1.YAPIContext.imm_atoi(cbpos);
         if (newPos < this._prevPos) {
             this._eventPos = 0;
         }
@@ -654,7 +654,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
         if (newPos < this._eventPos) {
             return this._yapi.SUCCESS;
         }
-        if (!(this._eventCallback != null)) {
+        if (!(this._stateChangeCallback != null)) {
             // first simulated event, use it to initialize reference values
             this._eventPos = newPos;
             this._eventChains.length = 0;
@@ -680,7 +680,7 @@ class YInputChain extends yocto_api_js_1.YFunction {
         lenStr = eventArr[arrLen];
         lenStr = (lenStr).substr(1, (lenStr).length - 1);
         // update processed event position pointer
-        this._eventPos = this._yapi.imm_atoi(lenStr);
+        this._eventPos = yocto_api_js_1.YAPIContext.imm_atoi(lenStr);
         // now generate callbacks for each event received
         arrPos = 0;
         while (arrPos < arrLen) {
@@ -699,16 +699,16 @@ class YInputChain extends yocto_api_js_1.YFunction {
                     if (dataPos > 10) {
                         evtData = (eventStr).substr(dataPos, (eventStr).length - dataPos);
                         if (('1234567').indexOf(evtType) >= 0) {
-                            chainIdx = this._yapi.imm_atoi(evtType) - 1;
+                            chainIdx = yocto_api_js_1.YAPIContext.imm_atoi(evtType) - 1;
                             evtChange = await this._strXor(evtData, this._eventChains[chainIdx]);
                             this._eventChains[chainIdx] = evtData;
                         }
                     }
                     try {
-                        await this._eventCallback(this, evtStamp, evtType, evtData, evtChange);
+                        await this._stateChangeCallback(this, evtStamp, evtType, evtData, evtChange);
                     }
                     catch (e) {
-                        this._yapi.imm_log('Exception in eventCallback:', e);
+                        this._yapi.imm_log('Exception in stateChangeCallback:', e);
                     }
                 }
             }

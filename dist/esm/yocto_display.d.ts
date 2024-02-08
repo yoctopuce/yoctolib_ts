@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_display.ts 56072 2023-08-15 13:47:48Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -554,7 +554,7 @@ export declare class YDisplay extends YFunction {
     static readonly LAYERCOUNT_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns true if the screen is powered, false otherwise.
      *

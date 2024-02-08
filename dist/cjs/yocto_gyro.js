@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_gyro.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -176,7 +176,7 @@ class YQt extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -213,7 +213,7 @@ class YQt extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }
@@ -271,11 +271,11 @@ class YQt extends yocto_api_js_1.YSensor {
 }
 exports.YQt = YQt;
 async function yInternalGyroCallback(YQt_obj, str_value) {
-    var gyro = await YQt_obj.get_userData();
+    const gyro = await YQt_obj.get_userData();
     if (!gyro)
         return;
-    var idx = parseInt(YQt_obj.imm_get_functionId().slice(2));
-    gyro._invokeGyroCallbacks(idx, parseInt(str_value));
+    const idx = parseInt(YQt_obj.imm_get_functionId().slice(2));
+    await gyro._invokeGyroCallbacks(idx, parseInt(str_value));
 }
 //--- (generated code: YGyro class start)
 /**
@@ -540,7 +540,7 @@ class YGyro extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -577,7 +577,7 @@ class YGyro extends yocto_api_js_1.YSensor {
             }
         }
         else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }

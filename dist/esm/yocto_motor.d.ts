@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_motor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_motor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Motor functions
  *
@@ -93,7 +93,7 @@ export declare class YMotor extends YFunction {
     static readonly FAILSAFETIMEOUT_INVALID: number;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Return the controller state. Possible states are:
      * IDLE   when the motor is stopped/in free wheel, ready to start;

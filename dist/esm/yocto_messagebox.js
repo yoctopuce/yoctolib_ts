@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_messagebox.ts 56072 2023-08-15 13:47:48Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -36,7 +36,7 @@
  *  WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
-import { YAPI, YFunction } from './yocto_api.js';
+import { YAPI, YAPIContext, YFunction } from './yocto_api.js';
 //--- (generated code: YSms class start)
 /**
  * YSms Class: SMS message sent or received, returned by messageBox.get_messages or messageBox.newMessage
@@ -212,41 +212,41 @@ export class YSms {
     }
     async set_slot(val) {
         this._slot = val;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_received(val) {
         this._deliv = val;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_smsc(val) {
         this._smsc = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_msgRef(val) {
         this._mref = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_sender(val) {
         this._orig = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_recipient(val) {
         this._dest = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_protocolId(val) {
         this._pid = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_alphabet(val) {
         this._alphab = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_msgClass(val) {
         if (val == -1) {
@@ -256,29 +256,29 @@ export class YSms {
             this._mclass = 16 + val;
         }
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_dcs(val) {
         this._alphab = (((((val) >> (2)))) & (3));
         this._mclass = ((val) & (16 + 3));
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_timestamp(val) {
         this._stamp = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_userDataHeader(val) {
         this._udh = val;
         this._npdu = 0;
         await this.parseUserDataHeader();
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async set_userData(val) {
         this._udata = val;
         this._npdu = 0;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async convertToUnicode() {
         let ucs2 = [];
@@ -286,7 +286,7 @@ export class YSms {
         let i;
         let uni;
         if (this._alphab == 2) {
-            return this._yapi.SUCCESS;
+            return YAPI.SUCCESS;
         }
         if (this._alphab == 0) {
             ucs2 = await this._mbox.gsm2unicode(this._udata);
@@ -304,7 +304,7 @@ export class YSms {
         this._alphab = 2;
         this._udata = new Uint8Array(0);
         await this.addUnicodeData(ucs2);
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     /**
      * Add a regular text to the SMS. This function support messages
@@ -323,7 +323,7 @@ export class YSms {
         let newdatalen;
         let i;
         if ((val).length == 0) {
-            return this._yapi.SUCCESS;
+            return YAPI.SUCCESS;
         }
         if (this._alphab == 0) {
             // Try to append using GSM 7-bit alphabet
@@ -446,7 +446,7 @@ export class YSms {
         let res;
         this._npdu = parts.length;
         if (this._npdu == 0) {
-            return this._yapi.INVALID_ARGUMENT;
+            return YAPI.INVALID_ARGUMENT;
         }
         sorted.length = 0;
         partno = 0;
@@ -469,7 +469,7 @@ export class YSms {
         // inherit header fields from first part
         subsms = this._parts[0];
         retcode = await this.parsePdu(await subsms.get_pdu());
-        if (retcode != this._yapi.SUCCESS) {
+        if (retcode != YAPI.SUCCESS) {
             return retcode;
         }
         this._npdu = sorted.length;
@@ -497,7 +497,7 @@ export class YSms {
             partno = partno + 1;
         }
         this._udata = res;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async encodeAddress(addr) {
         let bytes;
@@ -625,7 +625,7 @@ export class YSms {
             return res;
         }
         if ((exp).substr(0, 1) == '+') {
-            n = this._yapi.imm_atoi((exp).substr(1, explen - 1));
+            n = YAPIContext.imm_atoi((exp).substr(1, explen - 1));
             res = new Uint8Array(1);
             if (n > 30 * 86400) {
                 n = 192 + ((((n + 6 * 86400)) / ((7 * 86400))) >> 0);
@@ -922,7 +922,7 @@ export class YSms {
             await newpdu.set_userData(newud);
             this._parts.push(newpdu);
         }
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async generatePdu() {
         let sca;
@@ -1006,7 +1006,7 @@ export class YSms {
             i = i + 1;
         }
         this._npdu = 1;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async parseUserDataHeader() {
         let udhlen;
@@ -1041,7 +1041,7 @@ export class YSms {
             }
             i = i + ielen;
         }
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     async parsePdu(pdu) {
         let rpos;
@@ -1165,7 +1165,7 @@ export class YSms {
             }
         }
         await this.parseUserDataHeader();
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
     /**
      * Sends the SMS to the recipient. Messages of more than 160 characters are supported
@@ -1185,9 +1185,9 @@ export class YSms {
         if (this._npdu == 1) {
             return await this._mbox._upload('sendSMS', this._pdu);
         }
-        retcode = this._yapi.SUCCESS;
+        retcode = YAPI.SUCCESS;
         i = 0;
-        while ((i < this._npdu) && (retcode == this._yapi.SUCCESS)) {
+        while ((i < this._npdu) && (retcode == YAPI.SUCCESS)) {
             pdu = this._parts[i];
             retcode = await pdu.send();
             i = i + 1;
@@ -1201,9 +1201,9 @@ export class YSms {
         if (this._npdu < 2) {
             return await this._mbox.clearSIMSlot(this._slot);
         }
-        retcode = this._yapi.SUCCESS;
+        retcode = YAPI.SUCCESS;
         i = 0;
-        while ((i < this._npdu) && (retcode == this._yapi.SUCCESS)) {
+        while ((i < this._npdu) && (retcode == YAPI.SUCCESS)) {
             pdu = this._parts[i];
             retcode = await pdu.deleteFromSIM();
             i = i + 1;
@@ -1231,6 +1231,7 @@ export class YMessageBox extends YFunction {
         this._slotsBitmap = YMessageBox.SLOTSBITMAP_INVALID;
         this._pduSent = YMessageBox.PDUSENT_INVALID;
         this._pduReceived = YMessageBox.PDURECEIVED_INVALID;
+        this._obey = YMessageBox.OBEY_INVALID;
         this._command = YMessageBox.COMMAND_INVALID;
         this._valueCallbackMessageBox = null;
         this._nextMsgRef = 0;
@@ -1246,6 +1247,7 @@ export class YMessageBox extends YFunction {
         this.SLOTSBITMAP_INVALID = YAPI.INVALID_STRING;
         this.PDUSENT_INVALID = YAPI.INVALID_UINT;
         this.PDURECEIVED_INVALID = YAPI.INVALID_UINT;
+        this.OBEY_INVALID = YAPI.INVALID_STRING;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this._className = 'MessageBox';
         //--- (end of generated code: YMessageBox constructor)
@@ -1267,6 +1269,9 @@ export class YMessageBox extends YFunction {
                 return 1;
             case 'pduReceived':
                 this._pduReceived = val;
+                return 1;
+            case 'obey':
+                this._obey = val;
                 return 1;
             case 'command':
                 this._command = val;
@@ -1379,6 +1384,51 @@ export class YMessageBox extends YFunction {
         let rest_val;
         rest_val = String(newval);
         return await this._setAttr('pduReceived', rest_val);
+    }
+    /**
+     * Returns the phone number authorized to send remote management commands.
+     * When a phone number is specified, the hub will take contre of all incoming
+     * SMS messages: it will execute commands coming from the authorized number,
+     * and delete all messages once received (whether authorized or not).
+     * If you need to receive SMS messages using your own software, leave this
+     * attribute empty.
+     *
+     * @return a string corresponding to the phone number authorized to send remote management commands
+     *
+     * On failure, throws an exception or returns YMessageBox.OBEY_INVALID.
+     */
+    async get_obey() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YMessageBox.OBEY_INVALID;
+            }
+        }
+        res = this._obey;
+        return res;
+    }
+    /**
+     * Changes the phone number authorized to send remote management commands.
+     * The phone number usually starts with a '+' and does not include spacers.
+     * When a phone number is specified, the hub will take contre of all incoming
+     * SMS messages: it will execute commands coming from the authorized number,
+     * and delete all messages once received (whether authorized or not).
+     * If you need to receive SMS messages using your own software, leave this
+     * attribute empty. Remember to call the saveToFlash() method of the
+     * module if the modification must be kept.
+     *
+     * This feature is only available since YoctoHub-GSM-4G.
+     *
+     * @param newval : a string corresponding to the phone number authorized to send remote management commands
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_obey(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('obey', rest_val);
     }
     async get_command() {
         let res;
@@ -1505,7 +1555,7 @@ export class YMessageBox extends YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -2257,5 +2307,6 @@ YMessageBox.SLOTSCOUNT_INVALID = YAPI.INVALID_UINT;
 YMessageBox.SLOTSBITMAP_INVALID = YAPI.INVALID_STRING;
 YMessageBox.PDUSENT_INVALID = YAPI.INVALID_UINT;
 YMessageBox.PDURECEIVED_INVALID = YAPI.INVALID_UINT;
+YMessageBox.OBEY_INVALID = YAPI.INVALID_STRING;
 YMessageBox.COMMAND_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_messagebox.js.map

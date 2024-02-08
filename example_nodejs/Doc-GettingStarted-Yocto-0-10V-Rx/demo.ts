@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  An example that show how to use a  Yocto-0-10V-Rx
+ *  An example that shows how to use a  Yocto-0-10V-Rx
  *
  *  You can find more information on our web site:
  *   Yocto-0-10V-Rx documentation:

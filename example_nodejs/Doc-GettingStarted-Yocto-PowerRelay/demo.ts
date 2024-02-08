@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  An example that show how to use a  Yocto-PowerRelay
+ *  An example that shows how to use a  Yocto-PowerRelay
  *
  *  You can find more information on our web site:
  *   Yocto-PowerRelay documentation:
@@ -16,7 +16,7 @@
  *
  *  $Id: demo.js 32717 2018-10-19 15:58:17Z seb $
  *
- *  An example that show how to use a  Yocto-PowerRelay
+ *  An example that shows how to use a  Yocto-PowerRelay
  *
  *  You can find more information on our web site:
  *   Yocto-PowerRelay documentation:

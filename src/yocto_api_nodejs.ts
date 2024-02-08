@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 53821 2023-04-03 14:31:23Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 55358 2023-06-28 09:00:27Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -70,9 +70,9 @@ export class YSystemEnvNodeJs extends YSystemEnv
     isNodeJS: boolean = true;
     hasSSDP: boolean = true;
 
-    hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback)
+    hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback):void
     {
-        process.on('unhandledRejection', (reason: object, promise: Promise<void>) => {
+        process.on('unhandledRejection', (reason: object, promise: Promise<void>):void => {
             handler(reason, promise);
         });
     }
@@ -104,8 +104,8 @@ export class YSystemEnvNodeJs extends YSystemEnv
 
     loadfile(file: string | Blob): Promise<Uint8Array>
     {
-        return new Promise<Uint8Array>((resolve, reject) => {
-            fs.readFile(<string>file, (err: Error | null, data: Buffer) => {
+        return new Promise<Uint8Array>((resolve, reject):void => {
+            fs.readFile(<string>file, (err: Error | null, data: Buffer):void => {
                 if (err) {
                     reject(err);
                 } else {
@@ -117,8 +117,8 @@ export class YSystemEnvNodeJs extends YSystemEnv
 
     downloadfile(url: string): Promise<Uint8Array>
     {
-        return new Promise<Uint8Array>((resolve, reject) => {
-            http.get(url, (res: http.IncomingMessage) => {
+        return new Promise<Uint8Array>((resolve, reject):void => {
+            http.get(url, (res: http.IncomingMessage):void => {
                 if (res.statusCode != 200 && res.statusCode != 304) {
                     if (res.statusCode) {
                         reject(new Error('HTTP error ' + res.statusCode));
@@ -127,14 +127,14 @@ export class YSystemEnvNodeJs extends YSystemEnv
                     }
                 } else {
                     let response = Buffer.alloc(0);
-                    res.on('data', (chunk: Buffer) => {
+                    res.on('data', (chunk: Buffer):void => {
                         response = Buffer.concat([response, chunk]);
                     });
-                    res.on('end', () => {
+                    res.on('end', ():void => {
                         resolve(new Uint8Array(response));
                     })
                 }
-            }).on('error', (e: Error) => {
+            }).on('error', (e: Error):void => {
                 reject(new Error('HTTP error: ' + e.message));
             });
         });
@@ -167,11 +167,11 @@ class YHttpCallbackHub extends YGenericHub
         this._serverResponse = serverResponse;
         this._callbackData = Buffer.alloc(0);
         this.httpCallbackPromise = new Promise<boolean>(
-            (resolve, reject) => {
-                cbhub._incomingMessage.on('data', (chunk: Buffer) => {
+            (resolve, reject):void => {
+                cbhub._incomingMessage.on('data', (chunk: Buffer):void => {
                     cbhub._callbackData = Buffer.concat([cbhub._callbackData,chunk]);
                 });
-                cbhub._incomingMessage.on('end', () => {
+                cbhub._incomingMessage.on('end', ():void => {
                     cbhub._callbackData = new Uint8Array(cbhub._callbackData);
                     cbhub._callbackCache = JSON.parse(cbhub._yapi.imm_bin2str(cbhub._callbackData));
                     resolve(true);
@@ -328,12 +328,12 @@ class YHttpNodeHub extends YHttpHub
         let response: Buffer = Buffer.alloc(0);
         let endReceived: Boolean = false;
         let closeWithoutEndTimeout: NodeJS.Timeout|null = null;
-        let httpRequest: http.ClientRequest = http.request(options, (res: http.IncomingMessage) => {
+        let httpRequest: http.ClientRequest = http.request(options, (res: http.IncomingMessage):void => {
             if (this.imm_isDisconnecting()) {
                 return;
             }
             if(res.statusCode == 200 || res.statusCode == 304) {
-                res.on('data', (chunk: Buffer) => {
+                res.on('data', (chunk: Buffer):void => {
                     if (this.imm_isDisconnecting()) {
                         return;
                     }
@@ -345,7 +345,7 @@ class YHttpNodeHub extends YHttpHub
                         response = Buffer.concat([response, chunk]);
                     }
                 });
-                res.on('end', () => {
+                res.on('end', ():void => {
                     endReceived = true;
                     if (closeWithoutEndTimeout) {
                         clearTimeout(closeWithoutEndTimeout);
@@ -369,20 +369,20 @@ class YHttpNodeHub extends YHttpHub
                 onError(YAPI.IO_ERROR, 'HTTP request failed with status '+res.statusCode);
             }
         });
-        httpRequest.on('close', () => {
+        httpRequest.on('close', ():void => {
             if(!endReceived) {
                 if (httpRequest.destroyed) {
                     onError(YAPI.IO_ERROR, 'HTTP request aborted');
                 } else {
                     // Allow 100ms to receive a proper 'end' event, or declare the request as aborted
                     // This should normally not be needed, but better safe than sorry
-                    closeWithoutEndTimeout = setTimeout(() => {
+                    closeWithoutEndTimeout = setTimeout(():void => {
                         onError(YAPI.IO_ERROR, 'HTTP request closed unexpectedly');
                     }, 100);
                 }
             }
         });
-        httpRequest.on('error', (err: Error) => {
+        httpRequest.on('error', (err: Error):void => {
             onError(YAPI.IO_ERROR, 'HTTP request failed: '+err.message);
         });
         if(bodyBuff !== null) {
@@ -423,7 +423,7 @@ class YWebSocketNodeHub extends YWebSocketHub
      *
      * @param arr_bytes {Uint8Array}
      **/
-    imm_webSocketSend(arr_bytes: Uint8Array)
+    imm_webSocketSend(arr_bytes: Uint8Array):void
     {
         if(this.websocket) {
             this.websocket.send(arr_bytes, { binary: true, mask: false });
@@ -448,7 +448,7 @@ class YWebSocketCallbackHub extends YWebSocketNodeHub
      *
      * @param str_url {string}
      **/
-    imm_webSocketOpen(str_url: string)
+    imm_webSocketOpen(str_url: string):void
     {
         // nothing to do, the ws is already open !
     }
@@ -476,18 +476,18 @@ export class YNodeSSDPManager extends YGenericSSDPManager
                 if(ipaddr === '127.0.0.1') continue;
                 if(this._request_sock[ipaddr]) continue;
                 let request_sock = dgram.createSocket({ type: 'udp4' });
-                request_sock.on('message', (msg: Buffer, info: object) => {
+                request_sock.on('message', (msg: Buffer, info: object):void => {
                     this.ySSDPParseMessage(msg.toString());
                 });
-                await new Promise<void>((resolve, reject) => {
-                    request_sock.bind(0, ipaddr, () => { resolve(); });
+                await new Promise<void>((resolve, reject):void => {
+                    request_sock.bind(0, ipaddr, ():void => { resolve(); });
                 });
                 let notify_sock = dgram.createSocket({ type: 'udp4', reuseAddr: true });
-                notify_sock.on('message', (msg: Buffer, info: object) => {
+                notify_sock.on('message', (msg: Buffer, info: object):void => {
                     this.ySSDPParseMessage(msg.toString());
                 });
-                await new Promise<void>((resolve, reject) => {
-                    notify_sock.bind(this.YSSDP_PORT, () => {
+                await new Promise<void>((resolve, reject):void => {
+                    notify_sock.bind(this.YSSDP_PORT, ():void => {
                         notify_sock.addMembership(this.YSSDP_MCAST_ADDR_STR, ipaddr);
                         resolve();
                     });

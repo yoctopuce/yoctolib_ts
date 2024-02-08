@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -65,12 +69,15 @@ __exportStar(require("./yocto_rangefinder.js"), exports);
 __exportStar(require("./yocto_realtimeclock.js"), exports);
 __exportStar(require("./yocto_refframe.js"), exports);
 __exportStar(require("./yocto_relay.js"), exports);
+__exportStar(require("./yocto_rfidreader.js"), exports);
+__exportStar(require("./yocto_sdi12port.js"), exports);
 __exportStar(require("./yocto_segmenteddisplay.js"), exports);
 __exportStar(require("./yocto_serialport.js"), exports);
 __exportStar(require("./yocto_servo.js"), exports);
 __exportStar(require("./yocto_spiport.js"), exports);
 __exportStar(require("./yocto_steppermotor.js"), exports);
 __exportStar(require("./yocto_temperature.js"), exports);
+__exportStar(require("./yocto_threshold.js"), exports);
 __exportStar(require("./yocto_tilt.js"), exports);
 __exportStar(require("./yocto_tvoc.js"), exports);
 __exportStar(require("./yocto_voc.js"), exports);

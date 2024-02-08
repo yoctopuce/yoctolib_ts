@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_refframe.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -146,7 +146,7 @@ export class YRefFrame extends YFunction
 
     //--- (YRefFrame implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'mountPos':
@@ -409,7 +409,7 @@ export class YRefFrame extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -621,7 +621,7 @@ export class YRefFrame extends YFunction
             await this.cancel3DCalibration();
         }
         this._calibSavedParams = await this.get_calibrationParam();
-        this._calibV2 = (this._yapi.imm_atoi(this._calibSavedParams) == 33);
+        this._calibV2 = (YAPIContext.imm_atoi(this._calibSavedParams) == 33);
         await this.set_calibrationParam('0');
         this._calibCount = 50;
         this._calibStage = 1;
@@ -688,9 +688,9 @@ export class YRefFrame extends YFunction
         this._calibStageHint = 'Set down the device on a steady horizontal surface';
         this._calibPrevTick = ((currTick + 500) & (0x7FFFFFFF));
         jsonData = await this._download('api/accelerometer.json');
-        xVal = this._yapi.imm_atoi(this.imm_json_get_key(jsonData, 'xValue')) / 65536.0;
-        yVal = this._yapi.imm_atoi(this.imm_json_get_key(jsonData, 'yValue')) / 65536.0;
-        zVal = this._yapi.imm_atoi(this.imm_json_get_key(jsonData, 'zValue')) / 65536.0;
+        xVal = YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'xValue')) / 65536.0;
+        yVal = YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'yValue')) / 65536.0;
+        zVal = YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'zValue')) / 65536.0;
         xSq = xVal * xVal;
         if (xSq >= 0.04 && xSq < 0.64) {
             return this._yapi.SUCCESS;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_servo.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_servo.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -78,7 +78,7 @@ export declare class YServo extends YFunction {
     static readonly ENABLEDATPOWERON_TRUE: YServo.ENABLEDATPOWERON;
     static readonly ENABLEDATPOWERON_INVALID: YServo.ENABLEDATPOWERON;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the current servo position.
      *

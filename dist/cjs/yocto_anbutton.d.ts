@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_anbutton.ts 56268 2023-08-25 17:43:56Z mvuilleu $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -82,6 +82,7 @@ export declare class YAnButton extends YFunction {
     readonly INPUTTYPE_ANALOG_FAST: YAnButton.INPUTTYPE;
     readonly INPUTTYPE_DIGITAL4: YAnButton.INPUTTYPE;
     readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton.INPUTTYPE;
+    readonly INPUTTYPE_DIGITAL_FAST: YAnButton.INPUTTYPE;
     readonly INPUTTYPE_INVALID: YAnButton.INPUTTYPE;
     static readonly CALIBRATEDVALUE_INVALID: number;
     static readonly RAWVALUE_INVALID: number;
@@ -101,9 +102,10 @@ export declare class YAnButton extends YFunction {
     static readonly INPUTTYPE_ANALOG_FAST: YAnButton.INPUTTYPE;
     static readonly INPUTTYPE_DIGITAL4: YAnButton.INPUTTYPE;
     static readonly INPUTTYPE_ANALOG_SMOOTH: YAnButton.INPUTTYPE;
+    static readonly INPUTTYPE_DIGITAL_FAST: YAnButton.INPUTTYPE;
     static readonly INPUTTYPE_INVALID: YAnButton.INPUTTYPE;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the current calibrated input value (between 0 and 1000, included).
      *
@@ -263,9 +265,9 @@ export declare class YAnButton extends YFunction {
     /**
      * Returns the decoding method applied to the input (analog or multiplexed binary switches).
      *
-     * @return a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4 and
-     * YAnButton.INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog
-     * or multiplexed binary switches)
+     * @return a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4,
+     * YAnButton.INPUTTYPE_ANALOG_SMOOTH and YAnButton.INPUTTYPE_DIGITAL_FAST corresponding to the
+     * decoding method applied to the input (analog or multiplexed binary switches)
      *
      * On failure, throws an exception or returns YAnButton.INPUTTYPE_INVALID.
      */
@@ -274,9 +276,9 @@ export declare class YAnButton extends YFunction {
      * Changes the decoding method applied to the input (analog or multiplexed binary switches).
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4 and
-     * YAnButton.INPUTTYPE_ANALOG_SMOOTH corresponding to the decoding method applied to the input (analog
-     * or multiplexed binary switches)
+     * @param newval : a value among YAnButton.INPUTTYPE_ANALOG_FAST, YAnButton.INPUTTYPE_DIGITAL4,
+     * YAnButton.INPUTTYPE_ANALOG_SMOOTH and YAnButton.INPUTTYPE_DIGITAL_FAST corresponding to the
+     * decoding method applied to the input (analog or multiplexed binary switches)
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -408,6 +410,7 @@ export declare namespace YAnButton {
         ANALOG_FAST = 0,
         DIGITAL4 = 1,
         ANALOG_SMOOTH = 2,
+        DIGITAL_FAST = 3,
         INVALID = -1
     }
     interface ValueCallback {

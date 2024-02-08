@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multiaxiscontroller.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_multiaxiscontroller.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for MultiAxisController functions
  *
@@ -68,7 +68,7 @@ export declare class YMultiAxisController extends YFunction {
     static readonly GLOBALSTATE_INVALID: YMultiAxisController.GLOBALSTATE;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the number of synchronized controllers.
      *

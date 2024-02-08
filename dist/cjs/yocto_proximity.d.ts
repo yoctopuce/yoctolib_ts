@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_proximity.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -94,7 +94,7 @@ export declare class YProximity extends YSensor {
     static readonly PROXIMITYREPORTMODE_PULSECOUNT: YProximity.PROXIMITYREPORTMODE;
     static readonly PROXIMITYREPORTMODE_INVALID: YProximity.PROXIMITYREPORTMODE;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the current value of signal measured by the proximity sensor.
      *

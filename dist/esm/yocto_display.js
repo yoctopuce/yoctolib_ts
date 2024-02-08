@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_display.ts 56072 2023-08-15 13:47:48Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -86,7 +86,7 @@ export class YDisplayLayer {
     }
     // internal function to flush any pending command for this layer
     async flush_now() {
-        var res = YAPI.SUCCESS;
+        let res = YAPI.SUCCESS;
         if (this._cmdbuff != '') {
             res = await this._display.sendCommand(this._cmdbuff);
             this._cmdbuff = '';
@@ -95,7 +95,7 @@ export class YDisplayLayer {
     }
     // internal function to buffer a command for this layer
     async command_push(str_cmd) {
-        var res = YAPI.SUCCESS;
+        let res = YAPI.SUCCESS;
         if (this._cmdbuff.length + str_cmd.length >= 100) {
             // force flush before, to prevent overflow
             res = await this.flush_now();
@@ -109,7 +109,7 @@ export class YDisplayLayer {
     }
     // internal function to send a command for this layer
     async command_flush(str_cmd) {
-        var res = await this.command_push(str_cmd);
+        const res = await this.command_push(str_cmd);
         if (this._hidden) {
             return res;
         }
@@ -552,7 +552,7 @@ export class YDisplayLayer {
     }
     async resetHiddenFlag() {
         this._hidden = false;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
 }
 // API symbols as static members
@@ -1036,7 +1036,7 @@ export class YDisplay extends YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -1280,7 +1280,7 @@ export class YDisplay extends YFunction {
     //--- (end of generated code: YDisplay implementation)
     async flushLayers() {
         if (this._allDisplayLayers) {
-            for (var i = 0; i < this._allDisplayLayers.length; i++) {
+            for (let i = 0; i < this._allDisplayLayers.length; i++) {
                 if (this._allDisplayLayers[i].imm_must_be_flushed()) {
                     await this._allDisplayLayers[i].flush_now();
                 }
@@ -1290,14 +1290,14 @@ export class YDisplay extends YFunction {
     }
     async resetHiddenLayerFlags() {
         if (this._allDisplayLayers) {
-            for (var i = 0; i < this._allDisplayLayers.length; i++) {
+            for (let i = 0; i < this._allDisplayLayers.length; i++) {
                 await this._allDisplayLayers[i].resetHiddenFlag();
             }
         }
     }
     imm_resetHiddenLayerFlags() {
         if (this._allDisplayLayers) {
-            for (var i = 0; i < this._allDisplayLayers.length; i++) {
+            for (let i = 0; i < this._allDisplayLayers.length; i++) {
                 this._allDisplayLayers[i].imm_resetHiddenFlag();
             }
         }

@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  An example that show how to use a  Yocto-WatchdogDC
+ *  An example that shows how to use a  Yocto-WatchdogDC
  *
  *  You can find more information on our web site:
  *   Yocto-WatchdogDC documentation:

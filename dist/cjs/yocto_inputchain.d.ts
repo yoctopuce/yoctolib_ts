@@ -59,7 +59,7 @@ export declare class YInputChain extends YFunction {
     _watchdogPeriod: number;
     _chainDiags: number;
     _valueCallbackInputChain: YInputChain.ValueCallback | null;
-    _eventCallback: YInputChain.EventCallback | null;
+    _stateChangeCallback: YInputChain.YStateChangeCallback | null;
     _prevPos: number;
     _eventPos: number;
     _eventStamp: number;
@@ -95,7 +95,7 @@ export declare class YInputChain extends YFunction {
     static readonly WATCHDOGPERIOD_INVALID: number;
     static readonly CHAINDIAGS_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     _internalEventCallback(YInputChain_obj: YInputChain, str_value: string): Promise<void>;
     /**
      * Returns the number of nodes expected in the chain.
@@ -388,7 +388,7 @@ export declare class YInputChain extends YFunction {
      *         the type of event and a character string with the event data.
      *         On failure, throws an exception or returns a negative error code.
      */
-    registerEventCallback(callback: YInputChain.EventCallback | null): Promise<number>;
+    registerStateChangeCallback(callback: YInputChain.YStateChangeCallback | null): Promise<number>;
     _internalEventHandler(cbpos: string): Promise<number>;
     _strXor(a: string, b: string): Promise<string>;
     hex2array(hexstr: string): Promise<number[]>;
@@ -435,7 +435,7 @@ export declare namespace YInputChain {
     interface ValueCallback {
         (func: YInputChain, value: string): void;
     }
-    interface EventCallback {
+    interface YStateChangeCallback {
         (func: YInputChain, timestampr: number, evtType: string, eventData: string, eventChange: string): void;
     }
 }

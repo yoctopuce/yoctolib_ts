@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_rangefinder.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -99,7 +99,7 @@ export class YRangeFinder extends YSensor
 
     //--- (YRangeFinder implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'rangeFinderMode':
@@ -420,7 +420,7 @@ export class YRangeFinder extends YSensor
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -458,7 +458,7 @@ export class YRangeFinder extends YSensor
                 this._yapi.imm_log('Exception in timedReportCallback:', e);
             }
         } else {
-            super._invokeTimedReportCallback(value);
+            await super._invokeTimedReportCallback(value);
         }
         return 0;
     }
@@ -478,7 +478,7 @@ export class YRangeFinder extends YSensor
         if (!((hwcal).substr(0, 1) == '@')) {
             return this._yapi.INVALID_DOUBLE;
         }
-        return this._yapi.imm_atoi((hwcal).substr(1, (hwcal).length));
+        return YAPIContext.imm_atoi((hwcal).substr(1, (hwcal).length));
     }
 
     /**

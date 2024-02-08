@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_cellular.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -274,7 +274,7 @@ export class YCellular extends YFunction
 
     //--- (generated code: YCellular implementation)
 
-    imm_parseAttr(name: string, val: any)
+    imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
         case 'linkQuality':
@@ -984,7 +984,7 @@ export class YCellular extends YFunction
                 this._yapi.imm_log('Exception in valueCallback:', e);
             }
         } else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -1193,7 +1193,7 @@ export class YCellular extends YFunction
         if ((mccs).substr(0, 1) == '0') {
             mccs = (mccs).substr(1, 1);
         }
-        mcc = this._yapi.imm_atoi(mccs);
+        mcc = YAPIContext.imm_atoi(mccs);
         mncs = (moni).substr(11, 3);
         if ((mncs).substr(2, 1) == ',') {
             mncs = (mncs).substr(0, 2);
@@ -1201,7 +1201,7 @@ export class YCellular extends YFunction
         if ((mncs).substr(0, 1) == '0') {
             mncs = (mncs).substr(1, (mncs).length-1);
         }
-        mnc = this._yapi.imm_atoi(mncs);
+        mnc = YAPIContext.imm_atoi(mncs);
         recs = (moni).split('#');
         // process each line in turn
         res.length = 0;
@@ -1215,13 +1215,13 @@ export class YCellular extends YFunction
                     if ((dbms).substr(0, 1) == ' ') {
                         dbms = (dbms).substr(1, 3);
                     }
-                    dbm = this._yapi.imm_atoi(dbms);
+                    dbm = YAPIContext.imm_atoi(dbms);
                     if (llen > 66) {
                         tads = (recs[ii]).substr(54, 2);
                         if ((tads).substr(0, 1) == ' ') {
                             tads = (tads).substr(1, 3);
                         }
-                        tad = this._yapi.imm_atoi(tads);
+                        tad = YAPIContext.imm_atoi(tads);
                         oper = (recs[ii]).substr(66, llen-66);
                     } else {
                         tad = -1;
@@ -1249,7 +1249,7 @@ export class YCellular extends YFunction
         if (inputlen < 5) {
             return mccmnc;
         }
-        mcc = this._yapi.imm_atoi((mccmnc).substr(0, 3));
+        mcc = YAPIContext.imm_atoi((mccmnc).substr(0, 3));
         if (mcc < 200) {
             return mccmnc;
         }
@@ -1261,7 +1261,7 @@ export class YCellular extends YFunction
         plmnid = mcc;
         while (plmnid < 100000 && npos < inputlen) {
             ch = (mccmnc).substr(npos, 1);
-            nval = this._yapi.imm_atoi(ch);
+            nval = YAPIContext.imm_atoi(ch);
             if (ch == (nval).toString()) {
                 plmnid = plmnid * 10 + nval;
                 npos = npos + 1;
@@ -5720,7 +5720,7 @@ export class YCellular extends YFunction
             line = lines[idx];
             cpos = (line).indexOf(':');
             if (cpos > 0) {
-                profno = this._yapi.imm_atoi((line).substr(0, cpos));
+                profno = YAPIContext.imm_atoi((line).substr(0, cpos));
                 if (profno > 1) {
                     res.push(line);
                 }

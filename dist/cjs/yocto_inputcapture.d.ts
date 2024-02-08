@@ -359,7 +359,7 @@ export declare class YInputCapture extends YSensor {
     static readonly CAPTURETYPEATSTARTUP_INVALID: YInputCapture.CAPTURETYPEATSTARTUP;
     static readonly CONDVALUEATSTARTUP_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the number of elapsed milliseconds between the module power on
      * and the last capture (time of trigger), or zero if no capture has been done.

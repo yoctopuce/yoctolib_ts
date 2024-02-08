@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_wireless.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -60,7 +60,7 @@ class YWlanRecord {
         this._rssi = 0;
         //--- (generated code: YWlanRecord constructor)
         //--- (end of generated code: YWlanRecord constructor)
-        var loadval = JSON.parse(str_json);
+        const loadval = JSON.parse(str_json);
         this._ssid = loadval.ssid;
         this._channel = loadval.channel;
         this._sec = loadval.sec;
@@ -418,7 +418,7 @@ class YWireless extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

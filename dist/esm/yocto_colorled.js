@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorled.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_colorled.ts 56017 2023-08-14 08:47:38Z mvuilleu $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -158,9 +158,9 @@ export class YColorLed extends YFunction {
         return res;
     }
     /**
-     * Changes the current color of the LED, using a color HSL. Encoding is done as follows: 0xHHSSLL.
+     * Changes the current color of the LED, using a specific HSL color. Encoding is done as follows: 0xHHSSLL.
      *
-     * @param newval : an integer corresponding to the current color of the LED, using a color HSL
+     * @param newval : an integer corresponding to the current color of the LED, using a specific HSL color
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -300,12 +300,12 @@ export class YColorLed extends YFunction {
         return res;
     }
     /**
-     * Return the blinking sequence signature. Since blinking
+     * Returns the blinking sequence signature. Since blinking
      * sequences cannot be read from the device, this can be used
      * to detect if a specific blinking sequence is already
      * programmed.
      *
-     * @return an integer
+     * @return an integer corresponding to the blinking sequence signature
      *
      * On failure, throws an exception or returns YColorLed.BLINKSEQSIGNATURE_INVALID.
      */
@@ -444,7 +444,7 @@ export class YColorLed extends YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }

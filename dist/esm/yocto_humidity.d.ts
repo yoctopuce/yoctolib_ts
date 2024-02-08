@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_humidity.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -56,7 +56,7 @@ export declare class YHumidity extends YSensor {
     static readonly RELHUM_INVALID: number;
     static readonly ABSHUM_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the primary unit for measuring humidity. That unit is a string.
      * If that strings starts with the letter 'g', the primary measured value is the absolute

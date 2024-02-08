@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -106,7 +110,7 @@ function checkExamples() {
                 let pkgjson = dir + '/' + exdir + '/package.json';
                 let modules = dir + '/' + exdir + '/node_modules';
                 if (fs.existsSync(pkgjson) && !fs.existsSync(modules)) {
-                    child_process_1.execSync('cd ' + dir + '/' + exdir + ' && npm install', { stdio: [0, 1, 2] });
+                    (0, child_process_1.execSync)('cd ' + dir + '/' + exdir + ' && npm install', { stdio: [0, 1, 2] });
                 }
                 const options = {
                     noEmitOnError: true,

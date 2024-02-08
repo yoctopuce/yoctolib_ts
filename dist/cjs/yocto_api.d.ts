@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 54721 2023-05-23 09:58:57Z seb $
+ * $Id: yocto_api.ts 59221 2024-02-05 15:46:32Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -52,6 +52,9 @@ export declare const YAPI_UNAUTHORIZED: number;
 export declare const YAPI_RTC_NOT_READY: number;
 export declare const YAPI_FILE_NOT_FOUND: number;
 export declare const YAPI_SSL_ERROR: number;
+export declare const YAPI_RFID_SOFT_ERROR: number;
+export declare const YAPI_RFID_HARD_ERROR: number;
+export declare const YAPI_BUFFER_TOO_SMALL: number;
 export declare const YAPI_INVALID_INT: number;
 export declare const YAPI_INVALID_UINT: number;
 export declare const YAPI_INVALID_LONG: number;
@@ -1131,7 +1134,7 @@ export declare class YFunction {
     constructor(obj_yapi: YAPIContext, str_func: string);
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
     isReadOnly_internal(): Promise<boolean>;
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the logical name of the function.
      *
@@ -1787,12 +1790,13 @@ export declare class YModule extends YFunction {
      */
     functionId(functionIndex: number): Promise<string>;
     /**
-     * Retrieves the type of the <i>n</i>th function on the module.
+     * Retrieves the type of the <i>n</i>th function on the module. Yoctopuce functions type names match
+     * their class names without the <i>Y</i> prefix, for instance <i>Relay</i>, <i>Temperature</i> etc..
      *
      * @param functionIndex : the index of the function for which the information is desired, starting at
      * 0 for the first function.
      *
-     * @return a string corresponding to the type of the function
+     * @return a string corresponding to the type of the function.
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1846,7 +1850,7 @@ export declare class YModule extends YFunction {
     get_parentHub_internal(): Promise<string>;
     get_url_internal(): Promise<string>;
     _startStopDevLog_internal(str_serial: string, bool_start: boolean): Promise<void>;
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the commercial name of the module, as set by the factory.
      *
@@ -2419,7 +2423,7 @@ export declare class YSensor extends YFunction {
     static readonly RESOLUTION_INVALID: number;
     static readonly SENSORSTATE_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the measuring unit for the measure.
      *
@@ -2962,7 +2966,7 @@ export declare class YDataLogger extends YFunction {
     static readonly CLEARHISTORY_TRUE: YDataLogger.CLEARHISTORY;
     static readonly CLEARHISTORY_INVALID: YDataLogger.CLEARHISTORY;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the current run number, corresponding to the number of times the module was
      * powered on with the dataLogger enabled at some point.
@@ -3308,7 +3312,7 @@ export declare abstract class YGenericHub {
     imm_getNewConnID(): string;
     imm_tryTestConnectFor(mstimeout: number): void;
     /** Trigger the setup of a connection to the target hub, and return.
-     * This method uses a connection helper that is overriden by each type of hub.
+     * This method uses a connection helper that is overridden by each type of hub.
      *
      * @param targetConnType {Y_YHubConnType}
      */
@@ -3355,7 +3359,6 @@ export declare abstract class YGenericHub {
     /** Wait until the hub is fully disconnected
      *
      * @param mstimeout {number}
-     * @param errmsg {YErrorMsg}
      * @returns {number}
      */
     waitForDisconnection(mstimeout: number): Promise<void>;
@@ -3610,7 +3613,7 @@ export declare abstract class YGenericSSDPManager {
     ySSDPUpdateCache(str_uuid: string, str_url: string, int_cacheValidity: number): Promise<void>;
     ySSDPParseMessage(str_msg: string): Promise<void>;
     ySSDPCheckExpiration(): Promise<void>;
-    ySSDPStart(func_callback: Function): Promise<number | undefined>;
+    ySSDPStart(func_callback: Function): Promise<number>;
     ySSDPStop(): Promise<void>;
     ySSDPDiscover(): Promise<void>;
 }
@@ -3816,6 +3819,9 @@ export declare class YAPIContext {
     readonly RTC_NOT_READY: number;
     readonly FILE_NOT_FOUND: number;
     readonly SSL_ERROR: number;
+    readonly RFID_SOFT_ERROR: number;
+    readonly RFID_HARD_ERROR: number;
+    readonly BUFFER_TOO_SMALL: number;
     defaultCacheValidity: number;
     static readonly SUCCESS: number;
     static readonly NOT_INITIALIZED: number;
@@ -3833,6 +3839,9 @@ export declare class YAPIContext {
     static readonly RTC_NOT_READY: number;
     static readonly FILE_NOT_FOUND: number;
     static readonly SSL_ERROR: number;
+    static readonly RFID_SOFT_ERROR: number;
+    static readonly RFID_HARD_ERROR: number;
+    static readonly BUFFER_TOO_SMALL: number;
     readonly INVALID_INT: number;
     readonly INVALID_UINT: number;
     readonly INVALID_LONG: number;
@@ -3902,7 +3911,7 @@ export declare class YAPIContext {
      * @param str_data {string}
      * @return {number}
      */
-    imm_atoi(str_data: string): number;
+    static imm_atoi(str_data: string): number;
     /** Convert a binary object to string
      *
      * @param bin_data {Uint8Array}

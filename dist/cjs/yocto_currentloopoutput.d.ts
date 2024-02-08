@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_currentloopoutput.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -66,7 +66,7 @@ export declare class YCurrentLoopOutput extends YFunction {
     static readonly LOOPPOWER_POWEROK: YCurrentLoopOutput.LOOPPOWER;
     static readonly LOOPPOWER_INVALID: YCurrentLoopOutput.LOOPPOWER;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the current loop, the valid range is from 3 to 21mA. If the loop is
      * not properly powered, the  target current is not reached and

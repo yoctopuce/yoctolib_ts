@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_refframe.ts 55804 2023-08-02 10:03:26Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -353,7 +353,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
             }
         }
         else {
-            super._invokeValueCallback(value);
+            await super._invokeValueCallback(value);
         }
         return 0;
     }
@@ -550,7 +550,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
             await this.cancel3DCalibration();
         }
         this._calibSavedParams = await this.get_calibrationParam();
-        this._calibV2 = (this._yapi.imm_atoi(this._calibSavedParams) == 33);
+        this._calibV2 = (yocto_api_js_1.YAPIContext.imm_atoi(this._calibSavedParams) == 33);
         await this.set_calibrationParam('0');
         this._calibCount = 50;
         this._calibStage = 1;
@@ -613,9 +613,9 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         this._calibStageHint = 'Set down the device on a steady horizontal surface';
         this._calibPrevTick = ((currTick + 500) & (0x7FFFFFFF));
         jsonData = await this._download('api/accelerometer.json');
-        xVal = this._yapi.imm_atoi(this.imm_json_get_key(jsonData, 'xValue')) / 65536.0;
-        yVal = this._yapi.imm_atoi(this.imm_json_get_key(jsonData, 'yValue')) / 65536.0;
-        zVal = this._yapi.imm_atoi(this.imm_json_get_key(jsonData, 'zValue')) / 65536.0;
+        xVal = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'xValue')) / 65536.0;
+        yVal = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'yValue')) / 65536.0;
+        zVal = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'zValue')) / 65536.0;
         xSq = xVal * xVal;
         if (xSq >= 0.04 && xSq < 0.64) {
             return this._yapi.SUCCESS;

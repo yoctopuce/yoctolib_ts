@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_wakeupmonitor.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -83,7 +83,7 @@ export declare class YWakeUpMonitor extends YFunction {
     static readonly WAKEUPSTATE_INVALID: YWakeUpMonitor.WAKEUPSTATE;
     static readonly RTCTIME_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Returns the maximal wake up time (in seconds) before automatically going to sleep.
      *

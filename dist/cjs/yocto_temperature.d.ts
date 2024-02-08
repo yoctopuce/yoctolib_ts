@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_temperature.ts 55359 2023-06-28 09:25:04Z seb $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -100,7 +100,7 @@ export declare class YTemperature extends YSensor {
     static readonly SIGNALUNIT_INVALID: string;
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
-    imm_parseAttr(name: string, val: any): 0 | 1;
+    imm_parseAttr(name: string, val: any): number;
     /**
      * Changes the measuring unit for the measured temperature. That unit is a string.
      * If that strings end with the letter F all temperatures values will returned in
