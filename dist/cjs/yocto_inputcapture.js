@@ -193,14 +193,14 @@ class YInputCaptureData {
         mult3 = 1;
         if (recOfs < this._recOfs) {
             // load optional value multiplier
-            mult1 = this.imm_decodeU16(sdata, this._recOfs);
+            mult1 = this.imm_decodeU16(sdata, recOfs);
             recOfs = recOfs + 2;
             if (this._var2size > 0) {
-                mult2 = this.imm_decodeU16(sdata, this._recOfs);
+                mult2 = this.imm_decodeU16(sdata, recOfs);
                 recOfs = recOfs + 2;
             }
             if (this._var3size > 0) {
-                mult3 = this.imm_decodeU16(sdata, this._recOfs);
+                mult3 = this.imm_decodeU16(sdata, recOfs);
                 recOfs = recOfs + 2;
             }
         }
@@ -784,13 +784,13 @@ class YInputCapture extends yocto_api_js_1.YSensor {
     /**
      * Retrieves an instant snapshot trigger for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the instant snapshot trigger is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -821,13 +821,13 @@ class YInputCapture extends yocto_api_js_1.YSensor {
     /**
      * Retrieves an instant snapshot trigger for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the instant snapshot trigger is online at the time
      * it is invoked. The returned object is nevertheless valid.

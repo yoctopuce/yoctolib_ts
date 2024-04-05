@@ -1,7 +1,7 @@
 {
   "name": "doc-gettingstarted-yocto-rfid",
   "author": "Yoctopuce",
-  "description": "Yoctopuce Doc-GettingStarted-Yocto-Rfid example",
+  "description": "Yoctopuce Doc-GettingStarted-Yocto-RFID example",
   "scripts": {
     "demo": "tsc && node --enable-source-maps demo.js"
   },

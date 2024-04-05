@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 59221 2024-02-05 15:46:32Z seb $
+ * $Id: yocto_api.ts 59977 2024-03-18 15:02:32Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -3253,13 +3253,13 @@ export class YFunction {
     /**
      * Retrieves a function for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the function is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -3290,13 +3290,13 @@ export class YFunction {
     /**
      * Retrieves a function for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the function is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -4919,13 +4919,13 @@ export class YModule extends YFunction {
     /**
      * Retrieves a module for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the module is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -5068,8 +5068,10 @@ export class YModule extends YFunction {
      * Registers a device log callback function. This callback will be called each time
      * that a module sends a new log message. Mostly useful to debug a Yoctopuce module.
      *
-     * @param callback : the callback function to call, or a null pointer. The callback function should take two
-     *         arguments: the module object that emitted the log message, and the character string containing the log.
+     * @param callback : the callback function to call, or a null pointer.
+     *         The callback function should take two
+     *         arguments: the module object that emitted the log message,
+     *         and the character string containing the log.
      *         On failure, throws an exception or returns a negative error code.
      */
     async registerLogCallback(callback) {
@@ -6582,11 +6584,10 @@ export class YSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the sensor health state code, which is zero when there is an up-to-date measure
+     * Returns the sensor state code, which is zero when there is an up-to-date measure
      * available or a positive code if the sensor is not able to provide a measure right now.
      *
-     * @return an integer corresponding to the sensor health state code, which is zero when there is an
-     * up-to-date measure
+     * @return an integer corresponding to the sensor state code, which is zero when there is an up-to-date measure
      *         available or a positive code if the sensor is not able to provide a measure right now
      *
      * On failure, throws an exception or returns YSensor.SENSORSTATE_INVALID.
@@ -6604,13 +6605,13 @@ export class YSensor extends YFunction {
     /**
      * Retrieves a sensor for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -6641,13 +6642,13 @@ export class YSensor extends YFunction {
     /**
      * Retrieves a sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the sensor is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -7379,7 +7380,7 @@ export class YMeasure {
  * sensors. Recording can happen automatically, without requiring a permanent
  * connection to a computer.
  * The YDataLogger class controls the global parameters of the internal data
- * logger. Recording control (start/stop) as well as data retreival is done at
+ * logger. Recording control (start/stop) as well as data retrieval is done at
  * sensor objects level.
  */
 //--- (end of generated code: YDataLogger class start)
@@ -7634,13 +7635,13 @@ export class YDataLogger extends YFunction {
     /**
      * Retrieves a data logger for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the data logger is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -7671,13 +7672,13 @@ export class YDataLogger extends YFunction {
     /**
      * Retrieves a data logger for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the data logger is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -12228,7 +12229,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.59271';
+        return /* version number patched automatically */ '1.10.60394';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

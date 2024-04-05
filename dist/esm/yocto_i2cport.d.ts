@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -329,13 +329,13 @@ export declare class YI2cPort extends YFunction {
     /**
      * Retrieves an I2C port for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the I2C port is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -358,13 +358,13 @@ export declare class YI2cPort extends YFunction {
     /**
      * Retrieves an I2C port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the I2C port is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -655,6 +655,21 @@ export declare class YI2cPort extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     writeArray(byteList: number[]): Promise<number>;
+    /**
+     * Retrieves messages (both direction) in the I2C port buffer, starting at current position.
+     *
+     * If no message is found, the search waits for one up to the specified maximum timeout
+     * (in milliseconds).
+     *
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
+     *         in the receive buffer.
+     * @param maxMsg : the maximum number of messages to be returned by the function; up to 254.
+     *
+     * @return an array of YI2cSnoopingRecord objects containing the messages found, if any.
+     *
+     * On failure, throws an exception or returns an empty array.
+     */
+    snoopMessagesEx(maxWait: number, maxMsg: number): Promise<YI2cSnoopingRecord[]>;
     /**
      * Retrieves messages (both direction) in the I2C port buffer, starting at current position.
      *

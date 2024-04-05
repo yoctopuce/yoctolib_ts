@@ -38,7 +38,7 @@
  *
  *********************************************************************/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.YSdi12Port = exports.YSdi12Sensor = exports.YSdi12SnoopingRecord = void 0;
+exports.YSdi12Port = exports.YSdi12SensorInfo = exports.YSdi12SnoopingRecord = void 0;
 const yocto_api_js_1 = require("./yocto_api.js");
 //--- (generated code: YSdi12SnoopingRecord class start)
 /**
@@ -111,10 +111,11 @@ exports.YSdi12SnoopingRecord = YSdi12SnoopingRecord;
  */
 //--- (end of generated code: YSdi12Port class start)
 /** @extends {YFunction} **/
-class YSdi12Sensor {
+class YSdi12SensorInfo {
     // API symbols as static members
-    //--- (end of generated code: YSdi12Sensor attributes declaration)
+    //--- (end of generated code: YSdi12SensorInfo attributes declaration)
     constructor(sdi12Port, str_json) {
+        this._isValid = false;
         this._addr = '';
         this._proto = '';
         this._mfg = '';
@@ -122,12 +123,23 @@ class YSdi12Sensor {
         this._ver = '';
         this._sn = '';
         this._valuesDesc = [];
-        //--- (generated code: YSdi12Sensor constructor)
-        //--- (end of generated code: YSdi12Sensor constructor)
+        //--- (generated code: YSdi12SensorInfo constructor)
+        //--- (end of generated code: YSdi12SensorInfo constructor)
         this._sdi12Port = sdi12Port;
         this.imm_parseInfoStr(str_json);
     }
-    //--- (generated code: YSdi12Sensor implementation)
+    _throw(errcode, msg, retVal) {
+        return this._sdi12Port._throw(errcode, msg, retVal);
+    }
+    //--- (generated code: YSdi12SensorInfo implementation)
+    /**
+     * Returns the sensor state.
+     *
+     * @return the sensor state.
+     */
+    async isValid() {
+        return this._isValid;
+    }
     /**
      * Returns the sensor address.
      *
@@ -178,6 +190,8 @@ class YSdi12Sensor {
     }
     /**
      * Returns the number of sensor measurements.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @return the number of sensor measurements.
      */
@@ -186,52 +200,82 @@ class YSdi12Sensor {
     }
     /**
      * Returns the sensor measurement command.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     async get_measureCommand(measureIndex) {
+        if (!(measureIndex < this._valuesDesc.length)) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid measure index', '');
+        }
         return this._valuesDesc[measureIndex][0];
     }
     /**
      * Returns sensor measurement position.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns 0.
      */
     async get_measurePosition(measureIndex) {
+        if (!(measureIndex < this._valuesDesc.length)) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid measure index', 0);
+        }
         return yocto_api_js_1.YAPIContext.imm_atoi(this._valuesDesc[measureIndex][2]);
     }
     /**
      * Returns the measured value symbol.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     async get_measureSymbol(measureIndex) {
+        if (!(measureIndex < this._valuesDesc.length)) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid measure index', '');
+        }
         return this._valuesDesc[measureIndex][3];
     }
     /**
      * Returns the unit of the measured value.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     async get_measureUnit(measureIndex) {
+        if (!(measureIndex < this._valuesDesc.length)) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid measure index', '');
+        }
         return this._valuesDesc[measureIndex][4];
     }
     /**
      * Returns the description of the measured value.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     async get_measureDescription(measureIndex) {
+        if (!(measureIndex < this._valuesDesc.length)) {
+            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Invalid measure index', '');
+        }
         return this._valuesDesc[measureIndex][5];
     }
     async get_typeMeasure() {
@@ -248,6 +292,7 @@ class YSdi12Sensor {
                 this._model = errmsg;
                 this._ver = errmsg;
                 this._sn = errmsg;
+                this._isValid = false;
             }
             else {
                 this._addr = (infoStr).substr(0, 1);
@@ -256,6 +301,7 @@ class YSdi12Sensor {
                 this._model = (infoStr).substr(11, 6);
                 this._ver = (infoStr).substr(17, 3);
                 this._sn = (infoStr).substr(20, (infoStr).length - 20);
+                this._isValid = true;
             }
         }
     }
@@ -308,7 +354,7 @@ class YSdi12Sensor {
         this._valuesDesc = val;
     }
 }
-exports.YSdi12Sensor = YSdi12Sensor;
+exports.YSdi12SensorInfo = YSdi12SensorInfo;
 //--- (generated code: YSdi12Port class start)
 /**
  * YSdi12Port Class: SDI12 port control interface
@@ -766,21 +812,21 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         return await this._setAttr('serialMode', rest_val);
     }
     /**
-     * Retrieves a SDI12 port for a given identifier.
+     * Retrieves an SDI12 port for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the SDI12 port is online at the time
      * it is invoked. The returned object is nevertheless valid.
      * Use the method YSdi12Port.isOnline() to test if the SDI12 port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * a SDI12 port by logical name, no error is notified: the first instance
+     * an SDI12 port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -803,21 +849,21 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         return obj;
     }
     /**
-     * Retrieves a SDI12 port for a given identifier in a YAPI context.
+     * Retrieves an SDI12 port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the SDI12 port is online at the time
      * it is invoked. The returned object is nevertheless valid.
      * Use the method YSdi12Port.isOnline() to test if the SDI12 port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * a SDI12 port by logical name, no error is notified: the first instance
+     * an SDI12 port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -1580,7 +1626,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
      * This function is intended to be used when the serial port is configured for 'SDI-12' protocol.
      * This function work when only one sensor is connected.
      *
-     * @return the reply returned by the sensor, as a YSdi12Sensor object.
+     * @return the reply returned by the sensor, as a YSdi12SensorInfo object.
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1588,7 +1634,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         let resStr;
         resStr = await this.querySdi12('?', '', 5000);
         if (resStr == '') {
-            return new YSdi12Sensor(this, 'ERSensor Not Found');
+            return new YSdi12SensorInfo(this, 'ERSensor Not Found');
         }
         return await this.getSensorInformation(resStr);
     }
@@ -1596,7 +1642,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
      * Sends a discovery command to the bus, and reads all sensors information reply.
      * This function is intended to be used when the serial port is configured for 'SDI-12' protocol.
      *
-     * @return all the information from every connected sensor, as an array of YSdi12Sensor object.
+     * @return all the information from every connected sensor, as an array of YSdi12SensorInfo object.
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1689,7 +1735,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
      * @param oldAddress : Actual sensor address, as a string
      * @param newAddress : New sensor address, as a string
      *
-     * @return the sensor address and information , as a YSdi12Sensor object.
+     * @return the sensor address and information , as a YSdi12SensorInfo object.
      *
      * On failure, throws an exception or returns an empty string.
      */
@@ -1714,9 +1760,9 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         let sensor;
         res = await this.querySdi12(sensorAddr, 'I', 1000);
         if (res == '') {
-            return new YSdi12Sensor(this, 'ERSensor Not Found');
+            return new YSdi12SensorInfo(this, 'ERSensor Not Found');
         }
-        sensor = new YSdi12Sensor(this, res);
+        sensor = new YSdi12SensorInfo(this, res);
         await sensor._queryValueInfo();
         return sensor;
     }
@@ -1761,19 +1807,20 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
      *
      * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
+     * @param maxMsg : the maximum number of messages to be returned by the function; up to 254.
      *
      * @return an array of YSdi12SnoopingRecord objects containing the messages found, if any.
      *
      * On failure, throws an exception or returns an empty array.
      */
-    async snoopMessages(maxWait) {
+    async snoopMessagesEx(maxWait, maxMsg) {
         let url;
         let msgbin;
         let msgarr = [];
         let msglen;
         let res = [];
         let idx;
-        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&t=0';
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&t=0&len=' + String(Math.round(maxMsg));
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1791,13 +1838,29 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
+     * Retrieves messages (both direction) in the SDI12 port buffer, starting at current position.
+     *
+     * If no message is found, the search waits for one up to the specified maximum timeout
+     * (in milliseconds).
+     *
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
+     *         in the receive buffer.
+     *
+     * @return an array of YSdi12SnoopingRecord objects containing the messages found, if any.
+     *
+     * On failure, throws an exception or returns an empty array.
+     */
+    async snoopMessages(maxWait) {
+        return await this.snoopMessagesEx(maxWait, 255);
+    }
+    /**
      * Continues the enumeration of SDI12 ports started using yFirstSdi12Port().
      * Caution: You can't make any assumption about the returned SDI12 ports order.
-     * If you want to find a specific a SDI12 port, use Sdi12Port.findSdi12Port()
+     * If you want to find a specific an SDI12 port, use Sdi12Port.findSdi12Port()
      * and a hardwareID or a logical name.
      *
      * @return a pointer to a YSdi12Port object, corresponding to
-     *         a SDI12 port currently online, or a null pointer
+     *         an SDI12 port currently online, or a null pointer
      *         if there are no more SDI12 ports to enumerate.
      */
     nextSdi12Port() {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 58903 2024-01-11 16:44:48Z mvuilleu $
+ *  $Id: yocto_serialport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -672,13 +672,13 @@ export class YSerialPort extends YFunction
     /**
      * Retrieves a serial port for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the serial port is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -711,13 +711,13 @@ export class YSerialPort extends YFunction
     /**
      * Retrieves a serial port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the serial port is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -1545,13 +1545,14 @@ export class YSerialPort extends YFunction
      *
      * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
+     * @param maxMsg : the maximum number of messages to be returned by the function; up to 254.
      *
      * @return an array of YSnoopingRecord objects containing the messages found, if any.
      *         Binary messages are converted to hexadecimal representation.
      *
      * On failure, throws an exception or returns an empty array.
      */
-    async snoopMessages(maxWait: number): Promise<YSnoopingRecord[]>
+    async snoopMessagesEx(maxWait: number, maxMsg: number): Promise<YSnoopingRecord[]>
     {
         let url: string;
         let msgbin: Uint8Array;
@@ -1560,7 +1561,7 @@ export class YSerialPort extends YFunction
         let res: YSnoopingRecord[] = [];
         let idx: number;
 
-        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&t=0';
+        url = 'rxmsg.json?pos=' + String(Math.round(this._rxptr)) + '&maxw=' + String(Math.round(maxWait)) + '&t=0&len=' + String(Math.round(maxMsg));
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.length;
@@ -1576,6 +1577,27 @@ export class YSerialPort extends YFunction
             idx = idx + 1;
         }
         return res;
+    }
+
+    /**
+     * Retrieves messages (both direction) in the serial port buffer, starting at current position.
+     * This function will only compare and return printable characters in the message strings.
+     * Binary protocols are handled as hexadecimal strings.
+     *
+     * If no message is found, the search waits for one up to the specified maximum timeout
+     * (in milliseconds).
+     *
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
+     *         in the receive buffer.
+     *
+     * @return an array of YSnoopingRecord objects containing the messages found, if any.
+     *         Binary messages are converted to hexadecimal representation.
+     *
+     * On failure, throws an exception or returns an empty array.
+     */
+    async snoopMessages(maxWait: number): Promise<YSnoopingRecord[]>
+    {
+        return await this.snoopMessagesEx(maxWait, 255);
     }
 
     /**

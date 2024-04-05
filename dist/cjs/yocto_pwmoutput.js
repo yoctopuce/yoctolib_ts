@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 58892 2024-01-11 11:11:28Z mvuilleu $
+ *  $Id: yocto_pwmoutput.ts 59977 2024-03-18 15:02:32Z mvuilleu $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -403,13 +403,13 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
     /**
      * Retrieves a PWM generator for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the PWM generator is online at the time
      * it is invoked. The returned object is nevertheless valid.
@@ -440,13 +440,13 @@ class YPwmOutput extends yocto_api_js_1.YFunction {
     /**
      * Retrieves a PWM generator for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the PWM generator is online at the time
      * it is invoked. The returned object is nevertheless valid.

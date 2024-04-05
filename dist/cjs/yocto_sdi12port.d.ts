@@ -85,8 +85,9 @@ export declare namespace YSdi12SnoopingRecord {
  * They are meant to be used in the same way as all Yoctopuce devices.
  */
 /** @extends {YFunction} **/
-export declare class YSdi12Sensor {
+export declare class YSdi12SensorInfo {
     _sdi12Port: YSdi12Port;
+    _isValid: boolean;
     _addr: string;
     _proto: string;
     _mfg: string;
@@ -95,6 +96,13 @@ export declare class YSdi12Sensor {
     _sn: string;
     _valuesDesc: string[][];
     constructor(sdi12Port: YSdi12Port, str_json: string);
+    _throw(errcode: number, msg: string, retVal?: any): any;
+    /**
+     * Returns the sensor state.
+     *
+     * @return the sensor state.
+     */
+    isValid(): Promise<boolean>;
     /**
      * Returns the sensor address.
      *
@@ -133,55 +141,72 @@ export declare class YSdi12Sensor {
     get_sensorSerial(): Promise<string>;
     /**
      * Returns the number of sensor measurements.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @return the number of sensor measurements.
      */
     get_measureCount(): Promise<number>;
     /**
      * Returns the sensor measurement command.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     get_measureCommand(measureIndex: number): Promise<string>;
     /**
      * Returns sensor measurement position.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns 0.
      */
     get_measurePosition(measureIndex: number): Promise<number>;
     /**
      * Returns the measured value symbol.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     get_measureSymbol(measureIndex: number): Promise<string>;
     /**
      * Returns the unit of the measured value.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     get_measureUnit(measureIndex: number): Promise<string>;
     /**
      * Returns the description of the measured value.
+     * This function only works if the sensor is in version 1.4 SDI-12
+     * and supports metadata commands.
      *
      * @param measureIndex : measurement index
      *
      * @return the sensor measurement command.
+     *         On failure, throws an exception or returns an empty string.
      */
     get_measureDescription(measureIndex: number): Promise<string>;
     get_typeMeasure(): Promise<string[][]>;
     imm_parseInfoStr(infoStr: string): void;
     _queryValueInfo(): Promise<void>;
 }
-export declare namespace YSdi12Sensor {
+export declare namespace YSdi12SensorInfo {
 }
 /**
  * YSdi12Port Class: SDI12 port control interface
@@ -458,21 +483,21 @@ export declare class YSdi12Port extends YFunction {
      */
     set_serialMode(newval: string): Promise<number>;
     /**
-     * Retrieves a SDI12 port for a given identifier.
+     * Retrieves an SDI12 port for a given identifier.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the SDI12 port is online at the time
      * it is invoked. The returned object is nevertheless valid.
      * Use the method YSdi12Port.isOnline() to test if the SDI12 port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * a SDI12 port by logical name, no error is notified: the first instance
+     * an SDI12 port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -487,21 +512,21 @@ export declare class YSdi12Port extends YFunction {
      */
     static FindSdi12Port(func: string): YSdi12Port;
     /**
-     * Retrieves a SDI12 port for a given identifier in a YAPI context.
+     * Retrieves an SDI12 port for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
-     * <ul>
-     * <li>FunctionLogicalName</li>
-     * <li>ModuleSerialNumber.FunctionIdentifier</li>
-     * <li>ModuleSerialNumber.FunctionLogicalName</li>
-     * <li>ModuleLogicalName.FunctionIdentifier</li>
-     * <li>ModuleLogicalName.FunctionLogicalName</li>
-     * </ul>
+     *
+     * - FunctionLogicalName
+     * - ModuleSerialNumber.FunctionIdentifier
+     * - ModuleSerialNumber.FunctionLogicalName
+     * - ModuleLogicalName.FunctionIdentifier
+     * - ModuleLogicalName.FunctionLogicalName
+     *
      *
      * This function does not require that the SDI12 port is online at the time
      * it is invoked. The returned object is nevertheless valid.
      * Use the method YSdi12Port.isOnline() to test if the SDI12 port is
      * indeed online at a given time. In case of ambiguity when looking for
-     * a SDI12 port by logical name, no error is notified: the first instance
+     * an SDI12 port by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -781,20 +806,20 @@ export declare class YSdi12Port extends YFunction {
      * This function is intended to be used when the serial port is configured for 'SDI-12' protocol.
      * This function work when only one sensor is connected.
      *
-     * @return the reply returned by the sensor, as a YSdi12Sensor object.
+     * @return the reply returned by the sensor, as a YSdi12SensorInfo object.
      *
      * On failure, throws an exception or returns an empty string.
      */
-    discoverSingleSensor(): Promise<YSdi12Sensor>;
+    discoverSingleSensor(): Promise<YSdi12SensorInfo>;
     /**
      * Sends a discovery command to the bus, and reads all sensors information reply.
      * This function is intended to be used when the serial port is configured for 'SDI-12' protocol.
      *
-     * @return all the information from every connected sensor, as an array of YSdi12Sensor object.
+     * @return all the information from every connected sensor, as an array of YSdi12SensorInfo object.
      *
      * On failure, throws an exception or returns an empty string.
      */
-    discoverAllSensors(): Promise<YSdi12Sensor[]>;
+    discoverAllSensors(): Promise<YSdi12SensorInfo[]>;
     /**
      * Sends a mesurement command to the SDI-12 bus, and reads the sensor immediate reply.
      * The supported commands are:
@@ -819,11 +844,11 @@ export declare class YSdi12Port extends YFunction {
      * @param oldAddress : Actual sensor address, as a string
      * @param newAddress : New sensor address, as a string
      *
-     * @return the sensor address and information , as a YSdi12Sensor object.
+     * @return the sensor address and information , as a YSdi12SensorInfo object.
      *
      * On failure, throws an exception or returns an empty string.
      */
-    changeAddress(oldAddress: string, newAddress: string): Promise<YSdi12Sensor>;
+    changeAddress(oldAddress: string, newAddress: string): Promise<YSdi12SensorInfo>;
     /**
      * Sends a information command to the bus, and reads sensors information selected.
      * This function is intended to be used when the serial port is configured for 'SDI-12' protocol.
@@ -834,7 +859,7 @@ export declare class YSdi12Port extends YFunction {
      *
      * On failure, throws an exception or returns an empty string.
      */
-    getSensorInformation(sensorAddr: string): Promise<YSdi12Sensor>;
+    getSensorInformation(sensorAddr: string): Promise<YSdi12SensorInfo>;
     /**
      * Sends a information command to the bus, and reads sensors information selected.
      * This function is intended to be used when the serial port is configured for 'SDI-12' protocol.
@@ -865,6 +890,21 @@ export declare class YSdi12Port extends YFunction {
      *
      * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
      *         in the receive buffer.
+     * @param maxMsg : the maximum number of messages to be returned by the function; up to 254.
+     *
+     * @return an array of YSdi12SnoopingRecord objects containing the messages found, if any.
+     *
+     * On failure, throws an exception or returns an empty array.
+     */
+    snoopMessagesEx(maxWait: number, maxMsg: number): Promise<YSdi12SnoopingRecord[]>;
+    /**
+     * Retrieves messages (both direction) in the SDI12 port buffer, starting at current position.
+     *
+     * If no message is found, the search waits for one up to the specified maximum timeout
+     * (in milliseconds).
+     *
+     * @param maxWait : the maximum number of milliseconds to wait for a message if none is found
+     *         in the receive buffer.
      *
      * @return an array of YSdi12SnoopingRecord objects containing the messages found, if any.
      *
@@ -874,11 +914,11 @@ export declare class YSdi12Port extends YFunction {
     /**
      * Continues the enumeration of SDI12 ports started using yFirstSdi12Port().
      * Caution: You can't make any assumption about the returned SDI12 ports order.
-     * If you want to find a specific a SDI12 port, use Sdi12Port.findSdi12Port()
+     * If you want to find a specific an SDI12 port, use Sdi12Port.findSdi12Port()
      * and a hardwareID or a logical name.
      *
      * @return a pointer to a YSdi12Port object, corresponding to
-     *         a SDI12 port currently online, or a null pointer
+     *         an SDI12 port currently online, or a null pointer
      *         if there are no more SDI12 ports to enumerate.
      */
     nextSdi12Port(): YSdi12Port | null;
