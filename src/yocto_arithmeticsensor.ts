@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_arithmeticsensor.ts 60419 2024-04-08 09:53:37Z seb $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -335,7 +335,7 @@ export class YArithmeticSensor extends YSensor
         if (!((diags).substr(0, 8) == 'Result: ')) {
             return this._throw(this._yapi.INVALID_ARGUMENT, diags, this._yapi.INVALID_DOUBLE);
         }
-        resval = parseFloat((diags).substr(8, (diags).length-8));
+        resval = YAPIContext.imm_atof((diags).substr(8, (diags).length-8));
         return resval;
     }
 

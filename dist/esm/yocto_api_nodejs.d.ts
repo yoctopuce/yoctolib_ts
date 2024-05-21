@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 55358 2023-06-28 09:00:27Z seb $
+ * $Id: yocto_api_nodejs.ts 60569 2024-04-15 14:50:06Z seb $
  *
  * High-level programming interface, common to all modules
  *

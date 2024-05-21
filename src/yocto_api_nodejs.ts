@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 55358 2023-06-28 09:00:27Z seb $
+ * $Id: yocto_api_nodejs.ts 60569 2024-04-15 14:50:06Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -60,6 +60,7 @@ import * as fs from 'fs';
 import * as dgram from 'dgram';
 import * as crypto from 'crypto';
 import * as http from 'http';
+import * as https from 'https';
 import WebSocket from 'ws';
 
 /**
@@ -295,11 +296,13 @@ class YHttpCallbackHub extends YGenericHub
 class YHttpNodeHub extends YHttpHub
 {
     agent: http.Agent;
+    agenthttps: https.Agent;
 
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo)
     {
         super(yapi, urlInfo);
         this.agent = new http.Agent({ keepAlive: true });
+        this.agenthttps = new https.Agent({keepAlive: true});
     }
 
     // Low-level function to create an HTTP client request (abstraction layer)
@@ -308,8 +311,17 @@ class YHttpNodeHub extends YHttpHub
                     onSuccess: null | ((responseText: string) => void),
                     onError: (errorType: number, errorMsg: string) => void): http.ClientRequest
     {
+        let agentObj: any;
+        let requestObj: any;
+        if (this.urlInfo.proto == 'https://') {
+            agentObj = this.agenthttps;
+            requestObj = https;
+        } else {
+            agentObj = this.agent;
+            requestObj = http;
+        }
         let options: http.RequestOptions = {
-            agent: this.agent,
+            agent:agentObj,
             method: method,
             hostname: this.urlInfo.host,
             port: this.urlInfo.port,
@@ -328,7 +340,7 @@ class YHttpNodeHub extends YHttpHub
         let response: Buffer = Buffer.alloc(0);
         let endReceived: Boolean = false;
         let closeWithoutEndTimeout: NodeJS.Timeout|null = null;
-        let httpRequest: http.ClientRequest = http.request(options, (res: http.IncomingMessage):void => {
+        let httpRequest: http.ClientRequest = requestObj.request(options, (res: http.IncomingMessage): void => {
             if (this.imm_isDisconnecting()) {
                 return;
             }

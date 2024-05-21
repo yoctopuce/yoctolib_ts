@@ -1,18 +1,7 @@
-TypeScript v1.10.60394
+TypeScript v1.10.61039
 
-- Add support for Yocto-RFID
-- Add new secondsBefore attribute to wakeUpSchedule
-- Add support for multiplier in InputCapture
-- Add YThreshold class
-- Add position indicator in SnoopingRecords
-- Add snoopMessagesEx function to serial communication classes
-- Remove conflict between YEventCallback
-- Remove unwanted WebSocket log messages unless loglevel is set to 3+
-- Fix warning about malformed XML comment
-- Fix parsing of float on host where the decimal separator is not '.''
-- Fix restart of logs when registering log callback for a second time
-- Fix log refresh on Firefox
-- Fix cache latency on method YSensor.loadCalibrationPoints()
-- Fix handling of long strings in many parse situations (including json_get_key)
-- Fix YHub.isReadOnly method that was always returning true
-- Fix a few typos
+- New API 2.0 (backward compatible)
+- Fix authentication when request send a redirect
+- Fix sending of large requests (eg. display) to YoctoHubs through a WebSocket connection
+- Add support for HTTP redirection
+- fix handling of secure:// and auto:// URLs

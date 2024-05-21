@@ -1713,11 +1713,11 @@ export class YSdi12Port extends YFunction {
         if (split.length < 2) {
             return res;
         }
-        valdouble = parseFloat(split[1]);
+        valdouble = YAPIContext.imm_atof(split[1]);
         res.push(valdouble);
         i = 1;
         while (i < tab.length) {
-            valdouble = parseFloat(tab[i]);
+            valdouble = YAPIContext.imm_atof(tab[i]);
             res.push(valdouble);
             i = i + 1;
         }

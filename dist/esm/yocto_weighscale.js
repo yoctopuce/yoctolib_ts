@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_weighscale.ts 60419 2024-04-08 09:53:37Z seb $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -586,8 +586,8 @@ export class YWeighScale extends YSensor {
         compValues.length = 0;
         idx = 0;
         while (idx < siz) {
-            temp = parseFloat(paramlist[2 * idx]) / 1000.0;
-            comp = parseFloat(paramlist[2 * idx + 1]) / 1000.0;
+            temp = YAPIContext.imm_atof(paramlist[2 * idx]) / 1000.0;
+            comp = YAPIContext.imm_atof(paramlist[2 * idx + 1]) / 1000.0;
             tempValues.push(temp);
             compValues.push(comp);
             idx = idx + 1;

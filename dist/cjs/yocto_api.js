@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ * $Id: yocto_api.ts 60953 2024-05-15 10:03:19Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -5601,7 +5601,7 @@ class YModule extends YFunction {
                 }
                 else {
                     if (paramVer == 0) {
-                        ratio = parseFloat(param);
+                        ratio = YAPIContext.imm_atof(param);
                         if (ratio > 0) {
                             calibData.push(0.0);
                             calibData.push(0.0);
@@ -7945,7 +7945,6 @@ class YGenericHub {
         this.urlInfo = urlInfo;
         this.stalledTimeoutMs = yapi._networkTimeoutMs;
         this._hubRef = YGenericHub.globalHubRefCounter++;
-        this._knownUrls.push(urlInfo.orgUrl);
     }
     _throw(int_errType, str_errMsg, obj_retVal) {
         this._lastErrorType = int_errType;
@@ -8006,6 +8005,11 @@ class YGenericHub {
     // default implementation of function that says if a hub is currently forwarded and handled remotely
     imm_isForwarded() {
         return false;
+    }
+    imm_addKnownUrl(urlInfo) {
+        if (!this._knownUrls.includes(urlInfo.orgUrl)) {
+            this._knownUrls.push(urlInfo.orgUrl);
+        }
     }
     imm_updateUrl(urlInfo) {
         if (!this._knownUrls.includes(urlInfo.orgUrl)) {
@@ -9710,6 +9714,13 @@ class YWebSocketHub extends YGenericHub {
                 if (framelen > 125)
                     framelen = 125;
                 let datalen = framelen - 1;
+                if (pos + datalen < 180 && pos + datalen >= 192) {
+                    // on a YoctoHub, the input FIFO is limited to 192, and we can only
+                    // accept a frame if it fits entirely in the input FIFO. So make sure
+                    // the beginning of the request gets delivered entirely
+                    datalen = 191 - pos;
+                    framelen = datalen + 1;
+                }
                 if (isAsync && pos + datalen == yreq.toBeSent.length && framelen < 125) {
                     frame = new Uint8Array(framelen + 1);
                     frame[0] = 8 * 9 /* YSTREAM.TCP_ASYNCCLOSE */ + tcpchan;
@@ -11463,6 +11474,18 @@ class YAPIContext {
         }
         return Math.floor(num);
     }
+    /** Convert a numeric string to an float
+     *
+     * @param str_data {string}
+     * @return {number}
+     */
+    static imm_atof(str_data) {
+        let num = parseFloat(str_data);
+        if (isNaN(num)) {
+            return 0.0;
+        }
+        return num;
+    }
     /** Convert a binary object to string
      *
      * @param bin_data {Uint8Array}
@@ -12253,7 +12276,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '1.10.60394';
+        return /* version number patched automatically */ '1.10.61039';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -12557,6 +12580,7 @@ class YAPIContext {
             if (!hub) {
                 return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
             }
+            hub.imm_addKnownUrl(urlInfo);
         }
         else {
             if (this._logLevel >= 3) {
@@ -12608,6 +12632,7 @@ class YAPIContext {
             if (!hub) {
                 return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Unsupported hub protocol: ' + urlInfo.proto, exports.YAPI_NOT_SUPPORTED);
             }
+            hub.imm_addKnownUrl(urlInfo);
         }
         else {
             if (this._logLevel >= 3) {

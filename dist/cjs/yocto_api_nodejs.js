@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 55358 2023-06-28 09:00:27Z seb $
+ * $Id: yocto_api_nodejs.ts 60569 2024-04-15 14:50:06Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -76,6 +76,7 @@ const fs = __importStar(require("fs"));
 const dgram = __importStar(require("dgram"));
 const crypto = __importStar(require("crypto"));
 const http = __importStar(require("http"));
+const https = __importStar(require("https"));
 const ws_1 = __importDefault(require("ws"));
 /**
  * System environment definition, for use with Node.js libraries
@@ -282,11 +283,22 @@ class YHttpNodeHub extends yocto_api_js_1.YHttpHub {
     constructor(yapi, urlInfo) {
         super(yapi, urlInfo);
         this.agent = new http.Agent({ keepAlive: true });
+        this.agenthttps = new https.Agent({ keepAlive: true });
     }
     // Low-level function to create an HTTP client request (abstraction layer)
     imm_makeRequest(method, relUrl, contentType, body, onProgress, onSuccess, onError) {
+        let agentObj;
+        let requestObj;
+        if (this.urlInfo.proto == 'https://') {
+            agentObj = this.agenthttps;
+            requestObj = https;
+        }
+        else {
+            agentObj = this.agent;
+            requestObj = http;
+        }
         let options = {
-            agent: this.agent,
+            agent: agentObj,
             method: method,
             hostname: this.urlInfo.host,
             port: this.urlInfo.port,
@@ -304,7 +316,7 @@ class YHttpNodeHub extends yocto_api_js_1.YHttpHub {
         let response = Buffer.alloc(0);
         let endReceived = false;
         let closeWithoutEndTimeout = null;
-        let httpRequest = http.request(options, (res) => {
+        let httpRequest = requestObj.request(options, (res) => {
             if (this.imm_isDisconnecting()) {
                 return;
             }

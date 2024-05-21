@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_temperature.ts 60419 2024-04-08 09:53:37Z seb $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -577,7 +577,7 @@ export class YTemperature extends YSensor
         templist.length = 0;
         idx = 0;
         while (idx < siz) {
-            temp = parseFloat(paramlist[2*idx+1])/1000.0;
+            temp = YAPIContext.imm_atof(paramlist[2*idx+1])/1000.0;
             templist.push(temp);
             idx = idx + 1;
         }
@@ -595,7 +595,7 @@ export class YTemperature extends YSensor
                 temp = templist[idx];
                 if ((temp > prev) && (temp < curr)) {
                     curr = temp;
-                    currRes = parseFloat(paramlist[2*idx])/1000.0;
+                    currRes = YAPIContext.imm_atof(paramlist[2*idx])/1000.0;
                     found = 1;
                 }
                 idx = idx + 1;

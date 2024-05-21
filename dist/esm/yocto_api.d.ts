@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ * $Id: yocto_api.ts 60953 2024-05-15 10:03:19Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -3308,6 +3308,7 @@ export declare abstract class YGenericHub {
     imm_isPreOrRegistered(): boolean;
     imm_isOnline(): boolean;
     imm_isForwarded(): boolean;
+    imm_addKnownUrl(urlInfo: _YY_UrlInfo): void;
     imm_updateUrl(urlInfo: _YY_UrlInfo): void;
     imm_inheritFrom(otherHub: YGenericHub): void;
     imm_getNewConnID(): string;
@@ -3913,6 +3914,12 @@ export declare class YAPIContext {
      * @return {number}
      */
     static imm_atoi(str_data: string): number;
+    /** Convert a numeric string to an float
+     *
+     * @param str_data {string}
+     * @return {number}
+     */
+    static imm_atof(str_data: string): number;
     /** Convert a binary object to string
      *
      * @param bin_data {Uint8Array}
