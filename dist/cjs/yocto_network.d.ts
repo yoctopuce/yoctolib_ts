@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_network.ts 60574 2024-04-16 07:09:59Z seb $
  *
  *  Implements the high-level API for Network functions
  *
@@ -59,6 +59,8 @@ export declare class YNetwork extends YFunction {
     _userPassword: string;
     _adminPassword: string;
     _httpPort: number;
+    _httpsPort: number;
+    _securityMode: YNetwork.SECURITYMODE;
     _defaultPage: string;
     _discoverable: YNetwork.DISCOVERABLE;
     _wwwWatchdogDelay: number;
@@ -91,6 +93,12 @@ export declare class YNetwork extends YFunction {
     readonly USERPASSWORD_INVALID: string;
     readonly ADMINPASSWORD_INVALID: string;
     readonly HTTPPORT_INVALID: number;
+    readonly HTTPSPORT_INVALID: number;
+    readonly SECURITYMODE_UNDEFINED: YNetwork.SECURITYMODE;
+    readonly SECURITYMODE_LEGACY: YNetwork.SECURITYMODE;
+    readonly SECURITYMODE_MIXED: YNetwork.SECURITYMODE;
+    readonly SECURITYMODE_SECURE: YNetwork.SECURITYMODE;
+    readonly SECURITYMODE_INVALID: YNetwork.SECURITYMODE;
     readonly DEFAULTPAGE_INVALID: string;
     readonly DISCOVERABLE_FALSE: YNetwork.DISCOVERABLE;
     readonly DISCOVERABLE_TRUE: YNetwork.DISCOVERABLE;
@@ -142,6 +150,12 @@ export declare class YNetwork extends YFunction {
     static readonly USERPASSWORD_INVALID: string;
     static readonly ADMINPASSWORD_INVALID: string;
     static readonly HTTPPORT_INVALID: number;
+    static readonly HTTPSPORT_INVALID: number;
+    static readonly SECURITYMODE_UNDEFINED: YNetwork.SECURITYMODE;
+    static readonly SECURITYMODE_LEGACY: YNetwork.SECURITYMODE;
+    static readonly SECURITYMODE_MIXED: YNetwork.SECURITYMODE;
+    static readonly SECURITYMODE_SECURE: YNetwork.SECURITYMODE;
+    static readonly SECURITYMODE_INVALID: YNetwork.SECURITYMODE;
     static readonly DEFAULTPAGE_INVALID: string;
     static readonly DISCOVERABLE_FALSE: YNetwork.DISCOVERABLE;
     static readonly DISCOVERABLE_TRUE: YNetwork.DISCOVERABLE;
@@ -393,6 +407,62 @@ export declare class YNetwork extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_httpPort(newval: number): Promise<number>;
+    /**
+     * Returns the secure TCP port used to serve the hub web UI.
+     *
+     * @return an integer corresponding to the secure TCP port used to serve the hub web UI
+     *
+     * On failure, throws an exception or returns YNetwork.HTTPSPORT_INVALID.
+     */
+    get_httpsPort(): Promise<number>;
+    /**
+     * Changes the secure TCP port used to serve the hub web UI. The default value is port 4443,
+     * which is the default for all Web servers. When you change this parameter, remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : an integer corresponding to the secure TCP port used to serve the hub web UI
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_httpsPort(newval: number): Promise<number>;
+    /**
+     * Returns the security level chosen to prevent unauthorized access to the server.
+     *
+     * @return a value among YNetwork.SECURITYMODE_UNDEFINED, YNetwork.SECURITYMODE_LEGACY,
+     * YNetwork.SECURITYMODE_MIXED and YNetwork.SECURITYMODE_SECURE corresponding to the security level
+     * chosen to prevent unauthorized access to the server
+     *
+     * On failure, throws an exception or returns YNetwork.SECURITYMODE_INVALID.
+     */
+    get_securityMode(): Promise<YNetwork.SECURITYMODE>;
+    /**
+     * Changes the security level used to prevent unauthorized access to the server.
+     * The value UNDEFINED causes the security configuration wizard to be
+     * displayed the next time you log on to the Web console.
+     * The value LEGACY offers unencrypted HTTP access by default, and
+     * is designed to provide compatibility with legacy applications that do not
+     * handle password or do not support HTTPS. But it should
+     * only be used when system security is guaranteed by other means, such as the
+     * use of a firewall.
+     * The value MIXED requires the configuration of passwords, and allows
+     * access via both HTTP (unencrypted) and HTTPS (encrypted), while requiring
+     * the Yoctopuce API to be tolerant of certificate characteristics.
+     * The value SECURE requires the configuration of passwords and the
+     * use of secure communications in all cases.
+     * When you change this parameter, remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : a value among YNetwork.SECURITYMODE_UNDEFINED, YNetwork.SECURITYMODE_LEGACY,
+     * YNetwork.SECURITYMODE_MIXED and YNetwork.SECURITYMODE_SECURE corresponding to the security level
+     * used to prevent unauthorized access to the server
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_securityMode(newval: YNetwork.SECURITYMODE): Promise<number>;
     /**
      * Returns the HTML page to serve for the URL "/"" of the hub.
      *
@@ -890,6 +960,13 @@ export declare namespace YNetwork {
         LINKED = 2,
         LAN_OK = 3,
         WWW_OK = 4,
+        INVALID = -1
+    }
+    const enum SECURITYMODE {
+        UNDEFINED = 0,
+        LEGACY = 1,
+        MIXED = 2,
+        SECURE = 3,
         INVALID = -1
     }
     const enum DISCOVERABLE {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 60569 2024-04-15 14:50:06Z seb $
+ * $Id: yocto_api_nodejs.ts 61542 2024-06-19 09:08:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -39,7 +39,7 @@
 /// <reference types="node" />
 /// <reference types="node" />
 export * from "./yocto_api.js";
-import { _YY_UrlInfo, YAPIContext, YGenericHub, YGenericSSDPManager, YSystemEnv, YUnhandledPromiseRejectionCallback } from "./yocto_api.js";
+import { _YY_UrlInfo, YAPIContext, YGenericHub, YGenericSSDPManager, YHubEngine, YSystemEnv, YUnhandledPromiseRejectionCallback } from "./yocto_api.js";
 import 'process';
 import * as dgram from 'dgram';
 import * as http from 'http';
@@ -51,13 +51,14 @@ export declare class YSystemEnvNodeJs extends YSystemEnv {
     isNodeJS: boolean;
     hasSSDP: boolean;
     hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback): void;
-    getWebSocketHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null;
-    getHttpHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null;
-    getWebSocketCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, ws: WebSocket): YGenericHub | null;
-    getHttpCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, incomingMessage: http.IncomingMessage, serverResponse: http.ServerResponse): YGenericHub | null;
+    getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getHttpEngine(ohub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: WebSocket): YHubEngine | null;
+    getHttpCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, incomingMessage: http.IncomingMessage, serverResponse: http.ServerResponse): YHubEngine | null;
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;
     loadfile(file: string | Blob): Promise<Uint8Array>;
-    downloadfile(url: string): Promise<Uint8Array>;
+    downloadfile(url: string, yapi: YAPIContext): Promise<Uint8Array>;
+    downloadRemoteCertificate(urlinfo: _YY_UrlInfo): Promise<string>;
 }
 interface _YY_SSDPSockets {
     [iface: string]: dgram.Socket;

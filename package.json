@@ -2,7 +2,7 @@
   "name": "yoctolib-ts",
   "author": "Yoctopuce",
   "description": "Yoctopuce library for TypeScript",
-  "version": "1.10.61061",
+  "version": "2.0.61813",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "typescript": "^4.0.2",
     "@types/semver": "^7.3.4",
-    "@types/ws": "^7.2.6",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "eslint": "^8.43.0",

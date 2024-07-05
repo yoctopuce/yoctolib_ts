@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 55358 2023-06-28 09:00:27Z seb $
+ * $Id: yocto_api_html.ts 61542 2024-06-19 09:08:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -70,17 +70,17 @@ class YSystemEnvHtml extends yocto_api_js_1.YSystemEnv {
             handler(promiseRejectionEvent.reason, promiseRejectionEvent.promise);
         });
     }
-    getWebSocketHub(obj_yapi, urlInfo) {
-        return new YWebSocketHtmlHub(obj_yapi, urlInfo);
+    getWebSocketEngine(hub, runtime_urlInfo) {
+        return new YWebSocketHtmlEngine(hub, runtime_urlInfo);
     }
-    getHttpHub(obj_yapi, urlInfo) {
-        return new YHttpHtmlHub(obj_yapi, urlInfo);
+    getHttpEngine(hub, runtime_urlInfo) {
+        return new YHttpHtmlEngine(hub, runtime_urlInfo);
     }
-    getWebSocketCallbackHub(obj_yapi, urlInfo, ws) {
-        return obj_yapi._throw(yocto_api_js_1.YAPI.NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', null);
+    getWebSocketCallbackHub(hub, ws) {
+        return hub._yapi._throw(yocto_api_js_1.YAPI.NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', null);
     }
-    getHttpCallbackHub(obj_yapi, urlInfo, incomingMessage, serverResponse) {
-        return obj_yapi._throw(yocto_api_js_1.YAPI.NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', null);
+    getHttpCallbackHub(hub, incomingMessage, serverResponse) {
+        return hub._yapi._throw(yocto_api_js_1.YAPI.NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', null);
     }
     getSSDPManager(obj_yapi) {
         return obj_yapi._throw(yocto_api_js_1.YAPI.NOT_SUPPORTED, 'Hub discovery is not available in this environment', null);
@@ -99,7 +99,7 @@ class YSystemEnvHtml extends yocto_api_js_1.YSystemEnv {
             reader.readAsArrayBuffer(file);
         });
     }
-    downloadfile(url) {
+    downloadfile(url, yapi) {
         return new Promise((resolve, reject) => {
             let httpRequest = new XMLHttpRequest();
             httpRequest.open('GET', url, true);
@@ -122,19 +122,22 @@ class YSystemEnvHtml extends yocto_api_js_1.YSystemEnv {
             httpRequest.send('');
         });
     }
+    async downloadRemoteCertificate(urlinfo) {
+        return "error: Not supported in browser";
+    }
 }
 exports.YSystemEnvHtml = YSystemEnvHtml;
 const _HtmlSystemEnv = new YSystemEnvHtml();
 yocto_api_js_1.YAPI.imm_setSystemEnv(_HtmlSystemEnv);
-class YHttpHtmlHub extends yocto_api_js_1.YHttpHub {
-    constructor(yapi, urlInfo) {
-        super(yapi, urlInfo);
+class YHttpHtmlEngine extends yocto_api_js_1.YHttpEngine {
+    constructor(hub, runtime_urlInfo) {
+        super(hub, runtime_urlInfo);
     }
     // Low-level function to create an HTTP client request (abstraction layer)
     imm_makeRequest(method, relUrl, contentType, body, onProgress, onSuccess, onError) {
         let xhr = new XMLHttpRequest();
         let currPos = 0;
-        xhr.open(method, this.urlInfo.authUrl + relUrl, true, '', '');
+        xhr.open(method, this._runtime_urlInfo.imm_getUrl(true, true, true) + relUrl, true, '', '');
         // Send the request using text/plain POST, to avoid CORS checks
         xhr.setRequestHeader('Content-Type', contentType);
         xhr.overrideMimeType('text/plain; charset=x-user-defined');
@@ -145,23 +148,23 @@ class YHttpHtmlHub extends yocto_api_js_1.YHttpHub {
                     if (httpStatus == 401 || httpStatus == 204) {
                         // Authentication failure (204 == x-yauth)
                         this.infoJson.stamp = 0; // force to reload nonce/domain
-                        onError(yocto_api_js_1.YAPI.UNAUTHORIZED, 'Unauthorized access (' + xhr.status + ')');
+                        onError(yocto_api_js_1.YAPI.UNAUTHORIZED, 'Unauthorized access (' + xhr.status + ')', false);
                     }
                     else if (httpStatus == 404) {
                         // No such file
-                        onError(yocto_api_js_1.YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)');
+                        onError(yocto_api_js_1.YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)', false);
                     }
-                    else if (this.imm_isDisconnecting()) {
-                        onError(yocto_api_js_1.YAPI.IO_ERROR, 'Hub is disconnecting');
+                    else if (this._hub.imm_isDisconnecting()) {
+                        onError(yocto_api_js_1.YAPI.IO_ERROR, 'Hub is disconnecting', false);
                     }
                     else {
-                        onError(yocto_api_js_1.YAPI.IO_ERROR, 'HTTP request failed with status ' + xhr.status);
+                        onError(yocto_api_js_1.YAPI.IO_ERROR, 'HTTP request failed with status ' + xhr.status, false);
                     }
                     return;
                 }
-                if (this.imm_isDisconnecting()) {
-                    if (this._yapi._logLevel >= 4) {
-                        this._yapi.imm_log('Dropping request ' + relUrl + ' because hub is disconnecting');
+                if (this._hub.imm_isDisconnecting()) {
+                    if (this._hub._yapi._logLevel >= 4) {
+                        this._hub._yapi.imm_log('Dropping request ' + relUrl + ' because hub is disconnecting');
                     }
                     return;
                 }
@@ -178,7 +181,7 @@ class YHttpHtmlHub extends yocto_api_js_1.YHttpHub {
             }
         };
         xhr.onerror = () => {
-            onError(yocto_api_js_1.YAPI.IO_ERROR, 'HTTP request failed without status');
+            onError(yocto_api_js_1.YAPI.IO_ERROR, 'HTTP request failed without status', false);
         };
         xhr.send(body);
         return xhr;
@@ -188,7 +191,7 @@ class YHttpHtmlHub extends yocto_api_js_1.YHttpHub {
         clientRequest.abort();
     }
 }
-class YWebSocketHtmlHub extends yocto_api_js_1.YWebSocketHub {
+class YWebSocketHtmlEngine extends yocto_api_js_1.YWebSocketEngine {
     /** Open an outgoing websocket
      *
      * @param str_url {string}

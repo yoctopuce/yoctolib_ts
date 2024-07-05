@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 60953 2024-05-15 10:03:19Z mvuilleu $
+ * $Id: yocto_api.ts 61714 2024-06-28 09:43:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -55,11 +55,17 @@ export declare const YAPI_SSL_ERROR: number;
 export declare const YAPI_RFID_SOFT_ERROR: number;
 export declare const YAPI_RFID_HARD_ERROR: number;
 export declare const YAPI_BUFFER_TOO_SMALL: number;
+export declare const YAPI_DNS_ERROR: number;
+export declare const YAPI_SSL_UNK_CERT: number;
 export declare const YAPI_INVALID_INT: number;
 export declare const YAPI_INVALID_UINT: number;
 export declare const YAPI_INVALID_LONG: number;
 export declare const YAPI_INVALID_DOUBLE: number;
 export declare const YAPI_INVALID_STRING: string;
+export declare const YAPI_NO_TRUSTED_CA_CHECK: number;
+export declare const YAPI_NO_EXPIRATION_CHECK: number;
+export declare const YAPI_NO_HOSTNAME_CHECK: number;
+export declare const YAPI_LEGACY: number;
 export declare const YAPI_MIN_DOUBLE: number;
 export declare const YAPI_MAX_DOUBLE: number;
 export declare const Y_FUNCTIONDESCRIPTOR_INVALID: string;
@@ -94,16 +100,39 @@ export interface YDeviceUpdateCallback {
 export interface YUnhandledPromiseRejectionCallback {
     (reason: object, promise: PromiseLike<any>): void;
 }
-export interface _YY_UrlInfo {
+export type PortInfo = {
     proto: string;
-    user: string;
-    pass: string;
-    host: string;
-    port: string;
-    domain: string;
-    authUrl: string;
-    rootUrl: string;
-    orgUrl: string;
+    port: number;
+};
+export declare class _YY_UrlInfo {
+    private proto;
+    private user;
+    private pass;
+    private host;
+    private port;
+    private domain;
+    private orgUrl;
+    constructor(str_url: string);
+    imm_getHost(): string;
+    imm_getPass(): string;
+    imm_getPort(): number;
+    imm_getUser(): string;
+    imm_getUrl(withProto?: boolean, withUserPass?: boolean, withEndSlash?: boolean): string;
+    imm_getRootUrl(): string;
+    imm_getProto(): string;
+    imm_useWebSocket(): boolean;
+    /**
+     * @return subdomain (starting with a /)
+     */
+    imm_getSubDomain(): string;
+    imm_hasAuthParam(): boolean;
+    imm_useSecureSocket(): boolean;
+    imm_testInfoJson(): boolean;
+    imm_updateBestProto(proto: string, port: number): void;
+    imm_updateForRedirect(host: string, port: number, is_secure: boolean): void;
+    imm_updatePortInfo(proto: string, port: number): void;
+    imm_getOriginalURL(): string;
+    imm_updateFrom(urlInfo: _YY_UrlInfo): void;
 }
 export interface YConditionalResult {
     errorType: number;
@@ -955,6 +984,7 @@ declare class YDevice {
      * @returns {number}
      */
     refresh(): Promise<number>;
+    waitPendingQueries(): Promise<void>;
 }
 /**
  * YFirmwareFile Class: Object describing a loaded firmware file
@@ -1405,65 +1435,65 @@ export declare class YFunction {
      // Helper for initializing standard attributes (used in particular by built-in classes)
      async _i(): Promise<void>
      {
-        let arr_attrNames: string[] = this.constructor._attrList;
-        this._className = this.constructor.name.slice(1);
-        for(let i = 0; i < arr_attrNames.length; i++) {
-            this['_'+arr_attrNames[i]] = this.constructor[arr_attrNames[i].toUpperCase()+'_INVALID'];
-        }
-    }
+     let arr_attrNames: string[] = this.constructor._attrList;
+     this._className = this.constructor.name.slice(1);
+     for(let i = 0; i < arr_attrNames.length; i++) {
+     this['_'+arr_attrNames[i]] = this.constructor[arr_attrNames[i].toUpperCase()+'_INVALID'];
+     }
+     }
 
      // Helper for simple accessors (used in particular by built-in classes)
      async _g(str_attr): Promise<object>
      {
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != YAPI_SUCCESS) {
-                return this.constructor[str_attr.toLocaleUpperCase()+'_INVALID'];
-            }
-        }
-        return this['_'+str_attr];
-    }
+     if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+     if (await this.load(this._yapi.defaultCacheValidity) != YAPI_SUCCESS) {
+     return this.constructor[str_attr.toLocaleUpperCase()+'_INVALID'];
+     }
+     }
+     return this['_'+str_attr];
+     }
 
      // Helper for simple accessors (used in particular by built-in classes)
      async _s(str_attr, obj_val): Promise<number>
      {
-        return this._setAttr(str_attr, String(obj_val));
-    }
+     return this._setAttr(str_attr, String(obj_val));
+     }
 
      // Helper for completing and exporting the class; used by built-in classes
      static _E(arr_attrlist)
      {
-        let className = this.name.slice(1);
-        this._attrList = arr_attrlist;
-        for(let i = 0; i < arr_attrlist.length; i++) {
-            let attrname = arr_attrlist[i];
-            let getMethod = 'get_'+attrname;
-            this.prototype[getMethod] = async function(): Promise<object> { return this._g(attrname); };
-        }
-        this['Find'+className] = function(func) {
-            let str_classname = this.name.slice(1);
-            let obj: YFunction;
-            obj = YFunction._FindFromCache(str_classname, func);
-            if (obj == null) {
-                obj = new this(YAPI, func);
-                YFunction._AddToCache(str_classname, func, obj);
-            }
-            return obj;
-        };
-        this['First'+className] = function() {
-            let str_classname = this.name.slice(1);
-            let next_hwid = YAPI.imm_getFirstHardwareId(str_classname);
-            if(next_hwid == null) return null;
-            return this['Find'+className](next_hwid);
-        };
-        this.prototype['next'+className] = function() {
-            let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
-            if(resolve.errorType != YAPI.SUCCESS) return null;
-            let next_hwid = this._yapi.imm_getNextHardwareId(this._className, resolve.result);
-            if(next_hwid == null) return null;
-            return this.constructor['Find'+className](next_hwid);
-        };
-        this.imm_Init();
-    }
+     let className = this.name.slice(1);
+     this._attrList = arr_attrlist;
+     for(let i = 0; i < arr_attrlist.length; i++) {
+     let attrname = arr_attrlist[i];
+     let getMethod = 'get_'+attrname;
+     this.prototype[getMethod] = async function(): Promise<object> { return this._g(attrname); };
+     }
+     this['Find'+className] = function(func) {
+     let str_classname = this.name.slice(1);
+     let obj: YFunction;
+     obj = YFunction._FindFromCache(str_classname, func);
+     if (obj == null) {
+     obj = new this(YAPI, func);
+     YFunction._AddToCache(str_classname, func, obj);
+     }
+     return obj;
+     };
+     this['First'+className] = function() {
+     let str_classname = this.name.slice(1);
+     let next_hwid = YAPI.imm_getFirstHardwareId(str_classname);
+     if(next_hwid == null) return null;
+     return this['Find'+className](next_hwid);
+     };
+     this.prototype['next'+className] = function() {
+     let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
+     if(resolve.errorType != YAPI.SUCCESS) return null;
+     let next_hwid = this._yapi.imm_getNextHardwareId(this._className, resolve.result);
+     if(next_hwid == null) return null;
+     return this.constructor['Find'+className](next_hwid);
+     };
+     this.imm_Init();
+     }
 
      ********/
     isOnline_async(func: Function, ctx: object): void;
@@ -3229,13 +3259,14 @@ export declare class YSystemEnv {
     hasSSDP: boolean;
     unknownSystemEnvError(): YoctoError;
     hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback): void;
-    getWebSocketHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null;
-    getHttpHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null;
-    getWebSocketCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, ws: _YY_WebSocket): YGenericHub | null;
-    getHttpCallbackHub(yapi: YAPIContext, urlInfo: _YY_UrlInfo, incomingMessage: any, serverResponse: any): YGenericHub | null;
+    getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: _YY_WebSocket): YHubEngine | null;
+    getHttpCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, incomingMessage: any, serverResponse: any): YHubEngine | null;
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;
     loadfile(file: string | Blob): Promise<Uint8Array>;
-    downloadfile(url: string): Promise<Uint8Array>;
+    downloadfile(url: string, yapi: YAPIContext): Promise<Uint8Array>;
+    downloadRemoteCertificate(urlinfo: _YY_UrlInfo): Promise<string>;
 }
 export declare const enum Y_YHubConnType {
     HUB_UNKNOWN = -6,
@@ -3249,38 +3280,76 @@ export declare const enum Y_YHubConnType {
     HUB_REGISTERED = 2,
     HUB_CALLBACK = 3
 }
-export declare abstract class YGenericHub {
+export declare abstract class YHubEngine {
+    protected readonly _hub: YGenericHub;
+    protected readonly _runtime_urlInfo: _YY_UrlInfo;
+    protected lastPingStamp: number;
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo);
+    /** Attempt to establish a connection to the hub asynchronously.
+     *
+     * On success, this method should call this.signalHubConnected()
+     * On temporary failure, this method should call this.imm_signalHubDisconnected()
+     * On fatal failure, this method should call this.imm_commonDisconnect()
+     *
+     * This method is supposed to be redefined by subclasses
+     */
+    reconnectEngine(tryOpenID: string): Promise<void>;
+    imm_disconnectEngineNow(connID?: string): void;
+    /** Perform an HTTP query on the hub
+     *
+     * @param method {string}
+     * @param devUrl {string}
+     * @param obj_body {YHTTPBody|null}
+     * @param tcpchan {number}
+     * @returns {YHTTPRequest}
+     */
+    request(method: string, devUrl: string, obj_body: YHTTPBody | null, tcpchan: number): Promise<YHTTPRequest>;
+    reportFailure(message: string): Promise<void>;
+    imm_updateLastPinfStamp(): void;
+    imm_isConnected(): boolean;
+    imm_isForwarded(): boolean;
+    waitForPendingQueries(ms_duration: number): Promise<void>;
+}
+export declare class YGenericHub {
     private static globalHubRefCounter;
-    _hubRef: number;
+    private _hubRef;
+    private _hubEngine;
     _yapi: YAPIContext;
-    _lastErrorType: number;
-    _lastErrorMsg: string;
-    urlInfo: _YY_UrlInfo;
-    hubSerial: string;
+    private _lastErrorType;
+    private _lastErrorMsg;
+    readonly urlInfo: _YY_UrlInfo;
+    private hubSerial;
     serialByYdx: string[];
-    _currentState: Y_YHubConnType;
-    _targetState: Y_YHubConnType;
-    currentConnID: string;
-    connResolvers: YConditionalResultResolver[];
-    disconnResolvers: YConditionalResultResolver[];
+    private _currentState;
+    private _targetState;
+    private currentConnID;
+    private connResolvers;
+    private disconnResolvers;
     retryDelay: number;
-    _reconnectionTimer: any;
-    _rwAccess: boolean | null;
-    keepTryingExpiration: number;
-    keepTryingTimeoutId: any;
-    stalledTimeoutMs: number;
+    private _reconnectionTimer;
+    private _rwAccess;
+    private keepTryingExpiration;
+    private keepTryingTimeoutId;
+    private stalledTimeoutMs;
     timeoutId: any;
-    lastPingStamp: number;
     isNotifWorking: boolean;
     devListExpires: number;
     notifPos: number;
     notifCarryOver: string;
-    missing: object;
-    _firstArrivalCallback: boolean;
+    private _firstArrivalCallback;
     _missing: YBoolDict;
-    _knownUrls: string[];
+    private _knownUrls;
+    private _hubMode;
+    private _portInfo;
+    private _usePureHTTP;
     constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
+    imm_isFirstArrivalCallback(): boolean;
+    imm_setFirstArrivalCallback(isfirst: boolean): void;
+    imm_getNotifyPos(): number;
+    imm_getcurrentState(): Y_YHubConnType;
+    imm_getCurrentConnID(): string;
+    imm_setCurrentConnID(id: string): void;
     /**
      * Returns the numerical error code of the latest error with the function.
      * This method is mostly useful when using the Yoctopuce library with
@@ -3310,6 +3379,7 @@ export declare abstract class YGenericHub {
     imm_isForwarded(): boolean;
     imm_addKnownUrl(urlInfo: _YY_UrlInfo): void;
     imm_updateUrl(urlInfo: _YY_UrlInfo): void;
+    imm_updateForRedirect(url: string): void;
     imm_inheritFrom(otherHub: YGenericHub): void;
     imm_getNewConnID(): string;
     imm_tryTestConnectFor(mstimeout: number): void;
@@ -3354,8 +3424,6 @@ export declare abstract class YGenericHub {
      * This method may be redefined by subclasses to do additional
      * cleanup before invoking this.imm_commonDisconnect() to bring
      * communication down, to prevent automatic reconnect.
-     *
-     * note: super.xxx() cannot be used in an async function !
      */
     detach(errType?: number, errMsg?: string): Promise<void>;
     /** Wait until the hub is fully disconnected
@@ -3402,25 +3470,42 @@ export declare abstract class YGenericHub {
     firmwareUpdate(serial: string, firmware: YFirmwareFile, settings: Uint8Array, progress: YProgressCallback): Promise<string[] | null>;
     reportFailure(message: string): Promise<void>;
     hasRwAccess(): Promise<boolean>;
+    imm_isRwAccess(): boolean;
+    imm_setRwAccess(rwAccess: boolean): void;
     getHubRef(): number;
     get_knownUrls(): string[];
     imm_forgetUrls(): void;
+    imm_getOriginalURL(): string;
+    imm_getRootUrl(): string;
+    imm_getSerialNumber(): string;
+    imm_setSerialNumber(serial: string): void;
+    imm_getNetworkTimeout(): number;
+    imm_setNetworkTimeout(mstimeout: number): void;
+    imm_setHubEngine(engine: YHubEngine): void;
+    imm_setRetryDelay(value: number): void;
+    imm_SetErr(errorType: number, errorMsg: string): void;
+    WebSocketJoin(ws: _YY_WebSocket, arr_credentials: WebSocketCredential[], closeCallback: Function): Promise<boolean>;
+    imm_UseBestProto(): _YY_UrlInfo;
+    imm_useMixedMode(): boolean;
+    waitForPendingQueries(ms_timeout: number): Promise<void>;
 }
-export declare class YHttpHub extends YGenericHub {
+export declare class YHttpEngine extends YHubEngine {
     infoJson: any;
+    ha1: string;
     realm: string;
     nonce: string;
+    opaque: string;
     nonceCount: number;
     notbynRequest: any;
-    constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
-    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | Uint8Array | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => any): any;
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo);
+    imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | Uint8Array | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string, can_be_retry: boolean) => any): any;
     imm_abortRequest(clientRequest: any): void;
-    imm_sendRequest(method: string, relUrl: string, obj_body: YHTTPBody | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string) => void): any;
+    imm_sendRequest(method: string, relUrl: string, obj_body: YHTTPBody | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string, can_be_retry: boolean) => void): any;
     tryFetch(relUrl: string): Promise<YConditionalResult>;
     /** Handle HTTP-based event-monitoring work on a registered hub
      */
-    reconnect(tryOpenID: string): Promise<void>;
-    imm_disconnectNow(connID?: string): boolean;
+    reconnectEngine(tryOpenID: string): Promise<void>;
+    imm_disconnectEngineNow(connID?: string): void;
     /** Perform an HTTP query on the hub
      *
      * @param method {string}
@@ -3484,7 +3569,7 @@ declare const enum WSConnState {
     READY = 4,
     CONNECTED = 5
 }
-export declare abstract class YWebSocketHub extends YGenericHub {
+export declare abstract class YWebSocketEngine extends YHubEngine {
     _DEFAULT_TCP_ROUND_TRIP_TIME: number;
     _DEFAULT_TCP_MAX_WINDOW_SIZE: number;
     _YIO_DEFAULT_TCP_TIMEOUT: number;
@@ -3522,7 +3607,7 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     fwd_credentials: WebSocketCredential[];
     fwd_connectionState: number;
     fwd_closeCallback: Function | null;
-    constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo);
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo);
     /** Open an outgoing websocket
      *
      * @param str_url {string}
@@ -3538,7 +3623,7 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     imm_asyncWebSocketError(errorType: number, message: string): void;
     /** Handle websocket-based event-monitoring work on a registered hub
      */
-    reconnect(tryOpenID: string): Promise<void>;
+    reconnectEngine(tryOpenID: string): Promise<void>;
     /** Compute websocket authentication sha1 key
      *
      * @param user {string}
@@ -3563,6 +3648,8 @@ export declare abstract class YWebSocketHub extends YGenericHub {
      * @param arr_bytes {Uint8Array}
      **/
     imm_webSocketSend(arr_bytes: Uint8Array): void;
+    imm_hasPendingRequest(): boolean;
+    waitForPendingQueries(ms_duration: number): Promise<void>;
     /** Perform an HTTP query on the hub
      *
      * @param method {string}
@@ -3584,8 +3671,8 @@ export declare abstract class YWebSocketHub extends YGenericHub {
     imm_sendAPIAnnouncePkt(): boolean;
     imm_handleAPIAuthPkt(msg: Uint8Array): void;
     detach(errType?: number, errMsg?: string): Promise<void>;
-    imm_disconnectNow(connID?: string): boolean;
-    imm_isOnline(): boolean;
+    imm_disconnectEngineNow(connID?: string): void;
+    imm_isConnected(): boolean;
 }
 interface _YY_SSDPCacheEntry {
     serial: string;
@@ -3779,6 +3866,8 @@ export declare class YAPIContext {
     _knownHubsBySerial: YGenericHubDict;
     _knownHubsByUrl: YGenericHubDict;
     _connectedHubs: YGenericHub[];
+    _trustedCertificate: string[];
+    _networkSecurityOptions: number;
     _yhub_cache: YHubDict;
     _ssdpManager: YGenericSSDPManager | null;
     _devs: YDeviceDict;
@@ -3824,6 +3913,12 @@ export declare class YAPIContext {
     readonly RFID_SOFT_ERROR: number;
     readonly RFID_HARD_ERROR: number;
     readonly BUFFER_TOO_SMALL: number;
+    readonly DNS_ERROR: number;
+    readonly SSL_UNK_CERT: number;
+    readonly NO_TRUSTED_CA_CHECK: number;
+    readonly NO_EXPIRATION_CHECK: number;
+    readonly NO_HOSTNAME_CHECK: number;
+    readonly LEGACY: number;
     defaultCacheValidity: number;
     static readonly SUCCESS: number;
     static readonly NOT_INITIALIZED: number;
@@ -3844,6 +3939,12 @@ export declare class YAPIContext {
     static readonly RFID_SOFT_ERROR: number;
     static readonly RFID_HARD_ERROR: number;
     static readonly BUFFER_TOO_SMALL: number;
+    static readonly DNS_ERROR: number;
+    static readonly SSL_UNK_CERT: number;
+    static readonly NO_TRUSTED_CA_CHECK: number;
+    static readonly NO_EXPIRATION_CHECK: number;
+    static readonly NO_HOSTNAME_CHECK: number;
+    static readonly LEGACY: number;
     readonly INVALID_INT: number;
     readonly INVALID_UINT: number;
     readonly INVALID_LONG: number;
@@ -3856,6 +3957,8 @@ export declare class YAPIContext {
     readonly DETECT_USB: number;
     readonly DETECT_NET: number;
     readonly DETECT_ALL: number;
+    readonly YOCTO_DEFAULT_HTTP_PORT: number;
+    readonly YOCTO_DEFAULT_HTTPS_PORT: number;
     constructor(system_env?: YSystemEnv);
     imm_ResetToDefaults(): void;
     _throw(int_errType: number, str_errMsg: string, obj_retVal?: any): any;
@@ -4027,6 +4130,10 @@ export declare class YAPIContext {
     SetNetworkTimeout_internal(networkMsTimeout: number): Promise<void>;
     GetNetworkTimeout_internal(): Promise<number>;
     AddUdevRule_internal(force: boolean): Promise<string>;
+    DownloadHostCertificate_internal(url: string, mstimeout: number): Promise<string>;
+    SetTrustedCertificatesList_internal(certificatePath: string): Promise<string>;
+    SetNetworkSecurityOptions_internal(opts: number): Promise<string>;
+    AddTrustedCertificates_internal(certificate: string): Promise<string>;
     /**
      * Modifies the delay between each forced enumeration of the used YoctoHubs.
      * By default, the library performs a full enumeration every 10 seconds.
@@ -4059,6 +4166,52 @@ export declare class YAPIContext {
      * On failure, returns a string that starts with "error:".
      */
     AddUdevRule(force: boolean): Promise<string>;
+    /**
+     * Download the TLS/SSL certificate from the hub. This function allows to download a TLS/SSL certificate to add it
+     * to the list of trusted certificates using the AddTrustedCertificates method.
+     *
+     * @param url : the root URL of the VirtualHub V2 or HTTP server.
+     * @param mstimeout : the number of milliseconds available to download the certificate.
+     *
+     * @return a string containing the certificate. In case of error, returns a string starting with "error:".
+     */
+    DownloadHostCertificate(url: string, mstimeout: number): Promise<string>;
+    /**
+     * Adds a TLS/SSL certificate to the list of trusted certificates. By default, the library
+     * library will reject TLS/SSL connections to servers whose certificate is not known. This function
+     * function allows to add a list of known certificates. It is also possible to disable the verification
+     * using the SetNetworkSecurityOptions method.
+     *
+     * @param certificate : a string containing one or more certificates.
+     *
+     * @return an empty string if the certificate has been added correctly.
+     *         In case of error, returns a string starting with "error:".
+     */
+    AddTrustedCertificates(certificate: string): Promise<string>;
+    /**
+     * Set the path of Certificate Authority file on local filesystem. This method takes as a parameter
+     * the path of a file containing all certificates in PEM format.
+     * For technical reasons, only one file can be specified. So if you need to connect to several Hubs
+     * instances with self-signed certificates, you'll need to use
+     * a single file containing all the certificates end-to-end. Passing a empty string will restore the
+     * default settings. This option is only supported by PHP library.
+     *
+     * @param certificatePath : the path of the file containing all certificates in PEM format.
+     *
+     * @return an empty string if the certificate has been added correctly.
+     *         In case of error, returns a string starting with "error:".
+     */
+    SetTrustedCertificatesList(certificatePath: string): Promise<string>;
+    /**
+     * Enables or disables certain TLS/SSL certificate checks.
+     *
+     * @param opts : The options are YAPI.NO_TRUSTED_CA_CHECK,
+     *         YAPI.NO_EXPIRATION_CHECK, YAPI.NO_HOSTNAME_CHECK.
+     *
+     * @return an empty string if the options are taken into account.
+     *         On error, returns a string beginning with "error:".
+     */
+    SetNetworkSecurityOptions(opts: number): Promise<string>;
     /**
      * Modifies the network connection delay for yRegisterHub() and yUpdateDeviceList().
      * This delay impacts only the YoctoHubs and VirtualHub
@@ -4195,8 +4348,6 @@ export declare class YAPIContext {
      * we provide it here for convenience.
      */
     LogUnhandledPromiseRejections(): Promise<void>;
-    imm_parseRegisteredUrl(str_url: string): _YY_UrlInfo;
-    imm_registerHub_internal(urlInfo: _YY_UrlInfo): YGenericHub | null;
     /**
      * Setup the Yoctopuce library to use modules connected on a given machine. Idealy this
      * call will be made once at the begining of your application.  The

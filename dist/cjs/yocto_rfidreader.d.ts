@@ -444,7 +444,7 @@ export declare class YRfidOptions {
      */
     HexKey: string;
     /**
-     * Force the use of single-block commands to access RFID tag memory blocks.
+     * Forces the use of single-block commands to access RFID tag memory blocks.
      * By default, the Yoctopuce library uses the most efficient access strategy
      * generally available for each tag type, but you can force the use of
      * single-block commands if the RFID tags you are using do not support
@@ -453,7 +453,7 @@ export declare class YRfidOptions {
      */
     ForceSingleBlockAccess: boolean;
     /**
-     * Force the use of multi-block commands to access RFID tag memory blocks.
+     * Forces the use of multi-block commands to access RFID tag memory blocks.
      * By default, the Yoctopuce library uses the most efficient access strategy
      * generally available for each tag type, but you can force the use of
      * multi-block commands if you know for sure that the RFID tags you are using
@@ -464,7 +464,7 @@ export declare class YRfidOptions {
      */
     ForceMultiBlockAccess: boolean;
     /**
-     * Enable direct access to RFID tag control blocks.
+     * Enables direct access to RFID tag control blocks.
      * By default, Yoctopuce library read and write functions only work
      * on data blocks and automatically skip special blocks, as specific functions are provided
      * to configure security parameters found in control blocks.
@@ -483,7 +483,7 @@ export declare class YRfidOptions {
      */
     DisableBoundaryChecks: boolean;
     /**
-     * Enable simulation mode to check the affected block range as well
+     * Enables simulation mode to check the affected block range as well
      * as access rights. When this option is active, the operation is
      * not fully applied to the RFID tag but the affected block range
      * is determined and the optional access key is tested on these blocks.
@@ -510,14 +510,14 @@ export declare class YRfidOptions {
  *
  * - A tag's memory is generally organized in fixed-size blocks.
  * - At tag level, each block must be read and written in its entirety.
- * - Some blocks are special configuration blocks, and may alter the tag's behaviour
- * tag behavior if they are rewritten with arbitrary data.
+ * - Some blocks are special configuration blocks, and may alter the tag's behavior
+ * if they are rewritten with arbitrary data.
  * - Data blocks can be set to read-only mode, but on many tags, this operation is irreversible.
  *
  *
  * By default, the RfidReader class automatically manages these blocks so that
  * arbitrary size data  can be manipulated of  without risk and without knowledge of
- * tag architecture .
+ * tag architecture.
  */
 export declare class YRfidReader extends YFunction {
     _className: string;
@@ -647,8 +647,8 @@ export declare class YRfidReader extends YFunction {
      */
     get_tagIdList(): Promise<string[]>;
     /**
-     * Retourne la description des propriétés d'un tag RFID présent.
-     * Cette fonction peut causer des communications avec le tag.
+     * Returns a description of the properties of an existing RFID tag.
+     * This function can cause communications with the tag.
      *
      * @param tagId : identifier of the tag to check
      * @param status : an RfidStatus object that will contain
@@ -661,7 +661,7 @@ export declare class YRfidReader extends YFunction {
      */
     get_tagInfo(tagId: string, status: YRfidStatus): Promise<YRfidTagInfo>;
     /**
-     * Change an RFID tag configuration to prevents any further write to
+     * Changes an RFID tag configuration to prevents any further write to
      * the selected blocks. This operation is definitive and irreversible.
      * Depending on the tag type and block index, adjascent blocks may become
      * read-only as well, based on the locking granularity.
@@ -903,13 +903,19 @@ export declare class YRfidReader extends YFunction {
      * Note that only the characters présent  in  the provided string
      * will be written, there is no notion of string length. If your
      * string data have variable length, you'll have to encode the
-     * string length yourself.
+     * string length yourself, with a terminal zero for instannce.
+     *
+     * This function only works with ISO-latin characters, if you wish to
+     * write strings encoded with alternate character sets, you'll have to
+     * use tagWriteBin() function.
+     *
      * By default firstBlock cannot be a special block, and any special block
      * encountered in the middle of the write operation will be skipped
      * automatically. The last data block affected by the operation will
      * be automatically padded with zeros if neccessary.
      * If you rather want to rewrite special blocks as well,
-     * use the EnableRawAccess field from the options parameter.
+     * use the EnableRawAccess field from the options parameter
+     * (definitely not recommanded).
      *
      * @param tagId : identifier of the tag to use
      * @param firstBlock : block number where write should start
@@ -943,7 +949,7 @@ export declare class YRfidReader extends YFunction {
      */
     tagGetAFI(tagId: string, options: YRfidOptions, status: YRfidStatus): Promise<number>;
     /**
-     * Change an RFID tag AFI byte (ISO 15693 only).
+     * Changes an RFID tag AFI byte (ISO 15693 only).
      *
      * @param tagId : identifier of the tag to use
      * @param afi : the AFI value to write (0...255)
@@ -993,7 +999,7 @@ export declare class YRfidReader extends YFunction {
      */
     tagGetDSFID(tagId: string, options: YRfidOptions, status: YRfidStatus): Promise<number>;
     /**
-     * Change an RFID tag DSFID byte (ISO 15693 only).
+     * Changes an RFID tag DSFID byte (ISO 15693 only).
      *
      * @param tagId : identifier of the tag to use
      * @param dsfid : the DSFID value to write (0...255)

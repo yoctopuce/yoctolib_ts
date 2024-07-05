@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 60569 2024-04-15 14:50:06Z seb $
+ * $Id: yocto_api_nodejs.ts 61542 2024-06-19 09:08:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 export * from "./yocto_api.js";
-import { YAPI, YGenericHub, YHttpHub, YWebSocketHub, YGenericSSDPManager, YHTTPRequest, YSystemEnv, } from "./yocto_api.js";
+import { YAPI, YAPI_NO_TRUSTED_CA_CHECK, YGenericSSDPManager, YHttpEngine, YHTTPRequest, YHubEngine, YoctoError, YSystemEnv, YWebSocketEngine, } from "./yocto_api.js";
 import 'process';
 import * as os from 'os';
 import * as fs from 'fs';
@@ -45,6 +45,7 @@ import * as dgram from 'dgram';
 import * as crypto from 'crypto';
 import * as http from 'http';
 import * as https from 'https';
+import * as tls from 'node:tls';
 import WebSocket from 'ws';
 /**
  * System environment definition, for use with Node.js libraries
@@ -60,17 +61,17 @@ export class YSystemEnvNodeJs extends YSystemEnv {
             handler(reason, promise);
         });
     }
-    getWebSocketHub(obj_yapi, urlInfo) {
-        return new YWebSocketNodeHub(obj_yapi, urlInfo);
+    getWebSocketEngine(hub, runtime_urlInfo) {
+        return new YWebSocketNodeEngine(hub, runtime_urlInfo);
     }
-    getHttpHub(obj_yapi, urlInfo) {
-        return new YHttpNodeHub(obj_yapi, urlInfo);
+    getHttpEngine(ohub, runtime_urlInfo) {
+        return new YHttpNodeEngine(ohub, runtime_urlInfo);
     }
-    getWebSocketCallbackHub(obj_yapi, urlInfo, ws) {
-        return new YWebSocketCallbackHub(obj_yapi, urlInfo, ws);
+    getWebSocketCallbackEngine(hub, runtime_urlInfo, ws) {
+        return new YWebSocketCallbackEngine(hub, runtime_urlInfo, ws);
     }
-    getHttpCallbackHub(obj_yapi, urlInfo, incomingMessage, serverResponse) {
-        return new YHttpCallbackHub(obj_yapi, urlInfo, incomingMessage, serverResponse);
+    getHttpCallbackEngine(hub, runtime_urlInfo, incomingMessage, serverResponse) {
+        return new YHttpCallbackEngine(hub, runtime_urlInfo, incomingMessage, serverResponse);
     }
     getSSDPManager(obj_yapi) {
         return new YNodeSSDPManager(obj_yapi);
@@ -87,10 +88,43 @@ export class YSystemEnvNodeJs extends YSystemEnv {
             });
         });
     }
-    downloadfile(url) {
+    downloadfile(url, yapi) {
         return new Promise((resolve, reject) => {
-            http.get(url, (res) => {
-                if (res.statusCode != 200 && res.statusCode != 304) {
+            let requestObj;
+            let options;
+            if (url.startsWith("https://")) {
+                requestObj = https;
+                options = {
+                    rejectUnauthorized: (yapi._networkSecurityOptions & YAPI_NO_TRUSTED_CA_CHECK) == 0
+                };
+                let secureContext = tls.createSecureContext();
+                if (yapi._trustedCertificate.length > 0) {
+                    for (let i = 0; i < yapi._trustedCertificate.length; i++) {
+                        secureContext.context.addCACert(yapi._trustedCertificate[i]);
+                    }
+                    options['secureContext'] = secureContext;
+                }
+            }
+            else {
+                requestObj = http;
+                options = {};
+            }
+            requestObj.get(url, options, (res) => {
+                if (res.statusCode == 301 || res.statusCode == 302 || res.statusCode == 307 || res.statusCode == 308) {
+                    let location = res.headers['location'];
+                    if (location) {
+                        this.downloadfile(location, yapi).then((value) => {
+                            resolve(value);
+                        }).catch((error) => {
+                            reject(error);
+                        });
+                    }
+                    else {
+                        // No such file
+                        reject(new Error('HTTP request return status ' + res.statusCode + ' (redirect)'));
+                    }
+                }
+                else if (res.statusCode != 200 && res.statusCode != 304) {
                     if (res.statusCode) {
                         reject(new Error('HTTP error ' + res.statusCode));
                     }
@@ -108,16 +142,59 @@ export class YSystemEnvNodeJs extends YSystemEnv {
                     });
                 }
             }).on('error', (e) => {
-                reject(new Error('HTTP error: ' + e.message));
+                let ecx = new YoctoError('HTTP error: ' + e.message);
+                if (e.code == "DEPTH_ZERO_SELF_SIGNED_CERT") {
+                    ecx.errorType = YAPI.SSL_UNK_CERT;
+                }
+                else {
+                    ecx.errorType = YAPI.IO_ERROR;
+                }
+                reject(ecx);
             });
+        });
+    }
+    downloadRemoteCertificate(urlinfo) {
+        const options = {
+            agent: false,
+            method: 'GET',
+            path: '/',
+            port: urlinfo.imm_getPort(),
+            rejectUnauthorized: false,
+            hostname: urlinfo.imm_getHost()
+        };
+        return new Promise((resolve, reject) => {
+            try {
+                const req = https.request(options, (res) => {
+                    const crt = res.socket.getPeerCertificate(true);
+                    let raw = crt.raw.toString('base64');
+                    let tmp = ["-----BEGIN CERTIFICATE-----"];
+                    while (raw.length > 0) {
+                        if (raw.length > 64) {
+                            tmp.push(raw.slice(0, 64));
+                            raw = raw.slice(64);
+                        }
+                        else {
+                            tmp.push(raw);
+                            raw = '';
+                        }
+                    }
+                    tmp.push('-----END CERTIFICATE-----');
+                    resolve(tmp.join('\n'));
+                });
+                req.on('error', reject);
+                req.end();
+            }
+            catch (e) {
+                reject("error:" + e);
+            }
         });
     }
 }
 const _NodeJsSystemEnv = new YSystemEnvNodeJs();
 YAPI.imm_setSystemEnv(_NodeJsSystemEnv);
-class YHttpCallbackHub extends YGenericHub {
-    constructor(yapi, urlInfo, incomingMessage, serverResponse) {
-        super(yapi, urlInfo);
+class YHttpCallbackEngine extends YHubEngine {
+    constructor(hub, runtime_urlInfo, incomingMessage, serverResponse) {
+        super(hub, runtime_urlInfo);
         this._callbackCache = { sign: '' };
         let cbhub = this;
         this._incomingMessage = incomingMessage;
@@ -129,7 +206,7 @@ class YHttpCallbackHub extends YGenericHub {
             });
             cbhub._incomingMessage.on('end', () => {
                 cbhub._callbackData = new Uint8Array(cbhub._callbackData);
-                cbhub._callbackCache = JSON.parse(cbhub._yapi.imm_bin2str(cbhub._callbackData));
+                cbhub._callbackCache = JSON.parse(cbhub._hub._yapi.imm_bin2str(cbhub._callbackData));
                 resolve(true);
             });
         });
@@ -140,47 +217,47 @@ class YHttpCallbackHub extends YGenericHub {
     async reconnect(tryOpenID) {
         await this.httpCallbackPromise;
         if (this._incomingMessage.method != 'POST') {
-            this.imm_commonDisconnect(tryOpenID, YAPI.INVALID_ARGUMENT, 'HTTP POST expected');
+            this._hub.imm_commonDisconnect(tryOpenID, YAPI.INVALID_ARGUMENT, 'HTTP POST expected');
             return;
         }
         if (this._callbackData.length == 0) {
-            this.imm_commonDisconnect(tryOpenID, YAPI.NO_MORE_DATA, 'Empty POST body');
+            this._hub.imm_commonDisconnect(tryOpenID, YAPI.NO_MORE_DATA, 'Empty POST body');
             return;
         }
-        if (this.urlInfo.pass != '') {
+        if (this._runtime_urlInfo.imm_getPass() != '') {
             // callback data signed, verify signature
             if (!this._callbackCache.sign) {
-                this.imm_commonDisconnect(tryOpenID, YAPI.NO_MORE_DATA, 'missing signature from incoming YoctoHub (callback password required)');
+                this._hub.imm_commonDisconnect(tryOpenID, YAPI.NO_MORE_DATA, 'missing signature from incoming YoctoHub (callback password required)');
                 this._callbackCache = { sign: '' };
                 return;
             }
             let sign = this._callbackCache.sign;
-            let pass = this.urlInfo.pass;
+            let pass = this._runtime_urlInfo.imm_getPass();
             let salt;
             if (pass.length == 32) {
                 salt = pass.toLowerCase();
             }
             else {
-                salt = this._yapi.imm_bin2hexstr(this._yapi.imm_yMD5(pass)).toLowerCase();
+                salt = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_yMD5(pass)).toLowerCase();
             }
-            let patched = this._yapi.imm_bin2str(this._callbackData).replace(sign, salt);
-            let check = this._yapi.imm_bin2hexstr(this._yapi.imm_yMD5(patched));
+            let patched = this._hub._yapi.imm_bin2str(this._callbackData).replace(sign, salt);
+            let check = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_yMD5(patched));
             if (check.toLowerCase() != sign.toLowerCase()) {
                 //this._yapi.imm_log('Computed signature: '+ check);
                 //this._yapi.imm_log('Received signature: '+ sign);
-                this.imm_commonDisconnect(tryOpenID, YAPI.UNAUTHORIZED, 'invalid signature from incoming YoctoHub (invalid callback password)');
+                this._hub.imm_commonDisconnect(tryOpenID, YAPI.UNAUTHORIZED, 'invalid signature from incoming YoctoHub (invalid callback password)');
                 this._callbackCache = { sign: '' };
                 return;
             }
         }
-        if (this._currentState < 0 /* Y_YHubConnType.HUB_CONNECTED */) {
+        if (this._hub.imm_getcurrentState() < 0 /* Y_YHubConnType.HUB_CONNECTED */) {
             if (this._callbackCache.serial) {
-                this.hubSerial = this._callbackCache.serial;
+                this._hub.imm_setSerialNumber(this._callbackCache.serial);
             }
             else {
-                this.hubSerial = this._callbackCache['/api.json']['module']['serialNumber'];
+                this._hub.imm_setSerialNumber(this._callbackCache['/api.json']['module']['serialNumber']);
             }
-            await this.signalHubConnected(tryOpenID, this.hubSerial);
+            await this._hub.signalHubConnected(tryOpenID, this._hub.imm_getSerialNumber());
         }
     }
     /** Perform an HTTP query on the hub
@@ -194,8 +271,8 @@ class YHttpCallbackHub extends YGenericHub {
     async request(str_method, devUrl, obj_body, tcpchan) {
         let yreq = new YHTTPRequest(null);
         if (str_method == 'POST' && obj_body) {
-            let boundary = this.imm_getBoundary();
-            let body = this.imm_formEncodeBody(obj_body, boundary);
+            let boundary = this._hub.imm_getBoundary();
+            let body = this._hub.imm_formEncodeBody(obj_body, boundary);
             this._serverResponse.write('\n@YoctoAPI:' + str_method + ' ' + devUrl + ' ' + body.length + ':' + boundary + '\n');
             this._serverResponse.write(Buffer.from(body));
         }
@@ -226,7 +303,7 @@ class YHttpCallbackHub extends YGenericHub {
                         // @ts-ignore
                         jsonres = jsonres[subfun[1]];
                     }
-                    yreq.bin_result = this._yapi.imm_str2bin(JSON.stringify(jsonres));
+                    yreq.bin_result = this._hub._yapi.imm_str2bin(JSON.stringify(jsonres));
                 }
             }
             else {
@@ -246,32 +323,63 @@ class YHttpCallbackHub extends YGenericHub {
         this._serverResponse.write('\n!YoctoAPI:' + message + '\n');
     }
 }
-class YHttpNodeHub extends YHttpHub {
-    constructor(yapi, urlInfo) {
-        super(yapi, urlInfo);
+class YHttpNodeEngine extends YHttpEngine {
+    constructor(hub, runtime_urlInfo) {
+        super(hub, runtime_urlInfo);
         this.agent = new http.Agent({ keepAlive: true });
-        this.agenthttps = new https.Agent({ keepAlive: true });
+        this.agenthttps = new https.Agent({
+            keepAlive: true
+        });
     }
     // Low-level function to create an HTTP client request (abstraction layer)
     imm_makeRequest(method, relUrl, contentType, body, onProgress, onSuccess, onError) {
-        let agentObj;
         let requestObj;
-        if (this.urlInfo.proto == 'https://') {
-            agentObj = this.agenthttps;
+        let options;
+        if (this._runtime_urlInfo.imm_useSecureSocket()) {
             requestObj = https;
+            const mixedMode = this._hub.imm_useMixedMode();
+            const disableCertCheck = (this._hub._yapi._networkSecurityOptions & YAPI_NO_TRUSTED_CA_CHECK) != 0 || mixedMode;
+            options = {
+                agent: this.agenthttps,
+                method: method,
+                hostname: this._runtime_urlInfo.imm_getHost(),
+                port: this._runtime_urlInfo.imm_getPort(),
+                path: this._runtime_urlInfo.imm_getSubDomain() + relUrl,
+                headers: { 'Content-Type': contentType },
+                rejectUnauthorized: !disableCertCheck
+            };
+            let secureContext = tls.createSecureContext();
+            if (this._hub._yapi._trustedCertificate.length > 0) {
+                for (let i = 0; i < this._hub._yapi._trustedCertificate.length; i++) {
+                    secureContext.context.addCACert(this._hub._yapi._trustedCertificate[i]);
+                }
+                options['secureContext'] = secureContext;
+            }
         }
         else {
-            agentObj = this.agent;
             requestObj = http;
+            options = {
+                agent: this.agent,
+                method: method,
+                folowredirect: true,
+                hostname: this._runtime_urlInfo.imm_getHost(),
+                port: this._runtime_urlInfo.imm_getPort(),
+                path: this._runtime_urlInfo.imm_getSubDomain() + relUrl,
+                headers: { 'Content-Type': contentType },
+            };
         }
-        let options = {
-            agent: agentObj,
-            method: method,
-            hostname: this.urlInfo.host,
-            port: this.urlInfo.port,
-            path: '/' + this.urlInfo.domain + relUrl,
-            headers: { 'Content-Type': contentType }
-        };
+        if (this.ha1 != "") {
+            let ha2_clear = method + ":" + options.path;
+            let ha2 = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_yMD5(ha2_clear)).toLowerCase();
+            let cnonce = Math.floor(Math.random() * 2147483647).toString(16).toLowerCase();
+            let nc = (++this.nonceCount).toString(16).toLowerCase();
+            let plaintext = this.ha1 + ":" + this.nonce + ":" + nc + ":" + cnonce + ":auth:" + ha2;
+            let response = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_yMD5(plaintext)).toLowerCase();
+            let auth = "Digest username=\"" + this._runtime_urlInfo.imm_getUser() + "\", realm=\"" + this.realm
+                + "\", nonce=\"" + this.nonce + "\", uri=\"" + options.path + "\", qop=auth, nc=" + nc
+                + ", cnonce=\"" + cnonce + "\", response=\"" + response + "\", opaque=\"" + this.opaque + "\"";
+            options.headers["Authorization"] = auth;
+        }
         let bodyBuff = null;
         if (body !== null) {
             bodyBuff = Buffer.from(body);
@@ -279,17 +387,17 @@ class YHttpNodeHub extends YHttpHub {
                 options.headers['Content-Length'] = bodyBuff.length;
             }
         }
-        // FIXME: should implement digest authentication for basic HTTP
+        //console.log(options);
         let response = Buffer.alloc(0);
         let endReceived = false;
         let closeWithoutEndTimeout = null;
         let httpRequest = requestObj.request(options, (res) => {
-            if (this.imm_isDisconnecting()) {
+            if (this._hub.imm_isDisconnecting()) {
                 return;
             }
             if (res.statusCode == 200 || res.statusCode == 304) {
                 res.on('data', (chunk) => {
-                    if (this.imm_isDisconnecting()) {
+                    if (this._hub.imm_isDisconnecting()) {
                         return;
                     }
                     // receiving data properly
@@ -306,7 +414,7 @@ class YHttpNodeHub extends YHttpHub {
                         clearTimeout(closeWithoutEndTimeout);
                         closeWithoutEndTimeout = null;
                     }
-                    if (this.imm_isDisconnecting()) {
+                    if (this._hub.imm_isDisconnecting()) {
                         return;
                     }
                     if (onSuccess) {
@@ -314,35 +422,100 @@ class YHttpNodeHub extends YHttpHub {
                     }
                 });
             }
-            else if (res.statusCode == 401 || res.statusCode == 204) {
+            else if (res.statusCode == 401) {
+                // authentication required, process authentication headers
+                if (this._runtime_urlInfo.imm_hasAuthParam()) {
+                    // parse header to find
+                    let auth_info = res.headers['www-authenticate'];
+                    if (auth_info && auth_info.startsWith("Digest")) {
+                        let realm = "";
+                        let qop = "";
+                        let opaque = "";
+                        let nonce = "";
+                        auth_info = auth_info.substring(6).trim();
+                        let parts = auth_info.split(', ');
+                        for (let i = 0; i < parts.length; i++) {
+                            let elms = parts[i].split("=");
+                            if (elms && elms.length > 1) {
+                                let value = elms[1].trim();
+                                if (value[0] == '"') {
+                                    value = value.substring(1, value.length - 1);
+                                }
+                                if (elms[0] == 'realm') {
+                                    realm = value;
+                                }
+                                else if (elms[0] == 'qop') {
+                                    qop = value;
+                                }
+                                else if (elms[0] == 'nonce') {
+                                    nonce = value;
+                                }
+                                else if (elms[0] == 'opaque') {
+                                    opaque = value;
+                                }
+                            }
+                        }
+                        if (qop == "auth") {
+                            this.realm = realm;
+                            this.nonce = nonce;
+                            this.opaque = opaque;
+                            let plaintext = this._runtime_urlInfo.imm_getUser() + ":" + realm + ":" + this._runtime_urlInfo.imm_getPass();
+                            this.ha1 = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_yMD5(plaintext)).toLowerCase();
+                            onError(YAPI.UNAUTHORIZED, 'Unauthorized access (' + res.statusCode + ')', true);
+                            return;
+                        }
+                    }
+                }
+                onError(YAPI.UNAUTHORIZED, 'Unauthorized access (' + res.statusCode + ')', false);
+            }
+            else if (res.statusCode == 204) {
                 // Authentication failure (204 == x-yauth)
                 this.infoJson.stamp = 0; // force to reload nonce/domain
-                onError(YAPI.UNAUTHORIZED, 'Unauthorized access (' + res.statusCode + ')');
+                onError(YAPI.UNAUTHORIZED, 'Unauthorized access (' + res.statusCode + ')', false);
             }
             else if (res.statusCode == 404) {
                 // No such file
-                onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)');
+                onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)', false);
+            }
+            else if (res.statusCode == 301 || res.statusCode == 302 || res.statusCode == 307 || res.statusCode == 308) {
+                let location = res.headers['location'];
+                if (location) {
+                    endReceived = true;
+                    this._hub.imm_updateForRedirect(location);
+                    onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status ' + res.statusCode + ' (redirect)', true);
+                }
+                else {
+                    // No such file
+                    onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status ' + res.statusCode + ' (redirect)', false);
+                }
             }
             else {
-                onError(YAPI.IO_ERROR, 'HTTP request failed with status ' + res.statusCode);
+                onError(YAPI.IO_ERROR, 'HTTP request failed with status ' + res.statusCode, false);
             }
         });
         httpRequest.on('close', () => {
             if (!endReceived) {
                 if (httpRequest.destroyed) {
-                    onError(YAPI.IO_ERROR, 'HTTP request aborted');
+                    onError(YAPI.IO_ERROR, 'HTTP request aborted', false);
                 }
                 else {
                     // Allow 100ms to receive a proper 'end' event, or declare the request as aborted
                     // This should normally not be needed, but better safe than sorry
                     closeWithoutEndTimeout = setTimeout(() => {
-                        onError(YAPI.IO_ERROR, 'HTTP request closed unexpectedly');
+                        onError(YAPI.IO_ERROR, 'HTTP request closed unexpectedly', false);
                     }, 100);
                 }
             }
         });
         httpRequest.on('error', (err) => {
-            onError(YAPI.IO_ERROR, 'HTTP request failed: ' + err.message);
+            //console.log("error callback");
+            //console.log(err);
+            if (err.code == "DEPTH_ZERO_SELF_SIGNED_CERT") {
+                onError(YAPI.SSL_UNK_CERT, 'Unknown SSL certificate: ' + err.message, false);
+            }
+            else {
+                onError(YAPI.IO_ERROR, 'HTTP request failed: ' + err.message, false);
+            }
         });
         if (bodyBuff !== null) {
             httpRequest.write(bodyBuff);
@@ -355,13 +528,35 @@ class YHttpNodeHub extends YHttpHub {
         clientRequest.destroy();
     }
 }
-class YWebSocketNodeHub extends YWebSocketHub {
+class YWebSocketNodeEngine extends YWebSocketEngine {
     /** Open an outgoing websocket
      *
      * @param str_url {string}
      **/
     imm_webSocketOpen(str_url) {
-        this.websocket = new WebSocket(str_url);
+        let options = {
+            followRedirects: true
+        };
+        if (this._runtime_urlInfo.imm_useSecureSocket()) {
+            const mixedMode = this._hub.imm_useMixedMode();
+            const disableCertCheck = (this._hub._yapi._networkSecurityOptions & YAPI_NO_TRUSTED_CA_CHECK) != 0 || mixedMode;
+            if (disableCertCheck) {
+                if (this._hub._yapi._logLevel >= 4) {
+                    console.log(mixedMode);
+                    console.log(this._hub._yapi._networkSecurityOptions);
+                    this._hub._yapi.imm_log("Skip Certificate validation for " + str_url);
+                }
+            }
+            options['rejectUnauthorized'] = !disableCertCheck;
+            let secureContext = tls.createSecureContext();
+            if (this._hub._yapi._trustedCertificate.length > 0) {
+                for (let i = 0; i < this._hub._yapi._trustedCertificate.length; i++) {
+                    secureContext.context.addCACert(this._hub._yapi._trustedCertificate[i]);
+                }
+                options['secureContext'] = secureContext;
+            }
+        }
+        this.websocket = new WebSocket(str_url, options);
     }
     /** Fills a buffer with random numbers
      *
@@ -380,13 +575,13 @@ class YWebSocketNodeHub extends YWebSocketHub {
         }
     }
 }
-class YWebSocketCallbackHub extends YWebSocketNodeHub {
-    constructor(yapi, urlInfo, ws) {
-        super(yapi, urlInfo);
+class YWebSocketCallbackEngine extends YWebSocketNodeEngine {
+    constructor(hub, runtime_urlInfo, ws) {
+        super(hub, runtime_urlInfo);
         // websocket channel already open
         this.websocket = ws;
         // no retry from our side
-        this.retryDelay = -1;
+        hub.imm_setRetryDelay(-1);
     }
     /** Open an outgoing websocket
      *

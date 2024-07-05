@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 55358 2023-06-28 09:00:27Z seb $
+ * $Id: yocto_api_html.ts 61542 2024-06-19 09:08:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -37,7 +37,7 @@
  *
  *********************************************************************/
 export * from "./yocto_api.js";
-import { _YY_UrlInfo, YAPIContext, YGenericHub, YGenericSSDPManager, YSystemEnv, YUnhandledPromiseRejectionCallback } from "./yocto_api.js";
+import { _YY_UrlInfo, YAPIContext, YGenericHub, YGenericSSDPManager, YSystemEnv, YUnhandledPromiseRejectionCallback, YHubEngine } from "./yocto_api.js";
 /**
  * System environment definition, for use in a browser
  */
@@ -45,11 +45,12 @@ export declare class YSystemEnvHtml extends YSystemEnv {
     isNodeJS: boolean;
     hasSSDP: boolean;
     hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback): void;
-    getWebSocketHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null;
-    getHttpHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null;
-    getWebSocketCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, ws: any): YGenericHub | null;
-    getHttpCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, incomingMessage: any, serverResponse: any): YGenericHub | null;
+    getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getWebSocketCallbackHub(hub: YGenericHub, ws: any): YHubEngine | null;
+    getHttpCallbackHub(hub: YGenericHub, incomingMessage: any, serverResponse: any): YHubEngine | null;
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;
     loadfile(file: string | Blob): Promise<Uint8Array>;
-    downloadfile(url: string): Promise<Uint8Array>;
+    downloadfile(url: string, yapi: YAPIContext): Promise<Uint8Array>;
+    downloadRemoteCertificate(urlinfo: _YY_UrlInfo): Promise<string>;
 }

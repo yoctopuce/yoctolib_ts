@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 55358 2023-06-28 09:00:27Z seb $
+ * $Id: yocto_api_html.ts 61542 2024-06-19 09:08:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -49,12 +49,12 @@ import {
     YAPI_UNAUTHORIZED,
     YAPIContext,
     YConditionalResult,
-    YGenericHub, YHttpHub, YWebSocketHub,
+    YGenericHub, YHttpEngine, YWebSocketEngine,
     YGenericSSDPManager,
     YHTTPBody,
     YHTTPRequest,
     YSystemEnv,
-    YUnhandledPromiseRejectionCallback
+    YUnhandledPromiseRejectionCallback, YHubEngine
 } from "./yocto_api.js";
 
 /**
@@ -73,24 +73,24 @@ export class YSystemEnvHtml extends YSystemEnv
         });
     }
 
-    getWebSocketHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null
+    getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null
     {
-        return new YWebSocketHtmlHub(obj_yapi, urlInfo);
+        return new YWebSocketHtmlEngine(hub,runtime_urlInfo);
     }
 
-    getHttpHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo): YGenericHub | null
+    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null
     {
-        return new YHttpHtmlHub(obj_yapi, urlInfo);
+        return new YHttpHtmlEngine(hub, runtime_urlInfo);
     }
 
-    getWebSocketCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, ws: any): YGenericHub | null
+    getWebSocketCallbackHub(hub: YGenericHub, ws: any): YHubEngine | null
     {
-        return obj_yapi._throw(YAPI.NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', null);
+        return hub._yapi._throw(YAPI.NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', null);
     }
 
-    getHttpCallbackHub(obj_yapi: YAPIContext, urlInfo: _YY_UrlInfo, incomingMessage: any, serverResponse: any): YGenericHub | null
+    getHttpCallbackHub(hub: YGenericHub, incomingMessage: any, serverResponse: any): YHubEngine | null
     {
-        return obj_yapi._throw(YAPI.NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', null);
+        return hub._yapi._throw(YAPI.NOT_SUPPORTED, 'HTTP Callback mode is not available in this environment', null);
     }
 
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null
@@ -114,7 +114,7 @@ export class YSystemEnvHtml extends YSystemEnv
         });
     }
 
-    downloadfile(url: string): Promise<Uint8Array>
+    downloadfile(url: string, yapi: YAPIContext): Promise<Uint8Array>
     {
         return new Promise((resolve, reject):void => {
             let httpRequest = new XMLHttpRequest();
@@ -136,28 +136,33 @@ export class YSystemEnvHtml extends YSystemEnv
             httpRequest.send('');
         });
     }
+
+    async downloadRemoteCertificate(urlinfo: _YY_UrlInfo): Promise<string>
+    {
+        return "error: Not supported in browser"
+    }
 }
 
 const _HtmlSystemEnv: YSystemEnvHtml = new YSystemEnvHtml();
 
 YAPI.imm_setSystemEnv(_HtmlSystemEnv);
 
-class YHttpHtmlHub extends YHttpHub
+class YHttpHtmlEngine extends YHttpEngine
 {
-    constructor(yapi: YAPIContext, urlInfo: _YY_UrlInfo)
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo)
     {
-        super(yapi, urlInfo);
+        super(hub, runtime_urlInfo);
     }
 
     // Low-level function to create an HTTP client request (abstraction layer)
     imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | Uint8Array | null,
                     onProgress: null | ((moreText: string) => void),
                     onSuccess: null | ((responseText: string) => void),
-                    onError: (errorType: number, errorMsg: string) => any): XMLHttpRequest
+                    onError: (errorType: number, errorMsg: string, can_be_retry:boolean) => any): XMLHttpRequest
     {
         let xhr: XMLHttpRequest = new XMLHttpRequest();
         let currPos: number = 0;
-        xhr.open(method, this.urlInfo.authUrl + relUrl, true, '', '');
+        xhr.open(method, this._runtime_urlInfo.imm_getUrl(true, true,true) + relUrl, true, '', '');
         // Send the request using text/plain POST, to avoid CORS checks
         xhr.setRequestHeader('Content-Type', contentType);
         xhr.overrideMimeType('text/plain; charset=x-user-defined');
@@ -168,20 +173,20 @@ class YHttpHtmlHub extends YHttpHub
                     if(httpStatus == 401 || httpStatus == 204) {
                         // Authentication failure (204 == x-yauth)
                         this.infoJson.stamp = 0; // force to reload nonce/domain
-                        onError(YAPI.UNAUTHORIZED, 'Unauthorized access ('+xhr.status+')');
+                        onError(YAPI.UNAUTHORIZED, 'Unauthorized access ('+xhr.status+')', false);
                     } else if(httpStatus == 404) {
                         // No such file
-                        onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)');
-                    } else if(this.imm_isDisconnecting()) {
-                        onError(YAPI.IO_ERROR, 'Hub is disconnecting');
+                        onError(YAPI.FILE_NOT_FOUND, 'HTTP request return status 404 (not found)', false);
+                    } else if(this._hub.imm_isDisconnecting()) {
+                        onError(YAPI.IO_ERROR, 'Hub is disconnecting', false);
                     } else {
-                        onError(YAPI.IO_ERROR, 'HTTP request failed with status '+xhr.status);
+                        onError(YAPI.IO_ERROR, 'HTTP request failed with status '+xhr.status, false);
                     }
                     return;
                 }
-                if (this.imm_isDisconnecting()) {
-                    if(this._yapi._logLevel >= 4) {
-                        this._yapi.imm_log('Dropping request '+relUrl+' because hub is disconnecting');
+                if (this._hub.imm_isDisconnecting()) {
+                    if(this._hub._yapi._logLevel >= 4) {
+                        this._hub._yapi.imm_log('Dropping request '+relUrl+' because hub is disconnecting');
                     }
                     return;
                 }
@@ -198,7 +203,7 @@ class YHttpHtmlHub extends YHttpHub
             }
         }
         xhr.onerror = ():void => {
-            onError(YAPI.IO_ERROR, 'HTTP request failed without status');
+            onError(YAPI.IO_ERROR, 'HTTP request failed without status', false);
         };
         xhr.send(body);
         return xhr;
@@ -211,7 +216,7 @@ class YHttpHtmlHub extends YHttpHub
     }
 }
 
-class YWebSocketHtmlHub extends YWebSocketHub
+class YWebSocketHtmlEngine extends YWebSocketEngine
 {
     /** Open an outgoing websocket
      *

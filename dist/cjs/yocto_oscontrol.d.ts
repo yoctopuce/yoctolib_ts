@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 61342 2024-06-11 08:30:46Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -141,6 +141,16 @@ export declare class YOsControl extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     shutdown(secBeforeShutDown: number): Promise<number>;
+    /**
+     * Schedules an OS reboot after a given number of seconds.
+     *
+     * @param secBeforeReboot : number of seconds before reboot
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    reboot(secBeforeReboot: number): Promise<number>;
     /**
      * Continues the enumeration of OS control started using yFirstOsControl().
      * Caution: You can't make any assumption about the returned OS control order.

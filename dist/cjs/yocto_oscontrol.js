@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 61342 2024-06-11 08:30:46Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -57,7 +57,7 @@ class YOsControl extends yocto_api_js_1.YFunction {
         this._shutdownCountdown = YOsControl.SHUTDOWNCOUNTDOWN_INVALID;
         this._valueCallbackOsControl = null;
         // API symbols as object properties
-        this.SHUTDOWNCOUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
+        this.SHUTDOWNCOUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
         this._className = 'OsControl';
         //--- (end of YOsControl constructor)
     }
@@ -221,6 +221,18 @@ class YOsControl extends yocto_api_js_1.YFunction {
         return await this.set_shutdownCountdown(secBeforeShutDown);
     }
     /**
+     * Schedules an OS reboot after a given number of seconds.
+     *
+     * @param secBeforeReboot : number of seconds before reboot
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async reboot(secBeforeReboot) {
+        return await this.set_shutdownCountdown(0 - secBeforeReboot);
+    }
+    /**
      * Continues the enumeration of OS control started using yFirstOsControl().
      * Caution: You can't make any assumption about the returned OS control order.
      * If you want to find a specific OS control, use OsControl.findOsControl()
@@ -274,5 +286,5 @@ class YOsControl extends yocto_api_js_1.YFunction {
 }
 exports.YOsControl = YOsControl;
 // API symbols as static members
-YOsControl.SHUTDOWNCOUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
+YOsControl.SHUTDOWNCOUNTDOWN_INVALID = yocto_api_js_1.YAPI.INVALID_INT;
 //# sourceMappingURL=yocto_oscontrol.js.map

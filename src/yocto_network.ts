@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_network.ts 60574 2024-04-16 07:09:59Z seb $
  *
  *  Implements the high-level API for Network functions
  *
@@ -66,6 +66,8 @@ export class YNetwork extends YFunction
     _userPassword: string = YNetwork.USERPASSWORD_INVALID;
     _adminPassword: string = YNetwork.ADMINPASSWORD_INVALID;
     _httpPort: number = YNetwork.HTTPPORT_INVALID;
+    _httpsPort: number = YNetwork.HTTPSPORT_INVALID;
+    _securityMode: YNetwork.SECURITYMODE = YNetwork.SECURITYMODE_INVALID;
     _defaultPage: string = YNetwork.DEFAULTPAGE_INVALID;
     _discoverable: YNetwork.DISCOVERABLE = YNetwork.DISCOVERABLE_INVALID;
     _wwwWatchdogDelay: number = YNetwork.WWWWATCHDOGDELAY_INVALID;
@@ -100,6 +102,12 @@ export class YNetwork extends YFunction
     public readonly USERPASSWORD_INVALID: string = YAPI.INVALID_STRING;
     public readonly ADMINPASSWORD_INVALID: string = YAPI.INVALID_STRING;
     public readonly HTTPPORT_INVALID: number = YAPI.INVALID_UINT;
+    public readonly HTTPSPORT_INVALID: number = YAPI.INVALID_UINT;
+    public readonly SECURITYMODE_UNDEFINED: YNetwork.SECURITYMODE = 0;
+    public readonly SECURITYMODE_LEGACY: YNetwork.SECURITYMODE = 1;
+    public readonly SECURITYMODE_MIXED: YNetwork.SECURITYMODE = 2;
+    public readonly SECURITYMODE_SECURE: YNetwork.SECURITYMODE = 3;
+    public readonly SECURITYMODE_INVALID: YNetwork.SECURITYMODE = -1;
     public readonly DEFAULTPAGE_INVALID: string = YAPI.INVALID_STRING;
     public readonly DISCOVERABLE_FALSE: YNetwork.DISCOVERABLE = 0;
     public readonly DISCOVERABLE_TRUE: YNetwork.DISCOVERABLE = 1;
@@ -153,6 +161,12 @@ export class YNetwork extends YFunction
     public static readonly USERPASSWORD_INVALID: string = YAPI.INVALID_STRING;
     public static readonly ADMINPASSWORD_INVALID: string = YAPI.INVALID_STRING;
     public static readonly HTTPPORT_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly HTTPSPORT_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly SECURITYMODE_UNDEFINED: YNetwork.SECURITYMODE = 0;
+    public static readonly SECURITYMODE_LEGACY: YNetwork.SECURITYMODE = 1;
+    public static readonly SECURITYMODE_MIXED: YNetwork.SECURITYMODE = 2;
+    public static readonly SECURITYMODE_SECURE: YNetwork.SECURITYMODE = 3;
+    public static readonly SECURITYMODE_INVALID: YNetwork.SECURITYMODE = -1;
     public static readonly DEFAULTPAGE_INVALID: string = YAPI.INVALID_STRING;
     public static readonly DISCOVERABLE_FALSE: YNetwork.DISCOVERABLE = 0;
     public static readonly DISCOVERABLE_TRUE: YNetwork.DISCOVERABLE = 1;
@@ -239,6 +253,12 @@ export class YNetwork extends YFunction
             return 1;
         case 'httpPort':
             this._httpPort = <number> <number> val;
+            return 1;
+        case 'httpsPort':
+            this._httpsPort = <number> <number> val;
+            return 1;
+        case 'securityMode':
+            this._securityMode = <YNetwork.SECURITYMODE> <number> val;
             return 1;
         case 'defaultPage':
             this._defaultPage = <string> <string> val;
@@ -688,6 +708,96 @@ export class YNetwork extends YFunction
         let rest_val: string;
         rest_val = String(newval);
         return await this._setAttr('httpPort', rest_val);
+    }
+
+    /**
+     * Returns the secure TCP port used to serve the hub web UI.
+     *
+     * @return an integer corresponding to the secure TCP port used to serve the hub web UI
+     *
+     * On failure, throws an exception or returns YNetwork.HTTPSPORT_INVALID.
+     */
+    async get_httpsPort(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YNetwork.HTTPSPORT_INVALID;
+            }
+        }
+        res = this._httpsPort;
+        return res;
+    }
+
+    /**
+     * Changes the secure TCP port used to serve the hub web UI. The default value is port 4443,
+     * which is the default for all Web servers. When you change this parameter, remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : an integer corresponding to the secure TCP port used to serve the hub web UI
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_httpsPort(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('httpsPort', rest_val);
+    }
+
+    /**
+     * Returns the security level chosen to prevent unauthorized access to the server.
+     *
+     * @return a value among YNetwork.SECURITYMODE_UNDEFINED, YNetwork.SECURITYMODE_LEGACY,
+     * YNetwork.SECURITYMODE_MIXED and YNetwork.SECURITYMODE_SECURE corresponding to the security level
+     * chosen to prevent unauthorized access to the server
+     *
+     * On failure, throws an exception or returns YNetwork.SECURITYMODE_INVALID.
+     */
+    async get_securityMode(): Promise<YNetwork.SECURITYMODE>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YNetwork.SECURITYMODE_INVALID;
+            }
+        }
+        res = this._securityMode;
+        return res;
+    }
+
+    /**
+     * Changes the security level used to prevent unauthorized access to the server.
+     * The value UNDEFINED causes the security configuration wizard to be
+     * displayed the next time you log on to the Web console.
+     * The value LEGACY offers unencrypted HTTP access by default, and
+     * is designed to provide compatibility with legacy applications that do not
+     * handle password or do not support HTTPS. But it should
+     * only be used when system security is guaranteed by other means, such as the
+     * use of a firewall.
+     * The value MIXED requires the configuration of passwords, and allows
+     * access via both HTTP (unencrypted) and HTTPS (encrypted), while requiring
+     * the Yoctopuce API to be tolerant of certificate characteristics.
+     * The value SECURE requires the configuration of passwords and the
+     * use of secure communications in all cases.
+     * When you change this parameter, remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : a value among YNetwork.SECURITYMODE_UNDEFINED, YNetwork.SECURITYMODE_LEGACY,
+     * YNetwork.SECURITYMODE_MIXED and YNetwork.SECURITYMODE_SECURE corresponding to the security level
+     * used to prevent unauthorized access to the server
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_securityMode(newval: YNetwork.SECURITYMODE): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('securityMode', rest_val);
     }
 
     /**
@@ -1510,6 +1620,15 @@ export namespace YNetwork {
         LINKED = 2,
         LAN_OK = 3,
         WWW_OK = 4,
+        INVALID = -1
+    }
+
+    export const enum SECURITYMODE
+    {
+        UNDEFINED = 0,
+        LEGACY = 1,
+        MIXED = 2,
+        SECURE = 3,
         INVALID = -1
     }
 

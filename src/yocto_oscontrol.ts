@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_oscontrol.ts 61342 2024-06-11 08:30:46Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -57,10 +57,10 @@ export class YOsControl extends YFunction
     _valueCallbackOsControl: YOsControl.ValueCallback | null = null;
 
     // API symbols as object properties
-    public readonly SHUTDOWNCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
+    public readonly SHUTDOWNCOUNTDOWN_INVALID: number = YAPI.INVALID_INT;
 
     // API symbols as static members
-    public static readonly SHUTDOWNCOUNTDOWN_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly SHUTDOWNCOUNTDOWN_INVALID: number = YAPI.INVALID_INT;
     //--- (end of YOsControl attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -242,6 +242,20 @@ export class YOsControl extends YFunction
     async shutdown(secBeforeShutDown: number): Promise<number>
     {
         return await this.set_shutdownCountdown(secBeforeShutDown);
+    }
+
+    /**
+     * Schedules an OS reboot after a given number of seconds.
+     *
+     * @param secBeforeReboot : number of seconds before reboot
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async reboot(secBeforeReboot: number): Promise<number>
+    {
+        return await this.set_shutdownCountdown(0 - secBeforeReboot);
     }
 
     /**
