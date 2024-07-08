@@ -1,3 +1,4 @@
-TypeScriptV2 v2.0.61833
+TypeScriptV2 v2.0.61858
 
-- Minor fix
+- Fix parsing of IPv6 URL
+- Update ws dependency
