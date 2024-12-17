@@ -558,7 +558,7 @@ export class YInputChain extends YFunction
         obj = <YInputChain> YFunction._FindFromCache('InputChain', func);
         if (obj == null) {
             obj = new YInputChain(YAPI, func);
-            YFunction._AddToCache('InputChain',  func, obj);
+            YFunction._AddToCache('InputChain', func, obj);
         }
         return obj;
     }
@@ -591,10 +591,10 @@ export class YInputChain extends YFunction
     static FindInputChainInContext(yctx: YAPIContext, func: string): YInputChain
     {
         let obj: YInputChain | null;
-        obj = <YInputChain> YFunction._FindFromCacheInContext(yctx,  'InputChain', func);
+        obj = <YInputChain> YFunction._FindFromCacheInContext(yctx, 'InputChain', func);
         if (obj == null) {
             obj = new YInputChain(yctx, func);
-            YFunction._AddToCache('InputChain',  func, obj);
+            YFunction._AddToCache('InputChain', func, obj);
         }
         return obj;
     }
@@ -645,7 +645,7 @@ export class YInputChain extends YFunction
 
     /**
      * Resets the application watchdog countdown.
-     * If you have setup a non-zero watchdogPeriod, you should
+     * If you have set up a non-zero watchdogPeriod, you should
      * call this function on a regular basis to prevent the application
      * inactivity error to be triggered.
      *
@@ -754,7 +754,7 @@ export class YInputChain extends YFunction
         // last element of array is the new position preceeded by '@'
         arrLen = arrLen - 1;
         lenStr = eventArr[arrLen];
-        lenStr = (lenStr).substr(1, (lenStr).length-1);
+        lenStr = lenStr.substr(1, (lenStr).length-1);
         // update processed event position pointer
         this._eventPos = YAPIContext.imm_atoi(lenStr);
         // now generate callbacks for each event received
@@ -763,17 +763,17 @@ export class YInputChain extends YFunction
             eventStr = eventArr[arrPos];
             eventLen = (eventStr).length;
             if (eventLen >= 1) {
-                hexStamp = (eventStr).substr(0, 8);
+                hexStamp = eventStr.substr(0, 8);
                 evtStamp = parseInt(hexStamp, 16);
                 typePos = (eventStr).indexOf(':')+1;
                 if ((evtStamp >= this._eventStamp) && (typePos > 8)) {
                     this._eventStamp = evtStamp;
                     dataPos = (eventStr).indexOf('=')+1;
-                    evtType = (eventStr).substr(typePos, 1);
+                    evtType = eventStr.substr(typePos, 1);
                     evtData = '';
                     evtChange = '';
                     if (dataPos > 10) {
-                        evtData = (eventStr).substr(dataPos, (eventStr).length-dataPos);
+                        evtData = eventStr.substr(dataPos, (eventStr).length-dataPos);
                         if (('1234567').indexOf(evtType) >= 0) {
                             chainIdx = YAPIContext.imm_atoi(evtType) - 1;
                             evtChange = await this._strXor(evtData, this._eventChains[chainIdx]);
@@ -804,19 +804,19 @@ export class YInputChain extends YFunction
         lenA = (a).length;
         lenB = (b).length;
         if (lenA > lenB) {
-            res = (a).substr(0, lenA-lenB);
-            a = (a).substr(lenA-lenB, lenB);
+            res = a.substr(0, lenA-lenB);
+            a = a.substr(lenA-lenB, lenB);
             lenA = lenB;
         } else {
             res = '';
-            b = (b).substr(lenA-lenB, lenA);
+            b = b.substr(lenA-lenB, lenA);
         }
         // scan strings and compare digit by digit
         idx = 0;
         while (idx < lenA) {
-            digitA = parseInt((a).substr(idx, 1), 16);
-            digitB = parseInt((b).substr(idx, 1), 16);
-            res = res + '' + (((digitA) ^ (digitB))).toString(16).toLowerCase();
+            digitA = parseInt(a.substr(idx, 1), 16);
+            digitB = parseInt(b.substr(idx, 1), 16);
+            res = res + '' + ((digitA ^ digitB)).toString(16).toLowerCase();
             idx = idx + 1;
         }
         return res;
@@ -833,11 +833,11 @@ export class YInputChain extends YFunction
         idx = hexlen;
         while (idx > 0) {
             idx = idx - 1;
-            digit = parseInt((hexstr).substr(idx, 1), 16);
-            res.push(((digit) & (1)));
-            res.push(((((digit) >> (1))) & (1)));
-            res.push(((((digit) >> (2))) & (1)));
-            res.push(((((digit) >> (3))) & (1)));
+            digit = parseInt(hexstr.substr(idx, 1), 16);
+            res.push((digit & 1));
+            res.push(((digit >> 1) & 1));
+            res.push(((digit >> 2) & 1));
+            res.push(((digit >> 3) & 1));
         }
         return res;
     }

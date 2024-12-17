@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 60419 2024-04-08 09:53:37Z seb $
+ *  $Id: yocto_temperature.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for Temperature functions
  *
@@ -312,7 +312,7 @@ export class YTemperature extends YSensor
         obj = <YTemperature> YFunction._FindFromCache('Temperature', func);
         if (obj == null) {
             obj = new YTemperature(YAPI, func);
-            YFunction._AddToCache('Temperature',  func, obj);
+            YFunction._AddToCache('Temperature', func, obj);
         }
         return obj;
     }
@@ -345,10 +345,10 @@ export class YTemperature extends YSensor
     static FindTemperatureInContext(yctx: YAPIContext, func: string): YTemperature
     {
         let obj: YTemperature | null;
-        obj = <YTemperature> YFunction._FindFromCacheInContext(yctx,  'Temperature', func);
+        obj = <YTemperature> YFunction._FindFromCacheInContext(yctx, 'Temperature', func);
         if (obj == null) {
             obj = new YTemperature(yctx, func);
-            YFunction._AddToCache('Temperature',  func, obj);
+            YFunction._AddToCache('Temperature', func, obj);
         }
         return obj;
     }
@@ -553,7 +553,7 @@ export class YTemperature extends YSensor
     {
         let id: string;
         let bin_json: Uint8Array;
-        let paramlist: string[] = [];
+        let paramlist: Uint8Array[] = [];
         let templist: number[] = [];
         let siz: number;
         let idx: number;
@@ -566,18 +566,18 @@ export class YTemperature extends YSensor
         resValues.length = 0;
 
         id = await this.get_functionId();
-        id = (id).substr(11, (id).length - 11);
+        id = id.substr(11, (id).length - 11);
         if (id == '') {
             id = '1';
         }
         bin_json = await this._download('extra.json?page=' + id);
         paramlist = this.imm_json_get_array(bin_json);
         // first convert all temperatures to float
-        siz = ((paramlist.length) >> (1));
+        siz = (paramlist.length >> 1);
         templist.length = 0;
         idx = 0;
         while (idx < siz) {
-            temp = YAPIContext.imm_atof(paramlist[2*idx+1])/1000.0;
+            temp = YAPIContext.imm_atof(this._yapi.imm_bin2str(paramlist[2*idx+1]))/1000.0;
             templist.push(temp);
             idx = idx + 1;
         }
@@ -595,7 +595,7 @@ export class YTemperature extends YSensor
                 temp = templist[idx];
                 if ((temp > prev) && (temp < curr)) {
                     curr = temp;
-                    currRes = YAPIContext.imm_atof(paramlist[2*idx])/1000.0;
+                    currRes = YAPIContext.imm_atof(this._yapi.imm_bin2str(paramlist[2*idx]))/1000.0;
                     found = 1;
                 }
                 idx = idx + 1;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 61342 2024-06-11 08:30:46Z seb $
+ *  $Id: yocto_oscontrol.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *
@@ -145,7 +145,7 @@ export class YOsControl extends YFunction
         obj = <YOsControl> YFunction._FindFromCache('OsControl', func);
         if (obj == null) {
             obj = new YOsControl(YAPI, func);
-            YFunction._AddToCache('OsControl',  func, obj);
+            YFunction._AddToCache('OsControl', func, obj);
         }
         return obj;
     }
@@ -178,10 +178,10 @@ export class YOsControl extends YFunction
     static FindOsControlInContext(yctx: YAPIContext, func: string): YOsControl
     {
         let obj: YOsControl | null;
-        obj = <YOsControl> YFunction._FindFromCacheInContext(yctx,  'OsControl', func);
+        obj = <YOsControl> YFunction._FindFromCacheInContext(yctx, 'OsControl', func);
         if (obj == null) {
             obj = new YOsControl(yctx, func);
-            YFunction._AddToCache('OsControl',  func, obj);
+            YFunction._AddToCache('OsControl', func, obj);
         }
         return obj;
     }

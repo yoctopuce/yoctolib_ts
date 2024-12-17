@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_wakeupmonitor.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -333,7 +333,7 @@ export class YWakeUpMonitor extends YFunction
         obj = <YWakeUpMonitor> YFunction._FindFromCache('WakeUpMonitor', func);
         if (obj == null) {
             obj = new YWakeUpMonitor(YAPI, func);
-            YFunction._AddToCache('WakeUpMonitor',  func, obj);
+            YFunction._AddToCache('WakeUpMonitor', func, obj);
         }
         return obj;
     }
@@ -366,10 +366,10 @@ export class YWakeUpMonitor extends YFunction
     static FindWakeUpMonitorInContext(yctx: YAPIContext, func: string): YWakeUpMonitor
     {
         let obj: YWakeUpMonitor | null;
-        obj = <YWakeUpMonitor> YFunction._FindFromCacheInContext(yctx,  'WakeUpMonitor', func);
+        obj = <YWakeUpMonitor> YFunction._FindFromCacheInContext(yctx, 'WakeUpMonitor', func);
         if (obj == null) {
             obj = new YWakeUpMonitor(yctx, func);
-            YFunction._AddToCache('WakeUpMonitor',  func, obj);
+            YFunction._AddToCache('WakeUpMonitor', func, obj);
         }
         return obj;
     }

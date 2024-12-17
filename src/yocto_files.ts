@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_files.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -232,7 +232,7 @@ export class YFiles extends YFunction
         obj = <YFiles> YFunction._FindFromCache('Files', func);
         if (obj == null) {
             obj = new YFiles(YAPI, func);
-            YFunction._AddToCache('Files',  func, obj);
+            YFunction._AddToCache('Files', func, obj);
         }
         return obj;
     }
@@ -265,10 +265,10 @@ export class YFiles extends YFunction
     static FindFilesInContext(yctx: YAPIContext, func: string): YFiles
     {
         let obj: YFiles | null;
-        obj = <YFiles> YFunction._FindFromCacheInContext(yctx,  'Files', func);
+        obj = <YFiles> YFunction._FindFromCacheInContext(yctx, 'Files', func);
         if (obj == null) {
             obj = new YFiles(yctx, func);
-            YFunction._AddToCache('Files',  func, obj);
+            YFunction._AddToCache('Files', func, obj);
         }
         return obj;
     }
@@ -361,13 +361,13 @@ export class YFiles extends YFunction
     async get_list(pattern: string): Promise<YFileRecord[]>
     {
         let json: Uint8Array;
-        let filelist: string[] = [];
+        let filelist: Uint8Array[] = [];
         let res: YFileRecord[] = [];
         json = await this.sendCommand('dir&f=' + pattern);
         filelist = this.imm_json_get_array(json);
         res.length = 0;
         for (let ii in filelist) {
-            res.push(new YFileRecord(filelist[ii]));
+            res.push(new YFileRecord(this._yapi.imm_bin2str(filelist[ii])));
         }
         return res;
     }
@@ -384,7 +384,7 @@ export class YFiles extends YFunction
     async fileExist(filename: string): Promise<boolean>
     {
         let json: Uint8Array;
-        let filelist: string[] = [];
+        let filelist: Uint8Array[] = [];
         if ((filename).length == 0) {
             return false;
         }

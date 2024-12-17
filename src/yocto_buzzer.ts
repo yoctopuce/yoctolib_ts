@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -298,7 +298,7 @@ export class YBuzzer extends YFunction
         obj = <YBuzzer> YFunction._FindFromCache('Buzzer', func);
         if (obj == null) {
             obj = new YBuzzer(YAPI, func);
-            YFunction._AddToCache('Buzzer',  func, obj);
+            YFunction._AddToCache('Buzzer', func, obj);
         }
         return obj;
     }
@@ -331,10 +331,10 @@ export class YBuzzer extends YFunction
     static FindBuzzerInContext(yctx: YAPIContext, func: string): YBuzzer
     {
         let obj: YBuzzer | null;
-        obj = <YBuzzer> YFunction._FindFromCacheInContext(yctx,  'Buzzer', func);
+        obj = <YBuzzer> YFunction._FindFromCacheInContext(yctx, 'Buzzer', func);
         if (obj == null) {
             obj = new YBuzzer(yctx, func);
-            YFunction._AddToCache('Buzzer',  func, obj);
+            YFunction._AddToCache('Buzzer', func, obj);
         }
         return obj;
     }
@@ -571,7 +571,7 @@ export class YBuzzer extends YFunction
                     }
                     pitch = prevPitch + dNote;
                     freq = <number> Math.round(440 * Math.exp(pitch * 0.05776226504666));
-                    ms16 = ((ms) >> (4));
+                    ms16 = (ms >> 4);
                     rest = 0;
                     if (typ == 3) {
                         rest = 2 * ms16;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_proximity.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -44,7 +44,7 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
  * The YProximity class allows you to read and configure Yoctopuce proximity sensors.
  * It inherits from YSensor class the core functions to read measurements,
  * to register callback functions, and to access the autonomous datalogger.
- * This class adds the ability to setup a detection threshold and to count the
+ * This class adds the ability to set up a detection threshold and to count the
  * number of detected state changes.
  */
 //--- (end of YProximity class start)

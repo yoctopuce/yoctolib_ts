@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_display.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -1138,7 +1138,7 @@ export class YDisplay extends YFunction
         obj = <YDisplay> YFunction._FindFromCache('Display', func);
         if (obj == null) {
             obj = new YDisplay(YAPI, func);
-            YFunction._AddToCache('Display',  func, obj);
+            YFunction._AddToCache('Display', func, obj);
         }
         return obj;
     }
@@ -1171,10 +1171,10 @@ export class YDisplay extends YFunction
     static FindDisplayInContext(yctx: YAPIContext, func: string): YDisplay
     {
         let obj: YDisplay | null;
-        obj = <YDisplay> YFunction._FindFromCacheInContext(yctx,  'Display', func);
+        obj = <YDisplay> YFunction._FindFromCacheInContext(yctx, 'Display', func);
         if (obj == null) {
             obj = new YDisplay(yctx, func);
-            YFunction._AddToCache('Display',  func, obj);
+            YFunction._AddToCache('Display', func, obj);
         }
         return obj;
     }

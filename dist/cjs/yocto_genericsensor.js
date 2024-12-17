@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_genericsensor.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_genericsensor.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for GenericSensor functions
  *
@@ -246,7 +246,7 @@ class YGenericSensor extends yocto_api_js_1.YSensor {
     }
     /**
      * Changes the electric signal bias for zero shift adjustment.
-     * If your electric signal reads positive when it should be zero, setup
+     * If your electric signal reads positive when it should be zero, set up
      * a positive signalBias of the same value to fix the zero shift.
      * Remember to call the saveToFlash()
      * method of the module if the modification must be kept.

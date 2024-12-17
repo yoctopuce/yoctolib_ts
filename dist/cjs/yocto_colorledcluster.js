@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -759,9 +759,9 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         idx = 0;
         while (idx < listlen) {
             rgb = rgbList[idx];
-            buff.set([((((rgb) >> (16))) & (255))], 3 * idx);
-            buff.set([((((rgb) >> (8))) & (255))], 3 * idx + 1);
-            buff.set([((rgb) & (255))], 3 * idx + 2);
+            buff.set([((rgb >> 16) & 255)], 3 * idx);
+            buff.set([((rgb >> 8) & 255)], 3 * idx + 1);
+            buff.set([(rgb & 255)], 3 * idx + 2);
             idx = idx + 1;
         }
         res = await this._upload('rgb:0:' + String(Math.round(ledIndex)), buff);
@@ -791,9 +791,9 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         idx = 0;
         while (idx < listlen) {
             rgb = rgbList[idx];
-            buff.set([((((rgb) >> (16))) & (255))], 3 * idx);
-            buff.set([((((rgb) >> (8))) & (255))], 3 * idx + 1);
-            buff.set([((rgb) & (255))], 3 * idx + 2);
+            buff.set([((rgb >> 16) & 255)], 3 * idx);
+            buff.set([((rgb >> 8) & 255)], 3 * idx + 1);
+            buff.set([(rgb & 255)], 3 * idx + 2);
             idx = idx + 1;
         }
         res = await this._upload('rgb:' + String(Math.round(delay)) + ':' + String(Math.round(ledIndex)), buff);
@@ -854,9 +854,9 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         idx = 0;
         while (idx < listlen) {
             hsl = hslList[idx];
-            buff.set([((((hsl) >> (16))) & (255))], 3 * idx);
-            buff.set([((((hsl) >> (8))) & (255))], 3 * idx + 1);
-            buff.set([((hsl) & (255))], 3 * idx + 2);
+            buff.set([((hsl >> 16) & 255)], 3 * idx);
+            buff.set([((hsl >> 8) & 255)], 3 * idx + 1);
+            buff.set([(hsl & 255)], 3 * idx + 2);
             idx = idx + 1;
         }
         res = await this._upload('hsl:0:' + String(Math.round(ledIndex)), buff);
@@ -903,9 +903,9 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         idx = 0;
         while (idx < listlen) {
             hsl = hslList[idx];
-            buff.set([((((hsl) >> (16))) & (255))], 3 * idx);
-            buff.set([((((hsl) >> (8))) & (255))], 3 * idx + 1);
-            buff.set([((hsl) & (255))], 3 * idx + 2);
+            buff.set([((hsl >> 16) & 255)], 3 * idx);
+            buff.set([((hsl >> 8) & 255)], 3 * idx + 1);
+            buff.set([(hsl & 255)], 3 * idx + 2);
             idx = idx + 1;
         }
         res = await this._upload('hsl:' + String(Math.round(delay)) + ':' + String(Math.round(ledIndex)), buff);
@@ -1043,7 +1043,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
             hl = buff[4 * idx + 1];
             lh = buff[4 * idx + 2];
             ll = buff[4 * idx + 3];
-            res.push(((hh) << (24)) + ((hl) << (16)) + ((lh) << (8)) + ll);
+            res.push((hh << 24) + (hl << 16) + (lh << 8) + ll);
             idx = idx + 1;
         }
         return res;
@@ -1070,7 +1070,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         while (idx < count) {
             lh = buff[2 * idx];
             ll = buff[2 * idx + 1];
-            res.push(((lh) << (8)) + ll);
+            res.push((lh << 8) + ll);
             idx = idx + 1;
         }
         return res;
@@ -1148,11 +1148,11 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let temp2;
         let temp3;
         let res;
-        L = ((hslValue) & (0xff));
-        S = ((((hslValue) >> (8))) & (0xff));
-        H = ((((hslValue) >> (16))) & (0xff));
+        L = (hslValue & 0xff);
+        S = ((hslValue >> 8) & 0xff);
+        H = ((hslValue >> 16) & 0xff);
         if (S == 0) {
-            res = ((L) << (16)) + ((L) << (8)) + L;
+            res = (L << 16) + (L << 8) + L;
             return res;
         }
         if (L <= 127) {
@@ -1192,7 +1192,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         if (B > 255) {
             B = 255;
         }
-        res = ((R) << (16)) + ((G) << (8)) + B;
+        res = (R << 16) + (G << 8) + B;
         return res;
     }
     /**

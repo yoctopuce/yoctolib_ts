@@ -1024,16 +1024,16 @@ export class YRfidOptions
             opt = 0;
         }
         if (this.ForceMultiBlockAccess) {
-            opt = ((opt) | (2));
+            opt = (opt | 2);
         }
         if (this.EnableRawAccess) {
-            opt = ((opt) | (4));
+            opt = (opt | 4);
         }
         if (this.DisableBoundaryChecks) {
-            opt = ((opt) | (8));
+            opt = (opt | 8);
         }
         if (this.EnableDryRun) {
-            opt = ((opt) | (16));
+            opt = (opt | 16);
         }
         res = '&o=' + String(Math.round(opt));
         if (this.KeyType != 0) {
@@ -1212,7 +1212,7 @@ export class YRfidReader extends YFunction
         obj = <YRfidReader> YFunction._FindFromCache('RfidReader', func);
         if (obj == null) {
             obj = new YRfidReader(YAPI, func);
-            YFunction._AddToCache('RfidReader',  func, obj);
+            YFunction._AddToCache('RfidReader', func, obj);
         }
         return obj;
     }
@@ -1245,10 +1245,10 @@ export class YRfidReader extends YFunction
     static FindRfidReaderInContext(yctx: YAPIContext, func: string): YRfidReader
     {
         let obj: YRfidReader | null;
-        obj = <YRfidReader> YFunction._FindFromCacheInContext(yctx,  'RfidReader', func);
+        obj = <YRfidReader> YFunction._FindFromCacheInContext(yctx, 'RfidReader', func);
         if (obj == null) {
             obj = new YRfidReader(yctx, func);
-            YFunction._AddToCache('RfidReader',  func, obj);
+            YFunction._AddToCache('RfidReader', func, obj);
         }
         return obj;
     }
@@ -1323,7 +1323,7 @@ export class YRfidReader extends YFunction
                 lab = -1;
             }
         }
-        status.imm_init(tagId,  errCode,  errBlk,  fab, lab);
+        status.imm_init(tagId, errCode, errBlk, fab, lab);
         retcode = await status.get_yapiError();
         if (!(retcode == this._yapi.SUCCESS)) {
             return this._throw(retcode, await status.get_errorMessage(), retcode);
@@ -1338,7 +1338,7 @@ export class YRfidReader extends YFunction
         status = new YRfidStatus();
 
         json = await this._download('rfid.json?a=reset');
-        return await this._chkerror('',  json, status);
+        return await this._chkerror('', json, status);
     }
 
     /**
@@ -1351,7 +1351,7 @@ export class YRfidReader extends YFunction
     async get_tagIdList(): Promise<string[]>
     {
         let json: Uint8Array;
-        let jsonList: string[] = [];
+        let jsonList: Uint8Array[] = [];
         let taglist: string[] = [];
 
         json = await this._download('rfid.json?a=list');
@@ -1359,7 +1359,7 @@ export class YRfidReader extends YFunction
         if ((json).length > 3) {
             jsonList = this.imm_json_get_array(json);
             for (let ii in jsonList) {
-                taglist.push(this.imm_json_get_string(this._yapi.imm_str2bin(jsonList[ii])));
+                taglist.push(this.imm_json_get_string(jsonList[ii]));
             }
         }
         return taglist;
@@ -1392,7 +1392,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=info&t=' + tagId;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         tagType = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'type'));
         size = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'size'));
         usable = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'usable'));
@@ -1400,7 +1400,7 @@ export class YRfidReader extends YFunction
         fblk = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'fblk'));
         lblk = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'lblk'));
         res = new YRfidTagInfo();
-        res.imm_init(tagId,  tagType,  size,  usable,  blksize,  fblk, lblk);
+        res.imm_init(tagId, tagType, size, usable, blksize, fblk, lblk);
         return res;
     }
 
@@ -1433,7 +1433,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=lock&t=' + tagId + '&b=' + String(Math.round(firstBlock)) + '&n=' + String(Math.round(nBlocks)) + '' + optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1470,15 +1470,15 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=chkl&t=' + tagId + '&b=' + String(Math.round(firstBlock)) + '&n=' + String(Math.round(nBlocks)) + '' + optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() != this._yapi.SUCCESS) {
             return res;
         }
         binRes = this._yapi.imm_hexstr2bin(this.imm_json_get_key(json, 'bitmap'));
         idx = 0;
         while (idx < nBlocks) {
-            val = binRes[((idx) >> (3))];
-            isLocked = (((val) & (((1) << (((idx) & (7)))))) != 0);
+            val = binRes[(idx >> 3)];
+            isLocked = ((val & (1 << (idx & 7))) != 0);
             res.push(isLocked);
             idx = idx + 1;
         }
@@ -1518,15 +1518,15 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=chks&t=' + tagId + '&b=' + String(Math.round(firstBlock)) + '&n=' + String(Math.round(nBlocks)) + '' + optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() != this._yapi.SUCCESS) {
             return res;
         }
         binRes = this._yapi.imm_hexstr2bin(this.imm_json_get_key(json, 'bitmap'));
         idx = 0;
         while (idx < nBlocks) {
-            val = binRes[((idx) >> (3))];
-            isLocked = (((val) & (((1) << (((idx) & (7)))))) != 0);
+            val = binRes[(idx >> 3)];
+            isLocked = ((val & (1 << (idx & 7))) != 0);
             res.push(isLocked);
             idx = idx + 1;
         }
@@ -1566,7 +1566,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=read&t=' + tagId + '&b=' + String(Math.round(firstBlock)) + '&n=' + String(Math.round(nBytes)) + '' + optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() == this._yapi.SUCCESS) {
             hexbuf = this.imm_json_get_key(json, 'res');
         } else {
@@ -1600,7 +1600,7 @@ export class YRfidReader extends YFunction
      */
     async tagReadBin(tagId: string, firstBlock: number, nBytes: number, options: YRfidOptions, status: YRfidStatus): Promise<Uint8Array>
     {
-        return this._yapi.imm_hexstr2bin(await this.tagReadHex(tagId,  firstBlock,  nBytes,  options, status));
+        return this._yapi.imm_hexstr2bin(await this.tagReadHex(tagId, firstBlock, nBytes, options, status));
     }
 
     /**
@@ -1632,7 +1632,7 @@ export class YRfidReader extends YFunction
         let idx: number;
         let endidx: number;
         let res: number[] = [];
-        blk = await this.tagReadBin(tagId,  firstBlock,  nBytes,  options, status);
+        blk = await this.tagReadBin(tagId, firstBlock, nBytes, options, status);
         endidx = (blk).length;
         idx = 0;
         while (idx < endidx) {
@@ -1667,7 +1667,7 @@ export class YRfidReader extends YFunction
      */
     async tagReadStr(tagId: string, firstBlock: number, nChars: number, options: YRfidOptions, status: YRfidStatus): Promise<string>
     {
-        return this._yapi.imm_bin2str(await this.tagReadBin(tagId,  firstBlock,  nChars,  options, status));
+        return this._yapi.imm_bin2str(await this.tagReadBin(tagId, firstBlock, nChars, options, status));
     }
 
     /**
@@ -1706,13 +1706,13 @@ export class YRfidReader extends YFunction
         if (buflen <= 16) {
             // short data, use an URL-based command
             hexstr = this._yapi.imm_bin2hexstr(buff);
-            return await this.tagWriteHex(tagId,  firstBlock,  hexstr,  options, status);
+            return await this.tagWriteHex(tagId, firstBlock, hexstr, options, status);
         } else {
             // long data, use an upload command
             optstr = options.imm_getParams();
             fname = 'Rfid:t=' + tagId + '&b=' + String(Math.round(firstBlock)) + '&n=' + String(Math.round(buflen)) + '' + optstr;
             json = await this._uploadEx(fname, buff);
-            return await this._chkerror(tagId,  json, status);
+            return await this._chkerror(tagId, json, status);
         }
     }
 
@@ -1756,7 +1756,7 @@ export class YRfidReader extends YFunction
             idx = idx + 1;
         }
 
-        return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+        return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
     }
 
     /**
@@ -1794,23 +1794,23 @@ export class YRfidReader extends YFunction
         let idx: number;
         let hexb: number;
         bufflen = (hexString).length;
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         if (bufflen <= 16) {
             // short data, use an URL-based command
             optstr = options.imm_getParams();
             url = 'rfid.json?a=writ&t=' + tagId + '&b=' + String(Math.round(firstBlock)) + '&w=' + hexString + '' + optstr;
             json = await this._download(url);
-            return await this._chkerror(tagId,  json, status);
+            return await this._chkerror(tagId, json, status);
         } else {
             // long data, use an upload command
             buff = new Uint8Array(bufflen);
             idx = 0;
             while (idx < bufflen) {
-                hexb = parseInt((hexString).substr(2 * idx, 2), 16);
+                hexb = parseInt(hexString.substr(2 * idx, 2), 16);
                 buff.set([hexb], idx);
                 idx = idx + 1;
             }
-            return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+            return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
         }
     }
 
@@ -1854,7 +1854,7 @@ export class YRfidReader extends YFunction
         let buff: Uint8Array;
         buff = this._yapi.imm_str2bin(text);
 
-        return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+        return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
     }
 
     /**
@@ -1882,7 +1882,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=rdsf&t=' + tagId + '&b=0' + optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() == this._yapi.SUCCESS) {
             res = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'res'));
         } else {
@@ -1916,7 +1916,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=wrsf&t=' + tagId + '&b=0&v=' + String(Math.round(afi)) + '' + optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1944,7 +1944,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=lksf&t=' + tagId + '&b=0' + optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1972,7 +1972,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=rdsf&t=' + tagId + '&b=1' + optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() == this._yapi.SUCCESS) {
             res = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'res'));
         } else {
@@ -2006,7 +2006,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=wrsf&t=' + tagId + '&b=1&v=' + String(Math.round(dsfid)) + '' + optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -2034,7 +2034,7 @@ export class YRfidReader extends YFunction
         url = 'rfid.json?a=lksf&t=' + tagId + '&b=1' + optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -2105,7 +2105,7 @@ export class YRfidReader extends YFunction
         // detect possible power cycle of the reader to clear event pointer
         cbPos = YAPIContext.imm_atoi(cbVal);
         cbPos = (((cbPos) / (1000)) >> 0);
-        cbDPos = ((cbPos - this._prevCbPos) & (0x7ffff));
+        cbDPos = ((cbPos - this._prevCbPos) & 0x7ffff);
         this._prevCbPos = cbPos;
         if (cbDPos > 16384) {
             this._eventPos = 0;
@@ -2128,7 +2128,7 @@ export class YRfidReader extends YFunction
             // first element of array is the new position preceeded by '@'
             arrPos = 1;
             lenStr = eventArr[0];
-            lenStr = (lenStr).substr(1, (lenStr).length-1);
+            lenStr = lenStr.substr(1, (lenStr).length-1);
             // update processed event position pointer
             this._eventPos = YAPIContext.imm_atoi(lenStr);
         } else {
@@ -2145,7 +2145,7 @@ export class YRfidReader extends YFunction
             arrPos = 0;
             arrLen = arrLen - 1;
             lenStr = eventArr[arrLen];
-            lenStr = (lenStr).substr(1, (lenStr).length-1);
+            lenStr = lenStr.substr(1, (lenStr).length-1);
             // update processed event position pointer
             this._eventPos = YAPIContext.imm_atoi(lenStr);
         }
@@ -2155,18 +2155,18 @@ export class YRfidReader extends YFunction
             eventLen = (eventStr).length;
             typePos = (eventStr).indexOf(':')+1;
             if ((eventLen >= 14) && (typePos > 10)) {
-                hexStamp = (eventStr).substr(0, 8);
+                hexStamp = eventStr.substr(0, 8);
                 intStamp = parseInt(hexStamp, 16);
                 if (intStamp >= this._eventStamp) {
                     this._eventStamp = intStamp;
-                    binMStamp = this._yapi.imm_str2bin((eventStr).substr(8, 2));
+                    binMStamp = this._yapi.imm_str2bin(eventStr.substr(8, 2));
                     msStamp = (binMStamp[0]-64) * 32 + binMStamp[1];
                     evtStamp = intStamp + (0.001 * msStamp);
                     dataPos = (eventStr).indexOf('=')+1;
-                    evtType = (eventStr).substr(typePos, 1);
+                    evtType = eventStr.substr(typePos, 1);
                     evtData = '';
                     if (dataPos > 10) {
-                        evtData = (eventStr).substr(dataPos, eventLen-dataPos);
+                        evtData = eventStr.substr(dataPos, eventLen-dataPos);
                     }
                     if (this._eventCallback != null) {
                         try {

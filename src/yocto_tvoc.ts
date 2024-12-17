@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_tvoc.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_tvoc.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Tvoc functions
  *
@@ -104,7 +104,7 @@ export class YTvoc extends YSensor
         obj = <YTvoc> YFunction._FindFromCache('Tvoc', func);
         if (obj == null) {
             obj = new YTvoc(YAPI, func);
-            YFunction._AddToCache('Tvoc',  func, obj);
+            YFunction._AddToCache('Tvoc', func, obj);
         }
         return obj;
     }
@@ -137,10 +137,10 @@ export class YTvoc extends YSensor
     static FindTvocInContext(yctx: YAPIContext, func: string): YTvoc
     {
         let obj: YTvoc | null;
-        obj = <YTvoc> YFunction._FindFromCacheInContext(yctx,  'Tvoc', func);
+        obj = <YTvoc> YFunction._FindFromCacheInContext(yctx, 'Tvoc', func);
         if (obj == null) {
             obj = new YTvoc(yctx, func);
-            YFunction._AddToCache('Tvoc',  func, obj);
+            YFunction._AddToCache('Tvoc', func, obj);
         }
         return obj;
     }

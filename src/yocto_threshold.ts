@@ -254,7 +254,7 @@ export class YThreshold extends YFunction
         obj = <YThreshold> YFunction._FindFromCache('Threshold', func);
         if (obj == null) {
             obj = new YThreshold(YAPI, func);
-            YFunction._AddToCache('Threshold',  func, obj);
+            YFunction._AddToCache('Threshold', func, obj);
         }
         return obj;
     }
@@ -287,10 +287,10 @@ export class YThreshold extends YFunction
     static FindThresholdInContext(yctx: YAPIContext, func: string): YThreshold
     {
         let obj: YThreshold | null;
-        obj = <YThreshold> YFunction._FindFromCacheInContext(yctx,  'Threshold', func);
+        obj = <YThreshold> YFunction._FindFromCacheInContext(yctx, 'Threshold', func);
         if (obj == null) {
             obj = new YThreshold(yctx, func);
-            YFunction._AddToCache('Threshold',  func, obj);
+            YFunction._AddToCache('Threshold', func, obj);
         }
         return obj;
     }

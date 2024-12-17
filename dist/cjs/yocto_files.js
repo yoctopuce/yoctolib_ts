@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_files.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -320,7 +320,7 @@ class YFiles extends yocto_api_js_1.YFunction {
         filelist = this.imm_json_get_array(json);
         res.length = 0;
         for (let ii in filelist) {
-            res.push(new YFileRecord(filelist[ii]));
+            res.push(new YFileRecord(this._yapi.imm_bin2str(filelist[ii])));
         }
         return res;
     }

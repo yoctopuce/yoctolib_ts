@@ -2,7 +2,7 @@
   "name": "yoctolib-esm",
   "author": "Yoctopuce",
   "description": "Yoctopuce library for TypeScript/JavaScript, as an ECMAScript 2015 module",
-  "version": "2.0.61858",
+  "version": "2.0.63744",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",

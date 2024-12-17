@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_rangefinder.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -424,10 +424,10 @@ class YRangeFinder extends yocto_api_js_1.YSensor {
     async get_hardwareCalibrationTemperature() {
         let hwcal;
         hwcal = await this.get_hardwareCalibration();
-        if (!((hwcal).substr(0, 1) == '@')) {
+        if (!(hwcal.substr(0, 1) == '@')) {
             return this._yapi.INVALID_DOUBLE;
         }
-        return yocto_api_js_1.YAPIContext.imm_atoi((hwcal).substr(1, (hwcal).length));
+        return yocto_api_js_1.YAPIContext.imm_atoi(hwcal.substr(1, (hwcal).length));
     }
     /**
      * Triggers a sensor calibration according to the current ambient temperature. That

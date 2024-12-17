@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_network.ts 60574 2024-04-16 07:09:59Z seb $
+ *  $Id: yocto_network.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Network functions
  *
@@ -356,7 +356,7 @@ class YNetwork extends yocto_api_js_1.YFunction {
     /**
      * Returns the IP configuration of the network interface.
      *
-     * If the network interface is setup to use a static IP address, the string starts with "STATIC:" and
+     * If the network interface is set up to use a static IP address, the string starts with "STATIC:" and
      * is followed by three
      * parameters, separated by "/". The first is the device IP address, followed by the subnet mask
      * length, and finally the
@@ -1353,7 +1353,7 @@ class YNetwork extends yocto_api_js_1.YFunction {
         return await this.set_callbackMethod(await this.get_callbackMethod());
     }
     /**
-     * Setup periodic HTTP callbacks (simplified function).
+     * Set up periodic HTTP callbacks (simplified function).
      *
      * @param interval : a string representing the callback periodicity, expressed in
      *         seconds, minutes or hours, eg. "60s", "5m", "1h", "48h".

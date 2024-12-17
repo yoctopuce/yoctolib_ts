@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_temperature.ts 60419 2024-04-08 09:53:37Z seb $
+ *  $Id: yocto_temperature.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for Temperature functions
  *

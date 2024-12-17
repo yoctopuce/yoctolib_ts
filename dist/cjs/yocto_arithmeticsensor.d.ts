@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 60419 2024-04-08 09:53:37Z seb $
+ *  $Id: yocto_arithmeticsensor.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *

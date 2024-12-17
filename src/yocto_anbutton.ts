@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_anbutton.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_anbutton.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for AnButton functions
  *
@@ -551,7 +551,7 @@ export class YAnButton extends YFunction
         obj = <YAnButton> YFunction._FindFromCache('AnButton', func);
         if (obj == null) {
             obj = new YAnButton(YAPI, func);
-            YFunction._AddToCache('AnButton',  func, obj);
+            YFunction._AddToCache('AnButton', func, obj);
         }
         return obj;
     }
@@ -584,10 +584,10 @@ export class YAnButton extends YFunction
     static FindAnButtonInContext(yctx: YAPIContext, func: string): YAnButton
     {
         let obj: YAnButton | null;
-        obj = <YAnButton> YFunction._FindFromCacheInContext(yctx,  'AnButton', func);
+        obj = <YAnButton> YFunction._FindFromCacheInContext(yctx, 'AnButton', func);
         if (obj == null) {
             obj = new YAnButton(yctx, func);
-            YFunction._AddToCache('AnButton',  func, obj);
+            YFunction._AddToCache('AnButton', func, obj);
         }
         return obj;
     }

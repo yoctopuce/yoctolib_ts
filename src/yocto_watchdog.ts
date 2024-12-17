@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_watchdog.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Watchdog functions
  *
@@ -705,7 +705,7 @@ export class YWatchdog extends YFunction
         obj = <YWatchdog> YFunction._FindFromCache('Watchdog', func);
         if (obj == null) {
             obj = new YWatchdog(YAPI, func);
-            YFunction._AddToCache('Watchdog',  func, obj);
+            YFunction._AddToCache('Watchdog', func, obj);
         }
         return obj;
     }
@@ -738,10 +738,10 @@ export class YWatchdog extends YFunction
     static FindWatchdogInContext(yctx: YAPIContext, func: string): YWatchdog
     {
         let obj: YWatchdog | null;
-        obj = <YWatchdog> YFunction._FindFromCacheInContext(yctx,  'Watchdog', func);
+        obj = <YWatchdog> YFunction._FindFromCacheInContext(yctx, 'Watchdog', func);
         if (obj == null) {
             obj = new YWatchdog(yctx, func);
-            YFunction._AddToCache('Watchdog',  func, obj);
+            YFunction._AddToCache('Watchdog', func, obj);
         }
         return obj;
     }

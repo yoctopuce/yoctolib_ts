@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pressure.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_pressure.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Pressure functions
  *
@@ -104,7 +104,7 @@ export class YPressure extends YSensor
         obj = <YPressure> YFunction._FindFromCache('Pressure', func);
         if (obj == null) {
             obj = new YPressure(YAPI, func);
-            YFunction._AddToCache('Pressure',  func, obj);
+            YFunction._AddToCache('Pressure', func, obj);
         }
         return obj;
     }
@@ -137,10 +137,10 @@ export class YPressure extends YSensor
     static FindPressureInContext(yctx: YAPIContext, func: string): YPressure
     {
         let obj: YPressure | null;
-        obj = <YPressure> YFunction._FindFromCacheInContext(yctx,  'Pressure', func);
+        obj = <YPressure> YFunction._FindFromCacheInContext(yctx, 'Pressure', func);
         if (obj == null) {
             obj = new YPressure(yctx, func);
-            YFunction._AddToCache('Pressure',  func, obj);
+            YFunction._AddToCache('Pressure', func, obj);
         }
         return obj;
     }

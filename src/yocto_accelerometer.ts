@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_accelerometer.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_accelerometer.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Accelerometer functions
  *
@@ -263,7 +263,7 @@ export class YAccelerometer extends YSensor
         obj = <YAccelerometer> YFunction._FindFromCache('Accelerometer', func);
         if (obj == null) {
             obj = new YAccelerometer(YAPI, func);
-            YFunction._AddToCache('Accelerometer',  func, obj);
+            YFunction._AddToCache('Accelerometer', func, obj);
         }
         return obj;
     }
@@ -296,10 +296,10 @@ export class YAccelerometer extends YSensor
     static FindAccelerometerInContext(yctx: YAPIContext, func: string): YAccelerometer
     {
         let obj: YAccelerometer | null;
-        obj = <YAccelerometer> YFunction._FindFromCacheInContext(yctx,  'Accelerometer', func);
+        obj = <YAccelerometer> YFunction._FindFromCacheInContext(yctx, 'Accelerometer', func);
         if (obj == null) {
             obj = new YAccelerometer(yctx, func);
-            YFunction._AddToCache('Accelerometer',  func, obj);
+            YFunction._AddToCache('Accelerometer', func, obj);
         }
         return obj;
     }

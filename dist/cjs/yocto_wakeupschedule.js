@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -478,7 +478,7 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
     async get_minutes() {
         let res;
         res = await this.get_minutesB();
-        res = ((res) << (30));
+        res = (res << 30);
         res = res + await this.get_minutesA();
         return res;
     }
@@ -492,9 +492,9 @@ class YWakeUpSchedule extends yocto_api_js_1.YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async set_minutes(bitmap) {
-        await this.set_minutesA(((bitmap) & (0x3fffffff)));
-        bitmap = ((bitmap) >> (30));
-        return await this.set_minutesB(((bitmap) & (0x3fffffff)));
+        await this.set_minutesA((bitmap & 0x3fffffff));
+        bitmap = (bitmap >> 30);
+        return await this.set_minutesB((bitmap & 0x3fffffff));
     }
     /**
      * Continues the enumeration of wake up schedules started using yFirstWakeUpSchedule().

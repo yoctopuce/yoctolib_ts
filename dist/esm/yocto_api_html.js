@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 61542 2024-06-19 09:08:23Z seb $
+ * $Id: yocto_api_html.ts 63723 2024-12-17 08:51:04Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -56,8 +56,8 @@ export class YSystemEnvHtml extends YSystemEnv {
     getWebSocketEngine(hub, runtime_urlInfo) {
         return new YWebSocketHtmlEngine(hub, runtime_urlInfo);
     }
-    getHttpEngine(hub, runtime_urlInfo) {
-        return new YHttpHtmlEngine(hub, runtime_urlInfo);
+    getHttpEngine(hub, runtime_urlInfo, firstInfoJson) {
+        return new YHttpHtmlEngine(hub, runtime_urlInfo, firstInfoJson);
     }
     getWebSocketCallbackHub(hub, ws) {
         return hub._yapi._throw(YAPI.NOT_SUPPORTED, 'WebSocket Callback mode is not available in this environment', null);
@@ -112,14 +112,14 @@ export class YSystemEnvHtml extends YSystemEnv {
 const _HtmlSystemEnv = new YSystemEnvHtml();
 YAPI.imm_setSystemEnv(_HtmlSystemEnv);
 class YHttpHtmlEngine extends YHttpEngine {
-    constructor(hub, runtime_urlInfo) {
-        super(hub, runtime_urlInfo);
+    constructor(hub, runtime_urlInfo, firstInfoJson) {
+        super(hub, runtime_urlInfo, firstInfoJson);
     }
     // Low-level function to create an HTTP client request (abstraction layer)
     imm_makeRequest(method, relUrl, contentType, body, onProgress, onSuccess, onError) {
         let xhr = new XMLHttpRequest();
         let currPos = 0;
-        xhr.open(method, this._runtime_urlInfo.imm_getUrl(true, true, true) + relUrl, true, '', '');
+        xhr.open(method, this._runtime_urlInfo.imm_getUrl(true, true, false) + relUrl, true, '', '');
         // Send the request using text/plain POST, to avoid CORS checks
         xhr.setRequestHeader('Content-Type', contentType);
         xhr.overrideMimeType('text/plain; charset=x-user-defined');

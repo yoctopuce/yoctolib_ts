@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwmoutput.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_pwmoutput.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for PwmOutput functions
  *
@@ -44,7 +44,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
  * YPwmOutput Class: PWM generator control interface, available for instance in the Yocto-PWM-Tx
  *
  * The YPwmOutput class allows you to drive a pulse-width modulated output (PWM).
- * You can configure the frequency as well as the duty cycle, and setup progressive
+ * You can configure the frequency as well as the duty cycle, and set up progressive
  * transitions.
  */
 //--- (end of YPwmOutput class start)
@@ -497,7 +497,7 @@ export class YPwmOutput extends YFunction
         obj = <YPwmOutput> YFunction._FindFromCache('PwmOutput', func);
         if (obj == null) {
             obj = new YPwmOutput(YAPI, func);
-            YFunction._AddToCache('PwmOutput',  func, obj);
+            YFunction._AddToCache('PwmOutput', func, obj);
         }
         return obj;
     }
@@ -530,10 +530,10 @@ export class YPwmOutput extends YFunction
     static FindPwmOutputInContext(yctx: YAPIContext, func: string): YPwmOutput
     {
         let obj: YPwmOutput | null;
-        obj = <YPwmOutput> YFunction._FindFromCacheInContext(yctx,  'PwmOutput', func);
+        obj = <YPwmOutput> YFunction._FindFromCacheInContext(yctx, 'PwmOutput', func);
         if (obj == null) {
             obj = new YPwmOutput(yctx, func);
-            YFunction._AddToCache('PwmOutput',  func, obj);
+            YFunction._AddToCache('PwmOutput', func, obj);
         }
         return obj;
     }

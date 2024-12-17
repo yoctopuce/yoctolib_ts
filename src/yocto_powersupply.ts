@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_powersupply.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for PowerSupply functions
  *
@@ -497,7 +497,7 @@ export class YPowerSupply extends YFunction
         obj = <YPowerSupply> YFunction._FindFromCache('PowerSupply', func);
         if (obj == null) {
             obj = new YPowerSupply(YAPI, func);
-            YFunction._AddToCache('PowerSupply',  func, obj);
+            YFunction._AddToCache('PowerSupply', func, obj);
         }
         return obj;
     }
@@ -530,10 +530,10 @@ export class YPowerSupply extends YFunction
     static FindPowerSupplyInContext(yctx: YAPIContext, func: string): YPowerSupply
     {
         let obj: YPowerSupply | null;
-        obj = <YPowerSupply> YFunction._FindFromCacheInContext(yctx,  'PowerSupply', func);
+        obj = <YPowerSupply> YFunction._FindFromCacheInContext(yctx, 'PowerSupply', func);
         if (obj == null) {
             obj = new YPowerSupply(yctx, func);
-            YFunction._AddToCache('PowerSupply',  func, obj);
+            YFunction._AddToCache('PowerSupply', func, obj);
         }
         return obj;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorledcluster.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_colorledcluster.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for ColorLedCluster functions
  *
@@ -337,7 +337,7 @@ export class YColorLedCluster extends YFunction
         obj = <YColorLedCluster> YFunction._FindFromCache('ColorLedCluster', func);
         if (obj == null) {
             obj = new YColorLedCluster(YAPI, func);
-            YFunction._AddToCache('ColorLedCluster',  func, obj);
+            YFunction._AddToCache('ColorLedCluster', func, obj);
         }
         return obj;
     }
@@ -370,10 +370,10 @@ export class YColorLedCluster extends YFunction
     static FindColorLedClusterInContext(yctx: YAPIContext, func: string): YColorLedCluster
     {
         let obj: YColorLedCluster | null;
-        obj = <YColorLedCluster> YFunction._FindFromCacheInContext(yctx,  'ColorLedCluster', func);
+        obj = <YColorLedCluster> YFunction._FindFromCacheInContext(yctx, 'ColorLedCluster', func);
         if (obj == null) {
             obj = new YColorLedCluster(yctx, func);
-            YFunction._AddToCache('ColorLedCluster',  func, obj);
+            YFunction._AddToCache('ColorLedCluster', func, obj);
         }
         return obj;
     }
@@ -857,9 +857,9 @@ export class YColorLedCluster extends YFunction
         idx = 0;
         while (idx < listlen) {
             rgb = rgbList[idx];
-            buff.set([((((rgb) >> (16))) & (255))], 3*idx);
-            buff.set([((((rgb) >> (8))) & (255))], 3*idx+1);
-            buff.set([((rgb) & (255))], 3*idx+2);
+            buff.set([((rgb >> 16) & 255)], 3*idx);
+            buff.set([((rgb >> 8) & 255)], 3*idx+1);
+            buff.set([(rgb & 255)], 3*idx+2);
             idx = idx + 1;
         }
 
@@ -892,9 +892,9 @@ export class YColorLedCluster extends YFunction
         idx = 0;
         while (idx < listlen) {
             rgb = rgbList[idx];
-            buff.set([((((rgb) >> (16))) & (255))], 3*idx);
-            buff.set([((((rgb) >> (8))) & (255))], 3*idx+1);
-            buff.set([((rgb) & (255))], 3*idx+2);
+            buff.set([((rgb >> 16) & 255)], 3*idx);
+            buff.set([((rgb >> 8) & 255)], 3*idx+1);
+            buff.set([(rgb & 255)], 3*idx+2);
             idx = idx + 1;
         }
 
@@ -963,9 +963,9 @@ export class YColorLedCluster extends YFunction
         idx = 0;
         while (idx < listlen) {
             hsl = hslList[idx];
-            buff.set([((((hsl) >> (16))) & (255))], 3*idx);
-            buff.set([((((hsl) >> (8))) & (255))], 3*idx+1);
-            buff.set([((hsl) & (255))], 3*idx+2);
+            buff.set([((hsl >> 16) & 255)], 3*idx);
+            buff.set([((hsl >> 8) & 255)], 3*idx+1);
+            buff.set([(hsl & 255)], 3*idx+2);
             idx = idx + 1;
         }
 
@@ -1018,9 +1018,9 @@ export class YColorLedCluster extends YFunction
         idx = 0;
         while (idx < listlen) {
             hsl = hslList[idx];
-            buff.set([((((hsl) >> (16))) & (255))], 3*idx);
-            buff.set([((((hsl) >> (8))) & (255))], 3*idx+1);
-            buff.set([((hsl) & (255))], 3*idx+2);
+            buff.set([((hsl >> 16) & 255)], 3*idx);
+            buff.set([((hsl >> 8) & 255)], 3*idx+1);
+            buff.set([(hsl & 255)], 3*idx+2);
             idx = idx + 1;
         }
 
@@ -1173,7 +1173,7 @@ export class YColorLedCluster extends YFunction
             hl = buff[4*idx+1];
             lh = buff[4*idx+2];
             ll = buff[4*idx+3];
-            res.push(((hh) << (24))+((hl) << (16))+((lh) << (8))+ll);
+            res.push((hh << 24)+(hl << 16)+(lh << 8)+ll);
             idx = idx + 1;
         }
         return res;
@@ -1203,7 +1203,7 @@ export class YColorLedCluster extends YFunction
         while (idx < count) {
             lh = buff[2*idx];
             ll = buff[2*idx+1];
-            res.push(((lh) << (8))+ll);
+            res.push((lh << 8)+ll);
             idx = idx + 1;
         }
         return res;
@@ -1291,11 +1291,11 @@ export class YColorLedCluster extends YFunction
         let temp2: number;
         let temp3: number;
         let res: number;
-        L = ((hslValue) & (0xff));
-        S = ((((hslValue) >> (8))) & (0xff));
-        H = ((((hslValue) >> (16))) & (0xff));
+        L = (hslValue & 0xff);
+        S = ((hslValue >> 8) & 0xff);
+        H = ((hslValue >> 16) & 0xff);
         if (S==0) {
-            res = ((L) << (16))+((L) << (8))+L;
+            res = (L << 16)+(L << 8)+L;
             return res;
         }
         if (L<=127) {
@@ -1309,20 +1309,20 @@ export class YColorLedCluster extends YFunction
         if (temp3 > 255) {
             temp3 = temp3-255;
         }
-        R = await this.hsl2rgbInt(temp1,  temp2, temp3);
+        R = await this.hsl2rgbInt(temp1, temp2, temp3);
         // G
         temp3 = H;
         if (temp3 > 255) {
             temp3 = temp3-255;
         }
-        G = await this.hsl2rgbInt(temp1,  temp2, temp3);
+        G = await this.hsl2rgbInt(temp1, temp2, temp3);
         // B
         if (H >= 85) {
             temp3 = H - 85 ;
         } else {
             temp3 = H + 170;
         }
-        B = await this.hsl2rgbInt(temp1,  temp2, temp3);
+        B = await this.hsl2rgbInt(temp1, temp2, temp3);
         // just in case
         if (R>255) {
             R=255;
@@ -1333,7 +1333,7 @@ export class YColorLedCluster extends YFunction
         if (B>255) {
             B=255;
         }
-        res = ((R) << (16))+((G) << (8))+B;
+        res = (R << 16)+(G << 8)+B;
         return res;
     }
 

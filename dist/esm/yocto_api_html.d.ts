@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 61542 2024-06-19 09:08:23Z seb $
+ * $Id: yocto_api_html.ts 63723 2024-12-17 08:51:04Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -46,7 +46,7 @@ export declare class YSystemEnvHtml extends YSystemEnv {
     hasSSDP: boolean;
     hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback): void;
     getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
-    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, firstInfoJson: any): YHubEngine | null;
     getWebSocketCallbackHub(hub: YGenericHub, ws: any): YHubEngine | null;
     getHttpCallbackHub(hub: YGenericHub, incomingMessage: any, serverResponse: any): YHubEngine | null;
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;

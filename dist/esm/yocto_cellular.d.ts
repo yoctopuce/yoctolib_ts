@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_cellular.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -553,7 +553,7 @@ export declare class YCellular extends YFunction {
     _invokeValueCallback(value: string): Promise<number>;
     /**
      * Sends a PUK code to unlock the SIM card after three failed PIN code attempts, and
-     * setup a new PIN into the SIM card. Only ten consecutive tentatives are permitted:
+     * set up a new PIN into the SIM card. Only ten consecutive tentatives are permitted:
      * after that, the SIM card will be blocked permanently without any mean of recovery
      * to use it again. Note that after calling this method, you have usually to invoke
      * method set_pin() to tell the YoctoHub which PIN to use in the future.

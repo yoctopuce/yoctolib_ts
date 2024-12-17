@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.ts 61342 2024-06-11 08:30:46Z seb $
+ *  $Id: yocto_oscontrol.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for OsControl functions
  *

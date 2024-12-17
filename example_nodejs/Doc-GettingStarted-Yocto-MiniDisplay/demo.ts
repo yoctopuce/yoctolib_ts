@@ -2,11 +2,11 @@
  *
  *  $Id: svn_id $
  *
- *  An example that shows how to use a  Yocto-MaxiDisplay
+ *  An example that shows how to use a  Yocto-MiniDisplay
  *
  *  You can find more information on our web site:
- *   Yocto-MaxiDisplay documentation:
- *      https://www.yoctopuce.com/EN/products/yocto-maxidisplay/doc.html
+ *   Yocto-MiniDisplay documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-minidisplay/doc.html
  *   TypeScript API Reference:
  *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-typescript-EN.html
  *

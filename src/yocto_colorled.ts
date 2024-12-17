@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorled.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_colorled.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for ColorLed functions
  *
@@ -426,7 +426,7 @@ export class YColorLed extends YFunction
         obj = <YColorLed> YFunction._FindFromCache('ColorLed', func);
         if (obj == null) {
             obj = new YColorLed(YAPI, func);
-            YFunction._AddToCache('ColorLed',  func, obj);
+            YFunction._AddToCache('ColorLed', func, obj);
         }
         return obj;
     }
@@ -459,10 +459,10 @@ export class YColorLed extends YFunction
     static FindColorLedInContext(yctx: YAPIContext, func: string): YColorLed
     {
         let obj: YColorLed | null;
-        obj = <YColorLed> YFunction._FindFromCacheInContext(yctx,  'ColorLed', func);
+        obj = <YColorLed> YFunction._FindFromCacheInContext(yctx, 'ColorLed', func);
         if (obj == null) {
             obj = new YColorLed(yctx, func);
-            YFunction._AddToCache('ColorLed',  func, obj);
+            YFunction._AddToCache('ColorLed', func, obj);
         }
         return obj;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_gyro.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -109,7 +109,7 @@ export class YQt extends YSensor
         obj = <YQt> YFunction._FindFromCache('Qt', func);
         if (obj == null) {
             obj = new YQt(YAPI, func);
-            YFunction._AddToCache('Qt',  func, obj);
+            YFunction._AddToCache('Qt', func, obj);
         }
         return obj;
     }
@@ -142,10 +142,10 @@ export class YQt extends YSensor
     static FindQtInContext(yctx: YAPIContext, func: string): YQt
     {
         let obj: YQt | null;
-        obj = <YQt> YFunction._FindFromCacheInContext(yctx,  'Qt', func);
+        obj = <YQt> YFunction._FindFromCacheInContext(yctx, 'Qt', func);
         if (obj == null) {
             obj = new YQt(yctx, func);
-            YFunction._AddToCache('Qt',  func, obj);
+            YFunction._AddToCache('Qt', func, obj);
         }
         return obj;
     }
@@ -524,7 +524,7 @@ export class YGyro extends YSensor
         obj = <YGyro> YFunction._FindFromCache('Gyro', func);
         if (obj == null) {
             obj = new YGyro(YAPI, func);
-            YFunction._AddToCache('Gyro',  func, obj);
+            YFunction._AddToCache('Gyro', func, obj);
         }
         return obj;
     }
@@ -557,10 +557,10 @@ export class YGyro extends YSensor
     static FindGyroInContext(yctx: YAPIContext, func: string): YGyro
     {
         let obj: YGyro | null;
-        obj = <YGyro> YFunction._FindFromCacheInContext(yctx,  'Gyro', func);
+        obj = <YGyro> YFunction._FindFromCacheInContext(yctx, 'Gyro', func);
         if (obj == null) {
             obj = new YGyro(yctx, func);
-            YFunction._AddToCache('Gyro',  func, obj);
+            YFunction._AddToCache('Gyro', func, obj);
         }
         return obj;
     }
@@ -651,8 +651,8 @@ export class YGyro extends YSensor
     {
         let now_stamp: number;
         let age_ms: number;
-        now_stamp = <number> ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
-        age_ms = (((now_stamp - this._qt_stamp)) & (0x7FFFFFFF));
+        now_stamp = <number> ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        age_ms = ((now_stamp - this._qt_stamp) & 0x7FFFFFFF);
         if ((age_ms >= 10) || (this._qt_stamp == 0)) {
             if (await this.load(10) != this._yapi.SUCCESS) {
                 return this._yapi.DEVICE_NOT_FOUND;
@@ -938,7 +938,7 @@ export class YGyro extends YSensor
         if (qtIndex < 4) {
             return 0;
         }
-        this._qt_stamp = <number> ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
+        this._qt_stamp = <number> ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
         if (this._quatCallback != null) {
             try {
                 await this._quatCallback(this, this._w, this._x, this._y, this._z);

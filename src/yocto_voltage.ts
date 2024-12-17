@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltage.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_voltage.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Voltage functions
  *
@@ -164,7 +164,7 @@ export class YVoltage extends YSensor
         obj = <YVoltage> YFunction._FindFromCache('Voltage', func);
         if (obj == null) {
             obj = new YVoltage(YAPI, func);
-            YFunction._AddToCache('Voltage',  func, obj);
+            YFunction._AddToCache('Voltage', func, obj);
         }
         return obj;
     }
@@ -197,10 +197,10 @@ export class YVoltage extends YSensor
     static FindVoltageInContext(yctx: YAPIContext, func: string): YVoltage
     {
         let obj: YVoltage | null;
-        obj = <YVoltage> YFunction._FindFromCacheInContext(yctx,  'Voltage', func);
+        obj = <YVoltage> YFunction._FindFromCacheInContext(yctx, 'Voltage', func);
         if (obj == null) {
             obj = new YVoltage(yctx, func);
-            YFunction._AddToCache('Voltage',  func, obj);
+            YFunction._AddToCache('Voltage', func, obj);
         }
         return obj;
     }

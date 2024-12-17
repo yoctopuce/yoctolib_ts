@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 60419 2024-04-08 09:53:37Z seb $
+ *  $Id: yocto_weighscale.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -432,7 +432,7 @@ export class YWeighScale extends YSensor
         obj = <YWeighScale> YFunction._FindFromCache('WeighScale', func);
         if (obj == null) {
             obj = new YWeighScale(YAPI, func);
-            YFunction._AddToCache('WeighScale',  func, obj);
+            YFunction._AddToCache('WeighScale', func, obj);
         }
         return obj;
     }
@@ -465,10 +465,10 @@ export class YWeighScale extends YSensor
     static FindWeighScaleInContext(yctx: YAPIContext, func: string): YWeighScale
     {
         let obj: YWeighScale | null;
-        obj = <YWeighScale> YFunction._FindFromCacheInContext(yctx,  'WeighScale', func);
+        obj = <YWeighScale> YFunction._FindFromCacheInContext(yctx, 'WeighScale', func);
         if (obj == null) {
             obj = new YWeighScale(yctx, func);
-            YFunction._AddToCache('WeighScale',  func, obj);
+            YFunction._AddToCache('WeighScale', func, obj);
         }
         return obj;
     }
@@ -639,24 +639,24 @@ export class YWeighScale extends YSensor
     {
         let id: string;
         let bin_json: Uint8Array;
-        let paramlist: string[] = [];
+        let paramlist: Uint8Array[] = [];
         let siz: number;
         let idx: number;
         let temp: number;
         let comp: number;
 
         id = await this.get_functionId();
-        id = (id).substr(10, (id).length - 10);
+        id = id.substr(10, (id).length - 10);
         bin_json = await this._download('extra.json?page=' + String(Math.round((4*YAPIContext.imm_atoi(id))+tableIndex)));
         paramlist = this.imm_json_get_array(bin_json);
         // convert all values to float and append records
-        siz = ((paramlist.length) >> (1));
+        siz = (paramlist.length >> 1);
         tempValues.length = 0;
         compValues.length = 0;
         idx = 0;
         while (idx < siz) {
-            temp = YAPIContext.imm_atof(paramlist[2*idx])/1000.0;
-            comp = YAPIContext.imm_atof(paramlist[2*idx+1])/1000.0;
+            temp = YAPIContext.imm_atof(this._yapi.imm_bin2str(paramlist[2*idx]))/1000.0;
+            comp = YAPIContext.imm_atof(this._yapi.imm_bin2str(paramlist[2*idx+1]))/1000.0;
             tempValues.push(temp);
             compValues.push(comp);
             idx = idx + 1;
@@ -681,7 +681,7 @@ export class YWeighScale extends YSensor
      */
     async set_offsetAvgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.setCompensationTable(0,  tempValues, compValues);
+        return await this.setCompensationTable(0, tempValues, compValues);
     }
 
     /**
@@ -701,7 +701,7 @@ export class YWeighScale extends YSensor
      */
     async loadOffsetAvgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.loadCompensationTable(0,  tempValues, compValues);
+        return await this.loadCompensationTable(0, tempValues, compValues);
     }
 
     /**
@@ -721,7 +721,7 @@ export class YWeighScale extends YSensor
      */
     async set_offsetChgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.setCompensationTable(1,  tempValues, compValues);
+        return await this.setCompensationTable(1, tempValues, compValues);
     }
 
     /**
@@ -741,7 +741,7 @@ export class YWeighScale extends YSensor
      */
     async loadOffsetChgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.loadCompensationTable(1,  tempValues, compValues);
+        return await this.loadCompensationTable(1, tempValues, compValues);
     }
 
     /**
@@ -761,7 +761,7 @@ export class YWeighScale extends YSensor
      */
     async set_spanAvgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.setCompensationTable(2,  tempValues, compValues);
+        return await this.setCompensationTable(2, tempValues, compValues);
     }
 
     /**
@@ -781,7 +781,7 @@ export class YWeighScale extends YSensor
      */
     async loadSpanAvgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.loadCompensationTable(2,  tempValues, compValues);
+        return await this.loadCompensationTable(2, tempValues, compValues);
     }
 
     /**
@@ -801,7 +801,7 @@ export class YWeighScale extends YSensor
      */
     async set_spanChgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.setCompensationTable(3,  tempValues, compValues);
+        return await this.setCompensationTable(3, tempValues, compValues);
     }
 
     /**
@@ -821,7 +821,7 @@ export class YWeighScale extends YSensor
      */
     async loadSpanChgCompensationTable(tempValues: number[], compValues: number[]): Promise<number>
     {
-        return await this.loadCompensationTable(3,  tempValues, compValues);
+        return await this.loadCompensationTable(3, tempValues, compValues);
     }
 
     /**

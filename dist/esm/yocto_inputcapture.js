@@ -181,7 +181,7 @@ export class YInputCaptureData {
                 recOfs = recOfs + 1;
             }
         }
-        if (((recOfs) & (1)) == 1) {
+        if ((recOfs & 1) == 1) {
             // align to next word
             recOfs = recOfs + 1;
         }

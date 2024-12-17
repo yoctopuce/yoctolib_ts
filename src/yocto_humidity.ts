@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_humidity.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Humidity functions
  *
@@ -185,7 +185,7 @@ export class YHumidity extends YSensor
         obj = <YHumidity> YFunction._FindFromCache('Humidity', func);
         if (obj == null) {
             obj = new YHumidity(YAPI, func);
-            YFunction._AddToCache('Humidity',  func, obj);
+            YFunction._AddToCache('Humidity', func, obj);
         }
         return obj;
     }
@@ -218,10 +218,10 @@ export class YHumidity extends YSensor
     static FindHumidityInContext(yctx: YAPIContext, func: string): YHumidity
     {
         let obj: YHumidity | null;
-        obj = <YHumidity> YFunction._FindFromCacheInContext(yctx,  'Humidity', func);
+        obj = <YHumidity> YFunction._FindFromCacheInContext(yctx, 'Humidity', func);
         if (obj == null) {
             obj = new YHumidity(yctx, func);
-            YFunction._AddToCache('Humidity',  func, obj);
+            YFunction._AddToCache('Humidity', func, obj);
         }
         return obj;
     }

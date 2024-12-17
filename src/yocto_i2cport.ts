@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -661,7 +661,7 @@ export class YI2cPort extends YFunction
         obj = <YI2cPort> YFunction._FindFromCache('I2cPort', func);
         if (obj == null) {
             obj = new YI2cPort(YAPI, func);
-            YFunction._AddToCache('I2cPort',  func, obj);
+            YFunction._AddToCache('I2cPort', func, obj);
         }
         return obj;
     }
@@ -694,10 +694,10 @@ export class YI2cPort extends YFunction
     static FindI2cPortInContext(yctx: YAPIContext, func: string): YI2cPort
     {
         let obj: YI2cPort | null;
-        obj = <YI2cPort> YFunction._FindFromCacheInContext(yctx,  'I2cPort', func);
+        obj = <YI2cPort> YFunction._FindFromCacheInContext(yctx, 'I2cPort', func);
         if (obj == null) {
             obj = new YI2cPort(yctx, func);
-            YFunction._AddToCache('I2cPort',  func, obj);
+            YFunction._AddToCache('I2cPort', func, obj);
         }
         return obj;
     }
@@ -768,7 +768,7 @@ export class YI2cPort extends YFunction
     {
         let url: string;
         let msgbin: Uint8Array;
-        let msgarr: string[] = [];
+        let msgarr: Uint8Array[] = [];
         let msglen: number;
         let res: string;
 
@@ -781,11 +781,11 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
 
@@ -814,7 +814,7 @@ export class YI2cPort extends YFunction
     {
         let url: string;
         let msgbin: Uint8Array;
-        let msgarr: string[] = [];
+        let msgarr: Uint8Array[] = [];
         let msglen: number;
         let res: string[] = [];
         let idx: number;
@@ -828,10 +828,10 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
+            res.push(this.imm_json_get_string(msgarr[idx]));
             idx = idx + 1;
         }
         return res;
@@ -878,7 +878,7 @@ export class YI2cPort extends YFunction
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
+        res = YAPIContext.imm_atoi(availPosStr.substr(0, atPos));
         return res;
     }
 
@@ -892,7 +892,7 @@ export class YI2cPort extends YFunction
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = YAPIContext.imm_atoi((availPosStr).substr(atPos+1, (availPosStr).length-atPos-1));
+        res = YAPIContext.imm_atoi(availPosStr.substr(atPos+1, (availPosStr).length-atPos-1));
         return res;
     }
 
@@ -913,7 +913,7 @@ export class YI2cPort extends YFunction
         let prevpos: number;
         let url: string;
         let msgbin: Uint8Array;
-        let msgarr: string[] = [];
+        let msgarr: Uint8Array[] = [];
         let msglen: number;
         let res: string;
         if ((query).length <= 80) {
@@ -934,11 +934,11 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
 
@@ -960,7 +960,7 @@ export class YI2cPort extends YFunction
         let prevpos: number;
         let url: string;
         let msgbin: Uint8Array;
-        let msgarr: string[] = [];
+        let msgarr: Uint8Array[] = [];
         let msglen: number;
         let res: string;
         if ((hexString).length <= 80) {
@@ -981,11 +981,11 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
 
@@ -1183,7 +1183,7 @@ export class YI2cPort extends YFunction
         if (!(idx < 0)) {
             return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', rcvbytes);
         }
-        reply = (reply).substr((reply).length-2*rcvCount, 2*rcvCount);
+        reply = reply.substr((reply).length-2*rcvCount, 2*rcvCount);
         rcvbytes = this._yapi.imm_hexstr2bin(reply);
         return rcvbytes;
     }
@@ -1250,7 +1250,7 @@ export class YI2cPort extends YFunction
         if (!(idx < 0)) {
             return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', res);
         }
-        reply = (reply).substr((reply).length-2*rcvCount, 2*rcvCount);
+        reply = reply.substr((reply).length-2*rcvCount, 2*rcvCount);
         rcvbytes = this._yapi.imm_hexstr2bin(reply);
         res.length = 0;
         idx = 0;
@@ -1458,7 +1458,7 @@ export class YI2cPort extends YFunction
     {
         let url: string;
         let msgbin: Uint8Array;
-        let msgarr: string[] = [];
+        let msgarr: Uint8Array[] = [];
         let msglen: number;
         let res: YI2cSnoopingRecord[] = [];
         let idx: number;
@@ -1472,10 +1472,10 @@ export class YI2cPort extends YFunction
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(new YI2cSnoopingRecord(msgarr[idx]));
+            res.push(new YI2cSnoopingRecord(this._yapi.imm_bin2str(msgarr[idx])));
             idx = idx + 1;
         }
         return res;

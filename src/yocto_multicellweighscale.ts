@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_multicellweighscale.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for MultiCellWeighScale functions
  *
@@ -526,7 +526,7 @@ export class YMultiCellWeighScale extends YSensor
         obj = <YMultiCellWeighScale> YFunction._FindFromCache('MultiCellWeighScale', func);
         if (obj == null) {
             obj = new YMultiCellWeighScale(YAPI, func);
-            YFunction._AddToCache('MultiCellWeighScale',  func, obj);
+            YFunction._AddToCache('MultiCellWeighScale', func, obj);
         }
         return obj;
     }
@@ -559,10 +559,10 @@ export class YMultiCellWeighScale extends YSensor
     static FindMultiCellWeighScaleInContext(yctx: YAPIContext, func: string): YMultiCellWeighScale
     {
         let obj: YMultiCellWeighScale | null;
-        obj = <YMultiCellWeighScale> YFunction._FindFromCacheInContext(yctx,  'MultiCellWeighScale', func);
+        obj = <YMultiCellWeighScale> YFunction._FindFromCacheInContext(yctx, 'MultiCellWeighScale', func);
         if (obj == null) {
             obj = new YMultiCellWeighScale(yctx, func);
-            YFunction._AddToCache('MultiCellWeighScale',  func, obj);
+            YFunction._AddToCache('MultiCellWeighScale', func, obj);
         }
         return obj;
     }

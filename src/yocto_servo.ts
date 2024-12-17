@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_servo.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_servo.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Servo functions
  *
@@ -423,7 +423,7 @@ export class YServo extends YFunction
         obj = <YServo> YFunction._FindFromCache('Servo', func);
         if (obj == null) {
             obj = new YServo(YAPI, func);
-            YFunction._AddToCache('Servo',  func, obj);
+            YFunction._AddToCache('Servo', func, obj);
         }
         return obj;
     }
@@ -456,10 +456,10 @@ export class YServo extends YFunction
     static FindServoInContext(yctx: YAPIContext, func: string): YServo
     {
         let obj: YServo | null;
-        obj = <YServo> YFunction._FindFromCacheInContext(yctx,  'Servo', func);
+        obj = <YServo> YFunction._FindFromCacheInContext(yctx, 'Servo', func);
         if (obj == null) {
             obj = new YServo(yctx, func);
-            YFunction._AddToCache('Servo',  func, obj);
+            YFunction._AddToCache('Servo', func, obj);
         }
         return obj;
     }

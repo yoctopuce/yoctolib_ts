@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *

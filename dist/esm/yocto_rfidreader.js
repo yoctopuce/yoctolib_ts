@@ -951,16 +951,16 @@ export class YRfidOptions {
             opt = 0;
         }
         if (this.ForceMultiBlockAccess) {
-            opt = ((opt) | (2));
+            opt = (opt | 2);
         }
         if (this.EnableRawAccess) {
-            opt = ((opt) | (4));
+            opt = (opt | 4);
         }
         if (this.DisableBoundaryChecks) {
-            opt = ((opt) | (8));
+            opt = (opt | 8);
         }
         if (this.EnableDryRun) {
-            opt = ((opt) | (16));
+            opt = (opt | 16);
         }
         res = '&o=' + String(Math.round(opt));
         if (this.KeyType != 0) {
@@ -1252,7 +1252,7 @@ export class YRfidReader extends YFunction {
         if ((json).length > 3) {
             jsonList = this.imm_json_get_array(json);
             for (let ii in jsonList) {
-                taglist.push(this.imm_json_get_string(this._yapi.imm_str2bin(jsonList[ii])));
+                taglist.push(this.imm_json_get_string(jsonList[ii]));
             }
         }
         return taglist;
@@ -1361,8 +1361,8 @@ export class YRfidReader extends YFunction {
         binRes = this._yapi.imm_hexstr2bin(this.imm_json_get_key(json, 'bitmap'));
         idx = 0;
         while (idx < nBlocks) {
-            val = binRes[((idx) >> (3))];
-            isLocked = (((val) & (((1) << (((idx) & (7)))))) != 0);
+            val = binRes[(idx >> 3)];
+            isLocked = ((val & (1 << (idx & 7))) != 0);
             res.push(isLocked);
             idx = idx + 1;
         }
@@ -1406,8 +1406,8 @@ export class YRfidReader extends YFunction {
         binRes = this._yapi.imm_hexstr2bin(this.imm_json_get_key(json, 'bitmap'));
         idx = 0;
         while (idx < nBlocks) {
-            val = binRes[((idx) >> (3))];
-            isLocked = (((val) & (((1) << (((idx) & (7)))))) != 0);
+            val = binRes[(idx >> 3)];
+            isLocked = ((val & (1 << (idx & 7))) != 0);
             res.push(isLocked);
             idx = idx + 1;
         }
@@ -1661,7 +1661,7 @@ export class YRfidReader extends YFunction {
         let idx;
         let hexb;
         bufflen = (hexString).length;
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         if (bufflen <= 16) {
             // short data, use an URL-based command
             optstr = options.imm_getParams();
@@ -1674,7 +1674,7 @@ export class YRfidReader extends YFunction {
             buff = new Uint8Array(bufflen);
             idx = 0;
             while (idx < bufflen) {
-                hexb = parseInt((hexString).substr(2 * idx, 2), 16);
+                hexb = parseInt(hexString.substr(2 * idx, 2), 16);
                 buff.set([hexb], idx);
                 idx = idx + 1;
             }
@@ -1948,7 +1948,7 @@ export class YRfidReader extends YFunction {
         // detect possible power cycle of the reader to clear event pointer
         cbPos = YAPIContext.imm_atoi(cbVal);
         cbPos = (((cbPos) / (1000)) >> 0);
-        cbDPos = ((cbPos - this._prevCbPos) & (0x7ffff));
+        cbDPos = ((cbPos - this._prevCbPos) & 0x7ffff);
         this._prevCbPos = cbPos;
         if (cbDPos > 16384) {
             this._eventPos = 0;
@@ -1971,7 +1971,7 @@ export class YRfidReader extends YFunction {
             // first element of array is the new position preceeded by '@'
             arrPos = 1;
             lenStr = eventArr[0];
-            lenStr = (lenStr).substr(1, (lenStr).length - 1);
+            lenStr = lenStr.substr(1, (lenStr).length - 1);
             // update processed event position pointer
             this._eventPos = YAPIContext.imm_atoi(lenStr);
         }
@@ -1989,7 +1989,7 @@ export class YRfidReader extends YFunction {
             arrPos = 0;
             arrLen = arrLen - 1;
             lenStr = eventArr[arrLen];
-            lenStr = (lenStr).substr(1, (lenStr).length - 1);
+            lenStr = lenStr.substr(1, (lenStr).length - 1);
             // update processed event position pointer
             this._eventPos = YAPIContext.imm_atoi(lenStr);
         }
@@ -1999,18 +1999,18 @@ export class YRfidReader extends YFunction {
             eventLen = (eventStr).length;
             typePos = (eventStr).indexOf(':') + 1;
             if ((eventLen >= 14) && (typePos > 10)) {
-                hexStamp = (eventStr).substr(0, 8);
+                hexStamp = eventStr.substr(0, 8);
                 intStamp = parseInt(hexStamp, 16);
                 if (intStamp >= this._eventStamp) {
                     this._eventStamp = intStamp;
-                    binMStamp = this._yapi.imm_str2bin((eventStr).substr(8, 2));
+                    binMStamp = this._yapi.imm_str2bin(eventStr.substr(8, 2));
                     msStamp = (binMStamp[0] - 64) * 32 + binMStamp[1];
                     evtStamp = intStamp + (0.001 * msStamp);
                     dataPos = (eventStr).indexOf('=') + 1;
-                    evtType = (eventStr).substr(typePos, 1);
+                    evtType = eventStr.substr(typePos, 1);
                     evtData = '';
                     if (dataPos > 10) {
-                        evtData = (eventStr).substr(dataPos, eventLen - dataPos);
+                        evtData = eventStr.substr(dataPos, eventLen - dataPos);
                     }
                     if (this._eventCallback != null) {
                         try {

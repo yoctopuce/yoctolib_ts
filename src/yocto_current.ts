@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_current.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Current functions
  *
@@ -164,7 +164,7 @@ export class YCurrent extends YSensor
         obj = <YCurrent> YFunction._FindFromCache('Current', func);
         if (obj == null) {
             obj = new YCurrent(YAPI, func);
-            YFunction._AddToCache('Current',  func, obj);
+            YFunction._AddToCache('Current', func, obj);
         }
         return obj;
     }
@@ -197,10 +197,10 @@ export class YCurrent extends YSensor
     static FindCurrentInContext(yctx: YAPIContext, func: string): YCurrent
     {
         let obj: YCurrent | null;
-        obj = <YCurrent> YFunction._FindFromCacheInContext(yctx,  'Current', func);
+        obj = <YCurrent> YFunction._FindFromCacheInContext(yctx, 'Current', func);
         if (obj == null) {
             obj = new YCurrent(yctx, func);
-            YFunction._AddToCache('Current',  func, obj);
+            YFunction._AddToCache('Current', func, obj);
         }
         return obj;
     }

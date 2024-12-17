@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_currentloopoutput.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for CurrentLoopOutput functions
  *
@@ -255,7 +255,7 @@ export class YCurrentLoopOutput extends YFunction
         obj = <YCurrentLoopOutput> YFunction._FindFromCache('CurrentLoopOutput', func);
         if (obj == null) {
             obj = new YCurrentLoopOutput(YAPI, func);
-            YFunction._AddToCache('CurrentLoopOutput',  func, obj);
+            YFunction._AddToCache('CurrentLoopOutput', func, obj);
         }
         return obj;
     }
@@ -288,10 +288,10 @@ export class YCurrentLoopOutput extends YFunction
     static FindCurrentLoopOutputInContext(yctx: YAPIContext, func: string): YCurrentLoopOutput
     {
         let obj: YCurrentLoopOutput | null;
-        obj = <YCurrentLoopOutput> YFunction._FindFromCacheInContext(yctx,  'CurrentLoopOutput', func);
+        obj = <YCurrentLoopOutput> YFunction._FindFromCacheInContext(yctx, 'CurrentLoopOutput', func);
         if (obj == null) {
             obj = new YCurrentLoopOutput(yctx, func);
-            YFunction._AddToCache('CurrentLoopOutput',  func, obj);
+            YFunction._AddToCache('CurrentLoopOutput', func, obj);
         }
         return obj;
     }

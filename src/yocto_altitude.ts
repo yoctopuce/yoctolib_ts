@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_altitude.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_altitude.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Altitude functions
  *
@@ -210,7 +210,7 @@ export class YAltitude extends YSensor
         obj = <YAltitude> YFunction._FindFromCache('Altitude', func);
         if (obj == null) {
             obj = new YAltitude(YAPI, func);
-            YFunction._AddToCache('Altitude',  func, obj);
+            YFunction._AddToCache('Altitude', func, obj);
         }
         return obj;
     }
@@ -243,10 +243,10 @@ export class YAltitude extends YSensor
     static FindAltitudeInContext(yctx: YAPIContext, func: string): YAltitude
     {
         let obj: YAltitude | null;
-        obj = <YAltitude> YFunction._FindFromCacheInContext(yctx,  'Altitude', func);
+        obj = <YAltitude> YFunction._FindFromCacheInContext(yctx, 'Altitude', func);
         if (obj == null) {
             obj = new YAltitude(yctx, func);
-            YFunction._AddToCache('Altitude',  func, obj);
+            YFunction._AddToCache('Altitude', func, obj);
         }
         return obj;
     }

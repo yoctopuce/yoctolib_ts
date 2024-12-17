@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_relay.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_relay.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Relay functions
  *
@@ -479,7 +479,7 @@ export class YRelay extends YFunction
         obj = <YRelay> YFunction._FindFromCache('Relay', func);
         if (obj == null) {
             obj = new YRelay(YAPI, func);
-            YFunction._AddToCache('Relay',  func, obj);
+            YFunction._AddToCache('Relay', func, obj);
         }
         return obj;
     }
@@ -512,10 +512,10 @@ export class YRelay extends YFunction
     static FindRelayInContext(yctx: YAPIContext, func: string): YRelay
     {
         let obj: YRelay | null;
-        obj = <YRelay> YFunction._FindFromCacheInContext(yctx,  'Relay', func);
+        obj = <YRelay> YFunction._FindFromCacheInContext(yctx, 'Relay', func);
         if (obj == null) {
             obj = new YRelay(yctx, func);
-            YFunction._AddToCache('Relay',  func, obj);
+            YFunction._AddToCache('Relay', func, obj);
         }
         return obj;
     }

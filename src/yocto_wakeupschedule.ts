@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupschedule.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_wakeupschedule.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for WakeUpSchedule functions
  *
@@ -442,7 +442,7 @@ export class YWakeUpSchedule extends YFunction
         obj = <YWakeUpSchedule> YFunction._FindFromCache('WakeUpSchedule', func);
         if (obj == null) {
             obj = new YWakeUpSchedule(YAPI, func);
-            YFunction._AddToCache('WakeUpSchedule',  func, obj);
+            YFunction._AddToCache('WakeUpSchedule', func, obj);
         }
         return obj;
     }
@@ -475,10 +475,10 @@ export class YWakeUpSchedule extends YFunction
     static FindWakeUpScheduleInContext(yctx: YAPIContext, func: string): YWakeUpSchedule
     {
         let obj: YWakeUpSchedule | null;
-        obj = <YWakeUpSchedule> YFunction._FindFromCacheInContext(yctx,  'WakeUpSchedule', func);
+        obj = <YWakeUpSchedule> YFunction._FindFromCacheInContext(yctx, 'WakeUpSchedule', func);
         if (obj == null) {
             obj = new YWakeUpSchedule(yctx, func);
-            YFunction._AddToCache('WakeUpSchedule',  func, obj);
+            YFunction._AddToCache('WakeUpSchedule', func, obj);
         }
         return obj;
     }
@@ -535,7 +535,7 @@ export class YWakeUpSchedule extends YFunction
         let res: number;
 
         res = await this.get_minutesB();
-        res = ((res) << (30));
+        res = (res << 30);
         res = res + await this.get_minutesA();
         return res;
     }
@@ -551,9 +551,9 @@ export class YWakeUpSchedule extends YFunction
      */
     async set_minutes(bitmap: number): Promise<number>
     {
-        await this.set_minutesA(((bitmap) & (0x3fffffff)));
-        bitmap = ((bitmap) >> (30));
-        return await this.set_minutesB(((bitmap) & (0x3fffffff)));
+        await this.set_minutesA((bitmap & 0x3fffffff));
+        bitmap = (bitmap >> 30);
+        return await this.set_minutesB((bitmap & 0x3fffffff));
     }
 
     /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_serialport.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -713,11 +713,11 @@ export class YSerialPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -757,10 +757,10 @@ export class YSerialPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
+            res.push(this.imm_json_get_string(msgarr[idx]));
             idx = idx + 1;
         }
         return res;
@@ -800,7 +800,7 @@ export class YSerialPort extends YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
+        res = YAPIContext.imm_atoi(availPosStr.substr(0, atPos));
         return res;
     }
     async end_tell() {
@@ -811,7 +811,7 @@ export class YSerialPort extends YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = YAPIContext.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
+        res = YAPIContext.imm_atoi(availPosStr.substr(atPos + 1, (availPosStr).length - atPos - 1));
         return res;
     }
     /**
@@ -851,11 +851,11 @@ export class YSerialPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -896,11 +896,11 @@ export class YSerialPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1051,11 +1051,11 @@ export class YSerialPort extends YFunction {
         if (bufflen < 100) {
             return await this.sendCommand('$' + hexString);
         }
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         buff = new Uint8Array(bufflen);
         idx = 0;
         while (idx < bufflen) {
-            hexb = parseInt((hexString).substr(2 * idx, 2), 16);
+            hexb = parseInt(hexString.substr(2 * idx, 2), 16);
             buff.set([hexb], idx);
             idx = idx + 1;
         }
@@ -1399,10 +1399,10 @@ export class YSerialPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(new YSnoopingRecord(msgarr[idx]));
+            res.push(new YSnoopingRecord(this._yapi.imm_bin2str(msgarr[idx])));
             idx = idx + 1;
         }
         return res;
@@ -1473,14 +1473,14 @@ export class YSerialPort extends YFunction {
         msglen = msglen - 1;
         if (!(this._eventCallback != null)) {
             // first simulated event, use it only to initialize reference values
-            this._eventPos = YAPIContext.imm_atoi(msgarr[msglen]);
+            this._eventPos = this.imm_decode_json_int(msgarr[msglen]);
             return this._yapi.SUCCESS;
         }
-        this._eventPos = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._eventPos = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
             try {
-                await this._eventCallback(this, new YSnoopingRecord(msgarr[idx]));
+                await this._eventCallback(this, new YSnoopingRecord(this._yapi.imm_bin2str(msgarr[idx])));
             }
             catch (e) {
                 this._yapi.imm_log('Exception in snoopingCallback:', e);
@@ -1546,12 +1546,12 @@ export class YSerialPort extends YFunction {
         let replen;
         let hexb;
         funCode = pduBytes[0];
-        nib = ((funCode) >> (4));
-        pat = ('00' + (slaveNo).toString(16)).slice(-2).toUpperCase() + '[' + (nib).toString(16).toUpperCase() + '' + ((nib + 8)).toString(16).toUpperCase() + ']' + (((funCode) & (15))).toString(16).toUpperCase() + '.*';
+        nib = (funCode >> 4);
+        pat = ('00' + (slaveNo).toString(16)).slice(-2).toUpperCase() + '[' + (nib).toString(16).toUpperCase() + '' + ((nib + 8)).toString(16).toUpperCase() + ']' + ((funCode & 15)).toString(16).toUpperCase() + '.*';
         cmd = ('00' + (slaveNo).toString(16)).slice(-2).toUpperCase() + '' + ('00' + (funCode).toString(16)).slice(-2).toUpperCase();
         i = 1;
         while (i < pduBytes.length) {
-            cmd = cmd + '' + ('00' + (((pduBytes[i]) & (0xff))).toString(16)).slice(-2).toUpperCase();
+            cmd = cmd + '' + ('00' + ((pduBytes[i] & 0xff)).toString(16)).slice(-2).toUpperCase();
             i = i + 1;
         }
         if ((cmd).length <= 80) {
@@ -1570,11 +1570,11 @@ export class YSerialPort extends YFunction {
             return this._throw(this._yapi.IO_ERROR, 'no reply from MODBUS slave', res);
         }
         if (reps.length > 1) {
-            rep = this.imm_json_get_string(this._yapi.imm_str2bin(reps[0]));
-            replen = (((rep).length - 3) >> (1));
+            rep = this.imm_json_get_string(reps[0]);
+            replen = (((rep).length - 3) >> 1);
             i = 0;
             while (i < replen) {
-                hexb = parseInt((rep).substr(2 * i + 3, 2), 16);
+                hexb = parseInt(rep.substr(2 * i + 3, 2), 16);
                 res.push(hexb);
                 i = i + 1;
             }
@@ -1617,10 +1617,10 @@ export class YSerialPort extends YFunction {
         let val;
         let mask;
         pdu.push(0x01);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((nBits) >> (8)));
-        pdu.push(((nBits) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((nBits >> 8));
+        pdu.push((nBits & 0xff));
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.length == 0) {
             return res;
@@ -1633,7 +1633,7 @@ export class YSerialPort extends YFunction {
         val = reply[idx];
         mask = 1;
         while (bitpos < nBits) {
-            if (((val) & (mask)) == 0) {
+            if ((val & mask) == 0) {
                 res.push(0);
             }
             else {
@@ -1646,7 +1646,7 @@ export class YSerialPort extends YFunction {
                 mask = 1;
             }
             else {
-                mask = ((mask) << (1));
+                mask = (mask << 1);
             }
         }
         return res;
@@ -1672,10 +1672,10 @@ export class YSerialPort extends YFunction {
         let val;
         let mask;
         pdu.push(0x02);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((nBits) >> (8)));
-        pdu.push(((nBits) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((nBits >> 8));
+        pdu.push((nBits & 0xff));
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.length == 0) {
             return res;
@@ -1688,7 +1688,7 @@ export class YSerialPort extends YFunction {
         val = reply[idx];
         mask = 1;
         while (bitpos < nBits) {
-            if (((val) & (mask)) == 0) {
+            if ((val & mask) == 0) {
                 res.push(0);
             }
             else {
@@ -1701,7 +1701,7 @@ export class YSerialPort extends YFunction {
                 mask = 1;
             }
             else {
-                mask = ((mask) << (1));
+                mask = (mask << 1);
             }
         }
         return res;
@@ -1729,10 +1729,10 @@ export class YSerialPort extends YFunction {
             return this._throw(this._yapi.INVALID_ARGUMENT, 'Cannot read more than 256 words', res);
         }
         pdu.push(0x03);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((nWords) >> (8)));
-        pdu.push(((nWords) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((nWords >> 8));
+        pdu.push((nWords & 0xff));
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.length == 0) {
             return res;
@@ -1743,7 +1743,7 @@ export class YSerialPort extends YFunction {
         regpos = 0;
         idx = 2;
         while (regpos < nWords) {
-            val = ((reply[idx]) << (8));
+            val = (reply[idx] << 8);
             idx = idx + 1;
             val = val + reply[idx];
             idx = idx + 1;
@@ -1772,10 +1772,10 @@ export class YSerialPort extends YFunction {
         let idx;
         let val;
         pdu.push(0x04);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((nWords) >> (8)));
-        pdu.push(((nWords) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((nWords >> 8));
+        pdu.push((nWords & 0xff));
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.length == 0) {
             return res;
@@ -1786,7 +1786,7 @@ export class YSerialPort extends YFunction {
         regpos = 0;
         idx = 2;
         while (regpos < nWords) {
-            val = ((reply[idx]) << (8));
+            val = (reply[idx] << 8);
             idx = idx + 1;
             val = val + reply[idx];
             idx = idx + 1;
@@ -1816,8 +1816,8 @@ export class YSerialPort extends YFunction {
             value = 0xff;
         }
         pdu.push(0x05);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
         pdu.push(value);
         pdu.push(0x00);
         reply = await this.queryMODBUS(slaveNo, pdu);
@@ -1853,19 +1853,19 @@ export class YSerialPort extends YFunction {
         let res;
         res = 0;
         nBits = bits.length;
-        nBytes = (((nBits + 7)) >> (3));
+        nBytes = ((nBits + 7) >> 3);
         pdu.push(0x0f);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((nBits) >> (8)));
-        pdu.push(((nBits) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((nBits >> 8));
+        pdu.push((nBits & 0xff));
         pdu.push(nBytes);
         bitpos = 0;
         val = 0;
         mask = 1;
         while (bitpos < nBits) {
             if (bits[bitpos] != 0) {
-                val = ((val) | (mask));
+                val = (val | mask);
             }
             bitpos = bitpos + 1;
             if (mask == 0x80) {
@@ -1874,7 +1874,7 @@ export class YSerialPort extends YFunction {
                 mask = 1;
             }
             else {
-                mask = ((mask) << (1));
+                mask = (mask << 1);
             }
         }
         if (mask != 1) {
@@ -1887,7 +1887,7 @@ export class YSerialPort extends YFunction {
         if (reply[0] != pdu[0]) {
             return res;
         }
-        res = ((reply[3]) << (8));
+        res = (reply[3] << 8);
         res = res + reply[4];
         return res;
     }
@@ -1909,10 +1909,10 @@ export class YSerialPort extends YFunction {
         let res;
         res = 0;
         pdu.push(0x06);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((value) >> (8)));
-        pdu.push(((value) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((value >> 8));
+        pdu.push((value & 0xff));
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.length == 0) {
             return res;
@@ -1947,16 +1947,16 @@ export class YSerialPort extends YFunction {
         nWords = values.length;
         nBytes = 2 * nWords;
         pdu.push(0x10);
-        pdu.push(((pduAddr) >> (8)));
-        pdu.push(((pduAddr) & (0xff)));
-        pdu.push(((nWords) >> (8)));
-        pdu.push(((nWords) & (0xff)));
+        pdu.push((pduAddr >> 8));
+        pdu.push((pduAddr & 0xff));
+        pdu.push((nWords >> 8));
+        pdu.push((nWords & 0xff));
         pdu.push(nBytes);
         regpos = 0;
         while (regpos < nWords) {
             val = values[regpos];
-            pdu.push(((val) >> (8)));
-            pdu.push(((val) & (0xff)));
+            pdu.push((val >> 8));
+            pdu.push((val & 0xff));
             regpos = regpos + 1;
         }
         reply = await this.queryMODBUS(slaveNo, pdu);
@@ -1966,7 +1966,7 @@ export class YSerialPort extends YFunction {
         if (reply[0] != pdu[0]) {
             return res;
         }
-        res = ((reply[3]) << (8));
+        res = (reply[3] << 8);
         res = res + reply[4];
         return res;
     }
@@ -1997,20 +1997,20 @@ export class YSerialPort extends YFunction {
         nWriteWords = values.length;
         nBytes = 2 * nWriteWords;
         pdu.push(0x17);
-        pdu.push(((pduReadAddr) >> (8)));
-        pdu.push(((pduReadAddr) & (0xff)));
-        pdu.push(((nReadWords) >> (8)));
-        pdu.push(((nReadWords) & (0xff)));
-        pdu.push(((pduWriteAddr) >> (8)));
-        pdu.push(((pduWriteAddr) & (0xff)));
-        pdu.push(((nWriteWords) >> (8)));
-        pdu.push(((nWriteWords) & (0xff)));
+        pdu.push((pduReadAddr >> 8));
+        pdu.push((pduReadAddr & 0xff));
+        pdu.push((nReadWords >> 8));
+        pdu.push((nReadWords & 0xff));
+        pdu.push((pduWriteAddr >> 8));
+        pdu.push((pduWriteAddr & 0xff));
+        pdu.push((nWriteWords >> 8));
+        pdu.push((nWriteWords & 0xff));
         pdu.push(nBytes);
         regpos = 0;
         while (regpos < nWriteWords) {
             val = values[regpos];
-            pdu.push(((val) >> (8)));
-            pdu.push(((val) & (0xff)));
+            pdu.push((val >> 8));
+            pdu.push((val & 0xff));
             regpos = regpos + 1;
         }
         reply = await this.queryMODBUS(slaveNo, pdu);
@@ -2023,7 +2023,7 @@ export class YSerialPort extends YFunction {
         regpos = 0;
         idx = 2;
         while (regpos < nReadWords) {
-            val = ((reply[idx]) << (8));
+            val = (reply[idx] << 8);
             idx = idx + 1;
             val = val + reply[idx];
             idx = idx + 1;

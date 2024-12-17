@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_proximity.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_proximity.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Proximity functions
  *
@@ -46,7 +46,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
  * The YProximity class allows you to read and configure Yoctopuce proximity sensors.
  * It inherits from YSensor class the core functions to read measurements,
  * to register callback functions, and to access the autonomous datalogger.
- * This class adds the ability to setup a detection threshold and to count the
+ * This class adds the ability to set up a detection threshold and to count the
  * number of detected state changes.
  */
 //--- (end of YProximity class start)
@@ -527,7 +527,7 @@ export class YProximity extends YSensor
         obj = <YProximity> YFunction._FindFromCache('Proximity', func);
         if (obj == null) {
             obj = new YProximity(YAPI, func);
-            YFunction._AddToCache('Proximity',  func, obj);
+            YFunction._AddToCache('Proximity', func, obj);
         }
         return obj;
     }
@@ -560,10 +560,10 @@ export class YProximity extends YSensor
     static FindProximityInContext(yctx: YAPIContext, func: string): YProximity
     {
         let obj: YProximity | null;
-        obj = <YProximity> YFunction._FindFromCacheInContext(yctx,  'Proximity', func);
+        obj = <YProximity> YFunction._FindFromCacheInContext(yctx, 'Proximity', func);
         if (obj == null) {
             obj = new YProximity(yctx, func);
-            YFunction._AddToCache('Proximity',  func, obj);
+            YFunction._AddToCache('Proximity', func, obj);
         }
         return obj;
     }

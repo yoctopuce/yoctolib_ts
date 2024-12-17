@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_lightsensor.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for LightSensor functions
  *
@@ -207,7 +207,7 @@ export class YLightSensor extends YSensor
         obj = <YLightSensor> YFunction._FindFromCache('LightSensor', func);
         if (obj == null) {
             obj = new YLightSensor(YAPI, func);
-            YFunction._AddToCache('LightSensor',  func, obj);
+            YFunction._AddToCache('LightSensor', func, obj);
         }
         return obj;
     }
@@ -240,10 +240,10 @@ export class YLightSensor extends YSensor
     static FindLightSensorInContext(yctx: YAPIContext, func: string): YLightSensor
     {
         let obj: YLightSensor | null;
-        obj = <YLightSensor> YFunction._FindFromCacheInContext(yctx,  'LightSensor', func);
+        obj = <YLightSensor> YFunction._FindFromCacheInContext(yctx, 'LightSensor', func);
         if (obj == null) {
             obj = new YLightSensor(yctx, func);
-            YFunction._AddToCache('LightSensor',  func, obj);
+            YFunction._AddToCache('LightSensor', func, obj);
         }
         return obj;
     }

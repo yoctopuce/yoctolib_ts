@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voltageoutput.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_voltageoutput.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for VoltageOutput functions
  *
@@ -217,7 +217,7 @@ export class YVoltageOutput extends YFunction
         obj = <YVoltageOutput> YFunction._FindFromCache('VoltageOutput', func);
         if (obj == null) {
             obj = new YVoltageOutput(YAPI, func);
-            YFunction._AddToCache('VoltageOutput',  func, obj);
+            YFunction._AddToCache('VoltageOutput', func, obj);
         }
         return obj;
     }
@@ -250,10 +250,10 @@ export class YVoltageOutput extends YFunction
     static FindVoltageOutputInContext(yctx: YAPIContext, func: string): YVoltageOutput
     {
         let obj: YVoltageOutput | null;
-        obj = <YVoltageOutput> YFunction._FindFromCacheInContext(yctx,  'VoltageOutput', func);
+        obj = <YVoltageOutput> YFunction._FindFromCacheInContext(yctx, 'VoltageOutput', func);
         if (obj == null) {
             obj = new YVoltageOutput(yctx, func);
-            YFunction._AddToCache('VoltageOutput',  func, obj);
+            YFunction._AddToCache('VoltageOutput', func, obj);
         }
         return obj;
     }

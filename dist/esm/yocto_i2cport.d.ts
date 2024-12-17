@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *

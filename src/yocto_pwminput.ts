@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_pwminput.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -488,7 +488,7 @@ export class YPwmInput extends YSensor
         obj = <YPwmInput> YFunction._FindFromCache('PwmInput', func);
         if (obj == null) {
             obj = new YPwmInput(YAPI, func);
-            YFunction._AddToCache('PwmInput',  func, obj);
+            YFunction._AddToCache('PwmInput', func, obj);
         }
         return obj;
     }
@@ -521,10 +521,10 @@ export class YPwmInput extends YSensor
     static FindPwmInputInContext(yctx: YAPIContext, func: string): YPwmInput
     {
         let obj: YPwmInput | null;
-        obj = <YPwmInput> YFunction._FindFromCacheInContext(yctx,  'PwmInput', func);
+        obj = <YPwmInput> YFunction._FindFromCacheInContext(yctx, 'PwmInput', func);
         if (obj == null) {
             obj = new YPwmInput(yctx, func);
-            YFunction._AddToCache('PwmInput',  func, obj);
+            YFunction._AddToCache('PwmInput', func, obj);
         }
         return obj;
     }

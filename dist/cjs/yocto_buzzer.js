@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_buzzer.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Buzzer functions
  *
@@ -523,7 +523,7 @@ class YBuzzer extends yocto_api_js_1.YFunction {
                     }
                     pitch = prevPitch + dNote;
                     freq = Math.round(440 * Math.exp(pitch * 0.05776226504666));
-                    ms16 = ((ms) >> (4));
+                    ms16 = (ms >> 4);
                     rest = 0;
                     if (typ == 3) {
                         rest = 2 * ms16;

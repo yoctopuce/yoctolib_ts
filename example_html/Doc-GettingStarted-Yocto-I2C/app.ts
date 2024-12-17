@@ -63,7 +63,7 @@ async function refresh(): Promise<void>
         let toSend : number[] = [0x05]
         try
         {    received = await i2cPort.i2cSendAndReceiveArray(0x1f, toSend, 2) }
-        catch (e)
+        catch (e:any)
         { html += e.toString();
           document.body.innerHTML = html;
           return;

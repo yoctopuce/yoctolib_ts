@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_power.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_power.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Power functions
  *
@@ -289,7 +289,7 @@ export class YPower extends YSensor
         obj = <YPower> YFunction._FindFromCache('Power', func);
         if (obj == null) {
             obj = new YPower(YAPI, func);
-            YFunction._AddToCache('Power',  func, obj);
+            YFunction._AddToCache('Power', func, obj);
         }
         return obj;
     }
@@ -322,10 +322,10 @@ export class YPower extends YSensor
     static FindPowerInContext(yctx: YAPIContext, func: string): YPower
     {
         let obj: YPower | null;
-        obj = <YPower> YFunction._FindFromCacheInContext(yctx,  'Power', func);
+        obj = <YPower> YFunction._FindFromCacheInContext(yctx, 'Power', func);
         if (obj == null) {
             obj = new YPower(yctx, func);
-            YFunction._AddToCache('Power',  func, obj);
+            YFunction._AddToCache('Power', func, obj);
         }
         return obj;
     }

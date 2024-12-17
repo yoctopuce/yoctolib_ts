@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_compass.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_compass.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Compass functions
  *
@@ -205,7 +205,7 @@ export class YCompass extends YSensor
         obj = <YCompass> YFunction._FindFromCache('Compass', func);
         if (obj == null) {
             obj = new YCompass(YAPI, func);
-            YFunction._AddToCache('Compass',  func, obj);
+            YFunction._AddToCache('Compass', func, obj);
         }
         return obj;
     }
@@ -238,10 +238,10 @@ export class YCompass extends YSensor
     static FindCompassInContext(yctx: YAPIContext, func: string): YCompass
     {
         let obj: YCompass | null;
-        obj = <YCompass> YFunction._FindFromCacheInContext(yctx,  'Compass', func);
+        obj = <YCompass> YFunction._FindFromCacheInContext(yctx, 'Compass', func);
         if (obj == null) {
             obj = new YCompass(yctx, func);
-            YFunction._AddToCache('Compass',  func, obj);
+            YFunction._AddToCache('Compass', func, obj);
         }
         return obj;
     }

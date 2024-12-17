@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_gps.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Gps functions
  *
@@ -616,7 +616,7 @@ export class YGps extends YFunction
         obj = <YGps> YFunction._FindFromCache('Gps', func);
         if (obj == null) {
             obj = new YGps(YAPI, func);
-            YFunction._AddToCache('Gps',  func, obj);
+            YFunction._AddToCache('Gps', func, obj);
         }
         return obj;
     }
@@ -649,10 +649,10 @@ export class YGps extends YFunction
     static FindGpsInContext(yctx: YAPIContext, func: string): YGps
     {
         let obj: YGps | null;
-        obj = <YGps> YFunction._FindFromCacheInContext(yctx,  'Gps', func);
+        obj = <YGps> YFunction._FindFromCacheInContext(yctx, 'Gps', func);
         if (obj == null) {
             obj = new YGps(yctx, func);
-            YFunction._AddToCache('Gps',  func, obj);
+            YFunction._AddToCache('Gps', func, obj);
         }
         return obj;
     }

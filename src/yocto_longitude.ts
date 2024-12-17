@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_longitude.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_longitude.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Longitude functions
  *
@@ -103,7 +103,7 @@ export class YLongitude extends YSensor
         obj = <YLongitude> YFunction._FindFromCache('Longitude', func);
         if (obj == null) {
             obj = new YLongitude(YAPI, func);
-            YFunction._AddToCache('Longitude',  func, obj);
+            YFunction._AddToCache('Longitude', func, obj);
         }
         return obj;
     }
@@ -136,10 +136,10 @@ export class YLongitude extends YSensor
     static FindLongitudeInContext(yctx: YAPIContext, func: string): YLongitude
     {
         let obj: YLongitude | null;
-        obj = <YLongitude> YFunction._FindFromCacheInContext(yctx,  'Longitude', func);
+        obj = <YLongitude> YFunction._FindFromCacheInContext(yctx, 'Longitude', func);
         if (obj == null) {
             obj = new YLongitude(yctx, func);
-            YFunction._AddToCache('Longitude',  func, obj);
+            YFunction._AddToCache('Longitude', func, obj);
         }
         return obj;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 61714 2024-06-28 09:43:23Z seb $
+ * $Id: yocto_api.ts 63704 2024-12-16 10:05:02Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -92,7 +92,7 @@ export interface yCalibrationHandler {
     (rawValue: number, calibType: number, parameters: number[], rawValues: number[], refValues: number[]): number;
 }
 export interface YHubDiscoveryCallback {
-    (serial: string, urlToRegister: string | null, urlToUnregister: string | null): void;
+    (serial: string, urlToRegister: string | null): void;
 }
 export interface YDeviceUpdateCallback {
     (module: YModule): void;
@@ -1600,20 +1600,26 @@ export declare class YFunction {
      * @param bin_jsonbuff {Uint8Array}
      * @return {string[]}
      **/
-    imm_json_get_array(bin_jsonbuff: Uint8Array): string[];
+    imm_json_get_array(bin_jsonbuff: Uint8Array): Uint8Array[];
     /** Get an array of strings from a JSON buffer
      *
-     * @param str_json {string}
+     * @param bin_json {string}
      * @param str_path {string}
      * @return {string}
      **/
-    imm_get_json_path(str_json: string, str_path: string): string;
+    imm_get_json_path(bin_json: Uint8Array, str_path: string): Uint8Array;
     /** Get a string from a JSON string
      *
-     * @param str_json {string}
+     * @param bin_json {string}
      * @return {string}
      **/
-    imm_decode_json_string(str_json: string): string;
+    imm_decode_json_string(bin_json: Uint8Array): string;
+    /** Get a integer from a JSON string
+     *
+     * @param bin_json {string}
+     * @return {number}
+     **/
+    imm_decode_json_int(bin_json: Uint8Array): number;
     /** Method used to cache DataStream objects (new DataLogger)
      *
      * @param obj_dataset {YDataSet}
@@ -2282,7 +2288,7 @@ export declare class YModule extends YFunction {
     download(pathname: string): Promise<Uint8Array>;
     /**
      * Returns the icon of the module. The icon is a PNG image and does not
-     * exceeds 1536 bytes.
+     * exceed 1536 bytes.
      *
      * @return a binary buffer with module icon, in png format.
      *         On failure, throws an exception or returns  YAPI.INVALID_STRING.
@@ -2392,7 +2398,7 @@ export declare namespace YModule {
  * The YSensor class is the parent class for all Yoctopuce sensor types. It can be
  * used to read the current value and unit of any sensor, read the min/max
  * value, configure autonomous recording frequency and access recorded data.
- * It also provide a function to register a callback invoked each time the
+ * It also provides a function to register a callback invoked each time the
  * observed value changes, or at a predefined interval. Using this class rather
  * than a specific subclass makes it possible to create generic applications
  * that work with any Yoctopuce sensor, even those that do not yet exist.
@@ -3193,7 +3199,7 @@ export declare class YDataLogger extends YFunction {
      * On failure, throws an exception or returns an empty list.
      */
     get_dataSets(): Promise<YDataSet[]>;
-    parse_dataSets(json: Uint8Array): Promise<YDataSet[]>;
+    parse_dataSets(jsonbuff: Uint8Array): Promise<YDataSet[]>;
     /**
      * Continues the enumeration of data loggers started using yFirstDataLogger().
      * Caution: You can't make any assumption about the returned data loggers order.
@@ -3260,7 +3266,7 @@ export declare class YSystemEnv {
     unknownSystemEnvError(): YoctoError;
     hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback): void;
     getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
-    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getHttpEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, infojson: any): YHubEngine | null;
     getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: _YY_WebSocket): YHubEngine | null;
     getHttpCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, incomingMessage: any, serverResponse: any): YHubEngine | null;
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;
@@ -3497,7 +3503,7 @@ export declare class YHttpEngine extends YHubEngine {
     opaque: string;
     nonceCount: number;
     notbynRequest: any;
-    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo);
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, firstInfoJson: any);
     imm_makeRequest(method: string, relUrl: string, contentType: string, body: string | Uint8Array | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string, can_be_retry: boolean) => any): any;
     imm_abortRequest(clientRequest: any): void;
     imm_sendRequest(method: string, relUrl: string, obj_body: YHTTPBody | null, onProgress: null | ((moreText: string) => void), onSuccess: null | ((responseText: string) => void), onError: (errorType: number, errorMsg: string, can_be_retry: boolean) => void): any;
@@ -3764,7 +3770,7 @@ export declare class YHub {
      * Modifies tthe network connection delay for this hub.
      * The default value is inherited from ySetNetworkTimeout
      * at the time when the hub is registered, but it can be updated
-     * afterwards for each specific hub if necessary.
+     * afterward for each specific hub if necessary.
      *
      * @param networkMsTimeout : the network connection delay in milliseconds.
      * @noreturn
@@ -3774,7 +3780,7 @@ export declare class YHub {
      * Returns the network connection delay for this hub.
      * The default value is inherited from ySetNetworkTimeout
      * at the time when the hub is registered, but it can be updated
-     * afterwards for each specific hub if necessary.
+     * afterward for each specific hub if necessary.
      *
      * @return the network connection delay in milliseconds.
      */
@@ -4216,7 +4222,7 @@ export declare class YAPIContext {
      * Modifies the network connection delay for yRegisterHub() and yUpdateDeviceList().
      * This delay impacts only the YoctoHubs and VirtualHub
      * which are accessible through the network. By default, this delay is of 20000 milliseconds,
-     * but depending or you network you may want to change this delay,
+     * but depending on your network you may want to change this delay,
      * gor example if your network infrastructure is based on a GSM connection.
      *
      * @param networkMsTimeout : the network connection delay in milliseconds.
@@ -4227,7 +4233,7 @@ export declare class YAPIContext {
      * Returns the network connection delay for yRegisterHub() and yUpdateDeviceList().
      * This delay impacts only the YoctoHubs and VirtualHub
      * which are accessible through the network. By default, this delay is of 20000 milliseconds,
-     * but depending or you network you may want to change this delay,
+     * but depending on your network you may want to change this delay,
      * for example if your network infrastructure is based on a GSM connection.
      *
      * @return the network connection delay in milliseconds.
@@ -4305,7 +4311,7 @@ export declare class YAPIContext {
      *
      * From an operating system standpoint, it is generally not required to call
      * this function since the OS will automatically free allocated resources
-     * once your program is completed. However there are two situations when
+     * once your program is completed. However, there are two situations when
      * you may really want to use that function:
      *
      * - Free all dynamically allocated memory blocks in order to
@@ -4349,7 +4355,7 @@ export declare class YAPIContext {
      */
     LogUnhandledPromiseRejections(): Promise<void>;
     /**
-     * Setup the Yoctopuce library to use modules connected on a given machine. Idealy this
+     * Set up the Yoctopuce library to use modules connected on a given machine. Idealy this
      * call will be made once at the begining of your application.  The
      * parameter will determine how the API will work. Use the following values:
      *
@@ -4366,7 +4372,7 @@ export declare class YAPIContext {
      * computer, use the IP address 127.0.0.1. If the given IP is unresponsive, yRegisterHub
      * will not return until a time-out defined by ySetNetworkTimeout has elapsed.
      * However, it is possible to preventively test a connection  with yTestHub.
-     * If you cannot afford a network time-out, you can use the non blocking yPregisterHub
+     * If you cannot afford a network time-out, you can use the non-blocking yPregisterHub
      * function that will establish the connection as soon as it is available.
      *
      *
@@ -4381,7 +4387,7 @@ export declare class YAPIContext {
      * while trying to access the USB modules. In particular, this means
      * that you must stop the VirtualHub software before starting
      * an application that uses direct USB access. The workaround
-     * for this limitation is to setup the library to use the VirtualHub
+     * for this limitation is to set up the library to use the VirtualHub
      * rather than direct USB access.
      *
      * If access control has been activated on the hub, virtual or not, you want to
@@ -4447,7 +4453,7 @@ export declare class YAPIContext {
     RegisterHubWebSocketCallback(ws: _YY_WebSocket, errmsg: YErrorMsg, authpwd: string): Promise<number>;
     WebSocketJoin(ws: _YY_WebSocket, arr_credentials: WebSocketCredential[], closeCallback: Function): Promise<boolean>;
     /**
-     * Setup the Yoctopuce library to no more use modules connected on a previously
+     * Set up the Yoctopuce library to no more use modules connected on a previously
      * registered machine with RegisterHub.
      *
      * @param url : a string containing either "usb" or the
@@ -4569,7 +4575,7 @@ export declare class YAPIContext {
     /**
      * Checks if a given string is valid as logical name for a module or a function.
      * A valid logical name has a maximum of 19 characters, all among
-     * A..Z, a..z, 0..9, _, and -.
+     * A...Z, a...z, 0...9, _, and -.
      * If you try to configure a logical name with an incorrect string,
      * the invalid characters are ignored.
      *

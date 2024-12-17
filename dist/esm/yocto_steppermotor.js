@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_steppermotor.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_steppermotor.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for StepperMotor functions
  *
@@ -184,7 +184,7 @@ export class YStepperMotor extends YFunction {
     }
     /**
      * Changes the current logical motor position, measured in steps.
-     * This command does not cause any motor move, as its purpose is only to setup
+     * This command does not cause any motor move, as its purpose is only to set up
      * the origin of the position counter. The fractional part of the position,
      * that corresponds to the physical position of the rotor, is not changed.
      * To trigger a motor move, use methods moveTo() or moveRel()
@@ -661,7 +661,7 @@ export class YStepperMotor extends YFunction {
         let retBin;
         let res;
         id = await this.get_functionId();
-        id = (id).substr(12, 1);
+        id = id.substr(12, 1);
         url = 'cmd.txt?' + id + '=' + command;
         //may throw an exception
         retBin = await this._download(url);

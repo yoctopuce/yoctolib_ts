@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 61542 2024-06-19 09:08:23Z seb $
+ * $Id: yocto_api_nodejs.ts 62445 2024-09-04 09:35:31Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -52,7 +52,7 @@ export declare class YSystemEnvNodeJs extends YSystemEnv {
     hasSSDP: boolean;
     hookUnhandledRejection(handler: YUnhandledPromiseRejectionCallback): void;
     getWebSocketEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
-    getHttpEngine(ohub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null;
+    getHttpEngine(ohub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, firstInfoJson: any): YHubEngine | null;
     getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: WebSocket): YHubEngine | null;
     getHttpCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, incomingMessage: http.IncomingMessage, serverResponse: http.ServerResponse): YHubEngine | null;
     getSSDPManager(obj_yapi: YAPIContext): YGenericSSDPManager | null;

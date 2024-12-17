@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_carbondioxide.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_carbondioxide.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for CarbonDioxide functions
  *
@@ -185,7 +185,7 @@ export class YCarbonDioxide extends YSensor
         obj = <YCarbonDioxide> YFunction._FindFromCache('CarbonDioxide', func);
         if (obj == null) {
             obj = new YCarbonDioxide(YAPI, func);
-            YFunction._AddToCache('CarbonDioxide',  func, obj);
+            YFunction._AddToCache('CarbonDioxide', func, obj);
         }
         return obj;
     }
@@ -218,10 +218,10 @@ export class YCarbonDioxide extends YSensor
     static FindCarbonDioxideInContext(yctx: YAPIContext, func: string): YCarbonDioxide
     {
         let obj: YCarbonDioxide | null;
-        obj = <YCarbonDioxide> YFunction._FindFromCacheInContext(yctx,  'CarbonDioxide', func);
+        obj = <YCarbonDioxide> YFunction._FindFromCacheInContext(yctx, 'CarbonDioxide', func);
         if (obj == null) {
             obj = new YCarbonDioxide(yctx, func);
-            YFunction._AddToCache('CarbonDioxide',  func, obj);
+            YFunction._AddToCache('CarbonDioxide', func, obj);
         }
         return obj;
     }

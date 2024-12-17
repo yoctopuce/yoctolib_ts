@@ -284,8 +284,8 @@ class YSdi12SensorInfo {
     imm_parseInfoStr(infoStr) {
         let errmsg;
         if ((infoStr).length > 1) {
-            if ((infoStr).substr(0, 2) == 'ER') {
-                errmsg = (infoStr).substr(2, (infoStr).length - 2);
+            if (infoStr.substr(0, 2) == 'ER') {
+                errmsg = infoStr.substr(2, (infoStr).length - 2);
                 this._addr = errmsg;
                 this._proto = errmsg;
                 this._mfg = errmsg;
@@ -295,12 +295,12 @@ class YSdi12SensorInfo {
                 this._isValid = false;
             }
             else {
-                this._addr = (infoStr).substr(0, 1);
-                this._proto = (infoStr).substr(1, 2);
-                this._mfg = (infoStr).substr(3, 8);
-                this._model = (infoStr).substr(11, 6);
-                this._ver = (infoStr).substr(17, 3);
-                this._sn = (infoStr).substr(20, (infoStr).length - 20);
+                this._addr = infoStr.substr(0, 1);
+                this._proto = infoStr.substr(1, 2);
+                this._mfg = infoStr.substr(3, 8);
+                this._model = infoStr.substr(11, 6);
+                this._ver = infoStr.substr(17, 3);
+                this._sn = infoStr.substr(20, (infoStr).length - 20);
                 this._isValid = true;
             }
         }
@@ -323,7 +323,7 @@ class YSdi12SensorInfo {
         while (k < 10) {
             infoNbVal = await this._sdi12Port.querySdi12(this._addr, 'IM' + String(Math.round(k)), 5000);
             if ((infoNbVal).length > 1) {
-                value = (infoNbVal).substr(4, (infoNbVal).length - 4);
+                value = infoNbVal.substr(4, (infoNbVal).length - 4);
                 nbVal = yocto_api_js_1.YAPIContext.imm_atoi(value);
                 if (nbVal != 0) {
                     val.length = 0;
@@ -956,11 +956,11 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1000,10 +1000,10 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
+            res.push(this.imm_json_get_string(msgarr[idx]));
             idx = idx + 1;
         }
         return res;
@@ -1043,7 +1043,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = yocto_api_js_1.YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
+        res = yocto_api_js_1.YAPIContext.imm_atoi(availPosStr.substr(0, atPos));
         return res;
     }
     async end_tell() {
@@ -1054,7 +1054,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = yocto_api_js_1.YAPIContext.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
+        res = yocto_api_js_1.YAPIContext.imm_atoi(availPosStr.substr(atPos + 1, (availPosStr).length - atPos - 1));
         return res;
     }
     /**
@@ -1094,11 +1094,11 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1139,11 +1139,11 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1294,11 +1294,11 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         if (bufflen < 100) {
             return await this.sendCommand('$' + hexString);
         }
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         buff = new Uint8Array(bufflen);
         idx = 0;
         while (idx < bufflen) {
-            hexb = parseInt((hexString).substr(2 * idx, 2), 16);
+            hexb = parseInt(hexString.substr(2 * idx, 2), 16);
             buff.set([hexb], idx);
             idx = idx + 1;
         }
@@ -1587,7 +1587,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         cmdChar = '';
         pattern = sensorAddr;
         if ((cmd).length > 0) {
-            cmdChar = (cmd).substr(0, 1);
+            cmdChar = cmd.substr(0, 1);
         }
         if (sensorAddr == '?') {
             pattern = '.*';
@@ -1614,11 +1614,11 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1667,14 +1667,14 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         lettreMaj = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         i = 0;
         while (i < 26) {
-            res = await this.querySdi12((lettreMin).substr(i, 1), '!', 500);
+            res = await this.querySdi12(lettreMin.substr(i, 1), '!', 500);
             if ((res).length >= 1) {
                 idSens.push(res);
             }
             i = i + 1;
         }
         while (i < 26) {
-            res = await this.querySdi12((lettreMaj).substr(i, 1), '!', 500);
+            res = await this.querySdi12(lettreMaj.substr(i, 1), '!', 500);
             if ((res).length >= 1) {
                 idSens.push(res);
             }
@@ -1795,7 +1795,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         let timewait;
         let wait;
         wait = await this.querySdi12(sensorAddr, 'C', 1000);
-        wait = (wait).substr(1, 3);
+        wait = wait.substr(1, 3);
         timewait = yocto_api_js_1.YAPIContext.imm_atoi(wait) * 1000;
         return timewait;
     }
@@ -1829,10 +1829,10 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(new YSdi12SnoopingRecord(msgarr[idx]));
+            res.push(new YSdi12SnoopingRecord(this._yapi.imm_bin2str(msgarr[idx])));
             idx = idx + 1;
         }
         return res;

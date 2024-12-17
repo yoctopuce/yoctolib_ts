@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voc.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_voc.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for Voc functions
  *
@@ -103,7 +103,7 @@ export class YVoc extends YSensor
         obj = <YVoc> YFunction._FindFromCache('Voc', func);
         if (obj == null) {
             obj = new YVoc(YAPI, func);
-            YFunction._AddToCache('Voc',  func, obj);
+            YFunction._AddToCache('Voc', func, obj);
         }
         return obj;
     }
@@ -136,10 +136,10 @@ export class YVoc extends YSensor
     static FindVocInContext(yctx: YAPIContext, func: string): YVoc
     {
         let obj: YVoc | null;
-        obj = <YVoc> YFunction._FindFromCacheInContext(yctx,  'Voc', func);
+        obj = <YVoc> YFunction._FindFromCacheInContext(yctx, 'Voc', func);
         if (obj == null) {
             obj = new YVoc(yctx, func);
-            YFunction._AddToCache('Voc',  func, obj);
+            YFunction._AddToCache('Voc', func, obj);
         }
         return obj;
     }

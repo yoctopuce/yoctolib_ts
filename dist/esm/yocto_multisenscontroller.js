@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multisenscontroller.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_multisenscontroller.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for MultiSensController functions
  *
@@ -42,7 +42,7 @@ import { YAPI, YFunction } from './yocto_api.js';
  * YMultiSensController Class: Sensor chain configuration interface, available for instance in the
  * Yocto-Temperature-IR
  *
- * The YMultiSensController class allows you to setup a customized
+ * The YMultiSensController class allows you to set up a customized
  * sensor chain on devices featuring that functionality.
  */
 //--- (end of YMultiSensController class start)

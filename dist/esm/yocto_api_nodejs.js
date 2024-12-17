@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 61542 2024-06-19 09:08:23Z seb $
+ * $Id: yocto_api_nodejs.ts 62445 2024-09-04 09:35:31Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -64,8 +64,8 @@ export class YSystemEnvNodeJs extends YSystemEnv {
     getWebSocketEngine(hub, runtime_urlInfo) {
         return new YWebSocketNodeEngine(hub, runtime_urlInfo);
     }
-    getHttpEngine(ohub, runtime_urlInfo) {
-        return new YHttpNodeEngine(ohub, runtime_urlInfo);
+    getHttpEngine(ohub, runtime_urlInfo, firstInfoJson) {
+        return new YHttpNodeEngine(ohub, runtime_urlInfo, firstInfoJson);
     }
     getWebSocketCallbackEngine(hub, runtime_urlInfo, ws) {
         return new YWebSocketCallbackEngine(hub, runtime_urlInfo, ws);
@@ -324,8 +324,8 @@ class YHttpCallbackEngine extends YHubEngine {
     }
 }
 class YHttpNodeEngine extends YHttpEngine {
-    constructor(hub, runtime_urlInfo) {
-        super(hub, runtime_urlInfo);
+    constructor(hub, runtime_urlInfo, firstInfoJson) {
+        super(hub, runtime_urlInfo, firstInfoJson);
         this.agent = new http.Agent({ keepAlive: true });
         this.agenthttps = new https.Agent({
             keepAlive: true
@@ -433,9 +433,9 @@ class YHttpNodeEngine extends YHttpEngine {
                         let opaque = "";
                         let nonce = "";
                         auth_info = auth_info.substring(6).trim();
-                        let parts = auth_info.split(', ');
+                        let parts = auth_info.split(',');
                         for (let i = 0; i < parts.length; i++) {
-                            let elms = parts[i].split("=");
+                            let elms = parts[i].trim().split("=");
                             if (elms && elms.length > 1) {
                                 let value = elms[1].trim();
                                 if (value[0] == '"') {

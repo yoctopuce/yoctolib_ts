@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_dualpower.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_dualpower.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for DualPower functions
  *
@@ -225,7 +225,7 @@ export class YDualPower extends YFunction
         obj = <YDualPower> YFunction._FindFromCache('DualPower', func);
         if (obj == null) {
             obj = new YDualPower(YAPI, func);
-            YFunction._AddToCache('DualPower',  func, obj);
+            YFunction._AddToCache('DualPower', func, obj);
         }
         return obj;
     }
@@ -258,10 +258,10 @@ export class YDualPower extends YFunction
     static FindDualPowerInContext(yctx: YAPIContext, func: string): YDualPower
     {
         let obj: YDualPower | null;
-        obj = <YDualPower> YFunction._FindFromCacheInContext(yctx,  'DualPower', func);
+        obj = <YDualPower> YFunction._FindFromCacheInContext(yctx, 'DualPower', func);
         if (obj == null) {
             obj = new YDualPower(yctx, func);
-            YFunction._AddToCache('DualPower',  func, obj);
+            YFunction._AddToCache('DualPower', func, obj);
         }
         return obj;
     }

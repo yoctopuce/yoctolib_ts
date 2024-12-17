@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_spiport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_spiport.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for SpiSnoopingRecord functions
  *
@@ -778,11 +778,11 @@ export class YSpiPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -822,10 +822,10 @@ export class YSpiPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
+            res.push(this.imm_json_get_string(msgarr[idx]));
             idx = idx + 1;
         }
         return res;
@@ -865,7 +865,7 @@ export class YSpiPort extends YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
+        res = YAPIContext.imm_atoi(availPosStr.substr(0, atPos));
         return res;
     }
     async end_tell() {
@@ -876,7 +876,7 @@ export class YSpiPort extends YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = YAPIContext.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
+        res = YAPIContext.imm_atoi(availPosStr.substr(atPos + 1, (availPosStr).length - atPos - 1));
         return res;
     }
     /**
@@ -916,11 +916,11 @@ export class YSpiPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -961,11 +961,11 @@ export class YSpiPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1116,11 +1116,11 @@ export class YSpiPort extends YFunction {
         if (bufflen < 100) {
             return await this.sendCommand('$' + hexString);
         }
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         buff = new Uint8Array(bufflen);
         idx = 0;
         while (idx < bufflen) {
-            hexb = parseInt((hexString).substr(2 * idx, 2), 16);
+            hexb = parseInt(hexString.substr(2 * idx, 2), 16);
             buff.set([hexb], idx);
             idx = idx + 1;
         }
@@ -1428,10 +1428,10 @@ export class YSpiPort extends YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(new YSpiSnoopingRecord(msgarr[idx]));
+            res.push(new YSpiSnoopingRecord(this._yapi.imm_bin2str(msgarr[idx])));
             idx = idx + 1;
         }
         return res;

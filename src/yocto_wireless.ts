@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_wireless.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -406,7 +406,7 @@ export class YWireless extends YFunction
         obj = <YWireless> YFunction._FindFromCache('Wireless', func);
         if (obj == null) {
             obj = new YWireless(YAPI, func);
-            YFunction._AddToCache('Wireless',  func, obj);
+            YFunction._AddToCache('Wireless', func, obj);
         }
         return obj;
     }
@@ -439,10 +439,10 @@ export class YWireless extends YFunction
     static FindWirelessInContext(yctx: YAPIContext, func: string): YWireless
     {
         let obj: YWireless | null;
-        obj = <YWireless> YFunction._FindFromCacheInContext(yctx,  'Wireless', func);
+        obj = <YWireless> YFunction._FindFromCacheInContext(yctx, 'Wireless', func);
         if (obj == null) {
             obj = new YWireless(yctx, func);
-            YFunction._AddToCache('Wireless',  func, obj);
+            YFunction._AddToCache('Wireless', func, obj);
         }
         return obj;
     }
@@ -593,14 +593,14 @@ export class YWireless extends YFunction
     async get_detectedWlans(): Promise<YWlanRecord[]>
     {
         let json: Uint8Array;
-        let wlanlist: string[] = [];
+        let wlanlist: Uint8Array[] = [];
         let res: YWlanRecord[] = [];
 
         json = await this._download('wlan.json?by=name');
         wlanlist = this.imm_json_get_array(json);
         res.length = 0;
         for (let ii in wlanlist) {
-            res.push(new YWlanRecord(wlanlist[ii]));
+            res.push(new YWlanRecord(this._yapi.imm_bin2str(wlanlist[ii])));
         }
         return res;
     }

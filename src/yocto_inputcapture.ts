@@ -175,10 +175,10 @@ export class YInputCaptureData
         this._nRecs = this.imm_decodeU16(sdata, 6);
         this._samplesPerSec = this.imm_decodeU16(sdata, 8);
         this._trigType = this.imm_decodeU16(sdata, 10);
-        this._trigVal = this.imm_decodeVal(sdata,  12, 4) / 1000;
+        this._trigVal = this.imm_decodeVal(sdata, 12, 4) / 1000;
         this._trigPos = this.imm_decodeU16(sdata, 16);
         ms = this.imm_decodeU16(sdata, 18);
-        this._trigUTC = this.imm_decodeVal(sdata,  20, 4);
+        this._trigUTC = this.imm_decodeVal(sdata, 20, 4);
         this._trigUTC = this._trigUTC + (ms / 1000.0);
         recOfs = 24;
         while (sdata[recOfs] >= 32) {
@@ -199,7 +199,7 @@ export class YInputCaptureData
                 recOfs = recOfs + 1;
             }
         }
-        if (((recOfs) & (1)) == 1) {
+        if ((recOfs & 1) == 1) {
             // align to next word
             recOfs = recOfs + 1;
         }
@@ -222,7 +222,7 @@ export class YInputCaptureData
         recOfs = this._recOfs;
         count = this._nRecs;
         while ((count > 0) && (recOfs + this._var1size <= buffSize)) {
-            v = this.imm_decodeVal(sdata,  recOfs, this._var1size) / 1000.0;
+            v = this.imm_decodeVal(sdata, recOfs, this._var1size) / 1000.0;
             this._var1samples.push(v*mult1);
             recOfs = recOfs + recSize;
         }
@@ -230,7 +230,7 @@ export class YInputCaptureData
             recOfs = this._recOfs + this._var1size;
             count = this._nRecs;
             while ((count > 0) && (recOfs + this._var2size <= buffSize)) {
-                v = this.imm_decodeVal(sdata,  recOfs, this._var2size) / 1000.0;
+                v = this.imm_decodeVal(sdata, recOfs, this._var2size) / 1000.0;
                 this._var2samples.push(v*mult2);
                 recOfs = recOfs + recSize;
             }
@@ -239,7 +239,7 @@ export class YInputCaptureData
             recOfs = this._recOfs + this._var1size + this._var2size;
             count = this._nRecs;
             while ((count > 0) && (recOfs + this._var3size <= buffSize)) {
-                v = this.imm_decodeVal(sdata,  recOfs, this._var3size) / 1000.0;
+                v = this.imm_decodeVal(sdata, recOfs, this._var3size) / 1000.0;
                 this._var3samples.push(v*mult3);
                 recOfs = recOfs + recSize;
             }
@@ -1004,7 +1004,7 @@ export class YInputCapture extends YSensor
         obj = <YInputCapture> YFunction._FindFromCache('InputCapture', func);
         if (obj == null) {
             obj = new YInputCapture(YAPI, func);
-            YFunction._AddToCache('InputCapture',  func, obj);
+            YFunction._AddToCache('InputCapture', func, obj);
         }
         return obj;
     }
@@ -1037,10 +1037,10 @@ export class YInputCapture extends YSensor
     static FindInputCaptureInContext(yctx: YAPIContext, func: string): YInputCapture
     {
         let obj: YInputCapture | null;
-        obj = <YInputCapture> YFunction._FindFromCacheInContext(yctx,  'InputCapture', func);
+        obj = <YInputCapture> YFunction._FindFromCacheInContext(yctx, 'InputCapture', func);
         if (obj == null) {
             obj = new YInputCapture(yctx, func);
-            YFunction._AddToCache('InputCapture',  func, obj);
+            YFunction._AddToCache('InputCapture', func, obj);
         }
         return obj;
     }

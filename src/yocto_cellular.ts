@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_cellular.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -904,7 +904,7 @@ export class YCellular extends YFunction
         obj = <YCellular> YFunction._FindFromCache('Cellular', func);
         if (obj == null) {
             obj = new YCellular(YAPI, func);
-            YFunction._AddToCache('Cellular',  func, obj);
+            YFunction._AddToCache('Cellular', func, obj);
         }
         return obj;
     }
@@ -937,10 +937,10 @@ export class YCellular extends YFunction
     static FindCellularInContext(yctx: YAPIContext, func: string): YCellular
     {
         let obj: YCellular | null;
-        obj = <YCellular> YFunction._FindFromCacheInContext(yctx,  'Cellular', func);
+        obj = <YCellular> YFunction._FindFromCacheInContext(yctx, 'Cellular', func);
         if (obj == null) {
             obj = new YCellular(yctx, func);
-            YFunction._AddToCache('Cellular',  func, obj);
+            YFunction._AddToCache('Cellular', func, obj);
         }
         return obj;
     }
@@ -991,7 +991,7 @@ export class YCellular extends YFunction
 
     /**
      * Sends a PUK code to unlock the SIM card after three failed PIN code attempts, and
-     * setup a new PIN into the SIM card. Only ten consecutive tentatives are permitted:
+     * set up a new PIN into the SIM card. Only ten consecutive tentatives are permitted:
      * after that, the SIM card will be blocked permanently without any mean of recovery
      * to use it again. Note that after calling this method, you have usually to invoke
      * method set_pin() to tell the YoctoHub which PIN to use in the future.
@@ -1007,7 +1007,7 @@ export class YCellular extends YFunction
     {
         let gsmMsg: string;
         gsmMsg = await this.get_message();
-        if (!((gsmMsg).substr(0, 13) == 'Enter SIM PUK')) {
+        if (!(gsmMsg.substr(0, 13) == 'Enter SIM PUK')) {
             return this._throw(this._yapi.INVALID_ARGUMENT, 'PUK not expected at this time', this._yapi.INVALID_ARGUMENT);
         }
         if (newPin == '') {
@@ -1078,19 +1078,19 @@ export class YCellular extends YFunction
         cmdLen = (cmd).length;
         chrPos = (cmd).indexOf('#');
         while (chrPos >= 0) {
-            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '23' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
+            cmd = cmd.substr(0, chrPos) + '' + String.fromCharCode(37) + '23' + cmd.substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('#');
         }
         chrPos = (cmd).indexOf('+');
         while (chrPos >= 0) {
-            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '2B' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
+            cmd = cmd.substr(0, chrPos) + '' + String.fromCharCode(37) + '2B' + cmd.substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('+');
         }
         chrPos = (cmd).indexOf('=');
         while (chrPos >= 0) {
-            cmd = (cmd).substr(0, chrPos) + '' + String.fromCharCode(37) + '3D' + (cmd).substr(chrPos+1, cmdLen-chrPos-1);
+            cmd = cmd.substr(0, chrPos) + '' + String.fromCharCode(37) + '3D' + cmd.substr(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).indexOf('=');
         }
@@ -1110,8 +1110,8 @@ export class YCellular extends YFunction
             if (buff[idx] == 64) {
                 // continuation detected
                 suffixlen = bufflen - idx;
-                cmd = 'at.txt?cmd=' + (buffstr).substr(buffstrlen - suffixlen, suffixlen);
-                buffstr = (buffstr).substr(0, buffstrlen - suffixlen);
+                cmd = 'at.txt?cmd=' + buffstr.substr(buffstrlen - suffixlen, suffixlen);
+                buffstr = buffstr.substr(0, buffstrlen - suffixlen);
                 waitMore = waitMore - 1;
             } else {
                 // request complete
@@ -1144,14 +1144,14 @@ export class YCellular extends YFunction
         idx = (cops).indexOf('(');
         while (idx >= 0) {
             slen = slen - (idx+1);
-            cops = (cops).substr(idx+1, slen);
+            cops = cops.substr(idx+1, slen);
             idx = (cops).indexOf('"');
             if (idx > 0) {
                 slen = slen - (idx+1);
-                cops = (cops).substr(idx+1, slen);
+                cops = cops.substr(idx+1, slen);
                 idx = (cops).indexOf('"');
                 if (idx > 0) {
-                    res.push((cops).substr(0, idx));
+                    res.push(cops.substr(0, idx));
                 }
             }
             idx = (cops).indexOf('(');
@@ -1186,20 +1186,20 @@ export class YCellular extends YFunction
         let res: YCellRecord[] = [];
 
         moni = await this._AT('+CCED=0;#MONI=7;#MONI');
-        mccs = (moni).substr(7, 3);
-        if ((mccs).substr(0, 1) == '0') {
-            mccs = (mccs).substr(1, 2);
+        mccs = moni.substr(7, 3);
+        if (mccs.substr(0, 1) == '0') {
+            mccs = mccs.substr(1, 2);
         }
-        if ((mccs).substr(0, 1) == '0') {
-            mccs = (mccs).substr(1, 1);
+        if (mccs.substr(0, 1) == '0') {
+            mccs = mccs.substr(1, 1);
         }
         mcc = YAPIContext.imm_atoi(mccs);
-        mncs = (moni).substr(11, 3);
-        if ((mncs).substr(2, 1) == ',') {
-            mncs = (mncs).substr(0, 2);
+        mncs = moni.substr(11, 3);
+        if (mncs.substr(2, 1) == ',') {
+            mncs = mncs.substr(0, 2);
         }
-        if ((mncs).substr(0, 1) == '0') {
-            mncs = (mncs).substr(1, (mncs).length-1);
+        if (mncs.substr(0, 1) == '0') {
+            mncs = mncs.substr(1, (mncs).length-1);
         }
         mnc = YAPIContext.imm_atoi(mncs);
         recs = (moni).split('#');
@@ -1208,21 +1208,21 @@ export class YCellular extends YFunction
         for (let ii in recs) {
             llen = (recs[ii]).length - 2;
             if (llen >= 44) {
-                if ((recs[ii]).substr(41, 3) == 'dbm') {
-                    lac = parseInt((recs[ii]).substr(16, 4), 16);
-                    cellId = parseInt((recs[ii]).substr(23, 4), 16);
-                    dbms = (recs[ii]).substr(37, 4);
-                    if ((dbms).substr(0, 1) == ' ') {
-                        dbms = (dbms).substr(1, 3);
+                if (recs[ii].substr(41, 3) == 'dbm') {
+                    lac = parseInt(recs[ii].substr(16, 4), 16);
+                    cellId = parseInt(recs[ii].substr(23, 4), 16);
+                    dbms = recs[ii].substr(37, 4);
+                    if (dbms.substr(0, 1) == ' ') {
+                        dbms = dbms.substr(1, 3);
                     }
                     dbm = YAPIContext.imm_atoi(dbms);
                     if (llen > 66) {
-                        tads = (recs[ii]).substr(54, 2);
-                        if ((tads).substr(0, 1) == ' ') {
-                            tads = (tads).substr(1, 3);
+                        tads = recs[ii].substr(54, 2);
+                        if (tads.substr(0, 1) == ' ') {
+                            tads = tads.substr(1, 3);
                         }
                         tad = YAPIContext.imm_atoi(tads);
-                        oper = (recs[ii]).substr(66, llen-66);
+                        oper = recs[ii].substr(66, llen-66);
                     } else {
                         tad = -1;
                         oper = '';
@@ -1249,18 +1249,18 @@ export class YCellular extends YFunction
         if (inputlen < 5) {
             return mccmnc;
         }
-        mcc = YAPIContext.imm_atoi((mccmnc).substr(0, 3));
+        mcc = YAPIContext.imm_atoi(mccmnc.substr(0, 3));
         if (mcc < 200) {
             return mccmnc;
         }
-        if ((mccmnc).substr(3, 1) == ' ') {
+        if (mccmnc.substr(3, 1) == ' ') {
             npos = 4;
         } else {
             npos = 3;
         }
         plmnid = mcc;
         while (plmnid < 100000 && npos < inputlen) {
-            ch = (mccmnc).substr(npos, 1);
+            ch = mccmnc.substr(npos, 1);
             nval = YAPIContext.imm_atoi(ch);
             if (ch == (nval).toString()) {
                 plmnid = plmnid * 10 + nval;
@@ -5720,7 +5720,7 @@ export class YCellular extends YFunction
             line = lines[idx];
             cpos = (line).indexOf(':');
             if (cpos > 0) {
-                profno = YAPIContext.imm_atoi((line).substr(0, cpos));
+                profno = YAPIContext.imm_atoi(line.substr(0, cpos));
                 if (profno > 1) {
                     res.push(line);
                 }

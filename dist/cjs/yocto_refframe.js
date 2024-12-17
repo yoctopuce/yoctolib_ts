@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_refframe.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -45,7 +45,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
  * YRefFrame Class: 3D reference frame configuration interface, available for instance in the
  * Yocto-3D-V2 or the Yocto-Inclinometer
  *
- * The YRefFrame class is used to setup the base orientation of the Yoctopuce inertial
+ * The YRefFrame class is used to set up the base orientation of the Yoctopuce inertial
  * sensors. Thanks to this, orientation functions relative to the earth surface plane
  * can use the proper reference frame. For some devices, the class also implements a
  * tridimensional sensor calibration process, which can compensate for local variations
@@ -149,7 +149,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      * indicated by the compass is the difference between the measured magnetic
      * heading and the reference bearing indicated here.
      *
-     * For instance, if you setup as reference bearing the value of the earth
+     * For instance, if you set up as reference bearing the value of the earth
      * magnetic declination, the compass will provide the orientation relative
      * to the geographic North.
      *
@@ -376,7 +376,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         if (position < 0) {
             return YRefFrame.MOUNTPOSITION_INVALID;
         }
-        return ((position) >> (2));
+        return (position >> 2);
     }
     /**
      * Returns the installation orientation of the device, as configured
@@ -399,7 +399,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         if (position < 0) {
             return YRefFrame.MOUNTORIENTATION_INVALID;
         }
-        return ((position) & (3));
+        return (position & 3);
     }
     /**
      * Changes the compass and tilt sensor frame of reference. The magnetic compass
@@ -428,7 +428,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
      */
     async set_mountPosition(position, orientation) {
         let mixedPos;
-        mixedPos = ((position) << (2)) + orientation;
+        mixedPos = (position << 2) + orientation;
         return await this.set_mountPos(mixedPos);
     }
     /**
@@ -558,7 +558,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         this._calibStageProgress = 0;
         this._calibProgress = 1;
         this._calibInternalPos = 0;
-        this._calibPrevTick = ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
+        this._calibPrevTick = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
         this._calibOrient.length = 0;
         this._calibDataAccX.length = 0;
         this._calibDataAccY.length = 0;
@@ -604,14 +604,14 @@ class YRefFrame extends yocto_api_js_1.YFunction {
             return this._yapi.SUCCESS;
         }
         // make sure we leave at least 160 ms between samples
-        currTick = ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
-        if (((currTick - this._calibPrevTick) & (0x7FFFFFFF)) < 160) {
+        currTick = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        if (((currTick - this._calibPrevTick) & 0x7FFFFFFF) < 160) {
             return this._yapi.SUCCESS;
         }
         // load current accelerometer values, make sure we are on a straight angle
         // (default timeout to 0,5 sec without reading measure when out of range)
         this._calibStageHint = 'Set down the device on a steady horizontal surface';
-        this._calibPrevTick = ((currTick + 500) & (0x7FFFFFFF));
+        this._calibPrevTick = ((currTick + 500) & 0x7FFFFFFF);
         jsonData = await this._download('api/accelerometer.json');
         xVal = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'xValue')) / 65536.0;
         yVal = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'yValue')) / 65536.0;
@@ -713,7 +713,7 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         this._calibStage = this._calibStage + 1;
         if (this._calibStage < 7) {
             this._calibStageHint = 'Turn the device on another face';
-            this._calibPrevTick = ((currTick + 500) & (0x7FFFFFFF));
+            this._calibPrevTick = ((currTick + 500) & 0x7FFFFFFF);
             this._calibStageProgress = 0;
             this._calibInternalPos = 0;
             return this._yapi.SUCCESS;
@@ -800,8 +800,8 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         }
         // make sure we don't start before previous calibration is cleared
         if (this._calibStage == 1) {
-            currTick = ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
-            currTick = ((currTick - this._calibPrevTick) & (0x7FFFFFFF));
+            currTick = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+            currTick = ((currTick - this._calibPrevTick) & 0x7FFFFFFF);
             if (currTick < 1600) {
                 this._calibStageHint = 'Set down the device on a steady horizontal surface';
                 this._calibStageProgress = (((currTick) / (40)) >> 0);
@@ -950,9 +950,9 @@ class YRefFrame extends yocto_api_js_1.YFunction {
             }
         }
         if (scaleExp > 0) {
-            scaleX = ((scaleX) >> (scaleExp));
-            scaleY = ((scaleY) >> (scaleExp));
-            scaleZ = ((scaleZ) >> (scaleExp));
+            scaleX = (scaleX >> scaleExp);
+            scaleY = (scaleY >> scaleExp);
+            scaleZ = (scaleZ >> scaleExp);
         }
         if (scaleX < 0) {
             scaleX = scaleX + 1024;
@@ -963,8 +963,8 @@ class YRefFrame extends yocto_api_js_1.YFunction {
         if (scaleZ < 0) {
             scaleZ = scaleZ + 1024;
         }
-        scaleLo = ((((scaleY) & (15))) << (12)) + ((scaleX) << (2)) + scaleExp;
-        scaleHi = ((scaleZ) << (6)) + ((scaleY) >> (4));
+        scaleLo = ((scaleY & 15) << 12) + (scaleX << 2) + scaleExp;
+        scaleHi = (scaleZ << 6) + (scaleY >> 4);
         // Save calibration parameters
         newcalib = '5,' + String(Math.round(shiftX)) + ',' + String(Math.round(shiftY)) + ',' + String(Math.round(shiftZ)) + ',' + String(Math.round(scaleLo)) + ',' + String(Math.round(scaleHi));
         this._calibStage = 0;

@@ -1,4 +1,4 @@
-TypeScriptV2 v2.0.61858
+TypeScriptV2 v2.0.63744
 
-- Fix parsing of IPv6 URL
-- Update ws dependency
+- Fix Authentication on web server that was using HTTP header without spaces
+- Fix authentication on VirtualHub-4Web

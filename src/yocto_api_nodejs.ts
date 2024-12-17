@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 61542 2024-06-19 09:08:23Z seb $
+ * $Id: yocto_api_nodejs.ts 62445 2024-09-04 09:35:31Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -71,9 +71,9 @@ export class YSystemEnvNodeJs extends YSystemEnv
         return new YWebSocketNodeEngine(hub, runtime_urlInfo);
     }
 
-    getHttpEngine(ohub: YGenericHub, runtime_urlInfo: _YY_UrlInfo): YHubEngine | null
+    getHttpEngine(ohub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, firstInfoJson: any): YHubEngine | null
     {
-        return new YHttpNodeEngine(ohub, runtime_urlInfo);
+        return new YHttpNodeEngine(ohub, runtime_urlInfo, firstInfoJson);
     }
 
     getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: WebSocket): YHubEngine | null
@@ -361,9 +361,9 @@ class YHttpNodeEngine extends YHttpEngine
     agent: http.Agent;
     agenthttps: https.Agent;
 
-    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo)
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, firstInfoJson: any)
     {
-        super(hub, runtime_urlInfo);
+        super(hub, runtime_urlInfo, firstInfoJson);
         this.agent = new http.Agent({keepAlive: true});
         this.agenthttps = new https.Agent({
             keepAlive: true
@@ -476,9 +476,9 @@ class YHttpNodeEngine extends YHttpEngine
                         let opaque: string = "";
                         let nonce: string = "";
                         auth_info = auth_info.substring(6).trim()
-                        let parts: string[] = auth_info.split(', ')
+                        let parts: string[] = auth_info.split(',')
                         for (let i = 0; i < parts.length; i++) {
-                            let elms: string[] = parts[i].split("=");
+                            let elms: string[] = parts[i].trim().split("=");
                             if (elms && elms.length > 1) {
                                 let value: string = elms[1].trim();
                                 if (value[0] == '"') {

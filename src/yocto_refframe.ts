@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_refframe.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_refframe.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for RefFrame functions
  *
@@ -44,7 +44,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
  * YRefFrame Class: 3D reference frame configuration interface, available for instance in the
  * Yocto-3D-V2 or the Yocto-Inclinometer
  *
- * The YRefFrame class is used to setup the base orientation of the Yoctopuce inertial
+ * The YRefFrame class is used to set up the base orientation of the Yoctopuce inertial
  * sensors. Thanks to this, orientation functions relative to the earth surface plane
  * can use the proper reference frame. For some devices, the class also implements a
  * tridimensional sensor calibration process, which can compensate for local variations
@@ -189,7 +189,7 @@ export class YRefFrame extends YFunction
      * indicated by the compass is the difference between the measured magnetic
      * heading and the reference bearing indicated here.
      *
-     * For instance, if you setup as reference bearing the value of the earth
+     * For instance, if you set up as reference bearing the value of the earth
      * magnetic declination, the compass will provide the orientation relative
      * to the geographic North.
      *
@@ -329,7 +329,7 @@ export class YRefFrame extends YFunction
         obj = <YRefFrame> YFunction._FindFromCache('RefFrame', func);
         if (obj == null) {
             obj = new YRefFrame(YAPI, func);
-            YFunction._AddToCache('RefFrame',  func, obj);
+            YFunction._AddToCache('RefFrame', func, obj);
         }
         return obj;
     }
@@ -362,10 +362,10 @@ export class YRefFrame extends YFunction
     static FindRefFrameInContext(yctx: YAPIContext, func: string): YRefFrame
     {
         let obj: YRefFrame | null;
-        obj = <YRefFrame> YFunction._FindFromCacheInContext(yctx,  'RefFrame', func);
+        obj = <YRefFrame> YFunction._FindFromCacheInContext(yctx, 'RefFrame', func);
         if (obj == null) {
             obj = new YRefFrame(yctx, func);
-            YFunction._AddToCache('RefFrame',  func, obj);
+            YFunction._AddToCache('RefFrame', func, obj);
         }
         return obj;
     }
@@ -434,7 +434,7 @@ export class YRefFrame extends YFunction
         if (position < 0) {
             return YRefFrame.MOUNTPOSITION_INVALID;
         }
-        return <YRefFrame.MOUNTPOSITION> ((position) >> (2));
+        return <YRefFrame.MOUNTPOSITION> (position >> 2);
     }
 
     /**
@@ -459,7 +459,7 @@ export class YRefFrame extends YFunction
         if (position < 0) {
             return YRefFrame.MOUNTORIENTATION_INVALID;
         }
-        return <YRefFrame.MOUNTORIENTATION> ((position) & (3));
+        return <YRefFrame.MOUNTORIENTATION> (position & 3);
     }
 
     /**
@@ -490,7 +490,7 @@ export class YRefFrame extends YFunction
     async set_mountPosition(position: YRefFrame.MOUNTPOSITION, orientation: YRefFrame.MOUNTORIENTATION): Promise<number>
     {
         let mixedPos: number;
-        mixedPos = ((position) << (2)) + orientation;
+        mixedPos = (position << 2) + orientation;
         return await this.set_mountPos(mixedPos);
     }
 
@@ -629,7 +629,7 @@ export class YRefFrame extends YFunction
         this._calibStageProgress = 0;
         this._calibProgress = 1;
         this._calibInternalPos = 0;
-        this._calibPrevTick = <number> ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
+        this._calibPrevTick = <number> ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
         this._calibOrient.length = 0;
         this._calibDataAccX.length = 0;
         this._calibDataAccY.length = 0;
@@ -679,14 +679,14 @@ export class YRefFrame extends YFunction
             return this._yapi.SUCCESS;
         }
         // make sure we leave at least 160 ms between samples
-        currTick =  <number> ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
-        if (((currTick - this._calibPrevTick) & (0x7FFFFFFF)) < 160) {
+        currTick =  <number> ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        if (((currTick - this._calibPrevTick) & 0x7FFFFFFF) < 160) {
             return this._yapi.SUCCESS;
         }
         // load current accelerometer values, make sure we are on a straight angle
         // (default timeout to 0,5 sec without reading measure when out of range)
         this._calibStageHint = 'Set down the device on a steady horizontal surface';
-        this._calibPrevTick = ((currTick + 500) & (0x7FFFFFFF));
+        this._calibPrevTick = ((currTick + 500) & 0x7FFFFFFF);
         jsonData = await this._download('api/accelerometer.json');
         xVal = YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'xValue')) / 65536.0;
         yVal = YAPIContext.imm_atoi(this.imm_json_get_key(jsonData, 'yValue')) / 65536.0;
@@ -784,7 +784,7 @@ export class YRefFrame extends YFunction
         this._calibStage = this._calibStage + 1;
         if (this._calibStage < 7) {
             this._calibStageHint = 'Turn the device on another face';
-            this._calibPrevTick = ((currTick + 500) & (0x7FFFFFFF));
+            this._calibPrevTick = ((currTick + 500) & 0x7FFFFFFF);
             this._calibStageProgress = 0;
             this._calibInternalPos = 0;
             return this._yapi.SUCCESS;
@@ -873,8 +873,8 @@ export class YRefFrame extends YFunction
         }
         // make sure we don't start before previous calibration is cleared
         if (this._calibStage == 1) {
-            currTick = <number> ((this._yapi.GetTickCount()) & (0x7FFFFFFF));
-            currTick = ((currTick - this._calibPrevTick) & (0x7FFFFFFF));
+            currTick = <number> ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+            currTick = ((currTick - this._calibPrevTick) & 0x7FFFFFFF);
             if (currTick < 1600) {
                 this._calibStageHint = 'Set down the device on a steady horizontal surface';
                 this._calibStageProgress = (((currTick) / (40)) >> 0);
@@ -1032,9 +1032,9 @@ export class YRefFrame extends YFunction
             }
         }
         if (scaleExp > 0) {
-            scaleX = ((scaleX) >> (scaleExp));
-            scaleY = ((scaleY) >> (scaleExp));
-            scaleZ = ((scaleZ) >> (scaleExp));
+            scaleX = (scaleX >> scaleExp);
+            scaleY = (scaleY >> scaleExp);
+            scaleZ = (scaleZ >> scaleExp);
         }
         if (scaleX < 0) {
             scaleX = scaleX + 1024;
@@ -1045,8 +1045,8 @@ export class YRefFrame extends YFunction
         if (scaleZ < 0) {
             scaleZ = scaleZ + 1024;
         }
-        scaleLo = ((((scaleY) & (15))) << (12)) + ((scaleX) << (2)) + scaleExp;
-        scaleHi = ((scaleZ) << (6)) + ((scaleY) >> (4));
+        scaleLo = ((scaleY & 15) << 12) + (scaleX << 2) + scaleExp;
+        scaleHi = (scaleZ << 6) + (scaleY >> 4);
         // Save calibration parameters
         newcalib = '5,' + String(Math.round(shiftX)) + ',' + String(Math.round(shiftY)) + ',' + String(Math.round(shiftZ)) + ',' + String(Math.round(scaleLo)) + ',' + String(Math.round(scaleHi));
         this._calibStage = 0;

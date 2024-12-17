@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.ts 61494 2024-06-17 08:12:29Z seb $
+ *  $Id: yocto_digitalio.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -46,7 +46,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
  * Yocto-Maxi-IO-V2
  *
  * The YDigitalIO class allows you drive a Yoctopuce digital input/output port.
- * It can be used to setup the direction of each channel, to read the state of each channel
+ * It can be used to set up the direction of each channel, to read the state of each channel
  * and to switch the state of each channel configures as an output.
  * You can work on all channels at once, or one by one. Most functions
  * use a binary representation for channels where bit 0 matches channel #0 , bit 1 matches channel
@@ -499,7 +499,7 @@ class YDigitalIO extends yocto_api_js_1.YFunction {
     async get_bitState(bitno) {
         let portVal;
         portVal = await this.get_portState();
-        return ((((portVal) >> (bitno))) & (1));
+        return ((portVal >> bitno) & 1);
     }
     /**
      * Reverts a single bit (i.e. channel) of the I/O port.
@@ -546,7 +546,7 @@ class YDigitalIO extends yocto_api_js_1.YFunction {
     async get_bitDirection(bitno) {
         let portDir;
         portDir = await this.get_portDirection();
-        return ((((portDir) >> (bitno))) & (1));
+        return ((portDir >> bitno) & 1);
     }
     /**
      * Changes the polarity of a single bit from the I/O port.
@@ -582,7 +582,7 @@ class YDigitalIO extends yocto_api_js_1.YFunction {
     async get_bitPolarity(bitno) {
         let portPol;
         portPol = await this.get_portPolarity();
-        return ((((portPol) >> (bitno))) & (1));
+        return ((portPol >> bitno) & 1);
     }
     /**
      * Changes  the electrical interface of a single bit from the I/O port.
@@ -619,7 +619,7 @@ class YDigitalIO extends yocto_api_js_1.YFunction {
     async get_bitOpenDrain(bitno) {
         let portOpenDrain;
         portOpenDrain = await this.get_portOpenDrain();
-        return ((((portOpenDrain) >> (bitno))) & (1));
+        return ((portOpenDrain >> bitno) & 1);
     }
     /**
      * Triggers a pulse on a single bit for a specified duration. The specified bit

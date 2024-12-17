@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_i2cport.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -683,11 +683,11 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -727,10 +727,10 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[idx])));
+            res.push(this.imm_json_get_string(msgarr[idx]));
             idx = idx + 1;
         }
         return res;
@@ -770,7 +770,7 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = yocto_api_js_1.YAPIContext.imm_atoi((availPosStr).substr(0, atPos));
+        res = yocto_api_js_1.YAPIContext.imm_atoi(availPosStr.substr(0, atPos));
         return res;
     }
     async end_tell() {
@@ -781,7 +781,7 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         databin = await this._download('rxcnt.bin?pos=' + String(Math.round(this._rxptr)));
         availPosStr = this._yapi.imm_bin2str(databin);
         atPos = (availPosStr).indexOf('@');
-        res = yocto_api_js_1.YAPIContext.imm_atoi((availPosStr).substr(atPos + 1, (availPosStr).length - atPos - 1));
+        res = yocto_api_js_1.YAPIContext.imm_atoi(availPosStr.substr(atPos + 1, (availPosStr).length - atPos - 1));
         return res;
     }
     /**
@@ -821,11 +821,11 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -866,11 +866,11 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         if (msglen == 0) {
             return '';
         }
-        res = this.imm_json_get_string(this._yapi.imm_str2bin(msgarr[0]));
+        res = this.imm_json_get_string(msgarr[0]);
         return res;
     }
     /**
@@ -1052,7 +1052,7 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         if (!(idx < 0)) {
             return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', rcvbytes);
         }
-        reply = (reply).substr((reply).length - 2 * rcvCount, 2 * rcvCount);
+        reply = reply.substr((reply).length - 2 * rcvCount, 2 * rcvCount);
         rcvbytes = this._yapi.imm_hexstr2bin(reply);
         return rcvbytes;
     }
@@ -1116,7 +1116,7 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         if (!(idx < 0)) {
             return this._throw(this._yapi.IO_ERROR, 'I2C protocol error', res);
         }
-        reply = (reply).substr((reply).length - 2 * rcvCount, 2 * rcvCount);
+        reply = reply.substr((reply).length - 2 * rcvCount, 2 * rcvCount);
         rcvbytes = this._yapi.imm_hexstr2bin(reply);
         res.length = 0;
         idx = 0;
@@ -1321,10 +1321,10 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         }
         // last element of array is the new position
         msglen = msglen - 1;
-        this._rxptr = yocto_api_js_1.YAPIContext.imm_atoi(msgarr[msglen]);
+        this._rxptr = this.imm_decode_json_int(msgarr[msglen]);
         idx = 0;
         while (idx < msglen) {
-            res.push(new YI2cSnoopingRecord(msgarr[idx]));
+            res.push(new YI2cSnoopingRecord(this._yapi.imm_bin2str(msgarr[idx])));
             idx = idx + 1;
         }
         return res;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_bluetoothlink.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for BluetoothLink functions
  *
@@ -473,7 +473,7 @@ export class YBluetoothLink extends YFunction
         obj = <YBluetoothLink> YFunction._FindFromCache('BluetoothLink', func);
         if (obj == null) {
             obj = new YBluetoothLink(YAPI, func);
-            YFunction._AddToCache('BluetoothLink',  func, obj);
+            YFunction._AddToCache('BluetoothLink', func, obj);
         }
         return obj;
     }
@@ -506,10 +506,10 @@ export class YBluetoothLink extends YFunction
     static FindBluetoothLinkInContext(yctx: YAPIContext, func: string): YBluetoothLink
     {
         let obj: YBluetoothLink | null;
-        obj = <YBluetoothLink> YFunction._FindFromCacheInContext(yctx,  'BluetoothLink', func);
+        obj = <YBluetoothLink> YFunction._FindFromCacheInContext(yctx, 'BluetoothLink', func);
         if (obj == null) {
             obj = new YBluetoothLink(yctx, func);
-            YFunction._AddToCache('BluetoothLink',  func, obj);
+            YFunction._AddToCache('BluetoothLink', func, obj);
         }
         return obj;
     }

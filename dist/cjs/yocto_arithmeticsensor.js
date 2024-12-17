@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_arithmeticsensor.ts 60419 2024-04-08 09:53:37Z seb $
+ *  $Id: yocto_arithmeticsensor.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for ArithmeticSensor functions
  *
@@ -297,15 +297,15 @@ class YArithmeticSensor extends yocto_api_js_1.YSensor {
         let diags;
         let resval;
         id = await this.get_functionId();
-        id = (id).substr(16, (id).length - 16);
+        id = id.substr(16, (id).length - 16);
         fname = 'arithmExpr' + id + '.txt';
         content = '// ' + descr + '\n' + expr;
         data = await this._uploadEx(fname, this._yapi.imm_str2bin(content));
         diags = this._yapi.imm_bin2str(data);
-        if (!((diags).substr(0, 8) == 'Result: ')) {
+        if (!(diags.substr(0, 8) == 'Result: ')) {
             return this._throw(this._yapi.INVALID_ARGUMENT, diags, this._yapi.INVALID_DOUBLE);
         }
-        resval = yocto_api_js_1.YAPIContext.imm_atof((diags).substr(8, (diags).length - 8));
+        resval = yocto_api_js_1.YAPIContext.imm_atof(diags.substr(8, (diags).length - 8));
         return resval;
     }
     /**
@@ -322,12 +322,12 @@ class YArithmeticSensor extends yocto_api_js_1.YSensor {
         let content;
         let idx;
         id = await this.get_functionId();
-        id = (id).substr(16, (id).length - 16);
+        id = id.substr(16, (id).length - 16);
         fname = 'arithmExpr' + id + '.txt';
         content = this._yapi.imm_bin2str(await this._download(fname));
         idx = (content).indexOf('\n');
         if (idx > 0) {
-            content = (content).substr(idx + 1, (content).length - (idx + 1));
+            content = content.substr(idx + 1, (content).length - (idx + 1));
         }
         return content;
     }

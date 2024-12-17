@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_groundspeed.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_groundspeed.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for GroundSpeed functions
  *
@@ -103,7 +103,7 @@ export class YGroundSpeed extends YSensor
         obj = <YGroundSpeed> YFunction._FindFromCache('GroundSpeed', func);
         if (obj == null) {
             obj = new YGroundSpeed(YAPI, func);
-            YFunction._AddToCache('GroundSpeed',  func, obj);
+            YFunction._AddToCache('GroundSpeed', func, obj);
         }
         return obj;
     }
@@ -136,10 +136,10 @@ export class YGroundSpeed extends YSensor
     static FindGroundSpeedInContext(yctx: YAPIContext, func: string): YGroundSpeed
     {
         let obj: YGroundSpeed | null;
-        obj = <YGroundSpeed> YFunction._FindFromCacheInContext(yctx,  'GroundSpeed', func);
+        obj = <YGroundSpeed> YFunction._FindFromCacheInContext(yctx, 'GroundSpeed', func);
         if (obj == null) {
             obj = new YGroundSpeed(yctx, func);
-            YFunction._AddToCache('GroundSpeed',  func, obj);
+            YFunction._AddToCache('GroundSpeed', func, obj);
         }
         return obj;
     }

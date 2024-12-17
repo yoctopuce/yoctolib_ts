@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_weighscale.ts 60419 2024-04-08 09:53:37Z seb $
+ *  $Id: yocto_weighscale.ts 63482 2024-11-26 09:29:16Z seb $
  *
  *  Implements the high-level API for WeighScale functions
  *
@@ -577,17 +577,17 @@ export class YWeighScale extends YSensor {
         let temp;
         let comp;
         id = await this.get_functionId();
-        id = (id).substr(10, (id).length - 10);
+        id = id.substr(10, (id).length - 10);
         bin_json = await this._download('extra.json?page=' + String(Math.round((4 * YAPIContext.imm_atoi(id)) + tableIndex)));
         paramlist = this.imm_json_get_array(bin_json);
         // convert all values to float and append records
-        siz = ((paramlist.length) >> (1));
+        siz = (paramlist.length >> 1);
         tempValues.length = 0;
         compValues.length = 0;
         idx = 0;
         while (idx < siz) {
-            temp = YAPIContext.imm_atof(paramlist[2 * idx]) / 1000.0;
-            comp = YAPIContext.imm_atof(paramlist[2 * idx + 1]) / 1000.0;
+            temp = YAPIContext.imm_atof(this._yapi.imm_bin2str(paramlist[2 * idx])) / 1000.0;
+            comp = YAPIContext.imm_atof(this._yapi.imm_bin2str(paramlist[2 * idx + 1])) / 1000.0;
             tempValues.push(temp);
             compValues.push(comp);
             idx = idx + 1;

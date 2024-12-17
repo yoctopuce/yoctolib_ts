@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_rangefinder.ts 59977 2024-03-18 15:02:32Z mvuilleu $
+ *  $Id: yocto_rangefinder.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for RangeFinder functions
  *
@@ -340,7 +340,7 @@ export class YRangeFinder extends YSensor
         obj = <YRangeFinder> YFunction._FindFromCache('RangeFinder', func);
         if (obj == null) {
             obj = new YRangeFinder(YAPI, func);
-            YFunction._AddToCache('RangeFinder',  func, obj);
+            YFunction._AddToCache('RangeFinder', func, obj);
         }
         return obj;
     }
@@ -373,10 +373,10 @@ export class YRangeFinder extends YSensor
     static FindRangeFinderInContext(yctx: YAPIContext, func: string): YRangeFinder
     {
         let obj: YRangeFinder | null;
-        obj = <YRangeFinder> YFunction._FindFromCacheInContext(yctx,  'RangeFinder', func);
+        obj = <YRangeFinder> YFunction._FindFromCacheInContext(yctx, 'RangeFinder', func);
         if (obj == null) {
             obj = new YRangeFinder(yctx, func);
-            YFunction._AddToCache('RangeFinder',  func, obj);
+            YFunction._AddToCache('RangeFinder', func, obj);
         }
         return obj;
     }
@@ -475,10 +475,10 @@ export class YRangeFinder extends YSensor
     {
         let hwcal: string;
         hwcal = await this.get_hardwareCalibration();
-        if (!((hwcal).substr(0, 1) == '@')) {
+        if (!(hwcal.substr(0, 1) == '@')) {
             return this._yapi.INVALID_DOUBLE;
         }
-        return YAPIContext.imm_atoi((hwcal).substr(1, (hwcal).length));
+        return YAPIContext.imm_atoi(hwcal.substr(1, (hwcal).length));
     }
 
     /**

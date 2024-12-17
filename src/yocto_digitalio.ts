@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_digitalio.ts 61494 2024-06-17 08:12:29Z seb $
+ *  $Id: yocto_digitalio.ts 63327 2024-11-13 09:35:03Z seb $
  *
  *  Implements the high-level API for DigitalIO functions
  *
@@ -45,7 +45,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
  * Yocto-Maxi-IO-V2
  *
  * The YDigitalIO class allows you drive a Yoctopuce digital input/output port.
- * It can be used to setup the direction of each channel, to read the state of each channel
+ * It can be used to set up the direction of each channel, to read the state of each channel
  * and to switch the state of each channel configures as an output.
  * You can work on all channels at once, or one by one. Most functions
  * use a binary representation for channels where bit 0 matches channel #0 , bit 1 matches channel
@@ -439,7 +439,7 @@ export class YDigitalIO extends YFunction
         obj = <YDigitalIO> YFunction._FindFromCache('DigitalIO', func);
         if (obj == null) {
             obj = new YDigitalIO(YAPI, func);
-            YFunction._AddToCache('DigitalIO',  func, obj);
+            YFunction._AddToCache('DigitalIO', func, obj);
         }
         return obj;
     }
@@ -472,10 +472,10 @@ export class YDigitalIO extends YFunction
     static FindDigitalIOInContext(yctx: YAPIContext, func: string): YDigitalIO
     {
         let obj: YDigitalIO | null;
-        obj = <YDigitalIO> YFunction._FindFromCacheInContext(yctx,  'DigitalIO', func);
+        obj = <YDigitalIO> YFunction._FindFromCacheInContext(yctx, 'DigitalIO', func);
         if (obj == null) {
             obj = new YDigitalIO(yctx, func);
-            YFunction._AddToCache('DigitalIO',  func, obj);
+            YFunction._AddToCache('DigitalIO', func, obj);
         }
         return obj;
     }
@@ -558,7 +558,7 @@ export class YDigitalIO extends YFunction
     {
         let portVal: number;
         portVal = await this.get_portState();
-        return ((((portVal) >> (bitno))) & (1));
+        return ((portVal >> bitno) & 1);
     }
 
     /**
@@ -611,7 +611,7 @@ export class YDigitalIO extends YFunction
     {
         let portDir: number;
         portDir = await this.get_portDirection();
-        return ((((portDir) >> (bitno))) & (1));
+        return ((portDir >> bitno) & 1);
     }
 
     /**
@@ -651,7 +651,7 @@ export class YDigitalIO extends YFunction
     {
         let portPol: number;
         portPol = await this.get_portPolarity();
-        return ((((portPol) >> (bitno))) & (1));
+        return ((portPol >> bitno) & 1);
     }
 
     /**
@@ -692,7 +692,7 @@ export class YDigitalIO extends YFunction
     {
         let portOpenDrain: number;
         portOpenDrain = await this.get_portOpenDrain();
-        return ((((portOpenDrain) >> (bitno))) & (1));
+        return ((portOpenDrain >> bitno) & 1);
     }
 
     /**
