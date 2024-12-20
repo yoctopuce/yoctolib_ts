@@ -12934,7 +12934,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.0.63744';
+        return /* version number patched automatically */ '2.0.63797';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

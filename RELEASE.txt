@@ -1,4 +1,4 @@
-TypeScriptV2 v2.0.63744
+TypeScriptV2 v2.0.63797
 
-- Fix Authentication on web server that was using HTTP header without spaces
-- Fix authentication on VirtualHub-4Web
+(Misc)- purepython:now use const() for float as well //63791
+(Misc)- ympy_cross:fix Windows compilation //63792
