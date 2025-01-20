@@ -9,8 +9,8 @@
  *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-ecmascript-EN.html
  *
  *********************************************************************/
-import { YAPI, YErrorMsg } from '../../dist/esm/yocto_api_html.js';
-import { YSpectralSensor } from '../../dist/esm/yocto_spectralsensor.js';
+import { YAPI, YErrorMsg } from '../../src/yocto_api_html.js';
+import { YSpectralSensor } from '../../src/yocto_spectralsensor.js';
 let module;
 let spectralSensor;
 function error(msg) {
@@ -44,7 +44,9 @@ async function refresh() {
         await spectralSensor.set_integrationTime(150);
         await spectralSensor.set_gain(6);
         await spectralSensor.set_ledCurrent(6);
-        html += "Near HTML color:  " + await spectralSensor.get_nearHTMLColor();
+        let hex = await spectralSensor.get_estimatedRGB();
+        html += "Near color : " + await spectralSensor.get_nearSimpleColor() + "<br>";
+        html += "Color HEX : #" + hex.toString(16);
     }
     else {
         html += 'Module not connected';

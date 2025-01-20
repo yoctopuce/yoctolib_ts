@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 63704 2024-12-16 10:05:02Z seb $
+ * $Id: yocto_api.ts 64192 2025-01-15 09:29:03Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -4135,6 +4135,7 @@ export declare class YAPIContext {
     GetDeviceListValidity_internal(): Promise<number>;
     SetNetworkTimeout_internal(networkMsTimeout: number): Promise<void>;
     GetNetworkTimeout_internal(): Promise<number>;
+    GetYAPISharedLibraryPath_internal(): Promise<string>;
     AddUdevRule_internal(force: boolean): Promise<string>;
     DownloadHostCertificate_internal(url: string, mstimeout: number): Promise<string>;
     SetTrustedCertificatesList_internal(certificatePath: string): Promise<string>;
@@ -4160,6 +4161,15 @@ export declare class YAPIContext {
      * @return the number of seconds between each enumeration.
      */
     GetDeviceListValidity(): Promise<number>;
+    /**
+     * Returns the path to the dynamic YAPI library. This function is useful for debugging problems loading the
+     * dynamic library YAPI. This function is supported by the C#, Python and VB languages. The other
+     * libraries return an
+     * empty string.
+     *
+     * @return a string containing the path of the YAPI dynamic library.
+     */
+    GetYAPISharedLibraryPath(): Promise<string>;
     /**
      * Adds a UDEV rule which authorizes all users to access Yoctopuce modules
      * connected to the USB ports. This function works only under Linux. The process that

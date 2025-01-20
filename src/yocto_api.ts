@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 63704 2024-12-16 10:05:02Z seb $
+ * $Id: yocto_api.ts 64192 2025-01-15 09:29:03Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -69,7 +69,7 @@ export const YAPI_INVALID_STRING            : string = '!INVALID!';
 export const YAPI_NO_TRUSTED_CA_CHECK       : number = 1;       // Disables certificate checking
 export const YAPI_NO_EXPIRATION_CHECK       : number = 2;       // Disables certificate expiration date checking
 export const YAPI_NO_HOSTNAME_CHECK         : number = 4;       // Disable hostname checking
-export const YAPI_LEGACY                    : number = 8;       // Allow non secure connection (similar to v1.10)
+export const YAPI_LEGACY                    : number = 8;       // Allow non-secure connection (similar to v1.10)
 //--- (end of generated code: YFunction return codes)
 export const YAPI_MIN_DOUBLE: number = -Number.MAX_VALUE;
 export const YAPI_MAX_DOUBLE: number = Number.MAX_VALUE;
@@ -9624,6 +9624,8 @@ export class YGenericHub
         // Keep the latest connection settings requested for this hub
         if (this._targetState <= Y_YHubConnType.HUB_CONNECTED || targetConnType > Y_YHubConnType.HUB_CONNECTED) {
             // Upgrade target state
+            this._lastErrorType = 0;
+            this._lastErrorMsg = "Reconnecting";
             this.imm_setTargetState(targetConnType);
             if (this._currentState == Y_YHubConnType.HUB_CONNECTED && targetConnType > Y_YHubConnType.HUB_CONNECTED) {
                 // Hub must be kept attached
@@ -10608,7 +10610,8 @@ export class YHttpEngine extends YHubEngine
             let jsonBody: any = {
                 'x-yauth': {
                     method: method,
-                    uri: shorturi
+                    uri: shorturi,
+                    nonce: this.nonce
                 }
             };
             if (this._runtime_urlInfo.imm_hasAuthParam()) {
@@ -10622,7 +10625,6 @@ export class YHttpEngine extends YHubEngine
                 let response: string = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_ySHA1(signature)).toLowerCase();
                 jsonBody['x-yauth']['username'] = this._runtime_urlInfo.imm_getUser();
                 jsonBody['x-yauth']['cnonce'] = cnonce;
-                jsonBody['x-yauth']['nonce'] = this.nonce;
                 jsonBody['x-yauth']['nc'] = nc;
                 jsonBody['x-yauth']['qop'] = 'auth';
                 jsonBody['x-yauth']['response'] = response;
@@ -14347,6 +14349,11 @@ export class YAPIContext
         return this._networkTimeoutMs;
     }
 
+    async GetYAPISharedLibraryPath_internal(): Promise<string>
+    {
+        return "";
+    }
+
     async AddUdevRule_internal(force: boolean): Promise<string>
     {
         return "error: Not supported in TypeScript";
@@ -14402,6 +14409,19 @@ export class YAPIContext
     async GetDeviceListValidity(): Promise<number>
     {
         return await this.GetDeviceListValidity_internal();
+    }
+
+    /**
+     * Returns the path to the dynamic YAPI library. This function is useful for debugging problems loading the
+     * dynamic library YAPI. This function is supported by the C#, Python and VB languages. The other
+     * libraries return an
+     * empty string.
+     *
+     * @return a string containing the path of the YAPI dynamic library.
+     */
+    async GetYAPISharedLibraryPath(): Promise<string>
+    {
+        return await this.GetYAPISharedLibraryPath_internal();
     }
 
     /**
@@ -14584,7 +14604,7 @@ export class YAPIContext
 
     imm_GetAPIVersion(): string
     {
-        return /* version number patched automatically */'2.0.63797';
+        return /* version number patched automatically */'2.0.64286';
     }
 
     /**
@@ -15621,11 +15641,12 @@ export class YAPIContext
         } while (restart);
         return null;
     }
+
     getGenHub(hubref: number): YGenericHub | null
     {
         for (let url in this._knownHubsByUrl) {
             let hub = this._knownHubsByUrl[url];
-            if (hub.getHubRef() == hubref && hub.imm_isPreOrRegistered()) {
+            if (hub.getHubRef() == hubref) {
                 return hub;
             }
         }
@@ -15636,6 +15657,7 @@ export class YAPIContext
     {
         return this._yhub_cache[hubref];
     }
+
     private _addYHubToCache(hubref: number, obj: YHub): void
     {
         this._yhub_cache[hubref] = obj;

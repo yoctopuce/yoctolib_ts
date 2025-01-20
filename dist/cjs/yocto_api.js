@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 63704 2024-12-16 10:05:02Z seb $
+ * $Id: yocto_api.ts 64192 2025-01-15 09:29:03Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -72,7 +72,7 @@ exports.YAPI_INVALID_STRING = '!INVALID!';
 exports.YAPI_NO_TRUSTED_CA_CHECK = 1; // Disables certificate checking
 exports.YAPI_NO_EXPIRATION_CHECK = 2; // Disables certificate expiration date checking
 exports.YAPI_NO_HOSTNAME_CHECK = 4; // Disable hostname checking
-exports.YAPI_LEGACY = 8; // Allow non secure connection (similar to v1.10)
+exports.YAPI_LEGACY = 8; // Allow non-secure connection (similar to v1.10)
 //--- (end of generated code: YFunction return codes)
 exports.YAPI_MIN_DOUBLE = -Number.MAX_VALUE;
 exports.YAPI_MAX_DOUBLE = Number.MAX_VALUE;
@@ -8443,6 +8443,8 @@ class YGenericHub {
         // Keep the latest connection settings requested for this hub
         if (this._targetState <= 0 /* Y_YHubConnType.HUB_CONNECTED */ || targetConnType > 0 /* Y_YHubConnType.HUB_CONNECTED */) {
             // Upgrade target state
+            this._lastErrorType = 0;
+            this._lastErrorMsg = "Reconnecting";
             this.imm_setTargetState(targetConnType);
             if (this._currentState == 0 /* Y_YHubConnType.HUB_CONNECTED */ && targetConnType > 0 /* Y_YHubConnType.HUB_CONNECTED */) {
                 // Hub must be kept attached
@@ -9357,7 +9359,8 @@ class YHttpEngine extends YHubEngine {
             let jsonBody = {
                 'x-yauth': {
                     method: method,
-                    uri: shorturi
+                    uri: shorturi,
+                    nonce: this.nonce
                 }
             };
             if (this._runtime_urlInfo.imm_hasAuthParam()) {
@@ -9371,7 +9374,6 @@ class YHttpEngine extends YHubEngine {
                 let response = this._hub._yapi.imm_bin2hexstr(this._hub._yapi.imm_ySHA1(signature)).toLowerCase();
                 jsonBody['x-yauth']['username'] = this._runtime_urlInfo.imm_getUser();
                 jsonBody['x-yauth']['cnonce'] = cnonce;
-                jsonBody['x-yauth']['nonce'] = this.nonce;
                 jsonBody['x-yauth']['nc'] = nc;
                 jsonBody['x-yauth']['qop'] = 'auth';
                 jsonBody['x-yauth']['response'] = response;
@@ -12738,6 +12740,9 @@ class YAPIContext {
     async GetNetworkTimeout_internal() {
         return this._networkTimeoutMs;
     }
+    async GetYAPISharedLibraryPath_internal() {
+        return "";
+    }
     async AddUdevRule_internal(force) {
         return "error: Not supported in TypeScript";
     }
@@ -12779,6 +12784,17 @@ class YAPIContext {
      */
     async GetDeviceListValidity() {
         return await this.GetDeviceListValidity_internal();
+    }
+    /**
+     * Returns the path to the dynamic YAPI library. This function is useful for debugging problems loading the
+     * dynamic library YAPI. This function is supported by the C#, Python and VB languages. The other
+     * libraries return an
+     * empty string.
+     *
+     * @return a string containing the path of the YAPI dynamic library.
+     */
+    async GetYAPISharedLibraryPath() {
+        return await this.GetYAPISharedLibraryPath_internal();
     }
     /**
      * Adds a UDEV rule which authorizes all users to access Yoctopuce modules
@@ -12934,7 +12950,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.0.63797';
+        return /* version number patched automatically */ '2.0.64286';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -13911,7 +13927,7 @@ class YAPIContext {
     getGenHub(hubref) {
         for (let url in this._knownHubsByUrl) {
             let hub = this._knownHubsByUrl[url];
-            if (hub.getHubRef() == hubref && hub.imm_isPreOrRegistered()) {
+            if (hub.getHubRef() == hubref) {
                 return hub;
             }
         }

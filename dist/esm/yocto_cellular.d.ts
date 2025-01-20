@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: yocto_cellular.ts 64028 2025-01-06 15:19:41Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *

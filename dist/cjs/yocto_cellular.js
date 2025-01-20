@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: yocto_cellular.ts 64028 2025-01-06 15:19:41Z seb $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -1217,7 +1217,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'SFR';
                                         }
                                         if (plmnid == 20814) {
-                                            return 'SNCF Réseau';
+                                            return 'SNCF Reseau';
                                         }
                                     }
                                     else {
@@ -1653,7 +1653,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'DNA';
                                         }
                                         if (plmnid == 24414) {
-                                            return 'Ålcom';
+                                            return 'Alcom';
                                         }
                                     }
                                     else {
@@ -1804,7 +1804,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'Moldcell';
                                         }
                                         if (plmnid == 25905) {
-                                            return 'Unité';
+                                            return 'Unite';
                                         }
                                     }
                                     else {
@@ -1918,7 +1918,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                     else {
                                         if (plmnid < 27404) {
                                             if (plmnid == 27401) {
-                                                return 'Síminn';
+                                                return 'Siminn';
                                             }
                                             if (plmnid == 27402) {
                                                 return 'Vodafone IS';
@@ -2039,10 +2039,10 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'Vodafone TR';
                                         }
                                         if (plmnid == 28603) {
-                                            return 'Türk Telekom';
+                                            return 'Turk Telekom';
                                         }
                                         if (plmnid == 28801) {
-                                            return 'Føroya Tele';
+                                            return 'Foroya Tele';
                                         }
                                         if (plmnid == 28802) {
                                             return 'Hey';
@@ -2131,10 +2131,10 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'Orange GF';
                                         }
                                         if (plmnid == 34002) {
-                                            return 'SFR Caraïbe BL/GF/GP/MF/MQ';
+                                            return 'SFR Caraibe BL/GF/GP/MF/MQ';
                                         }
                                         if (plmnid == 34002) {
-                                            return 'SFR Caraïbe GF';
+                                            return 'SFR Caraibe GF';
                                         }
                                         if (plmnid == 34003) {
                                             return 'Chippie BL/GF/GP/MF/MQ';
@@ -3918,7 +3918,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'GreenN';
                                         }
                                         if (plmnid == 61207) {
-                                            return 'café';
+                                            return 'cafe';
                                         }
                                     }
                                     else {
@@ -4453,7 +4453,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                                 return 'Orange YT/RE';
                                             }
                                             if (plmnid == 64701) {
-                                                return 'Maoré Mobile';
+                                                return 'Maore Mobile';
                                             }
                                             if (plmnid == 64702) {
                                                 return 'Only';
@@ -4469,7 +4469,7 @@ class YCellular extends yocto_api_js_1.YFunction {
                                             return 'Free YT/RE';
                                         }
                                         if (plmnid == 64710) {
-                                            return 'SFR Réunion';
+                                            return 'SFR Reunion';
                                         }
                                         if (plmnid == 64801) {
                                             return 'Net*One';
@@ -4636,10 +4636,10 @@ class YCellular extends yocto_api_js_1.YFunction {
                                         }
                                         else {
                                             if (plmnid == 71201) {
-                                                return 'Kölbi ICE';
+                                                return 'Kolbi ICE';
                                             }
                                             if (plmnid == 71202) {
-                                                return 'Kölbi ICE';
+                                                return 'Kolbi ICE';
                                             }
                                             if (plmnid == 71203) {
                                                 return 'Claro CR';

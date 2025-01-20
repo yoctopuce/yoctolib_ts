@@ -895,7 +895,7 @@ class YRfidOptions {
          * By default, the Yoctopuce library uses the most efficient access strategy
          * generally available for each tag type, but you can force the use of
          * single-block commands if the RFID tags you are using do not support
-         * multi-block commands. If opération speed is not a priority, choose
+         * multi-block commands. If operation speed is not a priority, choose
          * single-block mode as it will work with any mode.
          */
         this.ForceSingleBlockAccess = false;
@@ -907,7 +907,7 @@ class YRfidOptions {
          * do support multi-block commands. Be  aware that even if a tag allows multi-block
          * operations, the maximum number of blocks that can be written or read at the same
          * time can be (very) limited. If the tag does not support multi-block mode
-         * for the wanted opération, the option will be ignored.
+         * for the wanted operation, the option will be ignored.
          */
         this.ForceMultiBlockAccess = false;
         /**
@@ -1691,7 +1691,7 @@ class YRfidReader extends yocto_api_js_1.YFunction {
      * Writes data provided as an ASCII string to an RFID tag memory.
      * The write operation may span accross multiple blocks if the
      * number of bytes to write is larger than the RFID tag block size.
-     * Note that only the characters présent  in  the provided string
+     * Note that only the characters present in the provided string
      * will be written, there is no notion of string length. If your
      * string data have variable length, you'll have to encode the
      * string length yourself, with a terminal zero for instannce.

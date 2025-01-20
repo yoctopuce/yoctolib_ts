@@ -60,6 +60,7 @@ export declare class YSpectralSensor extends YFunction {
     _nearRAL2: string;
     _nearRAL3: string;
     _nearHTMLColor: string;
+    _nearSimpleColor: string;
     _ledCurrentAtPowerOn: number;
     _integrationTimeAtPowerOn: number;
     _gainAtPowerOn: number;
@@ -80,6 +81,7 @@ export declare class YSpectralSensor extends YFunction {
     readonly NEARRAL2_INVALID: string;
     readonly NEARRAL3_INVALID: string;
     readonly NEARHTMLCOLOR_INVALID: string;
+    readonly NEARSIMPLECOLOR_INVALID: string;
     readonly LEDCURRENTATPOWERON_INVALID: number;
     readonly INTEGRATIONTIMEATPOWERON_INVALID: number;
     readonly GAINATPOWERON_INVALID: number;
@@ -99,6 +101,7 @@ export declare class YSpectralSensor extends YFunction {
     static readonly NEARRAL2_INVALID: string;
     static readonly NEARRAL3_INVALID: string;
     static readonly NEARHTMLCOLOR_INVALID: string;
+    static readonly NEARSIMPLECOLOR_INVALID: string;
     static readonly LEDCURRENTATPOWERON_INVALID: number;
     static readonly INTEGRATIONTIMEATPOWERON_INVALID: number;
     static readonly GAINATPOWERON_INVALID: number;
@@ -116,9 +119,7 @@ export declare class YSpectralSensor extends YFunction {
     get_ledCurrent(): Promise<number>;
     /**
      * Changes the luminosity of the module leds. The parameter is a
-     * value between 0 and 100.
-     * Remember to call the saveToFlash() method of the module if the
-     * modification must be kept.
+     * value between 0 and 254.
      *
      * @param newval : an integer corresponding to the luminosity of the module leds
      *
@@ -142,7 +143,6 @@ export declare class YSpectralSensor extends YFunction {
     /**
      * Returns the resolution of the measured values. The resolution corresponds to the numerical precision
      * of the measures, which is not always the same as the actual precision of the sensor.
-     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @return a floating point number corresponding to the resolution of the measured values
      *
@@ -195,17 +195,20 @@ export declare class YSpectralSensor extends YFunction {
      */
     set_gain(newval: number): Promise<number>;
     /**
-     * Return the model for the estimation colors.
+     * Returns the model for color estimation.
      *
-     * @return either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or YSpectralSensor.ESTIMATIONMODEL_EMISSION
+     * @return either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or
+     * YSpectralSensor.ESTIMATIONMODEL_EMISSION, according to the model for color estimation
      *
      * On failure, throws an exception or returns YSpectralSensor.ESTIMATIONMODEL_INVALID.
      */
     get_estimationModel(): Promise<YSpectralSensor.ESTIMATIONMODEL>;
     /**
-     * Change the model for the estimation colors.
+     * Changes the model for color estimation.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or YSpectralSensor.ESTIMATIONMODEL_EMISSION
+     * @param newval : either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or
+     * YSpectralSensor.ESTIMATIONMODEL_EMISSION, according to the model for color estimation
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -222,21 +225,21 @@ export declare class YSpectralSensor extends YFunction {
      */
     get_saturation(): Promise<number>;
     /**
-     * Returns the estimated color in RGB format.
+     * Returns the estimated color in RGB format (0xRRGGBB).
      * This method retrieves the estimated color values
      * and returns them as an RGB object or structure.
      *
-     * @return an integer corresponding to the estimated color in RGB format
+     * @return an integer corresponding to the estimated color in RGB format (0xRRGGBB)
      *
      * On failure, throws an exception or returns YSpectralSensor.ESTIMATEDRGB_INVALID.
      */
     get_estimatedRGB(): Promise<number>;
     /**
-     * Returns the estimated color in HSL format.
+     * Returns the estimated color in HSL (Hue, Saturation, Lightness) format.
      * This method retrieves the estimated color values
      * and returns them as an HSL object or structure.
      *
-     * @return an integer corresponding to the estimated color in HSL format
+     * @return an integer corresponding to the estimated color in HSL (Hue, Saturation, Lightness) format
      *
      * On failure, throws an exception or returns YSpectralSensor.ESTIMATEDHSL_INVALID.
      */
@@ -265,6 +268,16 @@ export declare class YSpectralSensor extends YFunction {
     get_nearRAL2(): Promise<string>;
     get_nearRAL3(): Promise<string>;
     get_nearHTMLColor(): Promise<string>;
+    /**
+     * Returns the estimated color.
+     * This method retrieves the estimated color values
+     * and returns them as the color name.
+     *
+     * @return a string corresponding to the estimated color
+     *
+     * On failure, throws an exception or returns YSpectralSensor.NEARSIMPLECOLOR_INVALID.
+     */
+    get_nearSimpleColor(): Promise<string>;
     get_ledCurrentAtPowerOn(): Promise<number>;
     /**
      * Sets the LED current at power-on.
@@ -279,14 +292,6 @@ export declare class YSpectralSensor extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     set_ledCurrentAtPowerOn(newval: number): Promise<number>;
-    /**
-     * Retrieves the integration time at power-on.
-     * This method updates the power-on integration time value.
-     *
-     * @return an integer
-     *
-     * On failure, throws an exception or returns YSpectralSensor.INTEGRATIONTIMEATPOWERON_INVALID.
-     */
     get_integrationTimeAtPowerOn(): Promise<number>;
     /**
      * Sets the integration time at power-on.

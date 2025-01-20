@@ -67,6 +67,7 @@ export class YSpectralSensor extends YFunction
     _nearRAL2: string = YSpectralSensor.NEARRAL2_INVALID;
     _nearRAL3: string = YSpectralSensor.NEARRAL3_INVALID;
     _nearHTMLColor: string = YSpectralSensor.NEARHTMLCOLOR_INVALID;
+    _nearSimpleColor: string = YSpectralSensor.NEARSIMPLECOLOR_INVALID;
     _ledCurrentAtPowerOn: number = YSpectralSensor.LEDCURRENTATPOWERON_INVALID;
     _integrationTimeAtPowerOn: number = YSpectralSensor.INTEGRATIONTIMEATPOWERON_INVALID;
     _gainAtPowerOn: number = YSpectralSensor.GAINATPOWERON_INVALID;
@@ -89,6 +90,7 @@ export class YSpectralSensor extends YFunction
     public readonly NEARRAL2_INVALID: string = YAPI.INVALID_STRING;
     public readonly NEARRAL3_INVALID: string = YAPI.INVALID_STRING;
     public readonly NEARHTMLCOLOR_INVALID: string = YAPI.INVALID_STRING;
+    public readonly NEARSIMPLECOLOR_INVALID: string = YAPI.INVALID_STRING;
     public readonly LEDCURRENTATPOWERON_INVALID: number = YAPI.INVALID_INT;
     public readonly INTEGRATIONTIMEATPOWERON_INVALID: number = YAPI.INVALID_INT;
     public readonly GAINATPOWERON_INVALID: number = YAPI.INVALID_INT;
@@ -110,6 +112,7 @@ export class YSpectralSensor extends YFunction
     public static readonly NEARRAL2_INVALID: string = YAPI.INVALID_STRING;
     public static readonly NEARRAL3_INVALID: string = YAPI.INVALID_STRING;
     public static readonly NEARHTMLCOLOR_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly NEARSIMPLECOLOR_INVALID: string = YAPI.INVALID_STRING;
     public static readonly LEDCURRENTATPOWERON_INVALID: number = YAPI.INVALID_INT;
     public static readonly INTEGRATIONTIMEATPOWERON_INVALID: number = YAPI.INVALID_INT;
     public static readonly GAINATPOWERON_INVALID: number = YAPI.INVALID_INT;
@@ -170,6 +173,9 @@ export class YSpectralSensor extends YFunction
         case 'nearHTMLColor':
             this._nearHTMLColor = <string> <string> val;
             return 1;
+        case 'nearSimpleColor':
+            this._nearSimpleColor = <string> <string> val;
+            return 1;
         case 'ledCurrentAtPowerOn':
             this._ledCurrentAtPowerOn = <number> <number> val;
             return 1;
@@ -206,9 +212,7 @@ export class YSpectralSensor extends YFunction
 
     /**
      * Changes the luminosity of the module leds. The parameter is a
-     * value between 0 and 100.
-     * Remember to call the saveToFlash() method of the module if the
-     * modification must be kept.
+     * value between 0 and 254.
      *
      * @param newval : an integer corresponding to the luminosity of the module leds
      *
@@ -244,7 +248,6 @@ export class YSpectralSensor extends YFunction
     /**
      * Returns the resolution of the measured values. The resolution corresponds to the numerical precision
      * of the measures, which is not always the same as the actual precision of the sensor.
-     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @return a floating point number corresponding to the resolution of the measured values
      *
@@ -342,9 +345,10 @@ export class YSpectralSensor extends YFunction
     }
 
     /**
-     * Return the model for the estimation colors.
+     * Returns the model for color estimation.
      *
-     * @return either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or YSpectralSensor.ESTIMATIONMODEL_EMISSION
+     * @return either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or
+     * YSpectralSensor.ESTIMATIONMODEL_EMISSION, according to the model for color estimation
      *
      * On failure, throws an exception or returns YSpectralSensor.ESTIMATIONMODEL_INVALID.
      */
@@ -361,9 +365,11 @@ export class YSpectralSensor extends YFunction
     }
 
     /**
-     * Change the model for the estimation colors.
+     * Changes the model for color estimation.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or YSpectralSensor.ESTIMATIONMODEL_EMISSION
+     * @param newval : either YSpectralSensor.ESTIMATIONMODEL_REFLECTION or
+     * YSpectralSensor.ESTIMATIONMODEL_EMISSION, according to the model for color estimation
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -397,11 +403,11 @@ export class YSpectralSensor extends YFunction
     }
 
     /**
-     * Returns the estimated color in RGB format.
+     * Returns the estimated color in RGB format (0xRRGGBB).
      * This method retrieves the estimated color values
      * and returns them as an RGB object or structure.
      *
-     * @return an integer corresponding to the estimated color in RGB format
+     * @return an integer corresponding to the estimated color in RGB format (0xRRGGBB)
      *
      * On failure, throws an exception or returns YSpectralSensor.ESTIMATEDRGB_INVALID.
      */
@@ -418,11 +424,11 @@ export class YSpectralSensor extends YFunction
     }
 
     /**
-     * Returns the estimated color in HSL format.
+     * Returns the estimated color in HSL (Hue, Saturation, Lightness) format.
      * This method retrieves the estimated color values
      * and returns them as an HSL object or structure.
      *
-     * @return an integer corresponding to the estimated color in HSL format
+     * @return an integer corresponding to the estimated color in HSL (Hue, Saturation, Lightness) format
      *
      * On failure, throws an exception or returns YSpectralSensor.ESTIMATEDHSL_INVALID.
      */
@@ -528,6 +534,27 @@ export class YSpectralSensor extends YFunction
         return res;
     }
 
+    /**
+     * Returns the estimated color.
+     * This method retrieves the estimated color values
+     * and returns them as the color name.
+     *
+     * @return a string corresponding to the estimated color
+     *
+     * On failure, throws an exception or returns YSpectralSensor.NEARSIMPLECOLOR_INVALID.
+     */
+    async get_nearSimpleColor(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YSpectralSensor.NEARSIMPLECOLOR_INVALID;
+            }
+        }
+        res = this._nearSimpleColor;
+        return res;
+    }
+
     async get_ledCurrentAtPowerOn(): Promise<number>
     {
         let res: number;
@@ -559,14 +586,6 @@ export class YSpectralSensor extends YFunction
         return await this._setAttr('ledCurrentAtPowerOn', rest_val);
     }
 
-    /**
-     * Retrieves the integration time at power-on.
-     * This method updates the power-on integration time value.
-     *
-     * @return an integer
-     *
-     * On failure, throws an exception or returns YSpectralSensor.INTEGRATIONTIMEATPOWERON_INVALID.
-     */
     async get_integrationTimeAtPowerOn(): Promise<number>
     {
         let res: number;

@@ -1,4 +1,6 @@
-TypeScriptV2 v2.0.63797
+TypeScriptV2 v2.0.64286
 
-(Misc)- purepython:now use const() for float as well //63791
-(Misc)- ympy_cross:fix Windows compilation //63792
+- Add support for sending nonce for VirtualHub4web
+- Improve handling of YHub to diagnose authentication problems
+- Fix retrieval if lastError on YHub objects disconnected due to auth failure
+- Remove exotic char form YCellular class

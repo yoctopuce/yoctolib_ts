@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_i2cport.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_i2cport.ts 64096 2025-01-08 10:57:26Z seb $
  *
  *  Implements the high-level API for I2cSnoopingRecord functions
  *
@@ -1175,8 +1175,7 @@ class YI2cPort extends yocto_api_js_1.YFunction {
         return await this._upload('txdata', buff);
     }
     /**
-     * Sends a text-encoded I2C code stream to the I2C bus, and terminate
-     * the message en relâchant le bus.
+     * Sends a text-encoded I2C code stream to the I2C bus, and release the bus.
      * An I2C code stream is a string made of hexadecimal data bytes,
      * but that may also include the I2C state transitions code:
      * "{S}" to emit a start condition,
