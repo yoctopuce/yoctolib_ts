@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 64192 2025-01-15 09:29:03Z seb $
+ * $Id: yocto_api.ts 65106 2025-03-17 12:51:27Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -5476,7 +5476,7 @@ export class YModule extends YFunction {
         }
         ext_settings = ext_settings + '],\n"files":[';
         if (await this.hasFunction('files')) {
-            json = await this._download('files.json?a=dir&f=');
+            json = await this._download('files.json?a=dir&d=1&f=');
             if ((json).length == 0) {
                 return json;
             }
@@ -5485,8 +5485,13 @@ export class YModule extends YFunction {
             for (let ii in filelist) {
                 name = this.imm_json_get_key(filelist[ii], 'name');
                 if (((name).length > 0) && !(name == 'startupConf.json')) {
-                    file_data_bin = await this._download(this.imm_escapeAttr(name));
-                    file_data = this._yapi.imm_bin2hexstr(file_data_bin);
+                    if (name.substr((name).length - 1, 1) == '/') {
+                        file_data = '';
+                    }
+                    else {
+                        file_data_bin = await this._download(this.imm_escapeAttr(name));
+                        file_data = this._yapi.imm_bin2hexstr(file_data_bin);
+                    }
                     item = sep + '{"name":"' + name + '", "data":"' + file_data + '"}\n';
                     ext_settings = ext_settings + item;
                     sep = ',';
@@ -12924,7 +12929,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.0.64286';
+        return /* version number patched automatically */ '2.1.654';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

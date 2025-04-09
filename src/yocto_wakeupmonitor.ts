@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -72,6 +72,7 @@ export class YWakeUpMonitor extends YFunction
     public readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON = 3;
     public readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON = 4;
     public readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON = 5;
+    public readonly WAKEUPREASON_SCHEDULE3: YWakeUpMonitor.WAKEUPREASON = 6;
     public readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON = -1;
     public readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE = 0;
     public readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE = 1;
@@ -88,6 +89,7 @@ export class YWakeUpMonitor extends YFunction
     public static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON = 3;
     public static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON = 4;
     public static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON = 5;
+    public static readonly WAKEUPREASON_SCHEDULE3: YWakeUpMonitor.WAKEUPREASON = 6;
     public static readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON = -1;
     public static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE = 0;
     public static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE = 1;
@@ -243,8 +245,8 @@ export class YWakeUpMonitor extends YFunction
      *
      * @return a value among YWakeUpMonitor.WAKEUPREASON_USBPOWER, YWakeUpMonitor.WAKEUPREASON_EXTPOWER,
      * YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP, YWakeUpMonitor.WAKEUPREASON_EXTSIG1,
-     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 and YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 corresponding to
-     * the latest wake up reason
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1, YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 and
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE3 corresponding to the latest wake up reason
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
@@ -575,6 +577,7 @@ export namespace YWakeUpMonitor {
         EXTSIG1 = 3,
         SCHEDULE1 = 4,
         SCHEDULE2 = 5,
+        SCHEDULE3 = 6,
         INVALID = -1
     }
 

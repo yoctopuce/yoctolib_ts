@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -63,6 +63,7 @@ export declare class YWakeUpMonitor extends YFunction {
     readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON;
     readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON;
     readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON;
+    readonly WAKEUPREASON_SCHEDULE3: YWakeUpMonitor.WAKEUPREASON;
     readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON;
     readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE;
     readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE;
@@ -77,6 +78,7 @@ export declare class YWakeUpMonitor extends YFunction {
     static readonly WAKEUPREASON_EXTSIG1: YWakeUpMonitor.WAKEUPREASON;
     static readonly WAKEUPREASON_SCHEDULE1: YWakeUpMonitor.WAKEUPREASON;
     static readonly WAKEUPREASON_SCHEDULE2: YWakeUpMonitor.WAKEUPREASON;
+    static readonly WAKEUPREASON_SCHEDULE3: YWakeUpMonitor.WAKEUPREASON;
     static readonly WAKEUPREASON_INVALID: YWakeUpMonitor.WAKEUPREASON;
     static readonly WAKEUPSTATE_SLEEPING: YWakeUpMonitor.WAKEUPSTATE;
     static readonly WAKEUPSTATE_AWAKE: YWakeUpMonitor.WAKEUPSTATE;
@@ -146,8 +148,8 @@ export declare class YWakeUpMonitor extends YFunction {
      *
      * @return a value among YWakeUpMonitor.WAKEUPREASON_USBPOWER, YWakeUpMonitor.WAKEUPREASON_EXTPOWER,
      * YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP, YWakeUpMonitor.WAKEUPREASON_EXTSIG1,
-     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 and YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 corresponding to
-     * the latest wake up reason
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1, YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 and
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE3 corresponding to the latest wake up reason
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
@@ -321,6 +323,7 @@ export declare namespace YWakeUpMonitor {
         EXTSIG1 = 3,
         SCHEDULE1 = 4,
         SCHEDULE2 = 5,
+        SCHEDULE3 = 6,
         INVALID = -1
     }
     const enum WAKEUPSTATE {

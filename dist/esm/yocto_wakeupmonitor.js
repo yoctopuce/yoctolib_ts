@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wakeupmonitor.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for WakeUpMonitor functions
  *
@@ -69,6 +69,7 @@ export class YWakeUpMonitor extends YFunction {
         this.WAKEUPREASON_EXTSIG1 = 3;
         this.WAKEUPREASON_SCHEDULE1 = 4;
         this.WAKEUPREASON_SCHEDULE2 = 5;
+        this.WAKEUPREASON_SCHEDULE3 = 6;
         this.WAKEUPREASON_INVALID = -1;
         this.WAKEUPSTATE_SLEEPING = 0;
         this.WAKEUPSTATE_AWAKE = 1;
@@ -202,8 +203,8 @@ export class YWakeUpMonitor extends YFunction {
      *
      * @return a value among YWakeUpMonitor.WAKEUPREASON_USBPOWER, YWakeUpMonitor.WAKEUPREASON_EXTPOWER,
      * YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP, YWakeUpMonitor.WAKEUPREASON_EXTSIG1,
-     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 and YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 corresponding to
-     * the latest wake up reason
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE1, YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 and
+     * YWakeUpMonitor.WAKEUPREASON_SCHEDULE3 corresponding to the latest wake up reason
      *
      * On failure, throws an exception or returns YWakeUpMonitor.WAKEUPREASON_INVALID.
      */
@@ -507,6 +508,7 @@ YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP = 2;
 YWakeUpMonitor.WAKEUPREASON_EXTSIG1 = 3;
 YWakeUpMonitor.WAKEUPREASON_SCHEDULE1 = 4;
 YWakeUpMonitor.WAKEUPREASON_SCHEDULE2 = 5;
+YWakeUpMonitor.WAKEUPREASON_SCHEDULE3 = 6;
 YWakeUpMonitor.WAKEUPREASON_INVALID = -1;
 YWakeUpMonitor.WAKEUPSTATE_SLEEPING = 0;
 YWakeUpMonitor.WAKEUPSTATE_AWAKE = 1;

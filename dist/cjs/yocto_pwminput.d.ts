@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -56,6 +56,7 @@ export declare class YPwmInput extends YSensor {
     _pulseTimer: number;
     _pwmReportMode: YPwmInput.PWMREPORTMODE;
     _debouncePeriod: number;
+    _minFrequency: number;
     _bandwidth: number;
     _edgesPerPeriod: number;
     _valueCallbackPwmInput: YPwmInput.ValueCallback | null;
@@ -79,6 +80,7 @@ export declare class YPwmInput extends YSensor {
     readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput.PWMREPORTMODE;
     readonly PWMREPORTMODE_INVALID: YPwmInput.PWMREPORTMODE;
     readonly DEBOUNCEPERIOD_INVALID: number;
+    readonly MINFREQUENCY_INVALID: number;
     readonly BANDWIDTH_INVALID: number;
     readonly EDGESPERPERIOD_INVALID: number;
     static readonly DUTYCYCLE_INVALID: number;
@@ -100,6 +102,7 @@ export declare class YPwmInput extends YSensor {
     static readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput.PWMREPORTMODE;
     static readonly PWMREPORTMODE_INVALID: YPwmInput.PWMREPORTMODE;
     static readonly DEBOUNCEPERIOD_INVALID: number;
+    static readonly MINFREQUENCY_INVALID: number;
     static readonly BANDWIDTH_INVALID: number;
     static readonly EDGESPERPERIOD_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
@@ -226,6 +229,25 @@ export declare class YPwmInput extends YSensor {
      */
     set_debouncePeriod(newval: number): Promise<number>;
     /**
+     * Changes the minimum detected frequency, in Hz. Slower signals will be consider as zero frequency.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the minimum detected frequency, in Hz
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_minFrequency(newval: number): Promise<number>;
+    /**
+     * Returns the minimum detected frequency, in Hz. Slower signals will be consider as zero frequency.
+     *
+     * @return a floating point number corresponding to the minimum detected frequency, in Hz
+     *
+     * On failure, throws an exception or returns YPwmInput.MINFREQUENCY_INVALID.
+     */
+    get_minFrequency(): Promise<number>;
+    /**
      * Returns the input signal sampling rate, in kHz.
      *
      * @return an integer corresponding to the input signal sampling rate, in kHz
@@ -338,7 +360,15 @@ export declare class YPwmInput extends YSensor {
     registerTimedReportCallback(callback: YPwmInput.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
     /**
-     * Returns the pulse counter value as well as its timer.
+     * Resets the periodicity detection algorithm.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    resetPeriodDetection(): Promise<number>;
+    /**
+     * Resets the pulse counter value as well as its timer.
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *

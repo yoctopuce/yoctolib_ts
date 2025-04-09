@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 64028 2025-01-06 15:19:41Z seb $
+ *  $Id: yocto_cellular.ts 64863 2025-03-05 14:06:40Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -617,9 +617,8 @@ export declare class YCellular extends YFunction {
      * @return a list of YCellRecords.
      */
     quickCellSurvey(): Promise<YCellRecord[]>;
-    imm_decodePLMN(mccmnc: string): string;
     /**
-     * Returns the cell operator brand for a given MCC/MNC pair.
+     * Returns the cell operator brand for a given MCC/MNC pair (DEPRECATED).
      *
      * @param mccmnc : a string starting with a MCC code followed by a MNC code,
      *

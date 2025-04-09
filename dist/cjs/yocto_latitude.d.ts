@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_latitude.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for Latitude functions
  *

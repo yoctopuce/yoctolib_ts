@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: yocto_display.ts 64510 2025-01-31 08:36:57Z seb $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -890,7 +890,7 @@ export declare class YDisplay extends YFunction {
      *
      * On failure, throws an exception or returns null.
      */
-    get_displayLayer(layerId: number): Promise<YDisplayLayer>;
+    get_displayLayer(layerId: number): Promise<YDisplayLayer | null>;
     /**
      * Continues the enumeration of displays started using yFirstDisplay().
      * Caution: You can't make any assumption about the returned displays order.

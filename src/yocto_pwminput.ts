@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -63,6 +63,7 @@ export class YPwmInput extends YSensor
     _pulseTimer: number = YPwmInput.PULSETIMER_INVALID;
     _pwmReportMode: YPwmInput.PWMREPORTMODE = YPwmInput.PWMREPORTMODE_INVALID;
     _debouncePeriod: number = YPwmInput.DEBOUNCEPERIOD_INVALID;
+    _minFrequency: number = YPwmInput.MINFREQUENCY_INVALID;
     _bandwidth: number = YPwmInput.BANDWIDTH_INVALID;
     _edgesPerPeriod: number = YPwmInput.EDGESPERPERIOD_INVALID;
     _valueCallbackPwmInput: YPwmInput.ValueCallback | null = null;
@@ -88,6 +89,7 @@ export class YPwmInput extends YSensor
     public readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput.PWMREPORTMODE = 10;
     public readonly PWMREPORTMODE_INVALID: YPwmInput.PWMREPORTMODE = -1;
     public readonly DEBOUNCEPERIOD_INVALID: number = YAPI.INVALID_UINT;
+    public readonly MINFREQUENCY_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly EDGESPERPERIOD_INVALID: number = YAPI.INVALID_UINT;
 
@@ -111,6 +113,7 @@ export class YPwmInput extends YSensor
     public static readonly PWMREPORTMODE_PWM_PERIODCOUNT: YPwmInput.PWMREPORTMODE = 10;
     public static readonly PWMREPORTMODE_INVALID: YPwmInput.PWMREPORTMODE = -1;
     public static readonly DEBOUNCEPERIOD_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly MINFREQUENCY_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly BANDWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly EDGESPERPERIOD_INVALID: number = YAPI.INVALID_UINT;
     //--- (end of YPwmInput attributes declaration)
@@ -151,6 +154,9 @@ export class YPwmInput extends YSensor
             return 1;
         case 'debouncePeriod':
             this._debouncePeriod = <number> <number> val;
+            return 1;
+        case 'minFrequency':
+            this._minFrequency = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'bandwidth':
             this._bandwidth = <number> <number> val;
@@ -396,6 +402,42 @@ export class YPwmInput extends YSensor
     }
 
     /**
+     * Changes the minimum detected frequency, in Hz. Slower signals will be consider as zero frequency.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the minimum detected frequency, in Hz
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_minFrequency(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(Math.round(newval * 65536.0));
+        return await this._setAttr('minFrequency', rest_val);
+    }
+
+    /**
+     * Returns the minimum detected frequency, in Hz. Slower signals will be consider as zero frequency.
+     *
+     * @return a floating point number corresponding to the minimum detected frequency, in Hz
+     *
+     * On failure, throws an exception or returns YPwmInput.MINFREQUENCY_INVALID.
+     */
+    async get_minFrequency(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YPwmInput.MINFREQUENCY_INVALID;
+            }
+        }
+        res = this._minFrequency;
+        return res;
+    }
+
+    /**
      * Returns the input signal sampling rate, in kHz.
      *
      * @return an integer corresponding to the input signal sampling rate, in kHz
@@ -612,7 +654,19 @@ export class YPwmInput extends YSensor
     }
 
     /**
-     * Returns the pulse counter value as well as its timer.
+     * Resets the periodicity detection algorithm.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async resetPeriodDetection(): Promise<number>
+    {
+        return await this.set_bandwidth(await this.get_bandwidth());
+    }
+
+    /**
+     * Resets the pulse counter value as well as its timer.
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *

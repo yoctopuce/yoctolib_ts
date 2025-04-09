@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: yocto_display.ts 64510 2025-01-31 08:36:57Z seb $
  *
  *  Implements the high-level API for DisplayLayer functions
  *

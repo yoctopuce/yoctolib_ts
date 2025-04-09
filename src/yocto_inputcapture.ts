@@ -1133,9 +1133,14 @@ export class YInputCapture extends YSensor
     }
 
     /**
-     * Returns the next InputCapture
+     * Continues the enumeration of instant snapshot triggers started using yFirstInputCapture().
+     * Caution: You can't make any assumption about the returned instant snapshot triggers order.
+     * If you want to find a specific an instant snapshot trigger, use InputCapture.findInputCapture()
+     * and a hardwareID or a logical name.
      *
-     * @returns {YInputCapture}
+     * @return a pointer to a YInputCapture object, corresponding to
+     *         an instant snapshot trigger currently online, or a null pointer
+     *         if there are no more instant snapshot triggers to enumerate.
      */
     nextInputCapture(): YInputCapture | null
     {
@@ -1147,9 +1152,13 @@ export class YInputCapture extends YSensor
     }
 
     /**
-     * Retrieves the first InputCapture in a YAPI context
+     * Starts the enumeration of instant snapshot triggers currently accessible.
+     * Use the method YInputCapture.nextInputCapture() to iterate on
+     * next instant snapshot triggers.
      *
-     * @returns {YInputCapture}
+     * @return a pointer to a YInputCapture object, corresponding to
+     *         the first instant snapshot trigger currently online, or a null pointer
+     *         if there are none.
      */
     static FirstInputCapture(): YInputCapture | null
     {
@@ -1159,11 +1168,15 @@ export class YInputCapture extends YSensor
     }
 
     /**
-     * Retrieves the first InputCapture in a given context
+     * Starts the enumeration of instant snapshot triggers currently accessible.
+     * Use the method YInputCapture.nextInputCapture() to iterate on
+     * next instant snapshot triggers.
      *
-     * @param yctx {YAPIContext}
+     * @param yctx : a YAPI context.
      *
-     * @returns {YInputCapture}
+     * @return a pointer to a YInputCapture object, corresponding to
+     *         the first instant snapshot trigger currently online, or a null pointer
+     *         if there are none.
      */
     static FirstInputCaptureInContext(yctx: YAPIContext): YInputCapture | null
     {

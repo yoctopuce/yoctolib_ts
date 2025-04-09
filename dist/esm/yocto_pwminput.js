@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_pwminput.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements the high-level API for PwmInput functions
  *
@@ -61,6 +61,7 @@ export class YPwmInput extends YSensor {
         this._pulseTimer = YPwmInput.PULSETIMER_INVALID;
         this._pwmReportMode = YPwmInput.PWMREPORTMODE_INVALID;
         this._debouncePeriod = YPwmInput.DEBOUNCEPERIOD_INVALID;
+        this._minFrequency = YPwmInput.MINFREQUENCY_INVALID;
         this._bandwidth = YPwmInput.BANDWIDTH_INVALID;
         this._edgesPerPeriod = YPwmInput.EDGESPERPERIOD_INVALID;
         this._valueCallbackPwmInput = null;
@@ -85,6 +86,7 @@ export class YPwmInput extends YSensor {
         this.PWMREPORTMODE_PWM_PERIODCOUNT = 10;
         this.PWMREPORTMODE_INVALID = -1;
         this.DEBOUNCEPERIOD_INVALID = YAPI.INVALID_UINT;
+        this.MINFREQUENCY_INVALID = YAPI.INVALID_DOUBLE;
         this.BANDWIDTH_INVALID = YAPI.INVALID_UINT;
         this.EDGESPERPERIOD_INVALID = YAPI.INVALID_UINT;
         this._className = 'PwmInput';
@@ -116,6 +118,9 @@ export class YPwmInput extends YSensor {
                 return 1;
             case 'debouncePeriod':
                 this._debouncePeriod = val;
+                return 1;
+            case 'minFrequency':
+                this._minFrequency = Math.round(val / 65.536) / 1000.0;
                 return 1;
             case 'bandwidth':
                 this._bandwidth = val;
@@ -336,6 +341,38 @@ export class YPwmInput extends YSensor {
         return await this._setAttr('debouncePeriod', rest_val);
     }
     /**
+     * Changes the minimum detected frequency, in Hz. Slower signals will be consider as zero frequency.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the minimum detected frequency, in Hz
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_minFrequency(newval) {
+        let rest_val;
+        rest_val = String(Math.round(newval * 65536.0));
+        return await this._setAttr('minFrequency', rest_val);
+    }
+    /**
+     * Returns the minimum detected frequency, in Hz. Slower signals will be consider as zero frequency.
+     *
+     * @return a floating point number corresponding to the minimum detected frequency, in Hz
+     *
+     * On failure, throws an exception or returns YPwmInput.MINFREQUENCY_INVALID.
+     */
+    async get_minFrequency() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YPwmInput.MINFREQUENCY_INVALID;
+            }
+        }
+        res = this._minFrequency;
+        return res;
+    }
+    /**
      * Returns the input signal sampling rate, in kHz.
      *
      * @return an integer corresponding to the input signal sampling rate, in kHz
@@ -540,7 +577,17 @@ export class YPwmInput extends YSensor {
         return 0;
     }
     /**
-     * Returns the pulse counter value as well as its timer.
+     * Resets the periodicity detection algorithm.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async resetPeriodDetection() {
+        return await this.set_bandwidth(await this.get_bandwidth());
+    }
+    /**
+     * Resets the pulse counter value as well as its timer.
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -621,6 +668,7 @@ YPwmInput.PWMREPORTMODE_PWM_FREQ_CPM = 9;
 YPwmInput.PWMREPORTMODE_PWM_PERIODCOUNT = 10;
 YPwmInput.PWMREPORTMODE_INVALID = -1;
 YPwmInput.DEBOUNCEPERIOD_INVALID = YAPI.INVALID_UINT;
+YPwmInput.MINFREQUENCY_INVALID = YAPI.INVALID_DOUBLE;
 YPwmInput.BANDWIDTH_INVALID = YAPI.INVALID_UINT;
 YPwmInput.EDGESPERPERIOD_INVALID = YAPI.INVALID_UINT;
 //# sourceMappingURL=yocto_pwminput.js.map
