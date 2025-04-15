@@ -42,8 +42,6 @@ import { YAPI, YFunction } from './yocto_api.js';
  * YColorSensor Class: color sensor control interface
  *
  * The YColorSensor class allows you to read and configure Yoctopuce color sensors.
- * It inherits from YSensor class the core functions to read measurements,
- * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YColorSensor class start)
 export class YColorSensor extends YFunction {
@@ -53,11 +51,11 @@ export class YColorSensor extends YFunction {
         super(yapi, func);
         this._estimationModel = YColorSensor.ESTIMATIONMODEL_INVALID;
         this._workingMode = YColorSensor.WORKINGMODE_INVALID;
-        this._saturation = YColorSensor.SATURATION_INVALID;
         this._ledCurrent = YColorSensor.LEDCURRENT_INVALID;
         this._ledCalibration = YColorSensor.LEDCALIBRATION_INVALID;
         this._integrationTime = YColorSensor.INTEGRATIONTIME_INVALID;
         this._gain = YColorSensor.GAIN_INVALID;
+        this._saturation = YColorSensor.SATURATION_INVALID;
         this._estimatedRGB = YColorSensor.ESTIMATEDRGB_INVALID;
         this._estimatedHSL = YColorSensor.ESTIMATEDHSL_INVALID;
         this._estimatedXYZ = YColorSensor.ESTIMATEDXYZ_INVALID;
@@ -66,8 +64,8 @@ export class YColorSensor extends YFunction {
         this._nearRAL2 = YColorSensor.NEARRAL2_INVALID;
         this._nearRAL3 = YColorSensor.NEARRAL3_INVALID;
         this._nearHTMLColor = YColorSensor.NEARHTMLCOLOR_INVALID;
-        this._nearSimpleColor = YColorSensor.NEARSIMPLECOLOR_INVALID;
         this._nearSimpleColorIndex = YColorSensor.NEARSIMPLECOLORINDEX_INVALID;
+        this._nearSimpleColor = YColorSensor.NEARSIMPLECOLOR_INVALID;
         this._valueCallbackColorSensor = null;
         // API symbols as object properties
         this.ESTIMATIONMODEL_REFLECTION = 0;
@@ -76,11 +74,11 @@ export class YColorSensor extends YFunction {
         this.WORKINGMODE_AUTO = 0;
         this.WORKINGMODE_EXPERT = 1;
         this.WORKINGMODE_INVALID = -1;
-        this.SATURATION_INVALID = YAPI.INVALID_UINT;
         this.LEDCURRENT_INVALID = YAPI.INVALID_UINT;
         this.LEDCALIBRATION_INVALID = YAPI.INVALID_UINT;
         this.INTEGRATIONTIME_INVALID = YAPI.INVALID_UINT;
         this.GAIN_INVALID = YAPI.INVALID_UINT;
+        this.SATURATION_INVALID = YAPI.INVALID_UINT;
         this.ESTIMATEDRGB_INVALID = YAPI.INVALID_UINT;
         this.ESTIMATEDHSL_INVALID = YAPI.INVALID_UINT;
         this.ESTIMATEDXYZ_INVALID = YAPI.INVALID_STRING;
@@ -89,7 +87,6 @@ export class YColorSensor extends YFunction {
         this.NEARRAL2_INVALID = YAPI.INVALID_STRING;
         this.NEARRAL3_INVALID = YAPI.INVALID_STRING;
         this.NEARHTMLCOLOR_INVALID = YAPI.INVALID_STRING;
-        this.NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
         this.NEARSIMPLECOLORINDEX_BROWN = 0;
         this.NEARSIMPLECOLORINDEX_RED = 1;
         this.NEARSIMPLECOLORINDEX_ORANGE = 2;
@@ -102,6 +99,7 @@ export class YColorSensor extends YFunction {
         this.NEARSIMPLECOLORINDEX_PURPLE = 9;
         this.NEARSIMPLECOLORINDEX_PINK = 10;
         this.NEARSIMPLECOLORINDEX_INVALID = -1;
+        this.NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
         this._className = 'ColorSensor';
         //--- (end of YColorSensor constructor)
     }
@@ -114,9 +112,6 @@ export class YColorSensor extends YFunction {
             case 'workingMode':
                 this._workingMode = val;
                 return 1;
-            case 'saturation':
-                this._saturation = val;
-                return 1;
             case 'ledCurrent':
                 this._ledCurrent = val;
                 return 1;
@@ -128,6 +123,9 @@ export class YColorSensor extends YFunction {
                 return 1;
             case 'gain':
                 this._gain = val;
+                return 1;
+            case 'saturation':
+                this._saturation = val;
                 return 1;
             case 'estimatedRGB':
                 this._estimatedRGB = val;
@@ -153,20 +151,20 @@ export class YColorSensor extends YFunction {
             case 'nearHTMLColor':
                 this._nearHTMLColor = val;
                 return 1;
-            case 'nearSimpleColor':
-                this._nearSimpleColor = val;
-                return 1;
             case 'nearSimpleColorIndex':
                 this._nearSimpleColorIndex = val;
+                return 1;
+            case 'nearSimpleColor':
+                this._nearSimpleColor = val;
                 return 1;
         }
         return super.imm_parseAttr(name, val);
     }
     /**
-     * Returns the model for color estimation.
+     * Returns the predictive model used for color estimation (reflective or emissive).
      *
      * @return either YColorSensor.ESTIMATIONMODEL_REFLECTION or YColorSensor.ESTIMATIONMODEL_EMISSION,
-     * according to the model for color estimation
+     * according to the predictive model used for color estimation (reflective or emissive)
      *
      * On failure, throws an exception or returns YColorSensor.ESTIMATIONMODEL_INVALID.
      */
@@ -181,11 +179,12 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Changes the model for color estimation.
+     * Changes the mpredictive model to be used for color estimation (reflective or emissive).
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param newval : either YColorSensor.ESTIMATIONMODEL_REFLECTION or
-     * YColorSensor.ESTIMATIONMODEL_EMISSION, according to the model for color estimation
+     * YColorSensor.ESTIMATIONMODEL_EMISSION, according to the mpredictive model to be used for color
+     * estimation (reflective or emissive)
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -197,10 +196,12 @@ export class YColorSensor extends YFunction {
         return await this._setAttr('estimationModel', rest_val);
     }
     /**
-     * Returns the active working mode.
+     * Returns the sensor working mode.
+     * In Auto mode, sensor parameters are automatically set based on the selected estimation model.
+     * In Expert mode, sensor parameters such as gain and integration time are configured manually.
      *
      * @return either YColorSensor.WORKINGMODE_AUTO or YColorSensor.WORKINGMODE_EXPERT, according to the
-     * active working mode
+     * sensor working mode
      *
      * On failure, throws an exception or returns YColorSensor.WORKINGMODE_INVALID.
      */
@@ -215,11 +216,13 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Changes the operating mode.
+     * Changes the sensor working mode.
+     * In Auto mode, sensor parameters are automatically set based on the selected estimation model.
+     * In Expert mode, sensor parameters such as gain and integration time are configured manually.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param newval : either YColorSensor.WORKINGMODE_AUTO or YColorSensor.WORKINGMODE_EXPERT, according
-     * to the operating mode
+     * to the sensor working mode
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -231,27 +234,11 @@ export class YColorSensor extends YFunction {
         return await this._setAttr('workingMode', rest_val);
     }
     /**
-     * Returns the current saturation of the sensor.
-     * This function updates the sensor's saturation value.
+     * Returns the amount of current sent to the illumination LEDs, for reflection measurements.
+     * The value is an integer ranging from 0 (LEDs off) to 254 (LEDs at maximum intensity).
      *
-     * @return an integer corresponding to the current saturation of the sensor
-     *
-     * On failure, throws an exception or returns YColorSensor.SATURATION_INVALID.
-     */
-    async get_saturation() {
-        let res;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YColorSensor.SATURATION_INVALID;
-            }
-        }
-        res = this._saturation;
-        return res;
-    }
-    /**
-     * Returns the current value of the LED.
-     *
-     * @return an integer corresponding to the current value of the LED
+     * @return an integer corresponding to the amount of current sent to the illumination LEDs, for
+     * reflection measurements
      *
      * On failure, throws an exception or returns YColorSensor.LEDCURRENT_INVALID.
      */
@@ -266,10 +253,11 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Changes the luminosity of the module leds. The parameter is a
-     * value between 0 and 254.
+     * Changes the amount of current sent to the illumination LEDs, for reflection measurements.
+     * The value is an integer ranging from 0 (LEDs off) to 254 (LEDs at maximum intensity).
      *
-     * @param newval : an integer corresponding to the luminosity of the module leds
+     * @param newval : an integer corresponding to the amount of current sent to the illumination LEDs,
+     * for reflection measurements
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -281,9 +269,9 @@ export class YColorSensor extends YFunction {
         return await this._setAttr('ledCurrent', rest_val);
     }
     /**
-     * Returns the LED current at calibration.
+     * Returns the current sent to the illumination LEDs during the last calibration.
      *
-     * @return an integer corresponding to the LED current at calibration
+     * @return an integer corresponding to the current sent to the illumination LEDs during the last calibration
      *
      * On failure, throws an exception or returns YColorSensor.LEDCALIBRATION_INVALID.
      */
@@ -298,7 +286,8 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Sets the LED current for calibration.
+     * Remember the LED current sent to the illumination LEDs during a calibration.
+     * Thanks to this, the device will be able to use the same current during measurements.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @param newval : an integer
@@ -313,11 +302,11 @@ export class YColorSensor extends YFunction {
         return await this._setAttr('ledCalibration', rest_val);
     }
     /**
-     * Returns the current integration time.
-     * This method retrieves the integration time value
-     * used for data processing and returns it as an integer or an object.
+     * Returns the current integration time for spectral measurement, in milliseconds.
+     * A longer integration time increase the sensitivity for low light conditions,
+     * but reduces the measurement rate and may lead to saturation for lighter colors.
      *
-     * @return an integer corresponding to the current integration time
+     * @return an integer corresponding to the current integration time for spectral measurement, in milliseconds
      *
      * On failure, throws an exception or returns YColorSensor.INTEGRATIONTIME_INVALID.
      */
@@ -332,13 +321,14 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Changes the integration time for data processing.
-     * This method takes a parameter and assigns it
-     * as the new integration time. This affects the duration
-     * for which data is integrated before being processed.
+     * Changes the integration time for spectral measurement, in milliseconds.
+     * A longer integration time increase the sensitivity for low light conditions,
+     * but reduces the measurement rate and may lead to saturation for lighter colors.
+     * This method can only be used when the sensor is configured in expert mode;
+     * when running in auto mode, the change will be ignored.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : an integer corresponding to the integration time for data processing
+     * @param newval : an integer corresponding to the integration time for spectral measurement, in milliseconds
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -350,10 +340,11 @@ export class YColorSensor extends YFunction {
         return await this._setAttr('integrationTime', rest_val);
     }
     /**
-     * Returns the current gain.
-     * This method updates the gain value.
+     * Returns the current spectral channel detector gain exponent.
+     * For a value n ranging from 0 to 12, the applied gain is 2^(n-1).
+     * 0 corresponds to a gain of 0.5, and 12 corresponds to a gain of 2048.
      *
-     * @return an integer corresponding to the current gain
+     * @return an integer corresponding to the current spectral channel detector gain exponent
      *
      * On failure, throws an exception or returns YColorSensor.GAIN_INVALID.
      */
@@ -368,13 +359,14 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Changes the gain for signal processing.
-     * This method takes a parameter and assigns it
-     * as the new gain. This affects the sensitivity and
-     * intensity of the processed signal.
+     * Changes the spectral channel detector gain exponent.
+     * For a value n ranging from 0 to 12, the applied gain is 2^(n-1).
+     * 0 corresponds to a gain of 0.5, and 12 corresponds to a gain of 2048.
+     * This method can only be used when the sensor is configured in expert mode;
+     * when running in auto mode, the change will be ignored.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : an integer corresponding to the gain for signal processing
+     * @param newval : an integer corresponding to the spectral channel detector gain exponent
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -386,9 +378,34 @@ export class YColorSensor extends YFunction {
         return await this._setAttr('gain', rest_val);
     }
     /**
-     * Returns the estimated color in RGB format (0xRRGGBB).
+     * Returns the current saturation state of the sensor, as an integer.
+     * Bit 0 indicates saturation of the analog sensor, which can only
+     * be corrected by reducing the gain parameters or the luminosity.
+     * Bit 1 indicates saturation of the digital interface, which can
+     * be corrected by reducing the integration time or the gain.
      *
-     * @return an integer corresponding to the estimated color in RGB format (0xRRGGBB)
+     * @return an integer corresponding to the current saturation state of the sensor, as an integer
+     *
+     * On failure, throws an exception or returns YColorSensor.SATURATION_INVALID.
+     */
+    async get_saturation() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YColorSensor.SATURATION_INVALID;
+            }
+        }
+        res = this._saturation;
+        return res;
+    }
+    /**
+     * Returns the estimated color in RGB color model (0xRRGGBB).
+     * The RGB color model describes each color using a combination of 3 components:
+     * - Red (R): the intensity of red, in thee range 0...255
+     * - Green (G): the intensity of green, in thee range 0...255
+     * - Blue (B): the intensity of blue, in thee range 0...255
+     *
+     * @return an integer corresponding to the estimated color in RGB color model (0xRRGGBB)
      *
      * On failure, throws an exception or returns YColorSensor.ESTIMATEDRGB_INVALID.
      */
@@ -403,9 +420,13 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color in HSL (Hue, Saturation, Lightness) format.
+     * Returns the estimated color in HSL color model (0xHHSSLL).
+     * The HSL color model describes each color using a combination of 3 components:
+     * - Hue (H): the angle on the color wheel (0-360 degrees), mapped to 0...255
+     * - Saturation (S): the intensity of the color (0-100%), mapped to 0...255
+     * - Lightness (L): the brightness of the color (0-100%), mapped to 0...255
      *
-     * @return an integer corresponding to the estimated color in HSL (Hue, Saturation, Lightness) format
+     * @return an integer corresponding to the estimated color in HSL color model (0xHHSSLL)
      *
      * On failure, throws an exception or returns YColorSensor.ESTIMATEDHSL_INVALID.
      */
@@ -420,9 +441,14 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color in XYZ format.
+     * Returns the estimated color according to the CIE XYZ color model.
+     * This color model is based on human vision and light perception, with three components
+     * represented by real numbers between 0 and 1:
+     * - X: corresponds to a component mixing sensitivity to red and green
+     * - Y: represents luminance (perceived brightness)
+     * - Z: corresponds to sensitivity to blue
      *
-     * @return a string corresponding to the estimated color in XYZ format
+     * @return a string corresponding to the estimated color according to the CIE XYZ color model
      *
      * On failure, throws an exception or returns YColorSensor.ESTIMATEDXYZ_INVALID.
      */
@@ -437,9 +463,14 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color in OkLab format.
+     * Returns the estimated color according to the OkLab color model.
+     * OkLab is a perceptual color model that aims to align human color perception with numerical
+     * values, so that visually near colors are also numerically near. Colors are represented using three components:
+     * - L: lightness, a real number between 0 and 1-
+     * - a: color variations between green and red, between -0.5 and 0.5-
+     * - b: color variations between blue and yellow, between -0.5 and 0.5.
      *
-     * @return a string corresponding to the estimated color in OkLab format
+     * @return a string corresponding to the estimated color according to the OkLab color model
      *
      * On failure, throws an exception or returns YColorSensor.ESTIMATEDOKLAB_INVALID.
      */
@@ -454,9 +485,9 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color in RAL format.
+     * Returns the RAL Classic color closest to the estimated color, with a similarity ratio.
      *
-     * @return a string corresponding to the estimated color in RAL format
+     * @return a string corresponding to the RAL Classic color closest to the estimated color, with a similarity ratio
      *
      * On failure, throws an exception or returns YColorSensor.NEARRAL1_INVALID.
      */
@@ -471,9 +502,10 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color in RAL format.
+     * Returns the second closest RAL Classic color to the estimated color, with a similarity ratio.
      *
-     * @return a string corresponding to the estimated color in RAL format
+     * @return a string corresponding to the second closest RAL Classic color to the estimated color, with
+     * a similarity ratio
      *
      * On failure, throws an exception or returns YColorSensor.NEARRAL2_INVALID.
      */
@@ -488,9 +520,10 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color in RAL format.
+     * Returns the third closest RAL Classic color to the estimated color, with a similarity ratio.
      *
-     * @return a string corresponding to the estimated color in RAL format
+     * @return a string corresponding to the third closest RAL Classic color to the estimated color, with
+     * a similarity ratio
      *
      * On failure, throws an exception or returns YColorSensor.NEARRAL3_INVALID.
      */
@@ -505,9 +538,9 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated HTML color .
+     * Returns the name of the HTML color closest to the estimated color.
      *
-     * @return a string corresponding to the estimated HTML color
+     * @return a string corresponding to the name of the HTML color closest to the estimated color
      *
      * On failure, throws an exception or returns YColorSensor.NEARHTMLCOLOR_INVALID.
      */
@@ -522,24 +555,19 @@ export class YColorSensor extends YFunction {
         return res;
     }
     /**
-     * Returns the estimated color .
-     *
-     * @return a string corresponding to the estimated color
-     *
-     * On failure, throws an exception or returns YColorSensor.NEARSIMPLECOLOR_INVALID.
-     */
-    async get_nearSimpleColor() {
-        let res;
-        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
-            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
-                return YColorSensor.NEARSIMPLECOLOR_INVALID;
-            }
-        }
-        res = this._nearSimpleColor;
-        return res;
-    }
-    /**
-     * Returns the estimated color as an index.
+     * Returns the index of the basic color typically used to refer to the estimated color (enumerated value).
+     * The list of basic colors recognized is:
+     * - 0 - Brown
+     * - 1 - Red
+     * - 2 - Orange
+     * - 3 - Yellow
+     * - 4 - White
+     * - 5 - Gray
+     * - 6 - Black
+     * - 7 - Green
+     * - 8 - Blue
+     * - 9 - Purple
+     * - 10 - Pink
      *
      * @return a value among YColorSensor.NEARSIMPLECOLORINDEX_BROWN,
      * YColorSensor.NEARSIMPLECOLORINDEX_RED, YColorSensor.NEARSIMPLECOLORINDEX_ORANGE,
@@ -547,7 +575,7 @@ export class YColorSensor extends YFunction {
      * YColorSensor.NEARSIMPLECOLORINDEX_GRAY, YColorSensor.NEARSIMPLECOLORINDEX_BLACK,
      * YColorSensor.NEARSIMPLECOLORINDEX_GREEN, YColorSensor.NEARSIMPLECOLORINDEX_BLUE,
      * YColorSensor.NEARSIMPLECOLORINDEX_PURPLE and YColorSensor.NEARSIMPLECOLORINDEX_PINK corresponding
-     * to the estimated color as an index
+     * to the index of the basic color typically used to refer to the estimated color (enumerated value)
      *
      * On failure, throws an exception or returns YColorSensor.NEARSIMPLECOLORINDEX_INVALID.
      */
@@ -559,6 +587,23 @@ export class YColorSensor extends YFunction {
             }
         }
         res = this._nearSimpleColorIndex;
+        return res;
+    }
+    /**
+     * Returns the name of the basic color typically used to refer to the estimated color.
+     *
+     * @return a string corresponding to the name of the basic color typically used to refer to the estimated color
+     *
+     * On failure, throws an exception or returns YColorSensor.NEARSIMPLECOLOR_INVALID.
+     */
+    async get_nearSimpleColor() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YColorSensor.NEARSIMPLECOLOR_INVALID;
+            }
+        }
+        res = this._nearSimpleColor;
         return res;
     }
     /**
@@ -676,15 +721,15 @@ export class YColorSensor extends YFunction {
         return 0;
     }
     /**
-     * Turns on the LEDs at the current used during calibration.
-     * On failure, throws an exception or returns YColorSensor.DATA_INVALID.
+     * Turns on the built-in illumination LEDs using the same current as used during last calibration.
+     * On failure, throws an exception or returns a negative error code.
      */
     async turnLedOn() {
         return await this.set_ledCurrent(await this.get_ledCalibration());
     }
     /**
-     * Turns off the LEDs.
-     * On failure, throws an exception or returns YColorSensor.DATA_INVALID.
+     * Turns off the built-in illumination LEDs.
+     * On failure, throws an exception or returns a negative error code.
      */
     async turnLedOff() {
         return await this.set_ledCurrent(0);
@@ -748,11 +793,11 @@ YColorSensor.ESTIMATIONMODEL_INVALID = -1;
 YColorSensor.WORKINGMODE_AUTO = 0;
 YColorSensor.WORKINGMODE_EXPERT = 1;
 YColorSensor.WORKINGMODE_INVALID = -1;
-YColorSensor.SATURATION_INVALID = YAPI.INVALID_UINT;
 YColorSensor.LEDCURRENT_INVALID = YAPI.INVALID_UINT;
 YColorSensor.LEDCALIBRATION_INVALID = YAPI.INVALID_UINT;
 YColorSensor.INTEGRATIONTIME_INVALID = YAPI.INVALID_UINT;
 YColorSensor.GAIN_INVALID = YAPI.INVALID_UINT;
+YColorSensor.SATURATION_INVALID = YAPI.INVALID_UINT;
 YColorSensor.ESTIMATEDRGB_INVALID = YAPI.INVALID_UINT;
 YColorSensor.ESTIMATEDHSL_INVALID = YAPI.INVALID_UINT;
 YColorSensor.ESTIMATEDXYZ_INVALID = YAPI.INVALID_STRING;
@@ -761,7 +806,6 @@ YColorSensor.NEARRAL1_INVALID = YAPI.INVALID_STRING;
 YColorSensor.NEARRAL2_INVALID = YAPI.INVALID_STRING;
 YColorSensor.NEARRAL3_INVALID = YAPI.INVALID_STRING;
 YColorSensor.NEARHTMLCOLOR_INVALID = YAPI.INVALID_STRING;
-YColorSensor.NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
 YColorSensor.NEARSIMPLECOLORINDEX_BROWN = 0;
 YColorSensor.NEARSIMPLECOLORINDEX_RED = 1;
 YColorSensor.NEARSIMPLECOLORINDEX_ORANGE = 2;
@@ -774,4 +818,5 @@ YColorSensor.NEARSIMPLECOLORINDEX_BLUE = 8;
 YColorSensor.NEARSIMPLECOLORINDEX_PURPLE = 9;
 YColorSensor.NEARSIMPLECOLORINDEX_PINK = 10;
 YColorSensor.NEARSIMPLECOLORINDEX_INVALID = -1;
+YColorSensor.NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_colorsensor.js.map

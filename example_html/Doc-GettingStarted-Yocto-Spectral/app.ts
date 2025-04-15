@@ -54,9 +54,8 @@ async function refresh(): Promise<void>
         html += 'sample code yocto-spectral'
         html += 'Using ' + (await module.get_serialNumber()) + ' (' + (await module.get_productName()) + ')<br><br>';
         
-        await spectralSensor.set_integrationTime(150);
-        await spectralSensor.set_gain(6);
-        await spectralSensor.set_ledCurrent(6);
+        await spectralSensor.set_workingMode(YColorSensor.WORKINGMODE_AUTO);
+        await spectralSensor.set_estimatedModel(YColorSensor.ESTIMATIONMODEL_REFLECTION);
         let hex = await spectralSensor.get_estimatedRGB();
         html += "Near color : " + await spectralSensor.get_nearSimpleColor()+ "<br>";
         html += "Color HEX : #" + hex.toString(16);

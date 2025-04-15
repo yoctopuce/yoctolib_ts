@@ -54,9 +54,7 @@ export declare class YSpectralChannel extends YSensor {
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): number;
     /**
-     * Retrieves the raw count of data samples.
-     * This method returns the current value of rawCount, representing the total number of samples collected
-     * by the sensor.
+     * Retrieves the raw cspectral intensity value as measured by the sensor, without any scaling or calibration.
      *
      * @return an integer
      *
