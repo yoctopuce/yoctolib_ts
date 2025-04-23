@@ -41,26 +41,48 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  * YSpectralChannel Class: spectral analysis channel control interface
  *
  * The YSpectralChannel class allows you to read and configure Yoctopuce spectral analysis channels.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 export declare class YSpectralChannel extends YSensor {
     _className: string;
     _rawCount: number;
+    _channelName: string;
+    _peakWavelength: number;
     _valueCallbackSpectralChannel: YSpectralChannel.ValueCallback | null;
     _timedReportCallbackSpectralChannel: YSpectralChannel.TimedReportCallback | null;
     readonly RAWCOUNT_INVALID: number;
+    readonly CHANNELNAME_INVALID: string;
+    readonly PEAKWAVELENGTH_INVALID: number;
     static readonly RAWCOUNT_INVALID: number;
+    static readonly CHANNELNAME_INVALID: string;
+    static readonly PEAKWAVELENGTH_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): number;
     /**
-     * Retrieves the raw cspectral intensity value as measured by the sensor, without any scaling or calibration.
+     * Retrieves the raw spectral intensity value as measured by the sensor, without any scaling or calibration.
      *
      * @return an integer
      *
      * On failure, throws an exception or returns YSpectralChannel.RAWCOUNT_INVALID.
      */
     get_rawCount(): Promise<number>;
+    /**
+     * Returns the target spectral band name.
+     *
+     * @return a string corresponding to the target spectral band name
+     *
+     * On failure, throws an exception or returns YSpectralChannel.CHANNELNAME_INVALID.
+     */
+    get_channelName(): Promise<string>;
+    /**
+     * Returns the target spectral band peak wavelenght, in nm.
+     *
+     * @return an integer corresponding to the target spectral band peak wavelenght, in nm
+     *
+     * On failure, throws an exception or returns YSpectralChannel.PEAKWAVELENGTH_INVALID.
+     */
+    get_peakWavelength(): Promise<number>;
     /**
      * Retrieves a spectral analysis channel for a given identifier.
      * The identifier can be specified using several formats:

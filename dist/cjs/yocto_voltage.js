@@ -46,7 +46,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
  * Yocto-Volt or the Yocto-Watt
  *
  * The YVoltage class allows you to read and configure Yoctopuce voltage sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YVoltage class start)
@@ -92,8 +92,8 @@ class YVoltage extends yocto_api_js_1.YSensor {
         return res;
     }
     /**
-     * Changes the activation state of this voltage input. When AC measurements are disabled,
-     * the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
+     * Changes the activation state of this voltage input. When AC measures are disabled,
+     * the device will always assume a DC signal, and vice-versa. When both AC and DC measures
      * are active, the device switches between AC and DC mode based on the relative amplitude
      * of variations compared to the average value.
      * Remember to call the saveToFlash()

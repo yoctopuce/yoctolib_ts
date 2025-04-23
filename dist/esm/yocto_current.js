@@ -43,7 +43,7 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
  * Yocto-Motor-DC or the Yocto-Watt
  *
  * The YCurrent class allows you to read and configure Yoctopuce current sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YCurrent class start)
@@ -89,8 +89,8 @@ export class YCurrent extends YSensor {
         return res;
     }
     /**
-     * Changes the activation state of this voltage input. When AC measurements are disabled,
-     * the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
+     * Changes the activation state of this voltage input. When AC measures are disabled,
+     * the device will always assume a DC signal, and vice-versa. When both AC and DC measures
      * are active, the device switches between AC and DC mode based on the relative amplitude
      * of variations compared to the average value.
      * Remember to call the saveToFlash()

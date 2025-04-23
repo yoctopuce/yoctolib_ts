@@ -41,7 +41,7 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  * YLatitude Class: latitude sensor control interface, available for instance in the Yocto-GPS-V2
  *
  * The YLatitude class allows you to read and configure Yoctopuce latitude sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 export declare class YLatitude extends YSensor {

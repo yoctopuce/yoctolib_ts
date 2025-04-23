@@ -46,7 +46,7 @@ const yocto_api_js_1 = require("./yocto_api.js");
  * Yocto-Meteo-V2 or the Yocto-VOC-V3
  *
  * The YHumidity class allows you to read and configure Yoctopuce humidity sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YHumidity class start)

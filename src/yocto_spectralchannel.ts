@@ -44,7 +44,7 @@ import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger,
  * YSpectralChannel Class: spectral analysis channel control interface
  *
  * The YSpectralChannel class allows you to read and configure Yoctopuce spectral analysis channels.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YSpectralChannel class start)
@@ -54,14 +54,20 @@ export class YSpectralChannel extends YSensor
     //--- (YSpectralChannel attributes declaration)
     _className: string;
     _rawCount: number = YSpectralChannel.RAWCOUNT_INVALID;
+    _channelName: string = YSpectralChannel.CHANNELNAME_INVALID;
+    _peakWavelength: number = YSpectralChannel.PEAKWAVELENGTH_INVALID;
     _valueCallbackSpectralChannel: YSpectralChannel.ValueCallback | null = null;
     _timedReportCallbackSpectralChannel: YSpectralChannel.TimedReportCallback | null = null;
 
     // API symbols as object properties
     public readonly RAWCOUNT_INVALID: number = YAPI.INVALID_INT;
+    public readonly CHANNELNAME_INVALID: string = YAPI.INVALID_STRING;
+    public readonly PEAKWAVELENGTH_INVALID: number = YAPI.INVALID_INT;
 
     // API symbols as static members
     public static readonly RAWCOUNT_INVALID: number = YAPI.INVALID_INT;
+    public static readonly CHANNELNAME_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly PEAKWAVELENGTH_INVALID: number = YAPI.INVALID_INT;
     //--- (end of YSpectralChannel attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -80,12 +86,18 @@ export class YSpectralChannel extends YSensor
         case 'rawCount':
             this._rawCount = <number> <number> val;
             return 1;
+        case 'channelName':
+            this._channelName = <string> <string> val;
+            return 1;
+        case 'peakWavelength':
+            this._peakWavelength = <number> <number> val;
+            return 1;
         }
         return super.imm_parseAttr(name, val);
     }
 
     /**
-     * Retrieves the raw cspectral intensity value as measured by the sensor, without any scaling or calibration.
+     * Retrieves the raw spectral intensity value as measured by the sensor, without any scaling or calibration.
      *
      * @return an integer
      *
@@ -100,6 +112,44 @@ export class YSpectralChannel extends YSensor
             }
         }
         res = this._rawCount;
+        return res;
+    }
+
+    /**
+     * Returns the target spectral band name.
+     *
+     * @return a string corresponding to the target spectral band name
+     *
+     * On failure, throws an exception or returns YSpectralChannel.CHANNELNAME_INVALID.
+     */
+    async get_channelName(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YSpectralChannel.CHANNELNAME_INVALID;
+            }
+        }
+        res = this._channelName;
+        return res;
+    }
+
+    /**
+     * Returns the target spectral band peak wavelenght, in nm.
+     *
+     * @return an integer corresponding to the target spectral band peak wavelenght, in nm
+     *
+     * On failure, throws an exception or returns YSpectralChannel.PEAKWAVELENGTH_INVALID.
+     */
+    async get_peakWavelength(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YSpectralChannel.PEAKWAVELENGTH_INVALID;
+            }
+        }
+        res = this._peakWavelength;
         return res;
     }
 

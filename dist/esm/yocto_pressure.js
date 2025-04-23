@@ -43,7 +43,7 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
  * Yocto-Altimeter-V2, the Yocto-CO2-V2, the Yocto-Meteo-V2 or the Yocto-Pressure
  *
  * The YPressure class allows you to read and configure Yoctopuce pressure sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YPressure class start)

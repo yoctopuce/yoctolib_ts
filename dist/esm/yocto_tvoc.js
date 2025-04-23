@@ -43,7 +43,7 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
  * the Yocto-VOC-V3
  *
  * The YTvoc class allows you to read and configure Yoctopuce Total Volatile Organic Compound sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YTvoc class start)
