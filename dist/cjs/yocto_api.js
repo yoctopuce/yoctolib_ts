@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 65106 2025-03-17 12:51:27Z mvuilleu $
+ * $Id: yocto_api.ts 66046 2025-04-24 09:40:34Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -10834,7 +10834,7 @@ exports.YGenericSSDPManager = YGenericSSDPManager;
 //--- (end of generated code: YHub definitions)
 //--- (generated code: YHub class start)
 /**
- * YHub Class: Hub Interface
+ * YHub Class: YoctoHub or VirtualHub currently in use by the API.
  *
  *
  */
@@ -12955,7 +12955,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.5971';
+        return /* version number patched automatically */ '2.1.6320';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
