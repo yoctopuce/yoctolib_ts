@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_wireless.ts 68466 2025-08-19 17:31:45Z mvuilleu $
  *
  *  Implements the high-level API for WlanRecord functions
  *
@@ -520,8 +520,8 @@ class YWireless extends yocto_api_js_1.YFunction {
         json = await this._download('wlan.json?by=name');
         wlanlist = this.imm_json_get_array(json);
         res.length = 0;
-        for (let ii in wlanlist) {
-            res.push(new YWlanRecord(this._yapi.imm_bin2str(wlanlist[ii])));
+        for (let ii_0 of wlanlist) {
+            res.push(new YWlanRecord(this._yapi.imm_bin2str(ii_0)));
         }
         return res;
     }

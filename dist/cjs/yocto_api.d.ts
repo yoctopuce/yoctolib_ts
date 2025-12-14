@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 66046 2025-04-24 09:40:34Z seb $
+ * $Id: yocto_api.ts 70666 2025-12-09 10:26:00Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -57,6 +57,7 @@ export declare const YAPI_RFID_HARD_ERROR: number;
 export declare const YAPI_BUFFER_TOO_SMALL: number;
 export declare const YAPI_DNS_ERROR: number;
 export declare const YAPI_SSL_UNK_CERT: number;
+export declare const YAPI_UNCONFIGURED: number;
 export declare const YAPI_INVALID_INT: number;
 export declare const YAPI_INVALID_UINT: number;
 export declare const YAPI_INVALID_LONG: number;
@@ -100,7 +101,15 @@ export interface YDeviceUpdateCallback {
 export interface YUnhandledPromiseRejectionCallback {
     (reason: object, promise: PromiseLike<any>): void;
 }
-export type PortInfo = {
+interface _YY_CalibCtx {
+    src: string;
+    typ: number;
+    hdl: yCalibrationHandler;
+    par: number[];
+    raw: number[];
+    cal: number[];
+}
+export type _YY_PortInfo = {
     proto: string;
     port: number;
 };
@@ -182,78 +191,44 @@ declare class YFunctionType {
     constructor(yapi: YAPIContext, classname: string);
     /** Index a single function given by HardwareId and logical name; store any advertised value
      *
-     * @param {string} str_hwid
-     * @param {string} str_name
-     * @param {string|null} str_val
-     * @param {number|null} int_basetype
-     * @returns {boolean} true iff there was a logical name discrepancy
+     * @returns true iff there was a logical name discrepancy
      */
     imm_reindexFunction(str_hwid: string, str_name: string, str_val: string | null, int_basetype: number | null): boolean;
     /** Forget a disconnected function given by HardwareId
-     *
-     * @param {string} str_hwid
      */
     imm_forgetFunction(str_hwid: string): void;
     /** Find the exact Hardware Id of the specified function, if currently connected
      * If device is not known as connected, return a clean error
      * This function will not cause any network access
-     *
-     * @param {string} str_func
-     * @return {object}
      */
     imm_resolve(str_func: string): YConditionalResult;
     /** Find the friendly name (use logical name if available) of the specified function, if currently connected
      * If device is not known as connected, return a clean error
      * This function will not cause any network access
-     *
-     * @param {string} str_func
-     * @return {object}
      */
     imm_getFriendlyName(str_func: string): YConditionalResult;
     /** Associates a given function object to a function id
-     *
-     * @param {string} str_func
-     * @param {YFunction} obj_func
      */
     imm_setFunction(str_func: string, obj_func: YFunction): void;
     /** Retrieve a function object by hardware id, updating the indexes on the fly if needed
-     *
-     * @param {string} str_func
-     * @return {YFunction}
      */
     imm_getFunction(str_func: string): YFunction;
     /** Stores a function advertised value by hardware id, and tell if an event should be queued for it
-     *
-     * @param {string} str_hwid
-     * @param {string} str_pubval
-     * @return {boolean}
      */
     imm_setFunctionValue(str_hwid: string, str_pubval: string): boolean;
     /** Retrieve a function advertised value by hardware id
-     *
-     * @param {string} str_hwid
-     * @return {string}
      */
     imm_getFunctionValue(str_hwid: string): string;
     /** Return the basetype of this function class
-     *
-     * @return {number}
      */
     imm_getBaseType(): number;
     /** Test if function type is compatible with basetype
-     *
-     * @return {boolean}
      */
     imm_matchBaseType(baseclass: number): boolean;
     /** Find the hardwareId of the first instance of a given function class
-     *
-     * @return {string|null}
      */
     imm_getFirstHardwareId(): string | null;
     /** Find the hardwareId for the next instance of a given function class
-     *
-     * @param {string} str_hwid
-     * @return {string|null}
      */
     imm_getNextHardwareId(str_hwid: string): string | null;
 }
@@ -265,10 +240,6 @@ export declare class YHTTPBody {
     data: Uint8Array;
     progressCb: YDownloadProgressCallback | null;
     /** Object storing a file to upload
-     *
-     * @param str_fname {string}
-     * @param bin_data {Uint8Array}
-     * @param fun_progressCb {YDownloadProgressCallback}
      */
     constructor(str_fname: string, bin_data: Uint8Array, fun_progressCb: YDownloadProgressCallback | null);
 }
@@ -289,10 +260,6 @@ export declare class YHTTPRequest {
     _creat: string;
     _sent: string;
     /** Object storing the result of any HTTP Query, with status code and error message
-     *
-     * @param bin_res {Uint8Array}
-     * @param int_errType {number}
-     * @param str_errMsg {string}
      */
     constructor(bin_res: Uint8Array | null, int_errType?: number, str_errMsg?: string);
 }
@@ -366,7 +333,7 @@ export declare class YDataStream {
     DATA_INVALID: number;
     DURATION_INVALID: number;
     _yapi: YAPIContext;
-    imm_calhdl: Function | null;
+    _cal: _YY_CalibCtx | null;
     _parent: YFunction;
     _runNo: number;
     _utcStamp: number;
@@ -383,13 +350,10 @@ export declare class YDataStream {
     _minVal: number;
     _avgVal: number;
     _maxVal: number;
-    _caltyp: number;
-    _calpar: number[];
-    _calraw: number[];
-    _calref: number[];
     _values: number[][];
     _isLoaded: boolean;
     constructor(obj_parent: YFunction, obj_dataset: YDataSet, encoded: number[]);
+    _parseCalibArr(iCalib: number[]): number;
     imm_initFromDataSet(dataset: YDataSet, encoded: number[]): number;
     imm_parseStream(sdata: Uint8Array): number;
     imm_wasLoaded(): boolean;
@@ -690,7 +654,7 @@ export declare class YDataSet {
      *
      * @return an integer in the range 0 to 100 (percentage of completion).
      */
-    get_progress(): Promise<number>;
+    get_progress(): number;
     /**
      * Loads the next block of measures from the dataLogger, and updates
      * the progress indicator.
@@ -898,9 +862,6 @@ declare class YDevice {
     imm_triggerLogPull(): void;
     imm_registerLogCallback(callback: YModule.LogCallback | null): void;
     /** Return the value of the last timestamp sent by the device, if any
-     *
-     * @param float_timestamp {number}
-     * @param float_duration {number}
      */
     imm_setTimeRef(float_timestamp: number, float_duration: number): void;
     /** Return the hub-specific devYdx of the device, as found during discovery
@@ -914,69 +875,37 @@ declare class YDevice {
      */
     imm_describe(): string;
     /** Update device cache and YAPI function lists from yp records
-     *
-     * @param obj_ypRecs {object}
      */
     imm_updateFromYP(obj_ypRecs: _YY_YellowPages): void;
     /** Update device cache and YAPI function lists accordingly
-     *
-     * @param yreq {YHTTPRequest}
-     * @param loadval {object}
      */
     updateFromReq(yreq: YHTTPRequest, loadval: _YY_HubApi): Promise<void>;
     imm_dropCache(): void;
     /** Retrieve the number of functions (beside "module") in the device
-     *
-     * @returns {number}
      */
     imm_functionCount(): number;
     /** Retrieve the Id of the nth function (beside "module") in the device
-     *
-     * @param int_idx {number}
-     * @returns {string}
      */
     imm_functionId(int_idx: number): string;
     /** Retrieve the base type of the nth function (beside "module") in the device
-     *
-     * @param int_idx {number}
-     * @returns {string}
      */
     imm_functionBaseType(int_idx: number): string;
     /** Retrieve the type of the nth function (beside 'module') in the device
-     *
-     * @param int_idx {number}
-     * @returns {string}
      */
     imm_functionType(int_idx: number): string;
     /** Retrieve the logical name of the nth function (beside "module") in the device
-     *
-     * @param int_idx {number}
-     * @returns {string}
      */
     imm_functionName(int_idx: number): string;
     /** Retrieve the advertised value of the nth function (beside "module") in the device
-     *
-     * @param int_idx {number}
-     * @returns {string}
      */
     imm_functionValue(int_idx: number): string;
     /** Retrieve the Id of a function given its funydx (internal function identifier index)
-     *
-     * @param int_funydx {number}
-     * @returns {string}
      */
     imm_functionIdByFunYdx(int_funydx: number): string;
     /** Map an optimized JZON reply to a previously known JSON structure
-     *
-     * @param jzon {object}
-     * @param json {object}
-     * @returns {object}
      */
     imm_jzon2json(jzon: object, json: object): object;
     /** Get the whole REST API string for a device, from cache if possible
-     *
-     * @param int_msValidity {number}
-     * @returns {YHTTPRequest}
      */
     requestAPI(int_msValidity: number): Promise<YHTTPRequest>;
     /** Reload a device API (store in cache), and update YAPI function lists accordingly
@@ -1006,11 +935,6 @@ export declare class YFirmwareFile {
     /**
      * Parse the binary buffer provided as input and initialize a new object
      * returns null if the file is not a valid firmware
-     *
-     * @param path {string}
-     * @param data {Uint8Array}
-     * @param force {boolean}
-     * @return {YFirmwareFile|null}
      */
     static imm_Parse(path: string, data: Uint8Array, force: boolean): YFirmwareFile | null;
     static imm_progCompatible(prog_version: string): boolean;
@@ -1313,7 +1237,8 @@ export declare class YFunction {
      * On failure, throws an exception or returns YFunction.SERIALNUMBER_INVALID.
      */
     get_serialNumber(): Promise<string>;
-    _parserHelper(): Promise<number>;
+    _parserHelper(): number;
+    _is_valid_pass(passwd: string): boolean;
     /**
      * Returns the next Function
      *
@@ -1335,42 +1260,21 @@ export declare class YFunction {
      */
     static FirstFunctionInContext(yctx: YAPIContext): YFunction | null;
     /** Retrieve a function instance from cache
-     *
-     * @param yctx {YAPIContext}
-     * @param className {string}
-     * @param func {string}
-     * @returns {YFunction}
      */
     static _FindFromCacheInContext(yctx: YAPIContext, className: string, func: string): YFunction;
     /** Retrieve a function instance from cache
-     *
-     * @param className {string}
-     * @param func {string}
-     * @returns {YFunction}
      */
     static _FindFromCache(className: string, func: string): YFunction;
     /** Add a function instance to cache
-     *
-     * @param className {string}
-     * @param func {string}
-     * @param obj {YFunction}
      */
     static _AddToCache(className: string, func: string, obj: YFunction): void;
     /** Clear the function instance cache
-     *
-     * @param obj_yapi {YAPIContext}
      */
     static _ClearCache(obj_yapi?: YAPIContext | null): void;
     /** Add or remove a value change callback
-     *
-     * @param obj_func {YFunction}
-     * @param bool_add {Boolean}
      */
     static _UpdateValueCallbackList(obj_func: YFunction, bool_add: boolean): Promise<void>;
     /** Add or remove a timed report callback
-     *
-     * @param obj_func {YSensor}
-     * @param bool_add {Boolean}
      */
     static _UpdateTimedReportCallbackList(obj_func: YFunction, bool_add: boolean): Promise<void>;
     /**
@@ -1422,10 +1326,7 @@ export declare class YFunction {
      * On failure, throws an exception or returns  YFunction.FRIENDLYNAME_INVALID.
      */
     get_friendlyName(): Promise<string>;
-    /** Store and parse a an API request for current function
-     *
-     * @param {YFuncRequest} yreq
-     * @param {number} msValidity
+    /** Store and parse an API request for current function
      */
     _parse(yreq: YFuncRequest, msValidity: number): Promise<void>;
     /**
@@ -1500,71 +1401,39 @@ export declare class YFunction {
     load_async(ms_validiy: number, func: Function, ctx: object): void;
     /** Return the value of an attribute from function cache, after reloading it from device if needed
      * Note: the function cache is a typed (parsed) cache, contrarily to the agnostic device cache
-     *
-     * @param {string} str_attr
-     * @return {string|null}
      */
     _getAttr(str_attr: string): Promise<string | null>;
     /** Return the value of an attribute from function cache, after reloading it from device if needed
      * Note: the function cache is a typed (parsed) cache, contrarily to the agnostic device cache
-     *
-     * @param {string} str_attr
-     * @return {string|null}
      */
     _getFixedAttr(str_attr: string): Promise<string | null>;
     /** Escape a string for posting it as an URL
-     *
-     * @param {string} str_newval
-     * @return {string}
      */
     imm_escapeAttr(str_newval: string): string;
     /** Change the value of an attribute on a device, and invalidate the cache
-     *
-     * @param {string} str_attr
-     * @param {string} str_newval
-     * @return {number}
      */
     _setAttr(str_attr: string, str_newval: string): Promise<number>;
     /** Execute an arbitrary HTTP GET request on the device and return the binary content
-     *
-     * @param {string} str_path
-     * @return {Uint8Array}
      */
     _download(str_path: string): Promise<Uint8Array>;
     /** Execute an out-of-band HTTP GET request on the device and return the binary content.
      * The request may execute in parallel to regular requests currently in progress.
-     *
-     * @param {string} str_path
-     * @return {Uint8Array}
      */
     _downloadOutOfBand(str_path: string): Promise<Uint8Array>;
     /** Upload a file to the filesystem, to the specified full path name.
      * If a file already exists with the same path name, its content is overwritten.
      * The progress callback function is called with two parameters: the number of
      * bytes uploaded so far and the total size to be uploaded.
-     *
-     * @param {string} str_path
-     * @param {Uint8Array|string|number[]} bin_content
-     * @param {YDownloadProgressCallback} fun_progressCb
-     * @return {object}
      */
     _uploadWithProgress(str_path: string, bin_content: Uint8Array | string | number[], fun_progressCb: YDownloadProgressCallback | null): Promise<YHTTPRequest>;
     /** Upload a file to the filesystem, to the specified full path name.
      * If a file already exists with the same path name, its content is overwritten.
      * The progress callback function is called with two parameters: the number of
      * bytes uploaded so far and the total size to be uploaded.
-     *
-     * @param {string} str_path
-     * @param {Uint8Array|string|number[]} bin_content
-     * @return {object}
      */
     _uploadEx(str_path: string, bin_content: Uint8Array | string | number[]): Promise<Uint8Array>;
     /** Upload a file to the filesystem, to the specified full path name.
      * If a file already exists with the same path name, its content is overwritten.
-     *
-     * @param {string} str_path
-     * @param {Uint8Array|string|number[]} bin_content
-     * @return {object}
      */
     _upload(str_path: string, bin_content: Uint8Array | string | number[]): Promise<number>;
     /**
@@ -1583,48 +1452,24 @@ export declare class YFunction {
      */
     wait_async(callback: Function, context: object): number;
     /** Get a value from a JSON buffer
-     *
-     * @param bin_jsonbuff {Uint8Array}
-     * @param str_key {string}
-     * @return {string}
      **/
     imm_json_get_key(bin_jsonbuff: Uint8Array, str_key: string): string;
     /** Get a string from a JSON buffer
-     *
-     * @param bin_jsonbuff {Uint8Array}
-     * @return {string}
      **/
     imm_json_get_string(bin_jsonbuff: Uint8Array): string;
     /** Get an array of strings from a JSON buffer
-     *
-     * @param bin_jsonbuff {Uint8Array}
-     * @return {string[]}
      **/
     imm_json_get_array(bin_jsonbuff: Uint8Array): Uint8Array[];
     /** Get an array of strings from a JSON buffer
-     *
-     * @param bin_json {string}
-     * @param str_path {string}
-     * @return {string}
      **/
     imm_get_json_path(bin_json: Uint8Array, str_path: string): Uint8Array;
     /** Get a string from a JSON string
-     *
-     * @param bin_json {string}
-     * @return {string}
      **/
     imm_decode_json_string(bin_json: Uint8Array): string;
     /** Get a integer from a JSON string
-     *
-     * @param bin_json {string}
-     * @return {number}
      **/
     imm_decode_json_int(bin_json: Uint8Array): number;
     /** Method used to cache DataStream objects (new DataLogger)
-     *
-     * @param obj_dataset {YDataSet}
-     * @param str_def {string}
-     * @return {YDataStream}
      **/
     imm_findDataStream(obj_dataset: YDataSet, str_def: string): YDataStream | null;
     clearDataStreamCache(): Promise<void>;
@@ -2283,15 +2128,15 @@ export declare class YModule extends YFunction {
      *
      * @return a binary buffer with the file content
      *
-     * On failure, throws an exception or returns  YAPI.INVALID_STRING.
+     * On failure, throws an exception or returns an empty content.
      */
     download(pathname: string): Promise<Uint8Array>;
     /**
      * Returns the icon of the module. The icon is a PNG image and does not
-     * exceed 1536 bytes.
+     * exceeds 1536 bytes.
      *
      * @return a binary buffer with module icon, in png format.
-     *         On failure, throws an exception or returns  YAPI.INVALID_STRING.
+     *         On failure, throws an exception or returns an empty content.
      */
     get_icon2d(): Promise<Uint8Array>;
     /**
@@ -2406,6 +2251,7 @@ export declare namespace YModule {
  * from YSensor.
  */
 export declare class YSensor extends YFunction {
+    _cal: _YY_CalibCtx | null;
     _className: string;
     _unit: string;
     _currentValue: number;
@@ -2420,16 +2266,8 @@ export declare class YSensor extends YFunction {
     _sensorState: number;
     _valueCallbackSensor: YSensor.ValueCallback | null;
     _timedReportCallbackSensor: YSensor.TimedReportCallback | null;
-    _prevTimedReport: number;
+    _prevTR: number;
     _iresol: number;
-    _offset: number;
-    _scale: number;
-    _decexp: number;
-    _caltyp: number;
-    _calpar: number[];
-    _calraw: number[];
-    _calref: number[];
-    imm_calhdl: yCalibrationHandler | null;
     readonly UNIT_INVALID: string;
     readonly CURRENTVALUE_INVALID: number;
     readonly LOWESTVALUE_INVALID: number;
@@ -2474,7 +2312,7 @@ export declare class YSensor extends YFunction {
      * Returns the current value of the measure, in the specified unit, as a floating point number.
      * Note that a get_currentValue() call will *not* start a measure in the device, it
      * will just return the last measure that occurred in the device. Indeed, internally, each Yoctopuce
-     * devices is continuously making measures at a hardware specific frequency.
+     * devices is continuously making measurements at a hardware specific frequency.
      *
      * If continuously calling  get_currentValue() leads you to performances issues, then
      * you might consider to switch to callback programming model. Check the "advanced
@@ -2718,7 +2556,7 @@ export declare class YSensor extends YFunction {
      */
     registerValueCallback(callback: YSensor.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
-    _parserHelper(): Promise<number>;
+    _parserHelper(): number;
     /**
      * Checks if the sensor is currently able to provide an up-to-date measure.
      * Returns false if the device is unreachable, or if the sensor does not have
@@ -2736,6 +2574,7 @@ export declare class YSensor extends YFunction {
      * @return an YDatalogger object, or null on error.
      */
     get_dataLogger(): Promise<YDataLogger | null>;
+    _parseCalibStr(calibStr: string): number;
     /**
      * Starts the data logger on the device. Note that the data logger
      * will only save the measures on this sensor if the logFrequency
@@ -3302,12 +3141,6 @@ export declare abstract class YHubEngine {
     reconnectEngine(tryOpenID: string): Promise<void>;
     imm_disconnectEngineNow(connID?: string): void;
     /** Perform an HTTP query on the hub
-     *
-     * @param method {string}
-     * @param devUrl {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param tcpchan {number}
-     * @returns {YHTTPRequest}
      */
     request(method: string, devUrl: string, obj_body: YHTTPBody | null, tcpchan: number): Promise<YHTTPRequest>;
     reportFailure(message: string): Promise<void>;
@@ -3382,6 +3215,7 @@ export declare class YGenericHub {
     imm_isDisconnected(): boolean;
     imm_isPreOrRegistered(): boolean;
     imm_isOnline(): boolean;
+    imm_getConnectionState(): number;
     imm_isForwarded(): boolean;
     imm_addKnownUrl(urlInfo: _YY_UrlInfo): void;
     imm_updateUrl(urlInfo: _YY_UrlInfo): void;
@@ -3391,15 +3225,9 @@ export declare class YGenericHub {
     imm_tryTestConnectFor(mstimeout: number): void;
     /** Trigger the setup of a connection to the target hub, and return.
      * This method uses a connection helper that is overridden by each type of hub.
-     *
-     * @param targetConnType {Y_YHubConnType}
      */
     attach(targetConnType: Y_YHubConnType): Promise<void>;
     /** Wait until the connection to the hub is established
-     *
-     * @param mstimeout {number}
-     * @param errmsg {YErrorMsg}
-     * @returns {number}
      */
     waitForConnection(mstimeout: number, errmsg: YErrorMsg): Promise<number>;
     /** Attempt to establish a connection to the hub asynchronously.
@@ -3433,45 +3261,22 @@ export declare class YGenericHub {
      */
     detach(errType?: number, errMsg?: string): Promise<void>;
     /** Wait until the hub is fully disconnected
-     *
-     * @param mstimeout {number}
-     * @returns {number}
      */
     waitForDisconnection(mstimeout: number): Promise<void>;
     hubUpdateDeviceList(): Promise<number>;
     /** Perform an HTTP query on the hub
-     *
-     * @param method {string}
-     * @param devUrl {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param tcpchan {number}
-     * @returns {YHTTPRequest}
      */
     request(method: string, devUrl: string, obj_body: YHTTPBody | null, tcpchan: number): Promise<YHTTPRequest>;
     /** Create a new random boundary for form-encoding
-     *
-     * @returns {string}
      */
     imm_getBoundary(): string;
     /** Form-encode a body object into an raw Uint8Array to send
-     *
-     * @param obj_body {YHTTPBody}
-     * @param str_boundary {string}
-     * @returns {Uint8Array}
      */
     imm_formEncodeBody(obj_body: YHTTPBody, str_boundary: string): Uint8Array;
     /** Return an array of serial numbers
-     *
-     * @returns {string[]}
      */
     getBootloaders(): Promise<string[]>;
     /** Perform a firmware update
-     *
-     * @param serial {string}
-     * @param firmware {YFirmwareFile}
-     * @param settings {Uint8Array}
-     * @param progress {YProgressCallback}
-     * @returns {string[] | null}
      */
     firmwareUpdate(serial: string, firmware: YFirmwareFile, settings: Uint8Array, progress: YProgressCallback): Promise<string[] | null>;
     reportFailure(message: string): Promise<void>;
@@ -3513,12 +3318,6 @@ export declare class YHttpEngine extends YHubEngine {
     reconnectEngine(tryOpenID: string): Promise<void>;
     imm_disconnectEngineNow(connID?: string): void;
     /** Perform an HTTP query on the hub
-     *
-     * @param method {string}
-     * @param devUrl {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param tcpchan {number}
-     * @returns {YHTTPRequest}
      */
     request(method: string, devUrl: string, obj_body: YHTTPBody | null, tcpchan: number): Promise<YHTTPRequest>;
 }
@@ -3615,13 +3414,9 @@ export declare abstract class YWebSocketEngine extends YHubEngine {
     fwd_closeCallback: Function | null;
     constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo);
     /** Open an outgoing websocket
-     *
-     * @param str_url {string}
      **/
     abstract imm_webSocketOpen(str_url: string): void;
     /** Fills a buffer with random numbers
-     *
-     * @param arr {Uint8Array}
      **/
     abstract imm_getRandomValues(arr: Uint8Array): Uint8Array;
     /** Report a low-level asynchronous websocket error
@@ -3631,43 +3426,23 @@ export declare abstract class YWebSocketEngine extends YHubEngine {
      */
     reconnectEngine(tryOpenID: string): Promise<void>;
     /** Compute websocket authentication sha1 key
-     *
-     * @param user {string}
-     * @param pass {string}
-     * @param serial {string}
-     * @param nonce
-     * @return {Uint8Array}
      */
     imm_computeAuth(user: string, pass: string, serial: string, nonce: number): Uint8Array;
     /** Tell if a websocket hub is currently forwarded and handled remotely
-     *
-     * @return {boolean}
      */
     imm_isForwarded(): boolean;
     /** Handle an incoming packet
-     *
-     * @param arr_bytes {Uint8Array}
      **/
     _webSocketMsg(arr_bytes: Uint8Array): Promise<void>;
     /** Send an outgoing packet
-     *
-     * @param arr_bytes {Uint8Array}
      **/
     imm_webSocketSend(arr_bytes: Uint8Array): void;
     imm_hasPendingRequest(): boolean;
     waitForPendingQueries(ms_duration: number): Promise<void>;
     /** Perform an HTTP query on the hub
-     *
-     * @param method {string}
-     * @param devUrl {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param tcpchan {number}
-     * @returns {YHTTPRequest}
      */
     request(method: string, devUrl: string, obj_body: YHTTPBody | null, tcpchan: number): Promise<YHTTPRequest>;
     /** Send all possible pending requests on specified tcpchan
-     *
-     * @param tcpchan {number}
      */
     imm_sendPendingRequest(tcpchan: number): void;
     imm_abortRequest(tcpchan: number, yreq: YHTTPRequest): void;
@@ -3721,32 +3496,43 @@ export declare class YHub {
     _ctx: YAPIContext;
     _hubref: number;
     _userData: any;
+    readonly TRYING: number;
+    readonly CONNECTED: number;
+    readonly RECONNECTING: number;
+    readonly ABORTED: number;
+    readonly UNREGISTERED: number;
+    static readonly TRYING: number;
+    static readonly CONNECTED: number;
+    static readonly RECONNECTING: number;
+    static readonly ABORTED: number;
+    static readonly UNREGISTERED: number;
     constructor(obj_yapi: YAPIContext, hubref: number);
-    private _getStrAttr_internal;
-    private _getIntAttr_internal;
-    private _setIntAttr_internal;
-    get_knownUrls_internal(): string[];
-    _getStrAttr(attrName: string): Promise<string>;
-    _getIntAttr(attrName: string): Promise<number>;
-    _setIntAttr(attrName: string, value: number): Promise<void>;
-    /**
-     * Returns the URL that has been used first to register this hub.
-     */
-    get_registeredUrl(): Promise<string>;
+    private _imm_getStrAttr;
+    private _imm_getIntAttr;
+    private _getIntAttr;
+    private _imm_setIntAttr;
     /**
      * Returns all known URLs that have been used to register this hub.
      * URLs are pointing to the same hub when the devices connected
      * are sharing the same serial number.
      */
-    get_knownUrls(): Promise<string[]>;
+    get_knownUrls(): string[];
+    /**
+     * Returns the URL that has been used first to register this hub.
+     */
+    get_registeredUrl(): string;
     /**
      * Returns the URL currently in use to communicate with this hub.
      */
-    get_connectionUrl(): Promise<string>;
+    get_connectionUrl(): string;
+    /**
+     * Returns the state of the connection with this hub. (TRYING, CONNECTED, RECONNECTING, ABORTED, UNREGISTERED)
+     */
+    get_connectionState(): number;
     /**
      * Returns the hub serial number, if the hub was already connected once.
      */
-    get_serialNumber(): Promise<string>;
+    get_serialNumber(): string;
     /**
      * Tells if this hub is still registered within the API.
      *
@@ -3775,7 +3561,7 @@ export declare class YHub {
      * @param networkMsTimeout : the network connection delay in milliseconds.
      * @noreturn
      */
-    set_networkTimeout(networkMsTimeout: number): Promise<void>;
+    set_networkTimeout(networkMsTimeout: number): void;
     /**
      * Returns the network connection delay for this hub.
      * The default value is inherited from ySetNetworkTimeout
@@ -3784,7 +3570,7 @@ export declare class YHub {
      *
      * @return the network connection delay in milliseconds.
      */
-    get_networkTimeout(): Promise<number>;
+    get_networkTimeout(): number;
     /**
      * Returns the numerical error code of the latest error with the hub.
      * This method is mostly useful when using the Yoctopuce library with
@@ -3846,11 +3632,34 @@ export declare class YHub {
      */
     static FirstHubInUseInContext(yctx: YAPIContext): YHub | null;
     /**
+     * Retrieves hub for a given identifier. The identifier can be the URL or the
+     * serial of the hub.
+     *
+     * @param url : The url or serial of the hub.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the first hub currently in use by the API, or a
+     *         null pointer if none has been registered.
+     */
+    static FindHubInUse(url: string): Promise<YHub | null>;
+    /**
+     * Retrieves hub for a given identifier in a given YAPI context. The identifier can be the URL or the
+     * serial of the hub.
+     *
+     * @param yctx : a YAPI context
+     * @param url : The url or serial of the hub.
+     *
+     * @return a pointer to a YHub object, corresponding to
+     *         the first hub currently in use by the API, or a
+     *         null pointer if none has been registered.
+     */
+    static FindHubInUseInContext(yctx: YAPIContext, url: string): Promise<YHub | null>;
+    /**
      * Continues the module enumeration started using YHub.FirstHubInUse().
      * Caution: You can't make any assumption about the order of returned hubs.
      *
      * @return a pointer to a YHub object, corresponding to
-     *         the next hub currenlty in use, or a null pointer
+     *         the next hub currently in use, or a null pointer
      *         if there are no more hubs to enumerate.
      */
     nextHubInUse(): YHub | null;
@@ -3872,6 +3681,7 @@ export declare class YAPIContext {
     _knownHubsBySerial: YGenericHubDict;
     _knownHubsByUrl: YGenericHubDict;
     _connectedHubs: YGenericHub[];
+    _registeredHubs: YGenericHub[];
     _trustedCertificate: string[];
     _networkSecurityOptions: number;
     _yhub_cache: YHubDict;
@@ -3898,6 +3708,7 @@ export declare class YAPIContext {
     _isNodeJS: boolean;
     _networkTimeoutMs: number;
     _deviceListValidityMs: number;
+    _crcTable: Int32Array | null;
     defaultEncoding: string;
     exceptionsDisabled: boolean;
     readonly SUCCESS: number;
@@ -3921,6 +3732,7 @@ export declare class YAPIContext {
     readonly BUFFER_TOO_SMALL: number;
     readonly DNS_ERROR: number;
     readonly SSL_UNK_CERT: number;
+    readonly UNCONFIGURED: number;
     readonly NO_TRUSTED_CA_CHECK: number;
     readonly NO_EXPIRATION_CHECK: number;
     readonly NO_HOSTNAME_CHECK: number;
@@ -3947,6 +3759,7 @@ export declare class YAPIContext {
     static readonly BUFFER_TOO_SMALL: number;
     static readonly DNS_ERROR: number;
     static readonly SSL_UNK_CERT: number;
+    static readonly UNCONFIGURED: number;
     static readonly NO_TRUSTED_CA_CHECK: number;
     static readonly NO_EXPIRATION_CHECK: number;
     static readonly NO_HOSTNAME_CHECK: number;
@@ -3988,9 +3801,6 @@ export declare class YAPIContext {
     _updateDeviceList_internal(bool_forceupdate: boolean, bool_invokecallbacks: boolean): Promise<YConditionalResult>;
     updateDeviceList_process(hub: YGenericHub, hubDev: YDevice, whitePages: _YY_WhitePage[], yellowPages: _YY_YellowPages): Promise<number>;
     /** process event data produced by a hub
-     *
-     * @param hub {YGenericHub}
-     * @param str_lines {string}
      */
     parseEvents(hub: YGenericHub, str_lines: string): Promise<void>;
     /** Network notification format: 7x7bit (mapped to 7 chars in range 32..159)
@@ -4003,12 +3813,6 @@ export declare class YAPIContext {
      */
     imm_decodeNetFuncValV2(p: string): number[] | null;
     /** Decode an enhanced notification (V2) buffer
-     *
-     * @param int_typeV2 {number}
-     * @param arr_funcval {number[]}
-     * @param int_ofs {number}
-     * @param int_funcvalen {number}
-     * @returns {string}
      */
     imm_decodePubVal(int_typeV2: number, arr_funcval: number[], int_ofs: number, int_funcvalen: number): string;
     imm_decExp(int_pow: number): number;
@@ -4018,59 +3822,35 @@ export declare class YAPIContext {
     imm_decodeWords(data: string): number[];
     imm_decodeFloats(data: string): number[];
     /** Convert a numeric string to an integer
-     *
-     * @param str_data {string}
-     * @return {number}
      */
     static imm_atoi(str_data: string): number;
     /** Convert a numeric string to an float
-     *
-     * @param str_data {string}
-     * @return {number}
      */
     static imm_atof(str_data: string): number;
     /** Convert a binary object to string
-     *
-     * @param bin_data {Uint8Array}
-     * @return {string}
      */
     imm_bin2str(bin_data: Uint8Array): string;
     /** Convert a string to binary object
-     *
-     * @param str_data {string}
-     * @return {Uint8Array}
      */
     imm_str2bin(str_data: string): Uint8Array;
     /** Convert a binary object to hex string
-     *
-     * @param bin_data {Uint8Array}
-     * @return {string}
      */
     imm_bin2hexstr(bin_data: Uint8Array): string;
+    /** Compute the 32-bit CRC of a binary object
+     */
+    imm_bincrc(bin_data: Uint8Array, ofs: number, size: number): number;
     /** Convert a hex string to binary object
-     *
-     * @param str_data {string}
-     * @return {Uint8Array}
      */
     imm_hexstr2bin(str_data: string): Uint8Array;
     /** Return a Device object for a specified URL, serial number or logical device name
-     *
-     * @param str_device {string}
-     * @return {YDevice}
      *
      * This function will not cause any network access (not async !)
      */
     imm_getDevice(str_device: string): YDevice | null;
     /** Add or remove a value change callback
-     *
-     * @param obj_func {YFunction}
-     * @param bool_add {Boolean}
      */
     _UpdateValueCallbackList(obj_func: YFunction, bool_add: boolean): Promise<void>;
     /** Add or remove a timed report callback
-     *
-     * @param obj_func {YFunction}
-     * @param bool_add {Boolean}
      */
     _UpdateTimedReportCallbackList(obj_func: YFunction, bool_add: boolean): Promise<void>;
     imm_functionClass(str_funcid: string): string;
@@ -4090,44 +3870,20 @@ export declare class YAPIContext {
     imm_getNextHardwareId(str_className: string, str_hwid: string): string | null;
     /** Perform an HTTP request on a device, by URL or identifier.
      * When loading the REST API from a device by identifier, the device cache will be used.
-     *
-     * @param str_device {string}
-     * @param str_request {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param int_tcpchan {number}
-     * @returns {YHTTPRequest}
      */
     devRequest(str_device: string, str_request: string, obj_body?: YHTTPBody | null, int_tcpchan?: number): Promise<YHTTPRequest>;
     isReadOnly(str_device: string): Promise<boolean>;
     /** Locate the device to access a specified function, without causing any I/O
-     *
-     * @param str_className {string}
-     * @param str_func {string}
-     * @returns {YFuncRequest}
      */
     imm_funcDev_internal(str_className: string, str_func: string): YFuncRequest;
     /** Locate the device to access a specified function. May cause device list update if needed
-     *
-     * @param str_className {string}
-     * @param str_func {string}
-     * @returns {YFuncRequest}
      */
     _funcDev(str_className: string, str_func: string): Promise<YFuncRequest>;
     /** Load and parse the REST API for a function given by class name and identifier, possibly applying changes
      * Device cache will be preloaded when loading function 'module' and leveraged for other modules
-     *
-     * @param str_className {string}
-     * @param str_func {string}
-     * @param str_extra {string}
-     * @param int_msValidity {number}
-     * @returns {YFuncRequest}
      */
     funcRequest(str_className: string, str_func: string, str_extra: string, int_msValidity?: number): Promise<YFuncRequest>;
     /** Perform an HTTP request on a device and return the result string
-     *
-     * @param str_device {string}
-     * @param str_request {string}
-     * @returns {Promise<Uint8Array|null>}
      */
     HTTPRequest(str_device: string, str_request: string): Promise<Uint8Array | null>;
     ForceDeviceRefresh(str_device: string): Promise<number>;
@@ -4141,6 +3897,7 @@ export declare class YAPIContext {
     SetTrustedCertificatesList_internal(certificatePath: string): Promise<string>;
     SetNetworkSecurityOptions_internal(opts: number): Promise<string>;
     AddTrustedCertificates_internal(certificate: string): Promise<string>;
+    imm_updateRegisteredHubs(hub: YGenericHub, add: boolean): void;
     /**
      * Modifies the delay between each forced enumeration of the used YoctoHubs.
      * By default, the library performs a full enumeration every 10 seconds.
@@ -4275,6 +4032,7 @@ export declare class YAPIContext {
     GetCacheValidity(): Promise<number>;
     nextHubInUseInternal(hubref: number): YHub | null;
     getYHubObj(hubref: number): YHub;
+    findYHubFromID(id: string): Promise<YHub | null>;
     /**
      * Returns the version identifier for the Yoctopuce library in use.
      * The version is a string in the form "Major.Minor.Build",

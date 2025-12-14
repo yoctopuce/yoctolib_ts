@@ -42,20 +42,23 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  * Yocto-Volt or the Yocto-Watt
  *
  * The YVoltage class allows you to read and configure Yoctopuce voltage sensors.
- * It inherits from YSensor class the core functions to read measures,
+ * It inherits from YSensor class the core functions to read measurements,
  * to register callback functions, and to access the autonomous datalogger.
  */
 export declare class YVoltage extends YSensor {
     _className: string;
     _enabled: YVoltage.ENABLED;
+    _signalBias: number;
     _valueCallbackVoltage: YVoltage.ValueCallback | null;
     _timedReportCallbackVoltage: YVoltage.TimedReportCallback | null;
     readonly ENABLED_FALSE: YVoltage.ENABLED;
     readonly ENABLED_TRUE: YVoltage.ENABLED;
     readonly ENABLED_INVALID: YVoltage.ENABLED;
+    readonly SIGNALBIAS_INVALID: number;
     static readonly ENABLED_FALSE: YVoltage.ENABLED;
     static readonly ENABLED_TRUE: YVoltage.ENABLED;
     static readonly ENABLED_INVALID: YVoltage.ENABLED;
+    static readonly SIGNALBIAS_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): number;
     /**
@@ -67,8 +70,8 @@ export declare class YVoltage extends YSensor {
      */
     get_enabled(): Promise<YVoltage.ENABLED>;
     /**
-     * Changes the activation state of this voltage input. When AC measures are disabled,
-     * the device will always assume a DC signal, and vice-versa. When both AC and DC measures
+     * Changes the activation state of this voltage input. When AC measurements are disabled,
+     * the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
      * are active, the device switches between AC and DC mode based on the relative amplitude
      * of variations compared to the average value.
      * Remember to call the saveToFlash()
@@ -82,6 +85,30 @@ export declare class YVoltage extends YSensor {
      * On failure, throws an exception or returns a negative error code.
      */
     set_enabled(newval: YVoltage.ENABLED): Promise<number>;
+    /**
+     * Changes the DC bias configured for zero shift adjustment.
+     * If your DC current reads positive when it should be zero, set up
+     * a positive signalBias of the same value to fix the zero shift.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the DC bias configured for zero shift adjustment
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_signalBias(newval: number): Promise<number>;
+    /**
+     * Returns the DC bias configured for zero shift adjustment.
+     * A positive bias value is used to correct a positive DC bias,
+     * while a negative bias value is used to correct a negative DC bias.
+     *
+     * @return a floating point number corresponding to the DC bias configured for zero shift adjustment
+     *
+     * On failure, throws an exception or returns YVoltage.SIGNALBIAS_INVALID.
+     */
+    get_signalBias(): Promise<number>;
     /**
      * Retrieves a voltage sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -163,6 +190,19 @@ export declare class YVoltage extends YSensor {
      */
     registerTimedReportCallback(callback: YVoltage.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
+    /**
+     * Calibrate the device by adjusting signalBias so that the current
+     * input voltage is precisely seen as zero. Before calling this method, make
+     * sure to short the power source inputs as close as possible to the connector, and
+     * to disconnect the load to ensure the wires don't capture radiated noise.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    zeroAdjust(): Promise<number>;
     /**
      * Continues the enumeration of voltage sensors started using yFirstVoltage().
      * Caution: You can't make any assumption about the returned voltage sensors order.

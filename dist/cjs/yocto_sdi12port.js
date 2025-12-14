@@ -1370,7 +1370,8 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         reqlen = 1024;
         buff = await this.readBin(reqlen);
         bufflen = (buff).length;
-        if (this._rxptr == currpos + bufflen) {
+        if ((bufflen > 0) && (this._rxptr == currpos + bufflen)) {
+            // up to 1024 bytes in buffer, all in direction Rx
             res = buff[0];
             this._rxptr = currpos + 1;
             this._rxbuffptr = currpos;
@@ -1382,7 +1383,8 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
         reqlen = 16;
         buff = await this.readBin(reqlen);
         bufflen = (buff).length;
-        if (this._rxptr == currpos + bufflen) {
+        if ((bufflen > 0) && (this._rxptr == currpos + bufflen)) {
+            // up to 16 bytes in buffer, all in direction Rx
             res = buff[0];
             this._rxptr = currpos + 1;
             this._rxbuffptr = currpos;
@@ -1437,7 +1439,7 @@ class YSdi12Port extends yocto_api_js_1.YFunction {
             bufflen = bufflen - 1;
         }
         this._rxptr = endpos;
-        res = (this._yapi.imm_bin2str(buff)).substr(0, bufflen);
+        res = this._yapi.imm_bin2str(buff).substr(0, bufflen);
         return res;
     }
     /**

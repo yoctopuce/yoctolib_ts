@@ -47,9 +47,12 @@ export declare class YMicroPython extends YFunction {
     _className: string;
     _lastMsg: string;
     _heapUsage: number;
+    _heapFrag: number;
     _xheapUsage: number;
+    _stackUsage: number;
     _currentScript: string;
     _startupScript: string;
+    _startupDelay: number;
     _debugMode: YMicroPython.DEBUGMODE;
     _command: string;
     _valueCallbackMicroPython: YMicroPython.ValueCallback | null;
@@ -60,18 +63,24 @@ export declare class YMicroPython extends YFunction {
     _prevPartialLog: string;
     readonly LASTMSG_INVALID: string;
     readonly HEAPUSAGE_INVALID: number;
+    readonly HEAPFRAG_INVALID: number;
     readonly XHEAPUSAGE_INVALID: number;
+    readonly STACKUSAGE_INVALID: number;
     readonly CURRENTSCRIPT_INVALID: string;
     readonly STARTUPSCRIPT_INVALID: string;
+    readonly STARTUPDELAY_INVALID: number;
     readonly DEBUGMODE_OFF: YMicroPython.DEBUGMODE;
     readonly DEBUGMODE_ON: YMicroPython.DEBUGMODE;
     readonly DEBUGMODE_INVALID: YMicroPython.DEBUGMODE;
     readonly COMMAND_INVALID: string;
     static readonly LASTMSG_INVALID: string;
     static readonly HEAPUSAGE_INVALID: number;
+    static readonly HEAPFRAG_INVALID: number;
     static readonly XHEAPUSAGE_INVALID: number;
+    static readonly STACKUSAGE_INVALID: number;
     static readonly CURRENTSCRIPT_INVALID: string;
     static readonly STARTUPSCRIPT_INVALID: string;
+    static readonly STARTUPDELAY_INVALID: number;
     static readonly DEBUGMODE_OFF: YMicroPython.DEBUGMODE;
     static readonly DEBUGMODE_ON: YMicroPython.DEBUGMODE;
     static readonly DEBUGMODE_INVALID: YMicroPython.DEBUGMODE;
@@ -88,25 +97,45 @@ export declare class YMicroPython extends YFunction {
      */
     get_lastMsg(): Promise<string>;
     /**
-     * Returns the percentage of micropython main memory in use,
+     * Returns the percentage of MicroPython main memory in use,
      * as observed at the end of the last garbage collection.
      *
-     * @return an integer corresponding to the percentage of micropython main memory in use,
+     * @return an integer corresponding to the percentage of MicroPython main memory in use,
      *         as observed at the end of the last garbage collection
      *
      * On failure, throws an exception or returns YMicroPython.HEAPUSAGE_INVALID.
      */
     get_heapUsage(): Promise<number>;
     /**
-     * Returns the percentage of micropython external memory in use,
+     * Returns the fragmentation ratio of MicroPython main memory,
      * as observed at the end of the last garbage collection.
      *
-     * @return an integer corresponding to the percentage of micropython external memory in use,
+     * @return an integer corresponding to the fragmentation ratio of MicroPython main memory,
+     *         as observed at the end of the last garbage collection
+     *
+     * On failure, throws an exception or returns YMicroPython.HEAPFRAG_INVALID.
+     */
+    get_heapFrag(): Promise<number>;
+    /**
+     * Returns the percentage of MicroPython external memory in use,
+     * as observed at the end of the last garbage collection.
+     *
+     * @return an integer corresponding to the percentage of MicroPython external memory in use,
      *         as observed at the end of the last garbage collection
      *
      * On failure, throws an exception or returns YMicroPython.XHEAPUSAGE_INVALID.
      */
     get_xheapUsage(): Promise<number>;
+    /**
+     * Returns the maximum percentage of MicroPython call stack in use,
+     * as observed at the end of the last garbage collection.
+     *
+     * @return an integer corresponding to the maximum percentage of MicroPython call stack in use,
+     *         as observed at the end of the last garbage collection
+     *
+     * On failure, throws an exception or returns YMicroPython.STACKUSAGE_INVALID.
+     */
+    get_stackUsage(): Promise<number>;
     /**
      * Returns the name of currently active script, if any.
      *
@@ -149,19 +178,43 @@ export declare class YMicroPython extends YFunction {
      */
     set_startupScript(newval: string): Promise<number>;
     /**
-     * Returns the activation state of micropython debugging interface.
+     * Changes the wait time before running the startup script on power on, between 0.1
+     * second and 25 seconds. Remember to call the saveToFlash() method of the
+     * module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the wait time before running the startup
+     * script on power on, between 0.1
+     *         second and 25 seconds
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_startupDelay(newval: number): Promise<number>;
+    /**
+     * Returns the wait time before running the startup script on power on,
+     * measured in seconds.
+     *
+     * @return a floating point number corresponding to the wait time before running the startup script on power on,
+     *         measured in seconds
+     *
+     * On failure, throws an exception or returns YMicroPython.STARTUPDELAY_INVALID.
+     */
+    get_startupDelay(): Promise<number>;
+    /**
+     * Returns the activation state of MicroPython debugging interface.
      *
      * @return either YMicroPython.DEBUGMODE_OFF or YMicroPython.DEBUGMODE_ON, according to the activation
-     * state of micropython debugging interface
+     * state of MicroPython debugging interface
      *
      * On failure, throws an exception or returns YMicroPython.DEBUGMODE_INVALID.
      */
     get_debugMode(): Promise<YMicroPython.DEBUGMODE>;
     /**
-     * Changes the activation state of micropython debugging interface.
+     * Changes the activation state of MicroPython debugging interface.
      *
      * @param newval : either YMicroPython.DEBUGMODE_OFF or YMicroPython.DEBUGMODE_ON, according to the
-     * activation state of micropython debugging interface
+     * activation state of MicroPython debugging interface
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -270,6 +323,14 @@ export declare class YMicroPython extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     reset(): Promise<number>;
+    /**
+     * Clears MicroPython interpreter console log buffer.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    clearLogs(): Promise<number>;
     /**
      * Returns a string with last logs of the MicroPython interpreter.
      * This method return only logs that are still in the module.

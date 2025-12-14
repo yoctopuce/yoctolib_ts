@@ -43,7 +43,7 @@ import { YAPI, YFunction, YSensor } from './yocto_api.js';
  * Yocto-Volt or the Yocto-Watt
  *
  * The YVoltage class allows you to read and configure Yoctopuce voltage sensors.
- * It inherits from YSensor class the core functions to read measures,
+ * It inherits from YSensor class the core functions to read measurements,
  * to register callback functions, and to access the autonomous datalogger.
  */
 //--- (end of YVoltage class start)
@@ -53,12 +53,14 @@ export class YVoltage extends YSensor {
         //--- (YVoltage constructor)
         super(yapi, func);
         this._enabled = YVoltage.ENABLED_INVALID;
+        this._signalBias = YVoltage.SIGNALBIAS_INVALID;
         this._valueCallbackVoltage = null;
         this._timedReportCallbackVoltage = null;
         // API symbols as object properties
         this.ENABLED_FALSE = 0;
         this.ENABLED_TRUE = 1;
         this.ENABLED_INVALID = -1;
+        this.SIGNALBIAS_INVALID = YAPI.INVALID_DOUBLE;
         this._className = 'Voltage';
         //--- (end of YVoltage constructor)
     }
@@ -67,6 +69,9 @@ export class YVoltage extends YSensor {
         switch (name) {
             case 'enabled':
                 this._enabled = val;
+                return 1;
+            case 'signalBias':
+                this._signalBias = Math.round(val / 65.536) / 1000.0;
                 return 1;
         }
         return super.imm_parseAttr(name, val);
@@ -89,8 +94,8 @@ export class YVoltage extends YSensor {
         return res;
     }
     /**
-     * Changes the activation state of this voltage input. When AC measures are disabled,
-     * the device will always assume a DC signal, and vice-versa. When both AC and DC measures
+     * Changes the activation state of this voltage input. When AC measurements are disabled,
+     * the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
      * are active, the device switches between AC and DC mode based on the relative amplitude
      * of variations compared to the average value.
      * Remember to call the saveToFlash()
@@ -107,6 +112,43 @@ export class YVoltage extends YSensor {
         let rest_val;
         rest_val = String(newval);
         return await this._setAttr('enabled', rest_val);
+    }
+    /**
+     * Changes the DC bias configured for zero shift adjustment.
+     * If your DC current reads positive when it should be zero, set up
+     * a positive signalBias of the same value to fix the zero shift.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the DC bias configured for zero shift adjustment
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_signalBias(newval) {
+        let rest_val;
+        rest_val = String(Math.round(newval * 65536.0));
+        return await this._setAttr('signalBias', rest_val);
+    }
+    /**
+     * Returns the DC bias configured for zero shift adjustment.
+     * A positive bias value is used to correct a positive DC bias,
+     * while a negative bias value is used to correct a negative DC bias.
+     *
+     * @return a floating point number corresponding to the DC bias configured for zero shift adjustment
+     *
+     * On failure, throws an exception or returns YVoltage.SIGNALBIAS_INVALID.
+     */
+    async get_signalBias() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YVoltage.SIGNALBIAS_INVALID;
+            }
+        }
+        res = this._signalBias;
+        return res;
     }
     /**
      * Retrieves a voltage sensor for a given identifier.
@@ -260,6 +302,28 @@ export class YVoltage extends YSensor {
         return 0;
     }
     /**
+     * Calibrate the device by adjusting signalBias so that the current
+     * input voltage is precisely seen as zero. Before calling this method, make
+     * sure to short the power source inputs as close as possible to the connector, and
+     * to disconnect the load to ensure the wires don't capture radiated noise.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async zeroAdjust() {
+        let currSignal;
+        let bias;
+        currSignal = await this.get_currentRawValue();
+        bias = await this.get_signalBias() + currSignal;
+        if (!((bias > -0.5) && (bias < 0.5))) {
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'suspicious zeroAdjust, please ensure that the power source inputs are shorted', this._yapi.INVALID_ARGUMENT);
+        }
+        return await this.set_signalBias(bias);
+    }
+    /**
      * Continues the enumeration of voltage sensors started using yFirstVoltage().
      * Caution: You can't make any assumption about the returned voltage sensors order.
      * If you want to find a specific a voltage sensor, use Voltage.findVoltage()
@@ -315,4 +379,5 @@ export class YVoltage extends YSensor {
 YVoltage.ENABLED_FALSE = 0;
 YVoltage.ENABLED_TRUE = 1;
 YVoltage.ENABLED_INVALID = -1;
+YVoltage.SIGNALBIAS_INVALID = YAPI.INVALID_DOUBLE;
 //# sourceMappingURL=yocto_voltage.js.map

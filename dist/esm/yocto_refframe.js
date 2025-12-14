@@ -449,11 +449,11 @@ export class YRefFrame extends YFunction {
         let res;
         calibParam = await this.get_calibrationParam();
         iCalib = this._yapi.imm_decodeFloats(calibParam);
-        caltyp = (((iCalib[0]) / (1000)) >> 0);
+        caltyp = ((iCalib[0] / 1000) >> 0);
         if (caltyp != 33) {
             return this._yapi.NOT_SUPPORTED;
         }
-        res = (((iCalib[1]) / (1000)) >> 0);
+        res = ((iCalib[1] / 1000) >> 0);
         return res;
     }
     /**
@@ -476,11 +476,11 @@ export class YRefFrame extends YFunction {
         let res;
         calibParam = await this.get_calibrationParam();
         iCalib = this._yapi.imm_decodeFloats(calibParam);
-        caltyp = (((iCalib[0]) / (1000)) >> 0);
+        caltyp = ((iCalib[0] / 1000) >> 0);
         if (caltyp != 33) {
             return this._yapi.NOT_SUPPORTED;
         }
-        res = (((iCalib[2]) / (1000)) >> 0);
+        res = ((iCalib[2] / 1000) >> 0);
         return res;
     }
     async _calibSort(start, stopidx) {
@@ -555,7 +555,7 @@ export class YRefFrame extends YFunction {
         this._calibStageProgress = 0;
         this._calibProgress = 1;
         this._calibInternalPos = 0;
-        this._calibPrevTick = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        this._calibPrevTick = (this._yapi.GetTickCount() & 0x7FFFFFFF);
         this._calibOrient.length = 0;
         this._calibDataAccX.length = 0;
         this._calibDataAccY.length = 0;
@@ -601,7 +601,7 @@ export class YRefFrame extends YFunction {
             return this._yapi.SUCCESS;
         }
         // make sure we leave at least 160 ms between samples
-        currTick = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        currTick = (this._yapi.GetTickCount() & 0x7FFFFFFF);
         if (((currTick - this._calibPrevTick) & 0x7FFFFFFF) < 160) {
             return this._yapi.SUCCESS;
         }
@@ -696,15 +696,15 @@ export class YRefFrame extends YFunction {
         this._calibDataAccZ.push(zVal);
         this._calibDataAcc.push(norm);
         this._calibInternalPos = this._calibInternalPos + 1;
-        this._calibProgress = 1 + 16 * (this._calibStage - 1) + (((16 * this._calibInternalPos) / (this._calibCount)) >> 0);
+        this._calibProgress = 1 + 16 * (this._calibStage - 1) + (((16 * this._calibInternalPos) / this._calibCount) >> 0);
         if (this._calibInternalPos < this._calibCount) {
-            this._calibStageProgress = 1 + (((99 * this._calibInternalPos) / (this._calibCount)) >> 0);
+            this._calibStageProgress = 1 + (((99 * this._calibInternalPos) / this._calibCount) >> 0);
             return this._yapi.SUCCESS;
         }
         // Stage done, compute preliminary result
         intpos = (this._calibStage - 1) * this._calibCount;
         await this._calibSort(intpos, intpos + this._calibCount);
-        intpos = intpos + (((this._calibCount) / (2)) >> 0);
+        intpos = intpos + ((this._calibCount / 2) >> 0);
         this._calibLogMsg = 'Stage ' + String(Math.round(this._calibStage)) + ': median is ' + String(Math.round(Math.round(1000 * this._calibDataAccX[intpos]))) + ',' + String(Math.round(Math.round(1000 * this._calibDataAccY[intpos]))) + ',' + String(Math.round(Math.round(1000 * this._calibDataAccZ[intpos])));
         // move to next stage
         this._calibStage = this._calibStage + 1;
@@ -721,7 +721,7 @@ export class YRefFrame extends YFunction {
         zVal = 0;
         idx = 0;
         while (idx < 6) {
-            intpos = idx * this._calibCount + (((this._calibCount) / (2)) >> 0);
+            intpos = idx * this._calibCount + ((this._calibCount / 2) >> 0);
             orient = this._calibOrient[idx];
             if (orient == 0 || orient == 1) {
                 zVal = zVal + this._calibDataAccZ[intpos];
@@ -759,7 +759,7 @@ export class YRefFrame extends YFunction {
         zVal = 0;
         idx = 0;
         while (idx < 6) {
-            intpos = idx * this._calibCount + (((this._calibCount) / (2)) >> 0);
+            intpos = idx * this._calibCount + ((this._calibCount / 2) >> 0);
             orient = this._calibOrient[idx];
             if (orient == 0 || orient == 1) {
                 zVal = zVal + this._calibDataAcc[intpos];
@@ -797,20 +797,20 @@ export class YRefFrame extends YFunction {
         }
         // make sure we don't start before previous calibration is cleared
         if (this._calibStage == 1) {
-            currTick = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+            currTick = (this._yapi.GetTickCount() & 0x7FFFFFFF);
             currTick = ((currTick - this._calibPrevTick) & 0x7FFFFFFF);
             if (currTick < 1600) {
                 this._calibStageHint = 'Set down the device on a steady horizontal surface';
-                this._calibStageProgress = (((currTick) / (40)) >> 0);
+                this._calibStageProgress = ((currTick / 40) >> 0);
                 this._calibProgress = 1;
                 return this._yapi.SUCCESS;
             }
         }
         calibParam = await this._download('api/refFrame/calibrationParam.txt');
         iCalib = this._yapi.imm_decodeFloats(this._yapi.imm_bin2str(calibParam));
-        cal3 = (((iCalib[1]) / (1000)) >> 0);
-        calAcc = (((cal3) / (100)) >> 0);
-        calMag = (((cal3) / (10)) >> 0) - 10 * calAcc;
+        cal3 = ((iCalib[1] / 1000) >> 0);
+        calAcc = ((cal3 / 100) >> 0);
+        calMag = ((cal3 / 10) >> 0) - 10 * calAcc;
         calGyr = ((cal3) % (10));
         if (calGyr < 3) {
             this._calibStageHint = 'Set down the device on a steady horizontal surface';

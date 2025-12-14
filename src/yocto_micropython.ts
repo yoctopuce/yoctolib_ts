@@ -39,24 +39,27 @@
 
 import { YAPI, YAPIContext, YErrorMsg, YFunction, YModule, YSensor, YDataLogger, YMeasure } from './yocto_api.js';
 
-//--- (YMicroPython class start)
+//--- (generated code: YMicroPython class start)
 /**
  * YMicroPython Class: MicroPython interpreter control interface
  *
  * The YMicroPython class provides control of the MicroPython interpreter
  * that can be found on some Yoctopuce devices.
  */
-//--- (end of YMicroPython class start)
+//--- (end of generated code: YMicroPython class start)
 
 export class YMicroPython extends YFunction
 {
-    //--- (YMicroPython attributes declaration)
+    //--- (generated code: YMicroPython attributes declaration)
     _className: string;
     _lastMsg: string = YMicroPython.LASTMSG_INVALID;
     _heapUsage: number = YMicroPython.HEAPUSAGE_INVALID;
+    _heapFrag: number = YMicroPython.HEAPFRAG_INVALID;
     _xheapUsage: number = YMicroPython.XHEAPUSAGE_INVALID;
+    _stackUsage: number = YMicroPython.STACKUSAGE_INVALID;
     _currentScript: string = YMicroPython.CURRENTSCRIPT_INVALID;
     _startupScript: string = YMicroPython.STARTUPSCRIPT_INVALID;
+    _startupDelay: number = YMicroPython.STARTUPDELAY_INVALID;
     _debugMode: YMicroPython.DEBUGMODE = YMicroPython.DEBUGMODE_INVALID;
     _command: string = YMicroPython.COMMAND_INVALID;
     _valueCallbackMicroPython: YMicroPython.ValueCallback | null = null;
@@ -69,9 +72,12 @@ export class YMicroPython extends YFunction
     // API symbols as object properties
     public readonly LASTMSG_INVALID: string = YAPI.INVALID_STRING;
     public readonly HEAPUSAGE_INVALID: number = YAPI.INVALID_UINT;
+    public readonly HEAPFRAG_INVALID: number = YAPI.INVALID_UINT;
     public readonly XHEAPUSAGE_INVALID: number = YAPI.INVALID_UINT;
+    public readonly STACKUSAGE_INVALID: number = YAPI.INVALID_UINT;
     public readonly CURRENTSCRIPT_INVALID: string = YAPI.INVALID_STRING;
     public readonly STARTUPSCRIPT_INVALID: string = YAPI.INVALID_STRING;
+    public readonly STARTUPDELAY_INVALID: number = YAPI.INVALID_DOUBLE;
     public readonly DEBUGMODE_OFF: YMicroPython.DEBUGMODE = 0;
     public readonly DEBUGMODE_ON: YMicroPython.DEBUGMODE = 1;
     public readonly DEBUGMODE_INVALID: YMicroPython.DEBUGMODE = -1;
@@ -80,24 +86,27 @@ export class YMicroPython extends YFunction
     // API symbols as static members
     public static readonly LASTMSG_INVALID: string = YAPI.INVALID_STRING;
     public static readonly HEAPUSAGE_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly HEAPFRAG_INVALID: number = YAPI.INVALID_UINT;
     public static readonly XHEAPUSAGE_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly STACKUSAGE_INVALID: number = YAPI.INVALID_UINT;
     public static readonly CURRENTSCRIPT_INVALID: string = YAPI.INVALID_STRING;
     public static readonly STARTUPSCRIPT_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly STARTUPDELAY_INVALID: number = YAPI.INVALID_DOUBLE;
     public static readonly DEBUGMODE_OFF: YMicroPython.DEBUGMODE = 0;
     public static readonly DEBUGMODE_ON: YMicroPython.DEBUGMODE = 1;
     public static readonly DEBUGMODE_INVALID: YMicroPython.DEBUGMODE = -1;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
-    //--- (end of YMicroPython attributes declaration)
+    //--- (end of generated code: YMicroPython attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
     {
-        //--- (YMicroPython constructor)
+        //--- (generated code: YMicroPython constructor)
         super(yapi, func);
         this._className                  = 'MicroPython';
-        //--- (end of YMicroPython constructor)
+        //--- (end of generated code: YMicroPython constructor)
     }
 
-    //--- (YMicroPython implementation)
+    //--- (generated code: YMicroPython implementation)
 
     imm_parseAttr(name: string, val: any): number
     {
@@ -108,14 +117,23 @@ export class YMicroPython extends YFunction
         case 'heapUsage':
             this._heapUsage = <number> <number> val;
             return 1;
+        case 'heapFrag':
+            this._heapFrag = <number> <number> val;
+            return 1;
         case 'xheapUsage':
             this._xheapUsage = <number> <number> val;
+            return 1;
+        case 'stackUsage':
+            this._stackUsage = <number> <number> val;
             return 1;
         case 'currentScript':
             this._currentScript = <string> <string> val;
             return 1;
         case 'startupScript':
             this._startupScript = <string> <string> val;
+            return 1;
+        case 'startupDelay':
+            this._startupDelay = <number> Math.round(<number>val / 65.536) / 1000.0;
             return 1;
         case 'debugMode':
             this._debugMode = <YMicroPython.DEBUGMODE> <number> val;
@@ -152,10 +170,10 @@ export class YMicroPython extends YFunction
     }
 
     /**
-     * Returns the percentage of micropython main memory in use,
+     * Returns the percentage of MicroPython main memory in use,
      * as observed at the end of the last garbage collection.
      *
-     * @return an integer corresponding to the percentage of micropython main memory in use,
+     * @return an integer corresponding to the percentage of MicroPython main memory in use,
      *         as observed at the end of the last garbage collection
      *
      * On failure, throws an exception or returns YMicroPython.HEAPUSAGE_INVALID.
@@ -173,10 +191,31 @@ export class YMicroPython extends YFunction
     }
 
     /**
-     * Returns the percentage of micropython external memory in use,
+     * Returns the fragmentation ratio of MicroPython main memory,
      * as observed at the end of the last garbage collection.
      *
-     * @return an integer corresponding to the percentage of micropython external memory in use,
+     * @return an integer corresponding to the fragmentation ratio of MicroPython main memory,
+     *         as observed at the end of the last garbage collection
+     *
+     * On failure, throws an exception or returns YMicroPython.HEAPFRAG_INVALID.
+     */
+    async get_heapFrag(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YMicroPython.HEAPFRAG_INVALID;
+            }
+        }
+        res = this._heapFrag;
+        return res;
+    }
+
+    /**
+     * Returns the percentage of MicroPython external memory in use,
+     * as observed at the end of the last garbage collection.
+     *
+     * @return an integer corresponding to the percentage of MicroPython external memory in use,
      *         as observed at the end of the last garbage collection
      *
      * On failure, throws an exception or returns YMicroPython.XHEAPUSAGE_INVALID.
@@ -190,6 +229,27 @@ export class YMicroPython extends YFunction
             }
         }
         res = this._xheapUsage;
+        return res;
+    }
+
+    /**
+     * Returns the maximum percentage of MicroPython call stack in use,
+     * as observed at the end of the last garbage collection.
+     *
+     * @return an integer corresponding to the maximum percentage of MicroPython call stack in use,
+     *         as observed at the end of the last garbage collection
+     *
+     * On failure, throws an exception or returns YMicroPython.STACKUSAGE_INVALID.
+     */
+    async get_stackUsage(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YMicroPython.STACKUSAGE_INVALID;
+            }
+        }
+        res = this._stackUsage;
         return res;
     }
 
@@ -269,10 +329,51 @@ export class YMicroPython extends YFunction
     }
 
     /**
-     * Returns the activation state of micropython debugging interface.
+     * Changes the wait time before running the startup script on power on, between 0.1
+     * second and 25 seconds. Remember to call the saveToFlash() method of the
+     * module if the modification must be kept.
+     *
+     * @param newval : a floating point number corresponding to the wait time before running the startup
+     * script on power on, between 0.1
+     *         second and 25 seconds
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_startupDelay(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(Math.round(newval * 65536.0));
+        return await this._setAttr('startupDelay', rest_val);
+    }
+
+    /**
+     * Returns the wait time before running the startup script on power on,
+     * measured in seconds.
+     *
+     * @return a floating point number corresponding to the wait time before running the startup script on power on,
+     *         measured in seconds
+     *
+     * On failure, throws an exception or returns YMicroPython.STARTUPDELAY_INVALID.
+     */
+    async get_startupDelay(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YMicroPython.STARTUPDELAY_INVALID;
+            }
+        }
+        res = this._startupDelay;
+        return res;
+    }
+
+    /**
+     * Returns the activation state of MicroPython debugging interface.
      *
      * @return either YMicroPython.DEBUGMODE_OFF or YMicroPython.DEBUGMODE_ON, according to the activation
-     * state of micropython debugging interface
+     * state of MicroPython debugging interface
      *
      * On failure, throws an exception or returns YMicroPython.DEBUGMODE_INVALID.
      */
@@ -289,10 +390,10 @@ export class YMicroPython extends YFunction
     }
 
     /**
-     * Changes the activation state of micropython debugging interface.
+     * Changes the activation state of MicroPython debugging interface.
      *
      * @param newval : either YMicroPython.DEBUGMODE_OFF or YMicroPython.DEBUGMODE_ON, according to the
-     * activation state of micropython debugging interface
+     * activation state of MicroPython debugging interface
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -501,6 +602,21 @@ export class YMicroPython extends YFunction
     }
 
     /**
+     * Clears MicroPython interpreter console log buffer.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async clearLogs(): Promise<number>
+    {
+        let res: number;
+
+        res = await this.set_command('z');
+        return res;
+    }
+
+    /**
      * Returns a string with last logs of the MicroPython interpreter.
      * This method return only logs that are still in the module.
      *
@@ -518,7 +634,7 @@ export class YMicroPython extends YFunction
         while ((bufflen > 0) && (buff[bufflen] != 64)) {
             bufflen = bufflen - 1;
         }
-        res = (this._yapi.imm_bin2str(buff)).substr(0, bufflen);
+        res = this._yapi.imm_bin2str(buff).substr(0, bufflen);
         return res;
     }
 
@@ -695,11 +811,11 @@ export class YMicroPython extends YFunction
         return YMicroPython.FindMicroPythonInContext(yctx, next_hwid);
     }
 
-    //--- (end of YMicroPython implementation)
+    //--- (end of generated code: YMicroPython implementation)
 }
 
 export namespace YMicroPython {
-    //--- (YMicroPython definitions)
+    //--- (generated code: YMicroPython definitions)
     export const enum DEBUGMODE
     {
         OFF = 0,
@@ -711,6 +827,6 @@ export namespace YMicroPython {
 
     export interface LogCallback {(func: YMicroPython, logline:string): void}
 
-    //--- (end of YMicroPython definitions)
+    //--- (end of generated code: YMicroPython definitions)
 }
 

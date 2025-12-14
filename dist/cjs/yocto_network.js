@@ -520,8 +520,8 @@ class YNetwork extends yocto_api_js_1.YFunction {
      */
     async set_userPassword(newval) {
         let rest_val;
-        if (newval.length > yocto_api_js_1.YAPI.HASH_BUF_SIZE) {
-            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, yocto_api_js_1.YAPI.INVALID_ARGUMENT);
+        if (!this._is_valid_pass(newval)) {
+            return yocto_api_js_1.YAPI.INVALID_ARGUMENT;
         }
         rest_val = String(newval);
         return await this._setAttr('userPassword', rest_val);
@@ -560,8 +560,8 @@ class YNetwork extends yocto_api_js_1.YFunction {
      */
     async set_adminPassword(newval) {
         let rest_val;
-        if (newval.length > yocto_api_js_1.YAPI.HASH_BUF_SIZE) {
-            return this._throw(yocto_api_js_1.YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, yocto_api_js_1.YAPI.INVALID_ARGUMENT);
+        if (!this._is_valid_pass(newval)) {
+            return yocto_api_js_1.YAPI.INVALID_ARGUMENT;
         }
         rest_val = String(newval);
         return await this._setAttr('adminPassword', rest_val);

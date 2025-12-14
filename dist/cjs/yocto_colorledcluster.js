@@ -424,7 +424,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
      */
     async set_hslColorAtPowerOn(ledIndex, count, hslValue) {
         let rgbValue;
-        rgbValue = await this.hsl2rgb(hslValue);
+        rgbValue = this.hsl2rgb(hslValue);
         return await this.sendCommand('SC' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (rgbValue).toString(16).toLowerCase());
     }
     /**
@@ -924,7 +924,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
      * On failure, throws an exception or returns an empty binary buffer.
      */
     async get_rgbColorBuffer(ledIndex, count) {
-        return await this._download('rgb.bin?typ=0&pos=' + String(Math.round(3 * ledIndex)) + '&len=' + String(Math.round(3 * count)));
+        return await this._download('rgb.bin?typ=' + String(Math.round(0)) + '&pos=' + String(Math.round(3 * ledIndex)) + '&len=' + String(Math.round(3 * count)));
     }
     /**
      * Returns a list on 24bit RGB color values with the current colors displayed on
@@ -945,7 +945,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let r;
         let g;
         let b;
-        buff = await this._download('rgb.bin?typ=0&pos=' + String(Math.round(3 * ledIndex)) + '&len=' + String(Math.round(3 * count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(0)) + '&pos=' + String(Math.round(3 * ledIndex)) + '&len=' + String(Math.round(3 * count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -976,7 +976,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let r;
         let g;
         let b;
-        buff = await this._download('rgb.bin?typ=4&pos=' + String(Math.round(3 * ledIndex)) + '&len=' + String(Math.round(3 * count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(4)) + '&pos=' + String(Math.round(3 * ledIndex)) + '&len=' + String(Math.round(3 * count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1005,7 +1005,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let res = [];
         let idx;
         let seq;
-        buff = await this._download('rgb.bin?typ=1&pos=' + String(Math.round(ledIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(1)) + '&pos=' + String(Math.round(ledIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1035,7 +1035,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let hl;
         let lh;
         let ll;
-        buff = await this._download('rgb.bin?typ=2&pos=' + String(Math.round(4 * seqIndex)) + '&len=' + String(Math.round(4 * count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(2)) + '&pos=' + String(Math.round(4 * seqIndex)) + '&len=' + String(Math.round(4 * count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1064,7 +1064,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let idx;
         let lh;
         let ll;
-        buff = await this._download('rgb.bin?typ=6&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(6)) + '&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1090,7 +1090,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let res = [];
         let idx;
         let started;
-        buff = await this._download('rgb.bin?typ=5&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(5)) + '&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1115,7 +1115,7 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         let res = [];
         let idx;
         let started;
-        buff = await this._download('rgb.bin?typ=3&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(3)) + '&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1125,19 +1125,19 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         }
         return res;
     }
-    async hsl2rgbInt(temp1, temp2, temp3) {
+    hsl2rgbInt(temp1, temp2, temp3) {
         if (temp3 >= 170) {
-            return ((((temp1 + 127)) / (255)) >> 0);
+            return (((temp1 + 127) / 255) >> 0);
         }
         if (temp3 > 42) {
             if (temp3 <= 127) {
-                return ((((temp2 + 127)) / (255)) >> 0);
+                return (((temp2 + 127) / 255) >> 0);
             }
             temp3 = 170 - temp3;
         }
-        return ((((temp1 * 255 + (temp2 - temp1) * (6 * temp3) + 32512)) / (65025)) >> 0);
+        return (((temp1 * 255 + (temp2 - temp1) * (6 * temp3) + 32512) / 65025) >> 0);
     }
-    async hsl2rgb(hslValue) {
+    hsl2rgb(hslValue) {
         let R;
         let G;
         let B;
@@ -1163,25 +1163,14 @@ class YColorLedCluster extends yocto_api_js_1.YFunction {
         }
         temp1 = 510 * L - temp2;
         // R
-        temp3 = (H + 85);
-        if (temp3 > 255) {
-            temp3 = temp3 - 255;
-        }
-        R = await this.hsl2rgbInt(temp1, temp2, temp3);
+        temp3 = ((H + 85) & 0xff);
+        R = this.hsl2rgbInt(temp1, temp2, temp3);
         // G
-        temp3 = H;
-        if (temp3 > 255) {
-            temp3 = temp3 - 255;
-        }
-        G = await this.hsl2rgbInt(temp1, temp2, temp3);
+        temp3 = (H & 0xff);
+        G = this.hsl2rgbInt(temp1, temp2, temp3);
         // B
-        if (H >= 85) {
-            temp3 = H - 85;
-        }
-        else {
-            temp3 = H + 170;
-        }
-        B = await this.hsl2rgbInt(temp1, temp2, temp3);
+        temp3 = ((H + 170) & 0xff);
+        B = this.hsl2rgbInt(temp1, temp2, temp3);
         // just in case
         if (R > 255) {
             R = 255;

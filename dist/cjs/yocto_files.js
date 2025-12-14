@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_files.ts 70518 2025-11-26 16:18:50Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -110,6 +110,7 @@ class YFiles extends yocto_api_js_1.YFunction {
         this._filesCount = YFiles.FILESCOUNT_INVALID;
         this._freeSpace = YFiles.FREESPACE_INVALID;
         this._valueCallbackFiles = null;
+        this._ver = 0;
         // API symbols as object properties
         this.FILESCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.FREESPACE_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -281,6 +282,22 @@ class YFiles extends yocto_api_js_1.YFunction {
         url = 'files.json?a=' + command;
         return await this._download(url);
     }
+    async _getVersion() {
+        let json;
+        if (this._ver > 0) {
+            return this._ver;
+        }
+        //may throw an exception
+        json = await this.sendCommand('info');
+        if (json[0] != 123) {
+            // ascii code for '{'
+            this._ver = 30;
+        }
+        else {
+            this._ver = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(json, 'ver'));
+        }
+        return this._ver;
+    }
     /**
      * Reinitialize the filesystem to its clean, unfragmented, empty state.
      * All files previously uploaded are permanently lost.
@@ -319,17 +336,17 @@ class YFiles extends yocto_api_js_1.YFunction {
         json = await this.sendCommand('dir&f=' + pattern);
         filelist = this.imm_json_get_array(json);
         res.length = 0;
-        for (let ii in filelist) {
-            res.push(new YFileRecord(this._yapi.imm_bin2str(filelist[ii])));
+        for (let ii_0 of filelist) {
+            res.push(new YFileRecord(this._yapi.imm_bin2str(ii_0)));
         }
         return res;
     }
     /**
-     * Test if a file exist on the filesystem of the module.
+     * Tests if a file exists on the filesystem of the module.
      *
-     * @param filename : the file name to test.
+     * @param filename : the filename to test.
      *
-     * @return a true if the file exist, false otherwise.
+     * @return true if the file exists, false otherwise.
      *
      * On failure, throws an exception.
      */
@@ -395,6 +412,53 @@ class YFiles extends yocto_api_js_1.YFunction {
             return this._throw(this._yapi.IO_ERROR, 'unable to remove file', this._yapi.IO_ERROR);
         }
         return this._yapi.SUCCESS;
+    }
+    /**
+     * Returns the expected file CRC for a given content.
+     * Note that the CRC value may vary depending on the version
+     * of the filesystem used by the hub, so it is important to
+     * use this method if a reference value needs to be computed.
+     *
+     * @param content : a buffer representing a file content
+     *
+     * @return the 32-bit CRC summarizing the file content, as it would
+     *         be returned by the get_crc() method of
+     *         YFileRecord objects returned by get_list().
+     */
+    async get_content_crc(content) {
+        let fsver;
+        let sz;
+        let blkcnt;
+        let meta;
+        let blkidx;
+        let blksz;
+        let part;
+        let res;
+        sz = (content).length;
+        fsver = await this._getVersion();
+        if (fsver < 40) {
+            res = this._yapi.imm_bincrc(content, 0, sz);
+            res = ((res & 0x7fffffff) - 2 * ((res >> 1) & 0x40000000));
+            return res;
+        }
+        blkcnt = (((sz + 255) / 256) >> 0);
+        meta = new Uint8Array(4 * blkcnt);
+        blkidx = 0;
+        while (blkidx < blkcnt) {
+            blksz = sz - blkidx * 256;
+            if (blksz > 256) {
+                blksz = 256;
+            }
+            part = (this._yapi.imm_bincrc(content, blkidx * 256, blksz) ^ 0xffffffff);
+            meta.set([(part & 255)], 4 * blkidx);
+            meta.set([((part >> 8) & 255)], 4 * blkidx + 1);
+            meta.set([((part >> 16) & 255)], 4 * blkidx + 2);
+            meta.set([((part >> 24) & 255)], 4 * blkidx + 3);
+            blkidx = blkidx + 1;
+        }
+        res = (this._yapi.imm_bincrc(meta, 0, 4 * blkcnt) ^ 0xffffffff);
+        res = ((res & 0x7fffffff) - 2 * ((res >> 1) & 0x40000000));
+        return res;
     }
     /**
      * Continues the enumeration of filesystems started using yFirstFiles().

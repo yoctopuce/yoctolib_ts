@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_files.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_files.ts 70518 2025-11-26 16:18:50Z mvuilleu $
  *
  *  Implements the high-level API for FileRecord functions
  *
@@ -84,6 +84,7 @@ export declare class YFiles extends YFunction {
     _filesCount: number;
     _freeSpace: number;
     _valueCallbackFiles: YFiles.ValueCallback | null;
+    _ver: number;
     readonly FILESCOUNT_INVALID: number;
     readonly FREESPACE_INVALID: number;
     static readonly FILESCOUNT_INVALID: number;
@@ -175,6 +176,7 @@ export declare class YFiles extends YFunction {
     registerValueCallback(callback: YFiles.ValueCallback | null): Promise<number>;
     _invokeValueCallback(value: string): Promise<number>;
     sendCommand(command: string): Promise<Uint8Array>;
+    _getVersion(): Promise<number>;
     /**
      * Reinitialize the filesystem to its clean, unfragmented, empty state.
      * All files previously uploaded are permanently lost.
@@ -199,11 +201,11 @@ export declare class YFiles extends YFunction {
      */
     get_list(pattern: string): Promise<YFileRecord[]>;
     /**
-     * Test if a file exist on the filesystem of the module.
+     * Tests if a file exists on the filesystem of the module.
      *
-     * @param filename : the file name to test.
+     * @param filename : the filename to test.
      *
-     * @return a true if the file exist, false otherwise.
+     * @return true if the file exists, false otherwise.
      *
      * On failure, throws an exception.
      */
@@ -245,6 +247,19 @@ export declare class YFiles extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     remove(pathname: string): Promise<number>;
+    /**
+     * Returns the expected file CRC for a given content.
+     * Note that the CRC value may vary depending on the version
+     * of the filesystem used by the hub, so it is important to
+     * use this method if a reference value needs to be computed.
+     *
+     * @param content : a buffer representing a file content
+     *
+     * @return the 32-bit CRC summarizing the file content, as it would
+     *         be returned by the get_crc() method of
+     *         YFileRecord objects returned by get_list().
+     */
+    get_content_crc(content: Uint8Array): Promise<number>;
     /**
      * Continues the enumeration of filesystems started using yFirstFiles().
      * Caution: You can't make any assumption about the returned filesystems order.

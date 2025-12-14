@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_serialport.ts 70736 2025-12-12 07:53:30Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 62445 2024-09-04 09:35:31Z seb $
+ * $Id: yocto_api_nodejs.ts 68272 2025-08-11 14:08:33Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -261,12 +261,6 @@ class YHttpCallbackEngine extends YHubEngine {
         }
     }
     /** Perform an HTTP query on the hub
-     *
-     * @param str_method {string}
-     * @param devUrl {string}
-     * @param obj_body {YHTTPBody|null}
-     * @param tcpchan {number}
-     * @returns {YHTTPRequest}
      */
     async request(str_method, devUrl, obj_body, tcpchan) {
         let yreq = new YHTTPRequest(null);
@@ -530,8 +524,6 @@ class YHttpNodeEngine extends YHttpEngine {
 }
 class YWebSocketNodeEngine extends YWebSocketEngine {
     /** Open an outgoing websocket
-     *
-     * @param str_url {string}
      **/
     imm_webSocketOpen(str_url) {
         let options = {
@@ -559,15 +551,11 @@ class YWebSocketNodeEngine extends YWebSocketEngine {
         this.websocket = new WebSocket(str_url, options);
     }
     /** Fills a buffer with random numbers
-     *
-     * @param arr {Uint8Array}
      **/
     imm_getRandomValues(arr) {
         return crypto.randomFillSync(arr);
     }
     /** Send an outgoing packet
-     *
-     * @param arr_bytes {Uint8Array}
      **/
     imm_webSocketSend(arr_bytes) {
         if (this.websocket) {
@@ -584,8 +572,6 @@ class YWebSocketCallbackEngine extends YWebSocketNodeEngine {
         hub.imm_setRetryDelay(-1);
     }
     /** Open an outgoing websocket
-     *
-     * @param str_url {string}
      **/
     imm_webSocketOpen(str_url) {
         // nothing to do, the ws is already open !

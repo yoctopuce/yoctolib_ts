@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: yocto_gyro.ts 67383 2025-06-11 05:44:27Z mvuilleu $
  *
  *  Implements the high-level API for Qt functions
  *
@@ -584,7 +584,7 @@ class YGyro extends yocto_api_js_1.YSensor {
     async _loadQuaternion() {
         let now_stamp;
         let age_ms;
-        now_stamp = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        now_stamp = (this._yapi.GetTickCount() & 0x7FFFFFFF);
         age_ms = ((now_stamp - this._qt_stamp) & 0x7FFFFFFF);
         if ((age_ms >= 10) || (this._qt_stamp == 0)) {
             if (await this.load(10) != this._yapi.SUCCESS) {
@@ -852,7 +852,7 @@ class YGyro extends yocto_api_js_1.YSensor {
         if (qtIndex < 4) {
             return 0;
         }
-        this._qt_stamp = ((this._yapi.GetTickCount()) & 0x7FFFFFFF);
+        this._qt_stamp = (this._yapi.GetTickCount() & 0x7FFFFFFF);
         if (this._quatCallback != null) {
             try {
                 await this._quatCallback(this, this._w, this._x, this._y, this._z);

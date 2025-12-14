@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_messagebox.ts 68482 2025-08-21 10:07:30Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -572,7 +572,7 @@ class YSms {
         addrType = (addr[ofs] & 112);
         if (addrType == 80) {
             // alphanumeric number
-            siz = (((4 * siz) / (7)) >> 0);
+            siz = (((4 * siz) / 7) >> 0);
             gsm7 = new Uint8Array(siz);
             rpos = 1;
             carry = 0;
@@ -631,18 +631,18 @@ class YSms {
             n = yocto_api_js_1.YAPIContext.imm_atoi(exp.substr(1, explen - 1));
             res = new Uint8Array(1);
             if (n > 30 * 86400) {
-                n = 192 + ((((n + 6 * 86400)) / ((7 * 86400))) >> 0);
+                n = 192 + (((n + 6 * 86400) / (7 * 86400)) >> 0);
             }
             else {
                 if (n > 86400) {
-                    n = 166 + ((((n + 86399)) / (86400)) >> 0);
+                    n = 166 + (((n + 86399) / 86400) >> 0);
                 }
                 else {
                     if (n > 43200) {
-                        n = 143 + ((((n - 43200 + 1799)) / (1800)) >> 0);
+                        n = 143 + (((n - 43200 + 1799) / 1800) >> 0);
                     }
                     else {
-                        n = -1 + ((((n + 299)) / (300)) >> 0);
+                        n = -1 + (((n + 299) / 300) >> 0);
                     }
                 }
             }
@@ -687,7 +687,7 @@ class YSms {
                 v1 = expasc[i + 1];
                 v2 = expasc[i + 2];
                 if ((v1 >= 48) && (v1 < 58) && (v1 >= 48) && (v1 < 58)) {
-                    v1 = ((((10 * (v1 - 48) + (v2 - 48))) / (15)) >> 0);
+                    v1 = (((10 * (v1 - 48) + (v2 - 48)) / 15) >> 0);
                     n = n - 1;
                     v2 = 4 * res[n] + v1;
                     if (expasc[i - 3] == 45) {
@@ -777,9 +777,9 @@ class YSms {
         res = (this._udata).length;
         if (this._alphab == 0) {
             if (udhsize > 0) {
-                res = res + ((((8 + 8 * udhsize + 6)) / (7)) >> 0);
+                res = res + (((8 + 8 * udhsize + 6) / 7) >> 0);
             }
-            res = ((((res * 7 + 7)) / (8)) >> 0);
+            res = (((res * 7 + 7) / 8) >> 0);
         }
         else {
             if (udhsize > 0) {
@@ -811,7 +811,7 @@ class YSms {
         if (this._alphab == 0) {
             // 7-bit encoding
             if (udhsize > 0) {
-                udhlen = ((((8 + 8 * udhsize + 6)) / (7)) >> 0);
+                udhlen = (((8 + 8 * udhsize + 6) / 7) >> 0);
                 nbits = 7 * udhlen - 8 - 8 * udhsize;
             }
             res.set([udhlen + udlen], 0);
@@ -880,9 +880,9 @@ class YSms {
         udlen = (this._udata).length;
         mss = 140 - 1 - 5 - udhsize;
         if (this._alphab == 0) {
-            mss = ((((mss * 8 - 6)) / (7)) >> 0);
+            mss = (((mss * 8 - 6) / 7) >> 0);
         }
-        this._npdu = ((((udlen + mss - 1)) / (mss)) >> 0);
+        this._npdu = (((udlen + mss - 1) / mss) >> 0);
         this._parts.length = 0;
         partno = 0;
         wpos = 0;
@@ -1119,7 +1119,7 @@ class YSms {
             }
             if (this._alphab == 0) {
                 // 7-bit encoding
-                udhlen = ((((8 + 8 * udhsize + 6)) / (7)) >> 0);
+                udhlen = (((8 + 8 * udhsize + 6) / 7) >> 0);
                 nbits = 7 * udhlen - 8 - 8 * udhsize;
                 if (nbits > 0) {
                     thi_b = pdu[rpos];
@@ -2131,6 +2131,7 @@ class YMessageBox extends yocto_api_js_1.YFunction {
         }
         this._pdus = newArr;
         // append complete concatenated messages
+        newAgg.length = 0;
         i = 0;
         while (i < nsig) {
             sig = signatures[i];

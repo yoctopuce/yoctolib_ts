@@ -18,7 +18,7 @@ const Examples: {[dir:string]:string} = {
     example_nodejs: 'demo.ts'
 };
 
-function makeIndex()
+function makeIndex(): void
 {
     // generate a source file index that includes support for all Yoctopuce functions
     let ts_index: string = 'export * from \'./yocto_api_nodejs.js\';\n';
@@ -31,7 +31,7 @@ function makeIndex()
     console.log('source index files have been updated')
 }
 
-function patchVersionInFile(newver: string, str_filename: string)
+function patchVersionInFile(newver: string, str_filename: string): void
 {
     let pattern: string = '/* version number patched automatically */';
     let jsFile: Buffer = fs.readFileSync(str_filename);
@@ -50,7 +50,7 @@ function patchVersionInFile(newver: string, str_filename: string)
     }
 }
 
-function setVersion(str_newver: string)
+function setVersion(str_newver: string): void
 {
     // update version number is package.json
     let json: { version: string } = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -81,15 +81,14 @@ function setVersion(str_newver: string)
     cjsjson.version = newver;
     fs.writeFileSync('dist/cjs/package.json', JSON.stringify(cjsjson, null, 2), 'utf-8');
 
-
     // update version number in yocto_api.ts
     patchVersionInFile(newver, 'src/yocto_api.ts');
 }
 
-function checkExamples()
+function checkExamples(): void
 {
     for(let dir in Examples) {
-        fs.readdirSync(dir).forEach(function (exdir: string) {
+        fs.readdirSync(dir).forEach(function (exdir: string):void {
             let file: string = dir+'/'+exdir+'/'+Examples[dir];
             if(fs.existsSync(file)) {
                 console.log('Checking '+file);
@@ -109,13 +108,13 @@ function checkExamples()
                     skipLibCheck: true
                 };
                 const host = ts.createCompilerHost(options);
-                host.writeFile = ((fileName: string, contents: string) => {});
+                host.writeFile = ((filename: string, contents: string):void => { filename; });
                 let program = ts.createProgram([file], options, host);
                 let emitResult = program.emit();
                 let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-                allDiagnostics.forEach(diagnostic => {
+                allDiagnostics.forEach((diagnostic: ts.Diagnostic):void => {
                     if (diagnostic.file) {
-                        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+                        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start||0);
                         let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
                         console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
                     } else {
@@ -130,10 +129,10 @@ function checkExamples()
     }
 }
 
-function cleanExamples()
+function cleanExamples(): void
 {
     for(let dir in Examples) {
-        fs.readdirSync(dir).forEach(function (exdir: string) {
+        fs.readdirSync(dir).forEach(function (exdir: string): void {
             let file: string = dir+'/'+exdir+'/'+Examples[dir];
             if(fs.existsSync(file)) {
                 let jsfile: string = file.replace('.ts','.js');

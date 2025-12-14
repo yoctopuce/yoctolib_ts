@@ -727,8 +727,8 @@ export declare class YColorLedCluster extends YFunction {
      * On failure, throws an exception or returns an empty array.
      */
     get_blinkSeqState(seqIndex: number, count: number): Promise<number[]>;
-    hsl2rgbInt(temp1: number, temp2: number, temp3: number): Promise<number>;
-    hsl2rgb(hslValue: number): Promise<number>;
+    hsl2rgbInt(temp1: number, temp2: number, temp3: number): number;
+    hsl2rgb(hslValue: number): number;
     /**
      * Continues the enumeration of RGB LED clusters started using yFirstColorLedCluster().
      * Caution: You can't make any assumption about the returned RGB LED clusters order.

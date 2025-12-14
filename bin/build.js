@@ -123,13 +123,13 @@ function checkExamples() {
                     skipLibCheck: true
                 };
                 const host = ts.createCompilerHost(options);
-                host.writeFile = ((fileName, contents) => { });
+                host.writeFile = ((filename, contents) => { filename; });
                 let program = ts.createProgram([file], options, host);
                 let emitResult = program.emit();
                 let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-                allDiagnostics.forEach(diagnostic => {
+                allDiagnostics.forEach((diagnostic) => {
                     if (diagnostic.file) {
-                        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+                        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start || 0);
                         let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
                         console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
                     }

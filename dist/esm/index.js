@@ -67,6 +67,7 @@ export * from './yocto_temperature.js';
 export * from './yocto_threshold.js';
 export * from './yocto_tilt.js';
 export * from './yocto_tvoc.js';
+export * from './yocto_virtualsensor.js';
 export * from './yocto_voc.js';
 export * from './yocto_voltage.js';
 export * from './yocto_voltageoutput.js';

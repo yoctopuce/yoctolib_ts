@@ -83,6 +83,7 @@ __exportStar(require("./yocto_temperature.js"), exports);
 __exportStar(require("./yocto_threshold.js"), exports);
 __exportStar(require("./yocto_tilt.js"), exports);
 __exportStar(require("./yocto_tvoc.js"), exports);
+__exportStar(require("./yocto_virtualsensor.js"), exports);
 __exportStar(require("./yocto_voc.js"), exports);
 __exportStar(require("./yocto_voltage.js"), exports);
 __exportStar(require("./yocto_voltageoutput.js"), exports);

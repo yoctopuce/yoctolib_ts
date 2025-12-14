@@ -57,6 +57,7 @@ export class YColorSensor extends YFunction
     _ledCalibration: number = YColorSensor.LEDCALIBRATION_INVALID;
     _integrationTime: number = YColorSensor.INTEGRATIONTIME_INVALID;
     _gain: number = YColorSensor.GAIN_INVALID;
+    _autoGain: string = YColorSensor.AUTOGAIN_INVALID;
     _saturation: number = YColorSensor.SATURATION_INVALID;
     _estimatedRGB: number = YColorSensor.ESTIMATEDRGB_INVALID;
     _estimatedHSL: number = YColorSensor.ESTIMATEDHSL_INVALID;
@@ -76,11 +77,13 @@ export class YColorSensor extends YFunction
     public readonly ESTIMATIONMODEL_INVALID: YColorSensor.ESTIMATIONMODEL = -1;
     public readonly WORKINGMODE_AUTO: YColorSensor.WORKINGMODE = 0;
     public readonly WORKINGMODE_EXPERT: YColorSensor.WORKINGMODE = 1;
+    public readonly WORKINGMODE_AUTOGAIN: YColorSensor.WORKINGMODE = 2;
     public readonly WORKINGMODE_INVALID: YColorSensor.WORKINGMODE = -1;
     public readonly LEDCURRENT_INVALID: number = YAPI.INVALID_UINT;
     public readonly LEDCALIBRATION_INVALID: number = YAPI.INVALID_UINT;
     public readonly INTEGRATIONTIME_INVALID: number = YAPI.INVALID_UINT;
     public readonly GAIN_INVALID: number = YAPI.INVALID_UINT;
+    public readonly AUTOGAIN_INVALID: string = YAPI.INVALID_STRING;
     public readonly SATURATION_INVALID: number = YAPI.INVALID_UINT;
     public readonly ESTIMATEDRGB_INVALID: number = YAPI.INVALID_UINT;
     public readonly ESTIMATEDHSL_INVALID: number = YAPI.INVALID_UINT;
@@ -110,11 +113,13 @@ export class YColorSensor extends YFunction
     public static readonly ESTIMATIONMODEL_INVALID: YColorSensor.ESTIMATIONMODEL = -1;
     public static readonly WORKINGMODE_AUTO: YColorSensor.WORKINGMODE = 0;
     public static readonly WORKINGMODE_EXPERT: YColorSensor.WORKINGMODE = 1;
+    public static readonly WORKINGMODE_AUTOGAIN: YColorSensor.WORKINGMODE = 2;
     public static readonly WORKINGMODE_INVALID: YColorSensor.WORKINGMODE = -1;
     public static readonly LEDCURRENT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly LEDCALIBRATION_INVALID: number = YAPI.INVALID_UINT;
     public static readonly INTEGRATIONTIME_INVALID: number = YAPI.INVALID_UINT;
     public static readonly GAIN_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly AUTOGAIN_INVALID: string = YAPI.INVALID_STRING;
     public static readonly SATURATION_INVALID: number = YAPI.INVALID_UINT;
     public static readonly ESTIMATEDRGB_INVALID: number = YAPI.INVALID_UINT;
     public static readonly ESTIMATEDHSL_INVALID: number = YAPI.INVALID_UINT;
@@ -169,6 +174,9 @@ export class YColorSensor extends YFunction
             return 1;
         case 'gain':
             this._gain = <number> <number> val;
+            return 1;
+        case 'autoGain':
+            this._autoGain = <string> <string> val;
             return 1;
         case 'saturation':
             this._saturation = <number> <number> val;
@@ -251,8 +259,8 @@ export class YColorSensor extends YFunction
      * In Auto mode, sensor parameters are automatically set based on the selected estimation model.
      * In Expert mode, sensor parameters such as gain and integration time are configured manually.
      *
-     * @return either YColorSensor.WORKINGMODE_AUTO or YColorSensor.WORKINGMODE_EXPERT, according to the
-     * sensor working mode
+     * @return a value among YColorSensor.WORKINGMODE_AUTO, YColorSensor.WORKINGMODE_EXPERT and
+     * YColorSensor.WORKINGMODE_AUTOGAIN corresponding to the sensor working mode
      *
      * On failure, throws an exception or returns YColorSensor.WORKINGMODE_INVALID.
      */
@@ -274,8 +282,8 @@ export class YColorSensor extends YFunction
      * In Expert mode, sensor parameters such as gain and integration time are configured manually.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
-     * @param newval : either YColorSensor.WORKINGMODE_AUTO or YColorSensor.WORKINGMODE_EXPERT, according
-     * to the sensor working mode
+     * @param newval : a value among YColorSensor.WORKINGMODE_AUTO, YColorSensor.WORKINGMODE_EXPERT and
+     * YColorSensor.WORKINGMODE_AUTOGAIN corresponding to the sensor working mode
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -445,6 +453,42 @@ export class YColorSensor extends YFunction
         let rest_val: string;
         rest_val = String(newval);
         return await this._setAttr('gain', rest_val);
+    }
+
+    /**
+     * Returns the current autogain parameters of the sensor as a character string.
+     * The returned parameter format is: "Min &lt; Channel &lt; Max:Saturation".
+     *
+     * @return a string corresponding to the current autogain parameters of the sensor as a character string
+     *
+     * On failure, throws an exception or returns YColorSensor.AUTOGAIN_INVALID.
+     */
+    async get_autoGain(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YColorSensor.AUTOGAIN_INVALID;
+            }
+        }
+        res = this._autoGain;
+        return res;
+    }
+
+    /**
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param newval : a string
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_autoGain(newval: string): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('autoGain', rest_val);
     }
 
     /**
@@ -819,6 +863,32 @@ export class YColorSensor extends YFunction
     }
 
     /**
+     * Changes the sensor automatic gain control settings.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param channel : reference channel to use for automated gain control.
+     * @param minRaw : lower threshold for the measured raw value, below which the gain is
+     *         automatically increased as long as possible.
+     * @param maxRaw : high threshold for the measured raw value, over which the gain is
+     *         automatically decreased as long as possible.
+     * @param noSatur : enables gain reduction in case of sensor saturation.
+     *
+     * @return YAPI.SUCCESS if the operation completes successfully.
+     *         On failure, throws an exception or returns a negative error code.
+     */
+    async configureAutoGain(channel: string, minRaw: number, maxRaw: number, noSatur: boolean): Promise<number>
+    {
+        let opt: string;
+        if (noSatur) {
+            opt = 'nosat';
+        } else {
+            opt = '';
+        }
+
+        return await this.set_autoGain(String(Math.round(minRaw)) + ' < ' + channel + ' < ' + String(Math.round(maxRaw)) + ':' + opt);
+    }
+
+    /**
      * Turns on the built-in illumination LEDs using the same current as used during the latest calibration.
      * On failure, throws an exception or returns a negative error code.
      */
@@ -905,6 +975,7 @@ export namespace YColorSensor {
     {
         AUTO = 0,
         EXPERT = 1,
+        AUTOGAIN = 2,
         INVALID = -1
     }
 

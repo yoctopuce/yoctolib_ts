@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_cellular.ts 64863 2025-03-05 14:06:40Z mvuilleu $
+ *  $Id: yocto_cellular.ts 68466 2025-08-19 17:31:45Z mvuilleu $
  *
  *  Implements the high-level API for CellRecord functions
  *
@@ -1205,24 +1205,24 @@ export class YCellular extends YFunction
         recs = (moni).split('#');
         // process each line in turn
         res.length = 0;
-        for (let ii in recs) {
-            llen = (recs[ii]).length - 2;
+        for (let ii_0 of recs) {
+            llen = (ii_0).length - 2;
             if (llen >= 44) {
-                if (recs[ii].substr(41, 3) == 'dbm') {
-                    lac = parseInt(recs[ii].substr(16, 4), 16);
-                    cellId = parseInt(recs[ii].substr(23, 4), 16);
-                    dbms = recs[ii].substr(37, 4);
+                if (ii_0.substr(41, 3) == 'dbm') {
+                    lac = parseInt(ii_0.substr(16, 4), 16);
+                    cellId = parseInt(ii_0.substr(23, 4), 16);
+                    dbms = ii_0.substr(37, 4);
                     if (dbms.substr(0, 1) == ' ') {
                         dbms = dbms.substr(1, 3);
                     }
                     dbm = YAPIContext.imm_atoi(dbms);
                     if (llen > 66) {
-                        tads = recs[ii].substr(54, 2);
+                        tads = ii_0.substr(54, 2);
                         if (tads.substr(0, 1) == ' ') {
                             tads = tads.substr(1, 3);
                         }
                         tad = YAPIContext.imm_atoi(tads);
-                        oper = recs[ii].substr(66, llen-66);
+                        oper = ii_0.substr(66, llen-66);
                     } else {
                         tad = -1;
                         oper = '';

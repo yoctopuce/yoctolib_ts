@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gyro.ts 63327 2024-11-13 09:35:03Z seb $
+ *  $Id: yocto_gyro.ts 67383 2025-06-11 05:44:27Z mvuilleu $
  *
  *  Implements the high-level API for Qt functions
  *

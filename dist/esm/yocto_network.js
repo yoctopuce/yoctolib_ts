@@ -517,8 +517,8 @@ export class YNetwork extends YFunction {
      */
     async set_userPassword(newval) {
         let rest_val;
-        if (newval.length > YAPI.HASH_BUF_SIZE) {
-            return this._throw(YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, YAPI.INVALID_ARGUMENT);
+        if (!this._is_valid_pass(newval)) {
+            return YAPI.INVALID_ARGUMENT;
         }
         rest_val = String(newval);
         return await this._setAttr('userPassword', rest_val);
@@ -557,8 +557,8 @@ export class YNetwork extends YFunction {
      */
     async set_adminPassword(newval) {
         let rest_val;
-        if (newval.length > YAPI.HASH_BUF_SIZE) {
-            return this._throw(YAPI.INVALID_ARGUMENT, 'Password too long :' + newval, YAPI.INVALID_ARGUMENT);
+        if (!this._is_valid_pass(newval)) {
+            return YAPI.INVALID_ARGUMENT;
         }
         rest_val = String(newval);
         return await this._setAttr('adminPassword', rest_val);

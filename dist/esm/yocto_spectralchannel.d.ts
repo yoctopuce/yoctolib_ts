@@ -41,7 +41,7 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  * YSpectralChannel Class: spectral analysis channel control interface
  *
  * The YSpectralChannel class allows you to read and configure Yoctopuce spectral analysis channels.
- * It inherits from YSensor class the core functions to read measures,
+ * It inherits from YSensor class the core functions to read measurements,
  * to register callback functions, and to access the autonomous datalogger.
  */
 export declare class YSpectralChannel extends YSensor {
@@ -76,9 +76,9 @@ export declare class YSpectralChannel extends YSensor {
      */
     get_channelName(): Promise<string>;
     /**
-     * Returns the target spectral band peak wavelenght, in nm.
+     * Returns the target spectral band peak wavelength, in nm.
      *
-     * @return an integer corresponding to the target spectral band peak wavelenght, in nm
+     * @return an integer corresponding to the target spectral band peak wavelength, in nm
      *
      * On failure, throws an exception or returns YSpectralChannel.PEAKWAVELENGTH_INVALID.
      */

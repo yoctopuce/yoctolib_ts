@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 63482 2024-11-26 09:29:16Z seb $
+ *  $Id: yocto_messagebox.ts 68482 2025-08-21 10:07:30Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *

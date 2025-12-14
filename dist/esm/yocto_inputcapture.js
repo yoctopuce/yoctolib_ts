@@ -923,7 +923,7 @@ export class YInputCapture extends YSensor {
         if (msDuration > 1000) {
             msDuration = 1000;
         }
-        snapStart = (((-msDuration) / (2)) >> 0);
+        snapStart = ((-msDuration / 2) >> 0);
         snapUrl = 'snap.bin?t=' + String(Math.round(snapStart)) + '&d=' + String(Math.round(msDuration));
         snapData = await this._download(snapUrl);
         return new YInputCaptureData(this, snapData);

@@ -478,7 +478,7 @@ export class YColorLedCluster extends YFunction
     async set_hslColorAtPowerOn(ledIndex: number, count: number, hslValue: number): Promise<number>
     {
         let rgbValue: number;
-        rgbValue = await this.hsl2rgb(hslValue);
+        rgbValue = this.hsl2rgb(hslValue);
         return await this.sendCommand('SC' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (rgbValue).toString(16).toLowerCase());
     }
 
@@ -1042,7 +1042,7 @@ export class YColorLedCluster extends YFunction
      */
     async get_rgbColorBuffer(ledIndex: number, count: number): Promise<Uint8Array>
     {
-        return await this._download('rgb.bin?typ=0&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
+        return await this._download('rgb.bin?typ=' + String(Math.round(0)) + '&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
     }
 
     /**
@@ -1066,7 +1066,7 @@ export class YColorLedCluster extends YFunction
         let g: number;
         let b: number;
 
-        buff = await this._download('rgb.bin?typ=0&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(0)) + '&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1100,7 +1100,7 @@ export class YColorLedCluster extends YFunction
         let g: number;
         let b: number;
 
-        buff = await this._download('rgb.bin?typ=4&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(4)) + '&pos=' + String(Math.round(3*ledIndex)) + '&len=' + String(Math.round(3*count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1132,7 +1132,7 @@ export class YColorLedCluster extends YFunction
         let idx: number;
         let seq: number;
 
-        buff = await this._download('rgb.bin?typ=1&pos=' + String(Math.round(ledIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(1)) + '&pos=' + String(Math.round(ledIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1165,7 +1165,7 @@ export class YColorLedCluster extends YFunction
         let lh: number;
         let ll: number;
 
-        buff = await this._download('rgb.bin?typ=2&pos=' + String(Math.round(4*seqIndex)) + '&len=' + String(Math.round(4*count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(2)) + '&pos=' + String(Math.round(4*seqIndex)) + '&len=' + String(Math.round(4*count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1197,7 +1197,7 @@ export class YColorLedCluster extends YFunction
         let lh: number;
         let ll: number;
 
-        buff = await this._download('rgb.bin?typ=6&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(6)) + '&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1226,7 +1226,7 @@ export class YColorLedCluster extends YFunction
         let idx: number;
         let started: number;
 
-        buff = await this._download('rgb.bin?typ=5&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(5)) + '&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1254,7 +1254,7 @@ export class YColorLedCluster extends YFunction
         let idx: number;
         let started: number;
 
-        buff = await this._download('rgb.bin?typ=3&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
+        buff = await this._download('rgb.bin?typ=' + String(Math.round(3)) + '&pos=' + String(Math.round(seqIndex)) + '&len=' + String(Math.round(count)));
         res.length = 0;
         idx = 0;
         while (idx < count) {
@@ -1265,21 +1265,21 @@ export class YColorLedCluster extends YFunction
         return res;
     }
 
-    async hsl2rgbInt(temp1: number, temp2: number, temp3: number): Promise<number>
+    hsl2rgbInt(temp1: number, temp2: number, temp3: number): number
     {
         if (temp3 >= 170) {
-            return ((((temp1 + 127)) / (255)) >> 0);
+            return (((temp1 + 127) / 255) >> 0);
         }
         if (temp3 > 42) {
             if (temp3 <= 127) {
-                return ((((temp2 + 127)) / (255)) >> 0);
+                return (((temp2 + 127) / 255) >> 0);
             }
             temp3 = 170 - temp3;
         }
-        return ((((temp1*255 + (temp2-temp1) * (6 * temp3) + 32512)) / (65025)) >> 0);
+        return (((temp1*255 + (temp2-temp1) * (6 * temp3) + 32512) / 65025) >> 0);
     }
 
-    async hsl2rgb(hslValue: number): Promise<number>
+    hsl2rgb(hslValue: number): number
     {
         let R: number;
         let G: number;
@@ -1301,39 +1301,29 @@ export class YColorLedCluster extends YFunction
         if (L<=127) {
             temp2 = L * (255 + S);
         } else {
-            temp2 = (L+S) * 255 - L*S;
+            temp2 = (L + S) * 255 - L * S;
         }
         temp1 = 510 * L - temp2;
         // R
-        temp3 = (H + 85);
-        if (temp3 > 255) {
-            temp3 = temp3-255;
-        }
-        R = await this.hsl2rgbInt(temp1, temp2, temp3);
+        temp3 = ((H + 85) & 0xff);
+        R = this.hsl2rgbInt(temp1, temp2, temp3);
         // G
-        temp3 = H;
-        if (temp3 > 255) {
-            temp3 = temp3-255;
-        }
-        G = await this.hsl2rgbInt(temp1, temp2, temp3);
+        temp3 = (H & 0xff);
+        G = this.hsl2rgbInt(temp1, temp2, temp3);
         // B
-        if (H >= 85) {
-            temp3 = H - 85 ;
-        } else {
-            temp3 = H + 170;
-        }
-        B = await this.hsl2rgbInt(temp1, temp2, temp3);
+        temp3 = ((H + 170) & 0xff);
+        B = this.hsl2rgbInt(temp1, temp2, temp3);
         // just in case
-        if (R>255) {
-            R=255;
+        if (R > 255) {
+            R = 255;
         }
-        if (G>255) {
-            G=255;
+        if (G > 255) {
+            G = 255;
         }
-        if (B>255) {
-            B=255;
+        if (B > 255) {
+            B = 255;
         }
-        res = (R << 16)+(G << 8)+B;
+        res = (R << 16) + (G << 8) + B;
         return res;
     }
 

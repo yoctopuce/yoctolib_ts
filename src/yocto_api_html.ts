@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 63723 2024-12-17 08:51:04Z seb $
+ * $Id: yocto_api_html.ts 68272 2025-08-11 14:08:33Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -219,8 +219,6 @@ class YHttpHtmlEngine extends YHttpEngine
 class YWebSocketHtmlEngine extends YWebSocketEngine
 {
     /** Open an outgoing websocket
-     *
-     * @param str_url {string}
      **/
     imm_webSocketOpen(str_url: string): void
     {
@@ -230,8 +228,6 @@ class YWebSocketHtmlEngine extends YWebSocketEngine
     }
 
     /** Fills a buffer with random numbers
-     *
-     * @param arr {Uint8Array}
      **/
     imm_getRandomValues(arr: Uint8Array): Uint8Array
     {

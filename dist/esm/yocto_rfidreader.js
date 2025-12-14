@@ -1251,8 +1251,8 @@ export class YRfidReader extends YFunction {
         taglist.length = 0;
         if ((json).length > 3) {
             jsonList = this.imm_json_get_array(json);
-            for (let ii in jsonList) {
-                taglist.push(this.imm_json_get_string(jsonList[ii]));
+            for (let ii_0 of jsonList) {
+                taglist.push(this.imm_json_get_string(ii_0));
             }
         }
         return taglist;
@@ -1947,7 +1947,7 @@ export class YRfidReader extends YFunction {
         let evtData;
         // detect possible power cycle of the reader to clear event pointer
         cbPos = YAPIContext.imm_atoi(cbVal);
-        cbPos = (((cbPos) / (1000)) >> 0);
+        cbPos = ((cbPos / 1000) >> 0);
         cbDPos = ((cbPos - this._prevCbPos) & 0x7ffff);
         this._prevCbPos = cbPos;
         if (cbDPos > 16384) {

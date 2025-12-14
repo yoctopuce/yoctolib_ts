@@ -500,7 +500,7 @@ class YBuzzer extends yocto_api_js_1.YFunction {
             }
             if (ch == 46) {
                 // . (duration modifier)
-                num = (((num * 2) / (3)) >> 0);
+                num = (((num * 2) / 3) >> 0);
             }
             if (((ch == 32) || (i + 1 == notesLen)) && ((note > -99) || (typ != 3))) {
                 if (num == 0) {
