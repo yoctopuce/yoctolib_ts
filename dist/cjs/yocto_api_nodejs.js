@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 68272 2025-08-11 14:08:33Z mvuilleu $
+ * $Id: yocto_api_nodejs.ts 71188 2026-01-06 09:23:14Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -497,7 +497,6 @@ class YHttpNodeEngine extends yocto_api_js_1.YHttpEngine {
             }
             else if (res.statusCode == 204) {
                 // Authentication failure (204 == x-yauth)
-                this.infoJson.stamp = 0; // force to reload nonce/domain
                 onError(yocto_api_js_1.YAPI.UNAUTHORIZED, 'Unauthorized access (' + res.statusCode + ')', false);
             }
             else if (res.statusCode == 404) {

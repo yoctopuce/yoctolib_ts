@@ -54,6 +54,7 @@ const ROOT_URL = 'http://127.0.0.1:' + HTTP_PORT;
 const MimeTypes = {
     '.js': 'application/javascript',
     '.ts': 'application/typescript',
+    '.xml': 'application/xml',
     '.map': 'application/json',
     '.html': 'text/html',
     '.css': 'text/css',
@@ -112,7 +113,7 @@ function listener(message, response) {
 // TypeScript incremental watcher, from Microsoft github page
 const ts = __importStar(require("typescript"));
 const formatHost = {
-    getCanonicalFileName: path => path,
+    getCanonicalFileName: (path) => path,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
     getNewLine: () => ts.sys.newLine
 };
@@ -137,7 +138,7 @@ function OpenBrowser(target) {
         command = 'open';
         cliArguments = ['--background'];
     }
-    else if (process.platform == 'win32') {
+    else if (process.platform === 'win32') {
         command = process.env.SYSTEMROOT + '\\System32\\WindowsPowerShell\\v1.0\\powershell';
         cliArguments = ['-NoProfile', '-NonInteractive', '–ExecutionPolicy', 'Bypass', '-Command', 'Start'];
         childProcessOptions = { windowsVerbatimArguments: true };

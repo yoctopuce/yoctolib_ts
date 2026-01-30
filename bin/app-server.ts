@@ -33,6 +33,7 @@ const ROOT_URL: string = 'http://127.0.0.1:'+HTTP_PORT;
 const MimeTypes: StringDict = {
     '.js': 'application/javascript',
     '.ts': 'application/typescript',
+    '.xml': 'application/xml',
     '.map': 'application/json',
     '.html': 'text/html',
     '.css': 'text/css',
@@ -46,7 +47,7 @@ interface StringDict {
     [ext: string] : string;
 }
 
-function listener(message: http.IncomingMessage, response: http.ServerResponse)
+function listener(message: http.IncomingMessage, response: http.ServerResponse): void
 {
     let srvpath: string = url.parse(<string>message.url).pathname || '/';
     let relpath: string = srvpath.slice(1);
@@ -86,7 +87,7 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse)
         return;
     }
     // Output file to browser at once
-    fs.readFile(abspath, (err: any, data: Buffer) => {
+    fs.readFile(abspath, (err: any, data: Buffer):void => {
         if (err) throw err;
         headers['Content-Length'] = data.length;
         response.writeHead(200, headers);
@@ -99,20 +100,22 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse)
 import * as ts from 'typescript';
 
 const formatHost: ts.FormatDiagnosticsHost = {
-    getCanonicalFileName: path => path,
+    getCanonicalFileName: (path:string):string => path,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
-    getNewLine: () => ts.sys.newLine
+    getNewLine: ():string => ts.sys.newLine
 };
 
-function reportDiagnostic(diagnostic: ts.Diagnostic) {
+function reportDiagnostic(diagnostic: ts.Diagnostic): void
+{
     console.error("Error", diagnostic.code, ":", ts.flattenDiagnosticMessageText( diagnostic.messageText, formatHost.getNewLine()));
 }
 
-function reportWatchStatusChanged(diagnostic: ts.Diagnostic) {
+function reportWatchStatusChanged(diagnostic: ts.Diagnostic): void
+{
     console.info(ts.formatDiagnostic(diagnostic, formatHost));
 }
 
-function TypeScriptWatcher(rootdir: string)
+function TypeScriptWatcher(rootdir: string): void
 {
     const configPath: string = path.join(rootdir, "tsconfig.json");
     const createProgram = ts.createEmitAndSemanticDiagnosticsBuilderProgram;
@@ -128,7 +131,7 @@ function TypeScriptWatcher(rootdir: string)
 }
 
 // Function to open an URL in the default browser, inspired from https://github.com/sindresorhus/open
-function OpenBrowser(target: string)
+function OpenBrowser(target: string): void
 {
     let command: string;
     let cliArguments: string[] = [];
@@ -136,7 +139,7 @@ function OpenBrowser(target: string)
     if (process.platform === 'darwin') {
         command = 'open';
         cliArguments = [ '--background' ];
-    } else if(process.platform == 'win32') {
+    } else if(process.platform === 'win32') {
         command = process.env.SYSTEMROOT+'\\System32\\WindowsPowerShell\\v1.0\\powershell';
         cliArguments = [ '-NoProfile','-NonInteractive','–ExecutionPolicy','Bypass','-Command','Start' ];
         childProcessOptions = { windowsVerbatimArguments: true };

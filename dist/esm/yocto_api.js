@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 70666 2025-12-09 10:26:00Z seb $
+ * $Id: yocto_api.ts 71188 2026-01-06 09:23:14Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -8434,6 +8434,7 @@ export class YGenericHub {
                     let data = await this._yapi.system_env.downloadfile(url, this._yapi);
                     infoJson = JSON.parse(YAPI.imm_bin2str(data));
                     if (infoJson) {
+                        infoJson.stamp = YAPI.GetTickCount();
                         if (infoJson.serialNumber) {
                             this.imm_setSerialNumber(infoJson.serialNumber);
                         }
@@ -9218,6 +9219,9 @@ export class YHttpEngine extends YHubEngine {
     }
     // Internal method to perform a simple HTTP GET using a hub-relative URL
     async tryFetch(relUrl) {
+        if (relUrl.slice(0, 1) != '/') {
+            relUrl = '/' + relUrl;
+        }
         return new Promise((resolve, reject) => {
             this.imm_sendRequest('GET', relUrl, null, null, (responseText) => {
                 resolve({ errorType: YAPI_SUCCESS, errorMsg: '', result: responseText });
@@ -9307,9 +9311,15 @@ export class YHttpEngine extends YHubEngine {
                 }
             }
             this._hub.imm_SetErr(errorType, errorMsg);
-            if ((errorType == YAPI_UNAUTHORIZED || errorType == YAPI_SSL_UNK_CERT) && !can_be_retry) {
-                // this is a fatal failure, no need to retry
-                this._hub.imm_commonDisconnect(tryOpenID, errorType, errorMsg);
+            if (!can_be_retry) {
+                if (errorType === YAPI_SSL_UNK_CERT) {
+                    // this is a fatal failure, no need to retry
+                    this._hub.imm_commonDisconnect(tryOpenID, errorType, errorMsg);
+                }
+                else if (errorType === YAPI_UNAUTHORIZED && YAPI.GetTickCount() - this.infoJson.stamp <= 12000) {
+                    // this is a fatal failure, no need to retry
+                    this._hub.imm_commonDisconnect(tryOpenID, errorType, errorMsg);
+                }
             }
             this._hub.imm_disconnectNow();
         });
@@ -9424,7 +9434,7 @@ export class YWebSocketEngine extends YHubEngine {
             this._hub._yapi.imm_log('Opening websocket connection [' + tryOpenID + ']');
         }
         this._hub.imm_setCurrentConnID(tryOpenID);
-        let url = (this._runtime_urlInfo.imm_useSecureSocket() ? "wss://" : "ws://") + this._runtime_urlInfo.imm_getUrl(false, true, true);
+        let url = (this._runtime_urlInfo.imm_useSecureSocket() ? "wss://" : "ws://") + this._runtime_urlInfo.imm_getUrl(false, false, true);
         this.imm_webSocketOpen(url + 'not.byn');
         this._hub.imm_setFirstArrivalCallback(true);
         if (!this.websocket) {
@@ -11557,20 +11567,32 @@ export class YAPIContext {
                 }
                 else {
                     // noinspection FallThroughInSwitchStatementJS
-                    switch (parseInt(notype)) {
-                        case 0: // device name change, or arrival
+                    switch (notype) {
+                        case NOTIFY_NETPKT_NAME: // device name change, or arrival
                             parts = ev.slice(5).split(',');
                             if (parts.length > 2) {
                                 let int_beacon = parseInt(parts[2]);
                                 await this.setBeaconChange(parts[0], int_beacon);
                             }
-                        // no break on purpose
-                        case 2: // device plug/unplug
-                        case 4: // function name change
-                        case 8: // function name change (ydx)
                             hub.devListExpires = 0;
                             break;
-                        case 5: // function value (long notification)
+                        // no break on purpose
+                        case NOTIFY_NETPKT_CHILD: // device plug/unplug
+                            parts = ev.split(",");
+                            if (parts[2] == '0') {
+                                let serial = parts[1];
+                                if (this._removalCallback) {
+                                    let module = YModule.FindModuleInContext(this, serial + '.module');
+                                    this._pendingCallbacks.push({ event: '-', serial: serial, module: module });
+                                }
+                                this.imm_forgetDevice(this._devs[serial]);
+                            }
+                        // no break on purpose
+                        case NOTIFY_NETPKT_FUNCNAME: // function name change
+                        case NOTIFY_NETPKT_FUNCNAMEYDX: // function name change (ydx)
+                            hub.devListExpires = 0;
+                            break;
+                        case NOTIFY_NETPKT_FUNCVAL: // function value (long notification)
                             parts = ev.slice(5).split(',');
                             if (parts.length > 2) {
                                 value = parts[2].split('\0');
@@ -12786,7 +12808,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.10736';
+        return /* version number patched automatically */ '2.1.11632';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

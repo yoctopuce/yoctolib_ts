@@ -9,8 +9,5 @@
   "type": "module",
   "dependencies": {
     "yoctolib-esm": "file:../../dist/esm"
-  },
-  "dev-dependencies": {
-    "esbuild": "^0.8.39"
   }
 }

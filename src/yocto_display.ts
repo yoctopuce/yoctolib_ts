@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 64510 2025-01-31 08:36:57Z seb $
+ *  $Id: yocto_display.ts 71629 2026-01-29 15:08:26Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -58,8 +58,13 @@ export class YDisplayLayer
     private _cmdbuff: string = '';
     private _hidden: boolean = false;
     //--- (generated code: YDisplayLayer attributes declaration)
+    _polyPrevX: number = 0;
+    _polyPrevY: number = 0;
 
     // API symbols as object properties
+    public readonly NO_INK: number = -1;
+    public readonly BG_INK: number = -2;
+    public readonly FG_INK: number = -3;
     public readonly ALIGN_TOP_LEFT: YDisplayLayer.ALIGN = 0;
     public readonly ALIGN_CENTER_LEFT: YDisplayLayer.ALIGN = 1;
     public readonly ALIGN_BASELINE_LEFT: YDisplayLayer.ALIGN = 2;
@@ -78,6 +83,9 @@ export class YDisplayLayer
     public readonly ALIGN_BOTTOM_RIGHT: YDisplayLayer.ALIGN = 15;
 
     // API symbols as static members
+    public static readonly NO_INK: number = -1;
+    public static readonly BG_INK: number = -2;
+    public static readonly FG_INK: number = -3;
     public static readonly ALIGN_TOP_LEFT: YDisplayLayer.ALIGN = 0;
     public static readonly ALIGN_CENTER_LEFT: YDisplayLayer.ALIGN = 1;
     public static readonly ALIGN_BASELINE_LEFT: YDisplayLayer.ALIGN = 2;
@@ -189,8 +197,11 @@ export class YDisplayLayer
     }
 
     /**
-     * Selects the pen color for all subsequent drawing functions,
-     * including text drawing. The pen color is provided as an RGB value.
+     * Selects the color to be used for all subsequent drawing functions,
+     * for filling as well as for line and text drawing.
+     * To select a different fill and outline color, use
+     * selectFillColor and selectLineColor.
+     * The pen color is provided as an RGB value.
      * For grayscale or monochrome displays, the value is
      * automatically converted to the proper range.
      *
@@ -207,7 +218,10 @@ export class YDisplayLayer
 
     /**
      * Selects the pen gray level for all subsequent drawing functions,
-     * including text drawing. The gray level is provided as a number between
+     * for filling as well as for line and text drawing.
+     * To select a different fill and outline color, use
+     * selectFillColor and selectLineColor.
+     * The gray level is provided as a number between
      * 0 (black) and 255 (white, or whichever the lightest color is).
      * For monochrome displays (without gray levels), any value
      * lower than 128 is rendered as black, and any value equal
@@ -240,21 +254,95 @@ export class YDisplayLayer
     }
 
     /**
-     * Enables or disables anti-aliasing for drawing oblique lines and circles.
-     * Anti-aliasing provides a smoother aspect when looked from far enough,
-     * but it can add fuzziness when the display is looked from very close.
-     * At the end of the day, it is your personal choice.
-     * Anti-aliasing is enabled by default on grayscale and color displays,
-     * but you can disable it if you prefer. This setting has no effect
-     * on monochrome displays.
+     * Selects the color to be used for filling rectangular bars,
+     * discs and polygons. The color is provided as an RGB value.
+     * For grayscale or monochrome displays, the value is
+     * automatically converted to the proper range.
+     * You can also use the constants FG_INK to use the
+     * default drawing colour, BG_INK to use the default
+     * background colour, and NO_INK to disable filling.
      *
-     * @param mode : true to enable anti-aliasing, false to
-     *         disable it.
+     * @param color : the desired drawing color, as a 24-bit RGB value,
+     *         or one of the constants NO_INK, FG_INK
+     *         or BG_INK
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
+    async selectFillColor(color: number): Promise<number>
+    {
+        let r: number;
+        let g: number;
+        let b: number;
+        if (color==-1) {
+            return await this.command_push('f_');
+        }
+        if (color==-2) {
+            return await this.command_push('f-');
+        }
+        if (color==-3) {
+            return await this.command_push('f.');
+        }
+        r = ((color >> 20) & 15);
+        g = ((color >> 12) & 15);
+        b = ((color >> 4) & 15);
+        return await this.command_push('f' + (r).toString(16).toLowerCase() + '' + (g).toString(16).toLowerCase() + '' + (b).toString(16).toLowerCase());
+    }
+
+    /**
+     * Selects the color to be used for drawing the outline of rectangular
+     * bars, discs and polygons, as well as for drawing lines and text.
+     * The color is provided as an RGB value.
+     * For grayscale or monochrome displays, the value is
+     * automatically converted to the proper range.
+     * You can also use the constants FG_INK to use the
+     * default drawing colour, BG_INK to use the default
+     * background colour, and NO_INK to disable outline drawing.
+     *
+     * @param color : the desired drawing color, as a 24-bit RGB value,
+     *         or one of the constants NO_INK, FG_INK
+     *         or BG_INK
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async selectLineColor(color: number): Promise<number>
+    {
+        let r: number;
+        let g: number;
+        let b: number;
+        if (color==-1) {
+            return await this.command_push('l_');
+        }
+        if (color==-2) {
+            return await this.command_push('l-');
+        }
+        if (color==-3) {
+            return await this.command_push('l*');
+        }
+        r = ((color >> 20) & 15);
+        g = ((color >> 12) & 15);
+        b = ((color >> 4) & 15);
+        return await this.command_push('l' + (r).toString(16).toLowerCase() + '' + (g).toString(16).toLowerCase() + '' + (b).toString(16).toLowerCase());
+    }
+
+    /**
+     * Selects the line width for drawing the outline of rectangular
+     * bars, discs and polygons, as well as for drawing lines.
+     *
+     * @param width : the desired line width, in pixels
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async selectLineWidth(width: number): Promise<number>
+    {
+        return await this.command_push('t' + String(Math.round(width)));
+    }
+
     async setAntialiasingMode(mode: boolean): Promise<number>
     {
         return await this.command_push('a' + (mode?"1":"0"));
@@ -388,10 +476,10 @@ export class YDisplayLayer
     }
 
     /**
-     * Draws a GIF image at the specified position. The GIF image must have been previously
-     * uploaded to the device built-in memory. If you experience problems using an image
-     * file, check the device logs for any error message such as missing image file or bad
-     * image file format.
+     * Draws an image previously uploaded to the device filesystem, at the specified position.
+     * At present time, GIF images are the only supported image format. If you experience
+     * problems using an image file, check the device logs for any error message such as
+     * missing image file or bad image file format.
      *
      * @param x : the distance from left of layer to the left of the image, in pixels
      * @param y : the distance from top of layer to the top of the image, in pixels
@@ -434,6 +522,26 @@ export class YDisplayLayer
     }
 
     /**
+     * Draws a GIF image provided as a binary buffer at the specified position.
+     * If the image drawing must be included in an animation sequence, save it
+     * in the device filesystem first and use drawImage instead.
+     *
+     * @param x : the distance from left of layer to the left of the image, in pixels
+     * @param y : the distance from top of layer to the top of the image, in pixels
+     * @param gifimage : a binary object with the content of a GIF file
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async drawGIF(x: number, y: number, gifimage: Uint8Array): Promise<number>
+    {
+        let destname: string;
+        destname = 'layer' + String(Math.round(this._id)) + ':G,-1@' + String(Math.round(x)) + ',' + String(Math.round(y));
+        return await this._display.upload(destname, gifimage);
+    }
+
+    /**
      * Moves the drawing pointer of this layer to the specified position.
      *
      * @param x : the distance from left of layer, in pixels
@@ -463,6 +571,58 @@ export class YDisplayLayer
     async lineTo(x: number, y: number): Promise<number>
     {
         return await this.command_flush('-' + String(Math.round(x)) + ',' + String(Math.round(y)));
+    }
+
+    /**
+     * Starts drawing a polygon with the first corner at the specified position.
+     *
+     * @param x : the distance from left of layer, in pixels
+     * @param y : the distance from top of layer, in pixels
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async polygonStart(x: number, y: number): Promise<number>
+    {
+        this._polyPrevX = x;
+        this._polyPrevY = y;
+        return await this.command_push('[' + String(Math.round(x)) + ',' + String(Math.round(y)));
+    }
+
+    /**
+     * Adds a point to the currently open polygon, previously opened using
+     * polygonStart.
+     *
+     * @param x : the distance from left of layer to the new point, in pixels
+     * @param y : the distance from top of layer to the new point, in pixels
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async polygonAdd(x: number, y: number): Promise<number>
+    {
+        let dx: number;
+        let dy: number;
+        dx = x - this._polyPrevX;
+        dy = y - this._polyPrevY;
+        this._polyPrevX = x;
+        this._polyPrevY = y;
+        return await this.command_flush(';' + String(Math.round(dx)) + ',' + String(Math.round(dy)));
+    }
+
+    /**
+     * Close the currently open polygon, fill its content the fill color currently
+     * selected for the layer, and draw its outline using the selected line color.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async polygonEnd(): Promise<number>
+    {
+        return await this.command_flush(']');
     }
 
     /**
@@ -714,7 +874,9 @@ export class YDisplay extends YFunction
     _enabled: YDisplay.ENABLED = YDisplay.ENABLED_INVALID;
     _startupSeq: string = YDisplay.STARTUPSEQ_INVALID;
     _brightness: number = YDisplay.BRIGHTNESS_INVALID;
+    _autoInvertDelay: number = YDisplay.AUTOINVERTDELAY_INVALID;
     _orientation: YDisplay.ORIENTATION = YDisplay.ORIENTATION_INVALID;
+    _displayPanel: string = YDisplay.DISPLAYPANEL_INVALID;
     _displayWidth: number = YDisplay.DISPLAYWIDTH_INVALID;
     _displayHeight: number = YDisplay.DISPLAYHEIGHT_INVALID;
     _displayType: YDisplay.DISPLAYTYPE = YDisplay.DISPLAYTYPE_INVALID;
@@ -731,16 +893,19 @@ export class YDisplay extends YFunction
     public readonly ENABLED_INVALID: YDisplay.ENABLED = -1;
     public readonly STARTUPSEQ_INVALID: string = YAPI.INVALID_STRING;
     public readonly BRIGHTNESS_INVALID: number = YAPI.INVALID_UINT;
+    public readonly AUTOINVERTDELAY_INVALID: number = YAPI.INVALID_UINT;
     public readonly ORIENTATION_LEFT: YDisplay.ORIENTATION = 0;
     public readonly ORIENTATION_UP: YDisplay.ORIENTATION = 1;
     public readonly ORIENTATION_RIGHT: YDisplay.ORIENTATION = 2;
     public readonly ORIENTATION_DOWN: YDisplay.ORIENTATION = 3;
     public readonly ORIENTATION_INVALID: YDisplay.ORIENTATION = -1;
+    public readonly DISPLAYPANEL_INVALID: string = YAPI.INVALID_STRING;
     public readonly DISPLAYWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly DISPLAYHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE = 0;
     public readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE = 1;
     public readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE = 2;
+    public readonly DISPLAYTYPE_EPAPER: YDisplay.DISPLAYTYPE = 3;
     public readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE = -1;
     public readonly LAYERWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
@@ -753,16 +918,19 @@ export class YDisplay extends YFunction
     public static readonly ENABLED_INVALID: YDisplay.ENABLED = -1;
     public static readonly STARTUPSEQ_INVALID: string = YAPI.INVALID_STRING;
     public static readonly BRIGHTNESS_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly AUTOINVERTDELAY_INVALID: number = YAPI.INVALID_UINT;
     public static readonly ORIENTATION_LEFT: YDisplay.ORIENTATION = 0;
     public static readonly ORIENTATION_UP: YDisplay.ORIENTATION = 1;
     public static readonly ORIENTATION_RIGHT: YDisplay.ORIENTATION = 2;
     public static readonly ORIENTATION_DOWN: YDisplay.ORIENTATION = 3;
     public static readonly ORIENTATION_INVALID: YDisplay.ORIENTATION = -1;
+    public static readonly DISPLAYPANEL_INVALID: string = YAPI.INVALID_STRING;
     public static readonly DISPLAYWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly DISPLAYHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE = 0;
     public static readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE = 1;
     public static readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE = 2;
+    public static readonly DISPLAYTYPE_EPAPER: YDisplay.DISPLAYTYPE = 3;
     public static readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE = -1;
     public static readonly LAYERWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
@@ -792,8 +960,14 @@ export class YDisplay extends YFunction
         case 'brightness':
             this._brightness = <number> <number> val;
             return 1;
+        case 'autoInvertDelay':
+            this._autoInvertDelay = <number> <number> val;
+            return 1;
         case 'orientation':
             this._orientation = <YDisplay.ORIENTATION> <number> val;
+            return 1;
+        case 'displayPanel':
+            this._displayPanel = <string> <string> val;
             return 1;
         case 'displayWidth':
             this._displayWidth = <number> <number> val;
@@ -932,6 +1106,50 @@ export class YDisplay extends YFunction
     }
 
     /**
+     * Returns the interval between automatic display inversions, or 0 if automatic
+     * inversion is disabled. Using the automatic inversion mechanism reduces the
+     * burn-in that occurs on OLED screens over long periods when the same content
+     * remains displayed on the screen.
+     *
+     * @return an integer corresponding to the interval between automatic display inversions, or 0 if automatic
+     *         inversion is disabled
+     *
+     * On failure, throws an exception or returns YDisplay.AUTOINVERTDELAY_INVALID.
+     */
+    async get_autoInvertDelay(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YDisplay.AUTOINVERTDELAY_INVALID;
+            }
+        }
+        res = this._autoInvertDelay;
+        return res;
+    }
+
+    /**
+     * Changes the interval between automatic display inversions.
+     * The parameter is the number of seconds, or 0 to disable automatic inversion.
+     * Using the automatic inversion mechanism reduces the burn-in that occurs on OLED
+     * screens over long periods when the same content remains displayed on the screen.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
+     *
+     * @param newval : an integer corresponding to the interval between automatic display inversions
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_autoInvertDelay(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('autoInvertDelay', rest_val);
+    }
+
+    /**
      * Returns the currently selected display orientation.
      *
      * @return a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
@@ -968,6 +1186,45 @@ export class YDisplay extends YFunction
         let rest_val: string;
         rest_val = String(newval);
         return await this._setAttr('orientation', rest_val);
+    }
+
+    /**
+     * Returns the exact model of the display panel.
+     *
+     * @return a string corresponding to the exact model of the display panel
+     *
+     * On failure, throws an exception or returns YDisplay.DISPLAYPANEL_INVALID.
+     */
+    async get_displayPanel(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YDisplay.DISPLAYPANEL_INVALID;
+            }
+        }
+        res = this._displayPanel;
+        return res;
+    }
+
+    /**
+     * Changes the model of display to match the connected display panel.
+     * This function has no effect if the module does not support the selected
+     * display panel.
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * @param newval : a string corresponding to the model of display to match the connected display panel
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_displayPanel(newval: string): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('displayPanel', rest_val);
     }
 
     /**
@@ -1011,8 +1268,9 @@ export class YDisplay extends YFunction
     /**
      * Returns the display type: monochrome, gray levels or full color.
      *
-     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_GRAY and
-     * YDisplay.DISPLAYTYPE_RGB corresponding to the display type: monochrome, gray levels or full color
+     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_GRAY,
+     * YDisplay.DISPLAYTYPE_RGB and YDisplay.DISPLAYTYPE_EPAPER corresponding to the display type:
+     * monochrome, gray levels or full color
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
@@ -1240,6 +1498,50 @@ export class YDisplay extends YFunction
     }
 
     /**
+     * Forces an ePaper screen to perform a regenerative update using the slow
+     * update method. Periodic use of the slow method (total panel update with
+     * multiple inversions) prevents ghosting effects and improves contrast.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async regenerateDisplay(): Promise<number>
+    {
+        return await this.sendCommand('z');
+    }
+
+    /**
+     * Disables screen refresh for a short period of time. The combination of
+     * postponeRefresh and triggerRefresh can be used as an
+     * alternative to double-buffering to avoid flickering during display updates.
+     *
+     * @param duration : duration of deactivation in milliseconds (max. 30 seconds)
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async postponeRefresh(duration: number): Promise<number>
+    {
+        return await this.sendCommand('H' + String(Math.round(duration)));
+    }
+
+    /**
+     * Trigger an immediate screen refresh. The combination of
+     * postponeRefresh and triggerRefresh can be used as an
+     * alternative to double-buffering to avoid flickering during display updates.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async triggerRefresh(): Promise<number>
+    {
+        return await this.sendCommand('H0');
+    }
+
+    /**
      * Smoothly changes the brightness of the screen to produce a fade-in or fade-out
      * effect.
      *
@@ -1432,6 +1734,207 @@ export class YDisplay extends YFunction
     }
 
     /**
+     * Returns a color image with the current content of the display.
+     * The image is returned as a binary object, where each byte represents a pixel,
+     * from left to right and from top to bottom. The palette used to map byte
+     * values to RGB colors is filled into the list provided as argument.
+     * In all cases, the first palette entry (value 0) corresponds to the
+     * screen default background color.
+     * The image dimensions are given by the display width and height.
+     *
+     * @param palette : a list to be filled with the image palette
+     *
+     * @return a binary object if the call succeeds.
+     *
+     * On failure, throws an exception or returns an empty binary object.
+     */
+    async readDisplay(palette: number[]): Promise<Uint8Array>
+    {
+        let zipmap: Uint8Array;
+        let zipsize: number;
+        let zipwidth: number;
+        let zipheight: number;
+        let ziprotate: number;
+        let zipcolors: number;
+        let zipcol: number;
+        let zipbits: number;
+        let zipmask: number;
+        let srcpos: number;
+        let endrun: number;
+        let srcpat: number;
+        let srcbit: number;
+        let srcval: number;
+        let srcx: number;
+        let srcy: number;
+        let srci: number;
+        let incx: number;
+        let pixmap: Uint8Array;
+        let pixcount: number;
+        let pixval: number;
+        let pixpos: number;
+        let rotmap: Uint8Array;
+        pixmap = new Uint8Array(0);
+        // Check if the display firmware has autoInvertDelay and pixels.bin support
+
+        if (await this.get_autoInvertDelay() < 0) {
+            // Old firmware, use uncompressed GIF output to rebuild pixmap
+            zipmap = await this._download('display.gif');
+            zipsize = (zipmap).length;
+            if (zipsize == 0) {
+                return pixmap;
+            }
+            if (!(zipsize >= 32)) {
+                return this._throw(this._yapi.IO_ERROR, 'not a GIF image', pixmap);
+            }
+            if (!((zipmap[0] == 71) && (zipmap[2] == 70))) {
+                return this._throw(this._yapi.INVALID_ARGUMENT, 'not a GIF image', pixmap);
+            }
+            zipwidth = zipmap[6] + 256 * zipmap[7];
+            zipheight = zipmap[8] + 256 * zipmap[9];
+            palette.length = 0;
+            zipcol = zipmap[13] * 65536 + zipmap[14] * 256 + zipmap[15];
+            palette.push(zipcol);
+            zipcol = zipmap[16] * 65536 + zipmap[17] * 256 + zipmap[18];
+            palette.push(zipcol);
+            pixcount = zipwidth * zipheight;
+            pixmap = new Uint8Array(pixcount);
+            pixpos = 0;
+            srcpos = 30;
+            zipsize = zipsize - 2;
+            while (srcpos < zipsize) {
+                // load next run size
+                endrun = srcpos + 1 + zipmap[srcpos];
+                srcpos = srcpos + 1;
+                while (srcpos < endrun) {
+                    srcval = zipmap[srcpos];
+                    srcpos = srcpos + 1;
+                    srcbit = 8;
+                    while (srcbit != 0) {
+                        if (srcbit < 3) {
+                            srcval = srcval + (zipmap[srcpos] << srcbit);
+                            srcpos = srcpos + 1;
+                        }
+                        pixval = (srcval & 7);
+                        srcval = (srcval >> 3);
+                        if (!((pixval > 1) && (pixval != 4))) {
+                            return this._throw(this._yapi.INVALID_ARGUMENT, 'unexpected encoding', pixmap);
+                        }
+                        pixmap.set([pixval], pixpos);
+                        pixpos = pixpos + 1;
+                        srcbit = srcbit - 3;
+                    }
+                }
+            }
+            return pixmap;
+        }
+        // New firmware, use compressed pixels.bin
+        zipmap = await this._download('pixels.bin');
+        zipsize = (zipmap).length;
+        if (zipsize == 0) {
+            return pixmap;
+        }
+        if (!(zipsize >= 16)) {
+            return this._throw(this._yapi.IO_ERROR, 'not a pixmap', pixmap);
+        }
+        if (!((zipmap[0] == 80) && (zipmap[2] == 88))) {
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'not a pixmap', pixmap);
+        }
+        zipwidth = zipmap[4] + 256 * zipmap[5];
+        zipheight = zipmap[6] + 256 * zipmap[7];
+        ziprotate = zipmap[8];
+        zipcolors = zipmap[9];
+        palette.length = 0;
+        srcpos = 10;
+        srci = 0;
+        while (srci < zipcolors) {
+            zipcol = zipmap[srcpos] * 65536 + zipmap[srcpos+1] * 256 + zipmap[srcpos+2];
+            palette.push(zipcol);
+            srcpos = srcpos + 3;
+            srci = srci + 1;
+        }
+        zipbits = 1;
+        while ((1 << zipbits) < zipcolors) {
+            zipbits = zipbits + 1;
+        }
+        zipmask = (1 << zipbits) - 1;
+        pixcount = zipwidth * zipheight;
+        pixmap = new Uint8Array(pixcount);
+        srcx = 0;
+        srcy = 0;
+        incx = ((8 / zipbits) >> 0);
+        srcval = 0;
+        while (srcpos < zipsize) {
+            // load next compression pattern byte
+            srcpat = zipmap[srcpos];
+            srcpos = srcpos + 1;
+            srcbit = 7;
+            while (srcbit >= 0) {
+                // get next bitmap byte
+                if ((srcpat & 128) != 0) {
+                    srcval = zipmap[srcpos];
+                    srcpos = srcpos + 1;
+                }
+                srcpat = (srcpat << 1);
+                pixpos = srcy * zipwidth + srcx;
+                // produce 8 pixels (or 4, if bitmap uses 2 bits per pixel)
+                srci = 8 - zipbits;
+                while (srci >= 0) {
+                    pixval = ((srcval >> srci) & zipmask);
+                    pixmap.set([pixval], pixpos);
+                    pixpos = pixpos + 1;
+                    srci = srci - zipbits;
+                }
+                srcy = srcy + 1;
+                if (srcy >= zipheight) {
+                    srcy = 0;
+                    srcx = srcx + incx;
+                    // drop last bytes if image is not a multiple of 8
+                    if (srcx >= zipwidth) {
+                        srcbit = 0;
+                    }
+                }
+                srcbit = srcbit - 1;
+            }
+        }
+        // rotate pixmap to match display orientation
+        if (ziprotate == 0) {
+            return pixmap;
+        }
+        if ((ziprotate & 2) != 0) {
+            // rotate buffer 180 degrees by swapping pixels
+            srcpos = 0;
+            pixpos = pixcount - 1;
+            while (srcpos < pixpos) {
+                pixval = pixmap[srcpos];
+                pixmap.set([pixmap[pixpos]], srcpos);
+                pixmap.set([pixval], pixpos);
+                srcpos = srcpos + 1;
+                pixpos = pixpos - 1;
+            }
+        }
+        if ((ziprotate & 1) == 0) {
+            return pixmap;
+        }
+        // rotate 90 ccw: first pixel is bottom left
+        rotmap = new Uint8Array(pixcount);
+        srcx = 0;
+        srcy = zipwidth - 1;
+        srcpos = 0;
+        while (srcpos < pixcount) {
+            pixval = pixmap[srcpos];
+            pixpos = srcy * zipheight + srcx;
+            rotmap.set([pixval], pixpos);
+            srcy = srcy - 1;
+            if (srcy < 0) {
+                srcx = srcx + 1;
+                srcy = zipwidth - 1;
+            }
+            srcpos = srcpos + 1;
+        }
+        return rotmap;
+    }
+
+    /**
      * Continues the enumeration of displays started using yFirstDisplay().
      * Caution: You can't make any assumption about the returned displays order.
      * If you want to find a specific a display, use Display.findDisplay()
@@ -1552,6 +2055,7 @@ export namespace YDisplay
         MONO = 0,
         GRAY = 1,
         RGB = 2,
+        EPAPER = 3,
         INVALID = -1
     }
 

@@ -4,8 +4,8 @@ Yoctopuce TypeScript Library
 ## What is this library good for ?
 
 This library provides access to [Yoctopuce devices](https://www.yoctopuce.com) for TypeScript.
-It can be used with all kind of JavaScript/EcmaScript environments, including in browsers,
-in Node.js services and with Electron or similar software.
+It can be used with any kind of JavaScript/EcmaScript environments, including in browsers,
+in Node.js services, and with Electron or similar software.
 
 This library handles asynchronous communication with the devices using Promise objects, 
 leveraging the new EcmaScript 2017 `async` / `await` non-blocking syntax for asynchronous I/O.
@@ -17,9 +17,95 @@ You can choose to include the library
 Both CommonJS and EcmaScript module directories include corresponding .d.ts definition files
 and .js.map sourcemap files to facilitate development.
 
-You will find examples in the zipped library on [Yoctopuce web site](https://www.yoctopuce.com/EN/libraries.php)
+You can find examples in the zipped library on the [Yoctopuce web site](https://www.yoctopuce.com/EN/libraries.php)
 and on [GitHub](https://github.com/yoctopuce/yoctolib_ts).
 
+
+## Content of this package
+
+* doc/
+
+		API Reference in HTML
+
+* examples_html/
+
+		Directory with example programs designed to be run in a web browser
+
+* examples_node/
+
+		Directory with example programs designed to be run with node.js
+
+* src/
+
+		Source code of the library (in TypeScript)
+
+* dist/cjs
+
+		The library transpiled according to CommonJS module standard
+
+* dist/esm
+
+		The library transpiled as an ECMAScript 2015 module
+
+* bin/
+
+		Internal build tools
+
+* FILES.txt
+
+		List of files contained in this archive
+
+* RELEASE.txt
+
+		Release notes
+
+
+## Installing the lib from NPM
+
+This library is also published on NPM
+
+To install the CommonJS module standard version use the yoctolib-cjs package:
+````
+npm install yoctolib-cjs
+````
+
+To install the ECMAScript 2015 module version use the yoctolib-esm package
+````
+npm install yoctolib-esm
+````
+## How to run examples
+
+### nodes.js examples
+
+To start the example you need to run ```npm install``` in the directory of the example.
+then you can start the examples with:
+````
+npm run demo 
+````
+
+
+### HTML examples
+
+In the HTML examples, there is an HTML file named app.html, and a TypeScript file app.ts. No installation is 
+needed to run these examples, as the TypeScript library is referenced using a relative path. However, in order to allow 
+the browser to run the code, the HTML page must be served by a Web server. We therefore provide a simple test server for
+this purpose, that you can start with the command:
+
+````
+npm run app-server
+````
+
+This command compiles the TypeScript example code, makes it available via an HTTP server on port 3000, and opens a Web 
+browser on this example. If you change the example source code, the TypeScript compiler is automatically triggered
+to update the transpiled code and a simple page reload on the browser makes it possible to test the change.
+
+## More help
+
+For more details, refer to the documentation specific to each product, which
+includes example code with explanations, and a programming reference manual.
+In case of trouble, contact support@yoctopuce.com
+
+Have fun !
 
 ## License information
 

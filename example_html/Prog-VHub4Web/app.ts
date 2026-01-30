@@ -28,20 +28,26 @@ function setStatus(msg: string): void
 
 async function updateStatus(): Promise<void>
 {
-    let countdown: number = await HeatingRelay.get_pulseTimer();
-    if (prevCount !== countdown) {
-        // only update status when countdown has changed
-        prevCount = countdown;
-        let mode: string = '<span class="cold">&#x2744;</span> Heating is OFF';
-        if (countdown > 0) {
-            let secs: number = (countdown / 1000) | 0;
-            let days: number = (secs / 86400) | 0;
-            let hours: number = ((secs % 86400) / 3600) | 0;
-            let mins: number = ((secs % 3600) / 60) | 0;
-            mode = '<span class="warm">&#x1F525;</span> Heating is ON<br>'+
-                `(turn off in ${days} days ${hours}h${mins})`;
+    try {
+        let countdown: number = await HeatingRelay.get_pulseTimer();
+        if (prevCount !== countdown) {
+            // only update status when countdown has changed
+            prevCount = countdown;
+            let mode: string = '<span class="cold">&#x2744;</span> Heating is OFF';
+            if (countdown > 0) {
+                let secs: number = (countdown / 1000) | 0;
+                let days: number = (secs / 86400) | 0;
+                let hours: number = ((secs % 86400) / 3600) | 0;
+                let mins: number = ((secs % 3600) / 60) | 0;
+                mode = '<span class="warm">&#x1F525;</span> Heating is ON<br>'+
+                    `(turn off in ${days} days ${hours}h${mins})`;
+            }
+            setStatus(mode);
         }
-        setStatus(mode);
+    } catch (e) {
+        console.log(e);
+        setStatus('Connection lost, please retry');
+        prevCount = -1;
     }
     setTimeout(updateStatus, 1000);
 }
@@ -52,7 +58,6 @@ async function updateStatus(): Promise<void>
 (window as any).login = async function(): Promise<void>
 {
     await YAPI.LogUnhandledPromiseRejections();
-    await YAPI.DisableExceptions();
 
     // Connect to VirtualHub for Web instance and locate the heating relay
     let pwd: string = (<HTMLInputElement>wdg('pwd')).value;
@@ -65,7 +70,7 @@ async function updateStatus(): Promise<void>
     }
     HeatingRelay = YRelay.FindRelay("heating");
     if(!await HeatingRelay.isOnline()) {
-        setStatus('Relay not found');
+        setStatus('Error: Relay not found');
         return;
     }
     (<HTMLElement>wdg('auth')).style.display = 'none';
