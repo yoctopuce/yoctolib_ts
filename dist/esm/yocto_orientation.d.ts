@@ -46,9 +46,41 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  */
 export declare class YOrientation extends YSensor {
     _className: string;
+    _command: string;
+    _zeroOffset: number;
     _valueCallbackOrientation: YOrientation.ValueCallback | null;
     _timedReportCallbackOrientation: YOrientation.TimedReportCallback | null;
+    readonly COMMAND_INVALID: string;
+    readonly ZEROOFFSET_INVALID: number;
+    static readonly COMMAND_INVALID: string;
+    static readonly ZEROOFFSET_INVALID: number;
     constructor(yapi: YAPIContext, func: string);
+    imm_parseAttr(name: string, val: any): number;
+    get_command(): Promise<string>;
+    set_command(newval: string): Promise<number>;
+    /**
+     * Sets an offset between the orientation reported by the sensor and the actual orientation. This
+     * can typically be used  to compensate for mechanical offset. This offset can also be set
+     * automatically using the zero() method.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     * On failure, throws an exception or returns a negative error code.
+     *
+     * @param newval : a floating point number
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_zeroOffset(newval: number): Promise<number>;
+    /**
+     * Returns the Offset between the orientation reported by the sensor and the actual orientation.
+     *
+     * @return a floating point number corresponding to the Offset between the orientation reported by the
+     * sensor and the actual orientation
+     *
+     * On failure, throws an exception or returns YOrientation.ZEROOFFSET_INVALID.
+     */
+    get_zeroOffset(): Promise<number>;
     /**
      * Retrieves an orientation sensor for a given identifier.
      * The identifier can be specified using several formats:
@@ -106,9 +138,11 @@ export declare class YOrientation extends YSensor {
     static FindOrientationInContext(yctx: YAPIContext, func: string): YOrientation;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -130,6 +164,57 @@ export declare class YOrientation extends YSensor {
      */
     registerTimedReportCallback(callback: YOrientation.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
+    sendCommand(command: string): Promise<number>;
+    /**
+     * Reset the sensor's zero to current position by automatically setting a new offset.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    zero(): Promise<number>;
+    /**
+     * Modifies the calibration of the MA600A sensor using an array of 32
+     * values representing the offset in degrees between the true values and
+     * those measured regularly every 11.25 degrees starting from zero. The calibration
+     * is applied immediately and is stored permanently in the MA600A sensor.
+     * Before calculating the offset values, remember to clear any previous
+     * calibration using the clearCalibration function and set
+     * the zero offset  to 0. After a calibration change, the sensor will stop
+     * measurements for about one second.
+     * Do not confuse this function with the generic calibrateFromPoints function,
+     * which works at the YSensor level and is not necessarily well suited to
+     * a sensor returning circular values.
+     *
+     * @param offsetValues : array of 32 floating point values in the [-11.25..+11.25] range
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_calibration(offsetValues: number[]): Promise<number>;
+    /**
+     * Retrieves offset correction data points previously entered using the method
+     * set_calibration.
+     *
+     * @param offsetValues : array of 32 floating point numbers, that will be filled by the
+     *         function with the offset values for the correction points.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    get_Calibration(offsetValues: number[]): Promise<number>;
+    /**
+     * Cancels any calibration set with set_calibration. This function
+     * is equivalent to calling set_calibration with only zeros.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    clearCalibration(): Promise<number>;
     /**
      * Continues the enumeration of orientation sensors started using yFirstOrientation().
      * Caution: You can't make any assumption about the returned orientation sensors order.

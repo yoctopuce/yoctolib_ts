@@ -106,9 +106,9 @@ class YServo extends yocto_api_js_1.YFunction {
         return super.imm_parseAttr(name, val);
     }
     /**
-     * Returns the current servo position.
+     * Returns the current servo position, usually a value between -1000 and 1000.
      *
-     * @return an integer corresponding to the current servo position
+     * @return an integer corresponding to the current servo position, usually a value between -1000 and 1000
      *
      * On failure, throws an exception or returns YServo.POSITION_INVALID.
      */
@@ -123,9 +123,10 @@ class YServo extends yocto_api_js_1.YFunction {
         return res;
     }
     /**
-     * Changes immediately the servo driving position.
+     * Changes immediately the servo  position, the parameter is  a value between -1000 and +1000.
      *
-     * @param newval : an integer corresponding to immediately the servo driving position
+     * @param newval : an integer corresponding to immediately the servo  position, the parameter is  a
+     * value between -1000 and +1000
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -409,9 +410,11 @@ class YServo extends yocto_api_js_1.YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing

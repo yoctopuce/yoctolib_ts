@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 71188 2026-01-06 09:23:14Z seb $
+ * $Id: yocto_api.ts 72344 2026-03-09 14:01:56Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -3471,9 +3471,11 @@ class YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -3677,8 +3679,8 @@ class YFunction {
      * SERIAL     is the serial number of the module if the module is connected or "unresolved", and
      * FUNCTIONID is  the hardware identifier of the function if the module is connected.
      * For example, this method returns Relay(MyCustomName.relay1)=RELAYLO1-123456.relay1 if the
-     * module is already connected or Relay(BadCustomeName.relay1)=unresolved if the module has
-     * not yet been connected. This method does not trigger any USB or TCP transaction and can therefore be used in
+     * module is connected or Relay(BadCustomeName.relay1)=unresolved if the module is
+     * not connected. This method does not trigger any USB or TCP transaction and can therefore be used in
      * a debugger.
      *
      * @return a string that describes the function
@@ -5056,9 +5058,11 @@ class YModule extends YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -6788,9 +6792,11 @@ class YSensor extends YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -7791,9 +7797,11 @@ class YDataLogger extends YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -12834,7 +12842,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.11632';
+        return /* version number patched automatically */ '2.1.12413';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
@@ -13020,7 +13028,7 @@ class YAPIContext {
             }
         }
         if (url === "usb") {
-            return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Use the VirtualHub on 127.0.0.1 to access USB devices', exports.YAPI_NOT_SUPPORTED);
+            return this.imm_setErr(errmsg, exports.YAPI_NOT_SUPPORTED, 'Use the VirtualHub on 127.0.0.1 to access local USB devices', exports.YAPI_NOT_SUPPORTED);
         }
         let urlInfo = new _YY_UrlInfo(url);
         let hub = this.imm_getHub(urlInfo);

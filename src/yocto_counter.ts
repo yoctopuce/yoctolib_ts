@@ -53,10 +53,15 @@ export class YCounter extends YSensor
 {
     //--- (YCounter attributes declaration)
     _className: string;
+    _command: string = YCounter.COMMAND_INVALID;
     _valueCallbackCounter: YCounter.ValueCallback | null = null;
     _timedReportCallbackCounter: YCounter.TimedReportCallback | null = null;
 
+    // API symbols as object properties
+    public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+
     // API symbols as static members
+    public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YCounter attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -68,6 +73,35 @@ export class YCounter extends YSensor
     }
 
     //--- (YCounter implementation)
+
+    imm_parseAttr(name: string, val: any): number
+    {
+        switch (name) {
+        case 'command':
+            this._command = <string> <string> val;
+            return 1;
+        }
+        return super.imm_parseAttr(name, val);
+    }
+
+    async get_command(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YCounter.COMMAND_INVALID;
+            }
+        }
+        res = this._command;
+        return res;
+    }
+
+    async set_command(newval: string): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('command', rest_val);
+    }
 
     /**
      * Retrieves a counter for a given identifier.
@@ -146,9 +180,11 @@ export class YCounter extends YSensor
 
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -224,6 +260,23 @@ export class YCounter extends YSensor
             await super._invokeTimedReportCallback(value);
         }
         return 0;
+    }
+
+    async sendCommand(command: string): Promise<number>
+    {
+        return await this.set_command(command);
+    }
+
+    /**
+     * Reset the counter to zero.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async zero(): Promise<number>
+    {
+        return await this.sendCommand('Z');
     }
 
     /**

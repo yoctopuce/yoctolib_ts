@@ -50,17 +50,42 @@ const yocto_api_js_1 = require("./yocto_api.js");
  */
 //--- (end of YCounter class start)
 class YCounter extends yocto_api_js_1.YSensor {
-    // API symbols as static members
     //--- (end of YCounter attributes declaration)
     constructor(yapi, func) {
         //--- (YCounter constructor)
         super(yapi, func);
+        this._command = YCounter.COMMAND_INVALID;
         this._valueCallbackCounter = null;
         this._timedReportCallbackCounter = null;
+        // API symbols as object properties
+        this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this._className = 'Counter';
         //--- (end of YCounter constructor)
     }
     //--- (YCounter implementation)
+    imm_parseAttr(name, val) {
+        switch (name) {
+            case 'command':
+                this._command = val;
+                return 1;
+        }
+        return super.imm_parseAttr(name, val);
+    }
+    async get_command() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YCounter.COMMAND_INVALID;
+            }
+        }
+        res = this._command;
+        return res;
+    }
+    async set_command(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('command', rest_val);
+    }
     /**
      * Retrieves a counter for a given identifier.
      * The identifier can be specified using several formats:
@@ -134,9 +159,11 @@ class YCounter extends yocto_api_js_1.YSensor {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -212,6 +239,19 @@ class YCounter extends yocto_api_js_1.YSensor {
         }
         return 0;
     }
+    async sendCommand(command) {
+        return await this.set_command(command);
+    }
+    /**
+     * Reset the counter to zero.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async zero() {
+        return await this.sendCommand('Z');
+    }
     /**
      * Continues the enumeration of gcounters started using yFirstCounter().
      * Caution: You can't make any assumption about the returned gcounters order.
@@ -265,4 +305,6 @@ class YCounter extends yocto_api_js_1.YSensor {
     }
 }
 exports.YCounter = YCounter;
+// API symbols as static members
+YCounter.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_counter.js.map

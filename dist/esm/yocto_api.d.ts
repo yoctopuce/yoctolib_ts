@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 71188 2026-01-06 09:23:14Z seb $
+ * $Id: yocto_api.ts 72344 2026-03-09 14:01:56Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -1176,9 +1176,11 @@ export declare class YFunction {
     static FindFunctionInContext(yctx: YAPIContext, func: string): YFunction;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -1286,8 +1288,8 @@ export declare class YFunction {
      * SERIAL     is the serial number of the module if the module is connected or "unresolved", and
      * FUNCTIONID is  the hardware identifier of the function if the module is connected.
      * For example, this method returns Relay(MyCustomName.relay1)=RELAYLO1-123456.relay1 if the
-     * module is already connected or Relay(BadCustomeName.relay1)=unresolved if the module has
-     * not yet been connected. This method does not trigger any USB or TCP transaction and can therefore be used in
+     * module is connected or Relay(BadCustomeName.relay1)=unresolved if the module is
+     * not connected. This method does not trigger any USB or TCP transaction and can therefore be used in
      * a debugger.
      *
      * @return a string that describes the function
@@ -1921,9 +1923,11 @@ export declare class YModule extends YFunction {
     static FindModuleInContext(yctx: YAPIContext, func: string): YModule;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -2545,9 +2549,11 @@ export declare class YSensor extends YFunction {
     static FindSensorInContext(yctx: YAPIContext, func: string): YSensor;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -3005,9 +3011,11 @@ export declare class YDataLogger extends YFunction {
     static FindDataLoggerInContext(yctx: YAPIContext, func: string): YDataLogger;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing

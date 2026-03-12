@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 68482 2025-08-21 10:07:30Z mvuilleu $
+ *  $Id: yocto_messagebox.ts 72410 2026-03-11 07:18:41Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -51,6 +51,7 @@ export class YSms {
     constructor(obj_mbox) {
         this._slot = 0;
         this._deliv = false;
+        this._isnew = false;
         this._smsc = '';
         this._mref = 0;
         this._orig = '';
@@ -82,14 +83,14 @@ export class YSms {
     async get_msgRef() {
         return this._mref;
     }
-    async get_sender() {
-        return this._orig;
+    async get_protocolId() {
+        return this._pid;
     }
     async get_recipient() {
         return this._dest;
     }
-    async get_protocolId() {
-        return this._pid;
+    async isNew() {
+        return this._isnew;
     }
     async isReceived() {
         return this._deliv;
@@ -104,10 +105,7 @@ export class YSms {
         return (this._mclass & 3);
     }
     async get_dcs() {
-        return (this._mclass | ((this._alphab << 2)));
-    }
-    async get_timestamp() {
-        return this._stamp;
+        return (this._mclass | (this._alphab << 2));
     }
     async get_userDataHeader() {
         return this._udh;
@@ -116,9 +114,34 @@ export class YSms {
         return this._udata;
     }
     /**
-     * Returns the content of the message.
+     * Returns true iff the message is a "Flash" SMS (class 0 message). Flash messages
+     * are displayed on the handset immediately and usually not saved on the SIM card.
      *
-     * @return  a string with the content of the message.
+     * @return a boolean.
+     */
+    async isFlashMessage() {
+        return await this.get_msgClass() == 0;
+    }
+    /**
+     * Returns the reported message timestamp.
+     *
+     * @return the timestamp as a text string.
+     */
+    async get_timestamp() {
+        return this._stamp;
+    }
+    /**
+     * Returns the reported message sender.
+     *
+     * @return a text string.
+     */
+    async get_sender() {
+        return this._orig;
+    }
+    /**
+     * Returns the content of the message as a text string.
+     *
+     * @return a string with the content of the message.
      */
     async get_textData() {
         let isolatin;
@@ -142,6 +165,11 @@ export class YSms {
         // default: convert 8 bit to string as-is
         return this._yapi.imm_bin2str(this._udata);
     }
+    /**
+     * Returns the content of the message, as a list of integer unicode values.
+     *
+     * @return a list of integers.
+     */
     async get_unicodeData() {
         let res = [];
         let unisize;
@@ -218,6 +246,10 @@ export class YSms {
         this._deliv = val;
         return YAPI.SUCCESS;
     }
+    async set_new(val) {
+        this._isnew = val;
+        return YAPI.SUCCESS;
+    }
     async set_smsc(val) {
         this._smsc = val;
         this._npdu = 0;
@@ -259,7 +291,7 @@ export class YSms {
         return YAPI.SUCCESS;
     }
     async set_dcs(val) {
-        this._alphab = (((val >> 2)) & 3);
+        this._alphab = ((val >> 2) & 3);
         this._mclass = (val & (16 + 3));
         this._npdu = 0;
         return YAPI.SUCCESS;
@@ -307,7 +339,7 @@ export class YSms {
         return YAPI.SUCCESS;
     }
     /**
-     * Add a regular text to the SMS. This function support messages
+     * Adds regular text to the SMS. This function support messages
      * of more than 160 characters. ISO-latin accented characters
      * are supported. For messages with special unicode characters such as asian
      * characters and emoticons, use the  addUnicodeData method.
@@ -374,10 +406,10 @@ export class YSms {
         return await this.set_userData(udata);
     }
     /**
-     * Add a unicode text to the SMS. This function support messages
+     * Adds unicode characters to the SMS. This function support messages
      * of more than 160 characters, using SMS concatenation.
      *
-     * @param val : an array of special unicode characters
+     * @param val : a list of unicode characters provided as integers
      *
      * @return YAPI.SUCCESS when the call succeeds.
      */
@@ -416,11 +448,11 @@ export class YSms {
             uni = val[i];
             if (uni >= 65536) {
                 surrogate = uni - 65536;
-                uni = (((surrogate >> 10) & 1023)) + 55296;
+                uni = ((surrogate >> 10) & 1023) + 55296;
                 udata.set([(uni >> 8)], udatalen);
                 udata.set([(uni & 255)], udatalen + 1);
                 udatalen = udatalen + 2;
-                uni = ((surrogate & 1023)) + 56320;
+                uni = (surrogate & 1023) + 56320;
             }
             udata.set([(uni >> 8)], udatalen);
             udata.set([(uni & 255)], udatalen + 1);
@@ -584,7 +616,7 @@ export class YSms {
                 else {
                     byt = addr[ofs + rpos];
                     rpos = rpos + 1;
-                    gsm7.set([(carry | (((byt << nbits)) & 127))], i);
+                    gsm7.set([(carry | ((byt << nbits) & 127))], i);
                     carry = (byt >> (7 - nbits));
                     nbits = nbits + 1;
                 }
@@ -840,7 +872,7 @@ export class YSms {
                 }
                 else {
                     thi_b = this._udata[i];
-                    res.set([(carry | (((thi_b << nbits)) & 255))], wpos);
+                    res.set([(carry | ((thi_b << nbits) & 255))], wpos);
                     wpos = wpos + 1;
                     nbits = nbits - 1;
                     carry = (thi_b >> (7 - nbits));
@@ -1078,8 +1110,8 @@ export class YSms {
             rpos = rpos + 1;
             this._dest = await this.decodeAddress(pdu, rpos, addrlen);
             this._orig = '';
-            if (((pdutyp & 16)) != 0) {
-                if (((pdutyp & 8)) != 0) {
+            if ((pdutyp & 16) != 0) {
+                if ((pdutyp & 8) != 0) {
                     tslen = 7;
                 }
                 else {
@@ -1090,12 +1122,12 @@ export class YSms {
                 tslen = 0;
             }
         }
-        rpos = rpos + (((addrlen + 3) >> 1));
+        rpos = rpos + ((addrlen + 3) >> 1);
         this._pid = pdu[rpos];
         rpos = rpos + 1;
         dcs = pdu[rpos];
         rpos = rpos + 1;
-        this._alphab = (((dcs >> 2)) & 3);
+        this._alphab = ((dcs >> 2) & 3);
         this._mclass = (dcs & (16 + 3));
         this._stamp = await this.decodeTimeStamp(pdu, rpos, tslen);
         rpos = rpos + tslen;
@@ -1148,7 +1180,7 @@ export class YSms {
                 else {
                     thi_b = pdu[rpos];
                     rpos = rpos + 1;
-                    this._udata.set([(carry | (((thi_b << nbits)) & 127))], i);
+                    this._udata.set([(carry | ((thi_b << nbits) & 127))], i);
                     carry = (thi_b >> (7 - nbits));
                     nbits = nbits + 1;
                 }
@@ -1182,18 +1214,27 @@ export class YSms {
         if (this._npdu == 0) {
             await this.generatePdu();
         }
-        if (this._npdu == 1) {
-            return await this._mbox._upload('sendSMS', this._pdu);
+        if (this._npdu > 1) {
+            // send multiple PDUs using recursive call
+            retcode = YAPI.SUCCESS;
+            i = 0;
+            while ((i < this._npdu) && (retcode == YAPI.SUCCESS)) {
+                pdu = this._parts[i];
+                retcode = await pdu.send();
+                i = i + 1;
+            }
+            return retcode;
         }
-        retcode = YAPI.SUCCESS;
-        i = 0;
-        while ((i < this._npdu) && (retcode == YAPI.SUCCESS)) {
-            pdu = this._parts[i];
-            retcode = await pdu.send();
-            i = i + 1;
-        }
-        return retcode;
+        // send a single PDU
+        return await this._mbox.sendPDU(this._pdu);
     }
+    /**
+     * Delete the SMS from the SIM card.
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
     async deleteFromSIM() {
         let i;
         let retcode;
@@ -1234,6 +1275,7 @@ export class YMessageBox extends YFunction {
         this._obey = YMessageBox.OBEY_INVALID;
         this._command = YMessageBox.COMMAND_INVALID;
         this._valueCallbackMessageBox = null;
+        this._smsCallback = null;
         this._nextMsgRef = 0;
         this._prevBitmapStr = '';
         this._pdus = [];
@@ -1278,6 +1320,9 @@ export class YMessageBox extends YFunction {
                 return 1;
         }
         return super.imm_parseAttr(name, val);
+    }
+    async _internalEventCallback(YMessageBox_obj, str_value) {
+        await YMessageBox_obj._internalEventHandler(str_value);
     }
     /**
      * Returns the number of message storage slots currently in use.
@@ -1518,9 +1563,11 @@ export class YMessageBox extends YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -1566,7 +1613,6 @@ export class YMessageBox extends YFunction {
     async clearSIMSlot(slot) {
         let retry;
         let idx;
-        let res;
         let bitmapStr;
         let int_res;
         let newBitmap;
@@ -1578,8 +1624,8 @@ export class YMessageBox extends YFunction {
             newBitmap = this._yapi.imm_hexstr2bin(bitmapStr);
             idx = (slot >> 3);
             if (idx < (newBitmap).length) {
-                bitVal = (1 << ((slot & 7)));
-                if (((newBitmap[idx] & bitVal)) != 0) {
+                bitVal = (1 << (slot & 7));
+                if ((newBitmap[idx] & bitVal) != 0) {
                     this._prevBitmapStr = '';
                     int_res = await this.set_command('DS' + String(Math.round(slot)));
                     if (int_res < 0) {
@@ -1593,81 +1639,74 @@ export class YMessageBox extends YFunction {
             else {
                 return this._yapi.INVALID_ARGUMENT;
             }
-            res = await this._AT('');
+            await this._download('at.txt?cmd=');
             retry = retry - 1;
         }
         return this._yapi.IO_ERROR;
     }
-    async _AT(cmd) {
-        let chrPos;
-        let cmdLen;
-        let waitMore;
-        let res;
+    async sendPDU(pdu) {
+        let i;
         let buff;
         let bufflen;
         let buffstr;
-        let buffstrlen;
-        let idx;
-        let suffixlen;
-        // copied form the YCellular class
-        // quote dangerous characters used in AT commands
-        cmdLen = (cmd).length;
-        chrPos = (cmd).indexOf('#');
-        while (chrPos >= 0) {
-            cmd = cmd.substr(0, chrPos) + '' + String.fromCharCode(37) + '23' + cmd.substr(chrPos + 1, cmdLen - chrPos - 1);
-            cmdLen = cmdLen + 2;
-            chrPos = (cmd).indexOf('#');
+        let res;
+        let waitMore;
+        let cmd;
+        buff = await this._uploadEx('sendSMS', pdu);
+        if ((buff).length < 2) {
+            return this._yapi.SUCCESS;
         }
-        chrPos = (cmd).indexOf('+');
-        while (chrPos >= 0) {
-            cmd = cmd.substr(0, chrPos) + '' + String.fromCharCode(37) + '2B' + cmd.substr(chrPos + 1, cmdLen - chrPos - 1);
-            cmdLen = cmdLen + 2;
-            chrPos = (cmd).indexOf('+');
+        if (buff[0] != 64) {
+            return this._yapi.SUCCESS;
         }
-        chrPos = (cmd).indexOf('=');
-        while (chrPos >= 0) {
-            cmd = cmd.substr(0, chrPos) + '' + String.fromCharCode(37) + '3D' + cmd.substr(chrPos + 1, cmdLen - chrPos - 1);
-            cmdLen = cmdLen + 2;
-            chrPos = (cmd).indexOf('=');
-        }
-        cmd = 'at.txt?cmd=' + cmd;
+        // new firmware provides a way to check result of SMS send command
         res = '';
-        // max 2 minutes (each iteration may take up to 5 seconds if waiting)
-        waitMore = 24;
+        bufflen = (buff).length;
+        buffstr = this._yapi.imm_bin2str(buff);
+        i = 0;
+        waitMore = 10;
         while (waitMore > 0) {
+            cmd = 'at.txt?cmd=' + buffstr.substr(i, bufflen - i);
             buff = await this._download(cmd);
             bufflen = (buff).length;
             buffstr = this._yapi.imm_bin2str(buff);
-            buffstrlen = (buffstr).length;
-            idx = bufflen - 1;
-            while ((idx > 0) && (buff[idx] != 64) && (buff[idx] != 10) && (buff[idx] != 13)) {
-                idx = idx - 1;
+            i = bufflen - 1;
+            while ((i > 0) && (buff[i] != 64) && (buff[i] != 10) && (buff[i] != 13)) {
+                i = i - 1;
             }
-            if (buff[idx] == 64) {
+            if ((i >= 0) && (buff[i] == 64)) {
                 // continuation detected
-                suffixlen = bufflen - idx;
-                cmd = 'at.txt?cmd=' + buffstr.substr(buffstrlen - suffixlen, suffixlen);
-                buffstr = buffstr.substr(0, buffstrlen - suffixlen);
                 waitMore = waitMore - 1;
             }
             else {
                 // request complete
                 waitMore = 0;
             }
-            res = res + '' + buffstr;
+            res = res + '' + buffstr.substr(0, i);
         }
-        return res;
+        if (!((res).indexOf('OK') >= 0)) {
+            return this._throw(this._yapi.NOT_SUPPORTED, 'Failed to send SMS', this._yapi.NOT_SUPPORTED);
+        }
+        return this._yapi.SUCCESS;
     }
     async fetchPdu(slot) {
         let binPdu;
         let arrPdu = [];
         let hexPdu;
         let sms;
-        binPdu = await this._download('sms.json?pos=' + String(Math.round(slot)) + '&len=1');
-        arrPdu = this.imm_json_get_array(binPdu);
-        hexPdu = this.imm_decode_json_string(arrPdu[0]);
         sms = new YSms(this);
         await sms.set_slot(slot);
+        binPdu = await this._download('sms.json?pos=' + String(Math.round(slot)) + '&len=1');
+        if ((binPdu).length < 8) {
+            // Retry in case SIM was busy
+            await YAPI.Sleep(250);
+            binPdu = await this._download('sms.json?pos=' + String(Math.round(slot)) + '&len=1');
+            if (!((binPdu).length >= 8)) {
+                return this._throw(this._yapi.IO_ERROR, 'unable to retrieve SMS', sms);
+            }
+        }
+        arrPdu = this.imm_json_get_array(binPdu);
+        hexPdu = this.imm_decode_json_string(arrPdu[0]);
         await sms.parsePdu(this._yapi.imm_hexstr2bin(hexPdu));
         return sms;
     }
@@ -2031,18 +2070,17 @@ export class YMessageBox extends YFunction {
     }
     async checkNewMessages() {
         let bitmapStr;
-        let prevBitmap;
         let newBitmap;
         let slot;
         let nslots;
         let pduIdx;
         let idx;
         let bitVal;
-        let prevBit;
         let i;
         let nsig;
         let cnt;
         let sig;
+        let isnew;
         let newArr = [];
         let newMsg = [];
         let newAgg = [];
@@ -2052,9 +2090,8 @@ export class YMessageBox extends YFunction {
         if (bitmapStr == this._prevBitmapStr) {
             return this._yapi.SUCCESS;
         }
-        prevBitmap = this._yapi.imm_hexstr2bin(this._prevBitmapStr);
-        newBitmap = this._yapi.imm_hexstr2bin(bitmapStr);
         this._prevBitmapStr = bitmapStr;
+        newBitmap = this._yapi.imm_hexstr2bin(bitmapStr);
         nslots = 8 * (newBitmap).length;
         newArr.length = 0;
         newMsg.length = 0;
@@ -2067,8 +2104,10 @@ export class YMessageBox extends YFunction {
             slot = await sms.get_slot();
             idx = (slot >> 3);
             if (idx < (newBitmap).length) {
-                bitVal = (1 << ((slot & 7)));
-                if (((newBitmap[idx] & bitVal)) != 0) {
+                bitVal = (1 << (slot & 7));
+                if ((newBitmap[idx] & bitVal) != 0) {
+                    newBitmap.set([(newBitmap[idx] ^ bitVal)], idx);
+                    await sms.set_new(false);
                     newArr.push(sms);
                     if (await sms.get_concatCount() == 0) {
                         newMsg.push(sms);
@@ -2095,31 +2134,26 @@ export class YMessageBox extends YFunction {
         slot = 0;
         while (slot < nslots) {
             idx = (slot >> 3);
-            bitVal = (1 << ((slot & 7)));
-            prevBit = 0;
-            if (idx < (prevBitmap).length) {
-                prevBit = (prevBitmap[idx] & bitVal);
-            }
-            if (((newBitmap[idx] & bitVal)) != 0) {
-                if (prevBit == 0) {
-                    sms = await this.fetchPdu(slot);
-                    newArr.push(sms);
-                    if (await sms.get_concatCount() == 0) {
-                        newMsg.push(sms);
+            bitVal = (1 << (slot & 7));
+            if ((newBitmap[idx] & bitVal) != 0) {
+                sms = await this.fetchPdu(slot);
+                await sms.set_new(true);
+                newArr.push(sms);
+                if (await sms.get_concatCount() == 0) {
+                    newMsg.push(sms);
+                }
+                else {
+                    sig = await sms.get_concatSignature();
+                    i = 0;
+                    while ((i < nsig) && ((sig).length > 0)) {
+                        if (signatures[i] == sig) {
+                            sig = '';
+                        }
+                        i = i + 1;
                     }
-                    else {
-                        sig = await sms.get_concatSignature();
-                        i = 0;
-                        while ((i < nsig) && ((sig).length > 0)) {
-                            if (signatures[i] == sig) {
-                                sig = '';
-                            }
-                            i = i + 1;
-                        }
-                        if ((sig).length > 0) {
-                            signatures.push(sig);
-                            nsig = nsig + 1;
-                        }
+                    if ((sig).length > 0) {
+                        signatures.push(sig);
+                        nsig = nsig + 1;
                     }
                 }
             }
@@ -2133,6 +2167,7 @@ export class YMessageBox extends YFunction {
             sig = signatures[i];
             cnt = 0;
             pduIdx = 0;
+            isnew = true;
             while (pduIdx < this._pdus.length) {
                 sms = this._pdus[pduIdx];
                 if (await sms.get_concatCount() > 0) {
@@ -2141,6 +2176,7 @@ export class YMessageBox extends YFunction {
                             cnt = await sms.get_concatCount();
                             newAgg.length = 0;
                         }
+                        isnew = await sms.isNew();
                         newAgg.push(sms);
                     }
                 }
@@ -2149,6 +2185,7 @@ export class YMessageBox extends YFunction {
             if ((cnt > 0) && (newAgg.length == cnt)) {
                 sms = new YSms(this);
                 await sms.set_parts(newAgg);
+                await sms.set_new(isnew);
                 newMsg.push(sms);
             }
             i = i + 1;
@@ -2249,6 +2286,55 @@ export class YMessageBox extends YFunction {
     async get_messages() {
         await this.checkNewMessages();
         return this._messages;
+    }
+    /**
+     * Registers a callback function to be called each time that a new SMS is received.
+     * The callback is invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered.
+     * For good responsiveness, remember to call one of these two functions periodically.
+     * To unregister a callback, pass a null pointer as argument.
+     *
+     * @param callback : the callback function to call, or a null pointer.
+     *         The callback function should take four arguments:
+     *         the YMessageBox object that emitted the event, and
+     *         the YSms object containing the received message.
+     *         On failure, throws an exception or returns a negative error code.
+     */
+    async registerSmsCallback(callback) {
+        this._smsCallback = null;
+        if (callback != null) {
+            await this.registerValueCallback(this._internalEventCallback);
+        }
+        else {
+            await this.registerValueCallback(null);
+        }
+        this._smsCallback = callback;
+        return 0;
+    }
+    async _internalEventHandler(cbVal) {
+        let arrLen;
+        let arrPos;
+        let messages = [];
+        let sms;
+        messages = await this.get_messages();
+        // invoke callback for all new messages
+        arrLen = messages.length;
+        arrPos = 0;
+        while (arrPos < arrLen) {
+            sms = messages[arrPos];
+            if (await sms.isNew()) {
+                if (this._smsCallback != null) {
+                    try {
+                        await this._smsCallback(this, sms);
+                    }
+                    catch (e) {
+                        this._yapi.imm_log('Exception in smsCallback:', e);
+                    }
+                }
+            }
+            arrPos = arrPos + 1;
+        }
+        return this._yapi.SUCCESS;
     }
     /**
      * Continues the enumeration of SMS message box interfaces started using yFirstMessageBox().

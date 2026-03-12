@@ -53,10 +53,18 @@ export class YOrientation extends YSensor
 {
     //--- (YOrientation attributes declaration)
     _className: string;
+    _command: string = YOrientation.COMMAND_INVALID;
+    _zeroOffset: number = YOrientation.ZEROOFFSET_INVALID;
     _valueCallbackOrientation: YOrientation.ValueCallback | null = null;
     _timedReportCallbackOrientation: YOrientation.TimedReportCallback | null = null;
 
+    // API symbols as object properties
+    public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+    public readonly ZEROOFFSET_INVALID: number = YAPI.INVALID_DOUBLE;
+
     // API symbols as static members
+    public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly ZEROOFFSET_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YOrientation attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -68,6 +76,78 @@ export class YOrientation extends YSensor
     }
 
     //--- (YOrientation implementation)
+
+    imm_parseAttr(name: string, val: any): number
+    {
+        switch (name) {
+        case 'command':
+            this._command = <string> <string> val;
+            return 1;
+        case 'zeroOffset':
+            this._zeroOffset = <number> Math.round(<number>val / 65.536) / 1000.0;
+            return 1;
+        }
+        return super.imm_parseAttr(name, val);
+    }
+
+    async get_command(): Promise<string>
+    {
+        let res: string;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YOrientation.COMMAND_INVALID;
+            }
+        }
+        res = this._command;
+        return res;
+    }
+
+    async set_command(newval: string): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('command', rest_val);
+    }
+
+    /**
+     * Sets an offset between the orientation reported by the sensor and the actual orientation. This
+     * can typically be used  to compensate for mechanical offset. This offset can also be set
+     * automatically using the zero() method.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     * On failure, throws an exception or returns a negative error code.
+     *
+     * @param newval : a floating point number
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_zeroOffset(newval: number): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(Math.round(newval * 65536.0));
+        return await this._setAttr('zeroOffset', rest_val);
+    }
+
+    /**
+     * Returns the Offset between the orientation reported by the sensor and the actual orientation.
+     *
+     * @return a floating point number corresponding to the Offset between the orientation reported by the
+     * sensor and the actual orientation
+     *
+     * On failure, throws an exception or returns YOrientation.ZEROOFFSET_INVALID.
+     */
+    async get_zeroOffset(): Promise<number>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YOrientation.ZEROOFFSET_INVALID;
+            }
+        }
+        res = this._zeroOffset;
+        return res;
+    }
 
     /**
      * Retrieves an orientation sensor for a given identifier.
@@ -146,9 +226,11 @@ export class YOrientation extends YSensor
 
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -224,6 +306,100 @@ export class YOrientation extends YSensor
             await super._invokeTimedReportCallback(value);
         }
         return 0;
+    }
+
+    async sendCommand(command: string): Promise<number>
+    {
+        return await this.set_command(command);
+    }
+
+    /**
+     * Reset the sensor's zero to current position by automatically setting a new offset.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async zero(): Promise<number>
+    {
+        return await this.sendCommand('Z');
+    }
+
+    /**
+     * Modifies the calibration of the MA600A sensor using an array of 32
+     * values representing the offset in degrees between the true values and
+     * those measured regularly every 11.25 degrees starting from zero. The calibration
+     * is applied immediately and is stored permanently in the MA600A sensor.
+     * Before calculating the offset values, remember to clear any previous
+     * calibration using the clearCalibration function and set
+     * the zero offset  to 0. After a calibration change, the sensor will stop
+     * measurements for about one second.
+     * Do not confuse this function with the generic calibrateFromPoints function,
+     * which works at the YSensor level and is not necessarily well suited to
+     * a sensor returning circular values.
+     *
+     * @param offsetValues : array of 32 floating point values in the [-11.25..+11.25] range
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_calibration(offsetValues: number[]): Promise<number>
+    {
+        let res: string;
+        let npt: number;
+        let idx: number;
+        let corr: number;
+        npt = offsetValues.length;
+        if (npt != 32) {
+            this._throw(this._yapi.INVALID_ARGUMENT, 'Invalid calibration parameters (32 expected)');
+            return this._yapi.INVALID_ARGUMENT;
+        }
+        res = 'C';
+        idx = 0;
+        while (idx < npt) {
+            corr = <number> Math.round(offsetValues[idx] * 128 / 11.25);
+            if ((corr < -128) || (corr > 127)) {
+                this._throw(this._yapi.INVALID_ARGUMENT, 'Calibration parameter exceeds permitted range (+/-11.25)');
+                return this._yapi.INVALID_ARGUMENT;
+            }
+            if (corr < 0) {
+                corr = corr + 256;
+            }
+            res = res + '' + ('00'+(corr).toString(16)).slice(-2).toLowerCase();
+            idx = idx + 1;
+        }
+        return await this.sendCommand(res);
+    }
+
+    /**
+     * Retrieves offset correction data points previously entered using the method
+     * set_calibration.
+     *
+     * @param offsetValues : array of 32 floating point numbers, that will be filled by the
+     *         function with the offset values for the correction points.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async get_Calibration(offsetValues: number[]): Promise<number>
+    {
+        return 0;
+    }
+
+    /**
+     * Cancels any calibration set with set_calibration. This function
+     * is equivalent to calling set_calibration with only zeros.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async clearCalibration(): Promise<number>
+    {
+        return await this.sendCommand('-');
     }
 
     /**

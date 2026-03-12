@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 71629 2026-01-29 15:08:26Z mvuilleu $
+ *  $Id: yocto_display.ts 72057 2026-02-17 09:44:53Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -622,9 +622,9 @@ export declare class YDisplay extends YFunction {
     readonly DISPLAYWIDTH_INVALID: number;
     readonly DISPLAYHEIGHT_INVALID: number;
     readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE;
-    readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE;
-    readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE;
-    readonly DISPLAYTYPE_EPAPER: YDisplay.DISPLAYTYPE;
+    readonly DISPLAYTYPE_EPAPER_BW: YDisplay.DISPLAYTYPE;
+    readonly DISPLAYTYPE_EPAPER_BWR: YDisplay.DISPLAYTYPE;
+    readonly DISPLAYTYPE_EPAPER_BWRY: YDisplay.DISPLAYTYPE;
     readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE;
     readonly LAYERWIDTH_INVALID: number;
     readonly LAYERHEIGHT_INVALID: number;
@@ -645,9 +645,9 @@ export declare class YDisplay extends YFunction {
     static readonly DISPLAYWIDTH_INVALID: number;
     static readonly DISPLAYHEIGHT_INVALID: number;
     static readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE;
-    static readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE;
-    static readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE;
-    static readonly DISPLAYTYPE_EPAPER: YDisplay.DISPLAYTYPE;
+    static readonly DISPLAYTYPE_EPAPER_BW: YDisplay.DISPLAYTYPE;
+    static readonly DISPLAYTYPE_EPAPER_BWR: YDisplay.DISPLAYTYPE;
+    static readonly DISPLAYTYPE_EPAPER_BWRY: YDisplay.DISPLAYTYPE;
     static readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE;
     static readonly LAYERWIDTH_INVALID: number;
     static readonly LAYERHEIGHT_INVALID: number;
@@ -803,11 +803,11 @@ export declare class YDisplay extends YFunction {
      */
     get_displayHeight(): Promise<number>;
     /**
-     * Returns the display type: monochrome, gray levels or full color.
+     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
      *
-     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_GRAY,
-     * YDisplay.DISPLAYTYPE_RGB and YDisplay.DISPLAYTYPE_EPAPER corresponding to the display type:
-     * monochrome, gray levels or full color
+     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_EPAPER_BW,
+     * YDisplay.DISPLAYTYPE_EPAPER_BWR and YDisplay.DISPLAYTYPE_EPAPER_BWRY corresponding to the display
+     * type: monochrome OLED, black and white ePaper, color ePaper, etc
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
@@ -895,9 +895,11 @@ export declare class YDisplay extends YFunction {
     static FindDisplayInContext(yctx: YAPIContext, func: string): YDisplay;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -1142,9 +1144,9 @@ export declare namespace YDisplay {
     }
     const enum DISPLAYTYPE {
         MONO = 0,
-        GRAY = 1,
-        RGB = 2,
-        EPAPER = 3,
+        EPAPER_BW = 1,
+        EPAPER_BWR = 2,
+        EPAPER_BWRY = 3,
         INVALID = -1
     }
     interface ValueCallback {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 71629 2026-01-29 15:08:26Z mvuilleu $
+ *  $Id: yocto_display.ts 72057 2026-02-17 09:44:53Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -775,9 +775,9 @@ export class YDisplay extends YFunction {
         this.DISPLAYWIDTH_INVALID = YAPI.INVALID_UINT;
         this.DISPLAYHEIGHT_INVALID = YAPI.INVALID_UINT;
         this.DISPLAYTYPE_MONO = 0;
-        this.DISPLAYTYPE_GRAY = 1;
-        this.DISPLAYTYPE_RGB = 2;
-        this.DISPLAYTYPE_EPAPER = 3;
+        this.DISPLAYTYPE_EPAPER_BW = 1;
+        this.DISPLAYTYPE_EPAPER_BWR = 2;
+        this.DISPLAYTYPE_EPAPER_BWRY = 3;
         this.DISPLAYTYPE_INVALID = -1;
         this.LAYERWIDTH_INVALID = YAPI.INVALID_UINT;
         this.LAYERHEIGHT_INVALID = YAPI.INVALID_UINT;
@@ -1075,11 +1075,11 @@ export class YDisplay extends YFunction {
         return res;
     }
     /**
-     * Returns the display type: monochrome, gray levels or full color.
+     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
      *
-     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_GRAY,
-     * YDisplay.DISPLAYTYPE_RGB and YDisplay.DISPLAYTYPE_EPAPER corresponding to the display type:
-     * monochrome, gray levels or full color
+     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_EPAPER_BW,
+     * YDisplay.DISPLAYTYPE_EPAPER_BWR and YDisplay.DISPLAYTYPE_EPAPER_BWRY corresponding to the display
+     * type: monochrome OLED, black and white ePaper, color ePaper, etc
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
@@ -1232,9 +1232,11 @@ export class YDisplay extends YFunction {
     }
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -1530,7 +1532,6 @@ export class YDisplay extends YFunction {
         let srcx;
         let srcy;
         let srci;
-        let incx;
         let pixmap;
         let pixcount;
         let pixval;
@@ -1623,7 +1624,6 @@ export class YDisplay extends YFunction {
         pixmap = new Uint8Array(pixcount);
         srcx = 0;
         srcy = 0;
-        incx = ((8 / zipbits) >> 0);
         srcval = 0;
         while (srcpos < zipsize) {
             // load next compression pattern byte
@@ -1635,11 +1635,15 @@ export class YDisplay extends YFunction {
                 if ((srcpat & 128) != 0) {
                     srcval = zipmap[srcpos];
                     srcpos = srcpos + 1;
+                    if (zipbits > 1) {
+                        srcval = (srcval << 8) + zipmap[srcpos];
+                        srcpos = srcpos + 1;
+                    }
                 }
                 srcpat = (srcpat << 1);
                 pixpos = srcy * zipwidth + srcx;
-                // produce 8 pixels (or 4, if bitmap uses 2 bits per pixel)
-                srci = 8 - zipbits;
+                // produce 8 pixels
+                srci = 7 * zipbits;
                 while (srci >= 0) {
                     pixval = ((srcval >> srci) & zipmask);
                     pixmap.set([pixval], pixpos);
@@ -1649,7 +1653,7 @@ export class YDisplay extends YFunction {
                 srcy = srcy + 1;
                 if (srcy >= zipheight) {
                     srcy = 0;
-                    srcx = srcx + incx;
+                    srcx = srcx + 8;
                     // drop last bytes if image is not a multiple of 8
                     if (srcx >= zipwidth) {
                         srcbit = 0;
@@ -1796,9 +1800,9 @@ YDisplay.DISPLAYPANEL_INVALID = YAPI.INVALID_STRING;
 YDisplay.DISPLAYWIDTH_INVALID = YAPI.INVALID_UINT;
 YDisplay.DISPLAYHEIGHT_INVALID = YAPI.INVALID_UINT;
 YDisplay.DISPLAYTYPE_MONO = 0;
-YDisplay.DISPLAYTYPE_GRAY = 1;
-YDisplay.DISPLAYTYPE_RGB = 2;
-YDisplay.DISPLAYTYPE_EPAPER = 3;
+YDisplay.DISPLAYTYPE_EPAPER_BW = 1;
+YDisplay.DISPLAYTYPE_EPAPER_BWR = 2;
+YDisplay.DISPLAYTYPE_EPAPER_BWRY = 3;
 YDisplay.DISPLAYTYPE_INVALID = -1;
 YDisplay.LAYERWIDTH_INVALID = YAPI.INVALID_UINT;
 YDisplay.LAYERHEIGHT_INVALID = YAPI.INVALID_UINT;

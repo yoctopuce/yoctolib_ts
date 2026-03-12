@@ -46,9 +46,15 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  */
 export declare class YCounter extends YSensor {
     _className: string;
+    _command: string;
     _valueCallbackCounter: YCounter.ValueCallback | null;
     _timedReportCallbackCounter: YCounter.TimedReportCallback | null;
+    readonly COMMAND_INVALID: string;
+    static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
+    imm_parseAttr(name: string, val: any): number;
+    get_command(): Promise<string>;
+    set_command(newval: string): Promise<number>;
     /**
      * Retrieves a counter for a given identifier.
      * The identifier can be specified using several formats:
@@ -106,9 +112,11 @@ export declare class YCounter extends YSensor {
     static FindCounterInContext(yctx: YAPIContext, func: string): YCounter;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -130,6 +138,15 @@ export declare class YCounter extends YSensor {
      */
     registerTimedReportCallback(callback: YCounter.TimedReportCallback | null): Promise<number>;
     _invokeTimedReportCallback(value: YMeasure): Promise<number>;
+    sendCommand(command: string): Promise<number>;
+    /**
+     * Reset the counter to zero.
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    zero(): Promise<number>;
     /**
      * Continues the enumeration of gcounters started using yFirstCounter().
      * Caution: You can't make any assumption about the returned gcounters order.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 71629 2026-01-29 15:08:26Z mvuilleu $
+ *  $Id: yocto_display.ts 72057 2026-02-17 09:44:53Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -903,9 +903,9 @@ export class YDisplay extends YFunction
     public readonly DISPLAYWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly DISPLAYHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE = 0;
-    public readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE = 1;
-    public readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE = 2;
-    public readonly DISPLAYTYPE_EPAPER: YDisplay.DISPLAYTYPE = 3;
+    public readonly DISPLAYTYPE_EPAPER_BW: YDisplay.DISPLAYTYPE = 1;
+    public readonly DISPLAYTYPE_EPAPER_BWR: YDisplay.DISPLAYTYPE = 2;
+    public readonly DISPLAYTYPE_EPAPER_BWRY: YDisplay.DISPLAYTYPE = 3;
     public readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE = -1;
     public readonly LAYERWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
@@ -928,9 +928,9 @@ export class YDisplay extends YFunction
     public static readonly DISPLAYWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly DISPLAYHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly DISPLAYTYPE_MONO: YDisplay.DISPLAYTYPE = 0;
-    public static readonly DISPLAYTYPE_GRAY: YDisplay.DISPLAYTYPE = 1;
-    public static readonly DISPLAYTYPE_RGB: YDisplay.DISPLAYTYPE = 2;
-    public static readonly DISPLAYTYPE_EPAPER: YDisplay.DISPLAYTYPE = 3;
+    public static readonly DISPLAYTYPE_EPAPER_BW: YDisplay.DISPLAYTYPE = 1;
+    public static readonly DISPLAYTYPE_EPAPER_BWR: YDisplay.DISPLAYTYPE = 2;
+    public static readonly DISPLAYTYPE_EPAPER_BWRY: YDisplay.DISPLAYTYPE = 3;
     public static readonly DISPLAYTYPE_INVALID: YDisplay.DISPLAYTYPE = -1;
     public static readonly LAYERWIDTH_INVALID: number = YAPI.INVALID_UINT;
     public static readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
@@ -1266,11 +1266,11 @@ export class YDisplay extends YFunction
     }
 
     /**
-     * Returns the display type: monochrome, gray levels or full color.
+     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
      *
-     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_GRAY,
-     * YDisplay.DISPLAYTYPE_RGB and YDisplay.DISPLAYTYPE_EPAPER corresponding to the display type:
-     * monochrome, gray levels or full color
+     * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_EPAPER_BW,
+     * YDisplay.DISPLAYTYPE_EPAPER_BWR and YDisplay.DISPLAYTYPE_EPAPER_BWRY corresponding to the display
+     * type: monochrome OLED, black and white ePaper, color ePaper, etc
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
@@ -1439,9 +1439,11 @@ export class YDisplay extends YFunction
 
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -1767,7 +1769,6 @@ export class YDisplay extends YFunction
         let srcx: number;
         let srcy: number;
         let srci: number;
-        let incx: number;
         let pixmap: Uint8Array;
         let pixcount: number;
         let pixval: number;
@@ -1861,7 +1862,6 @@ export class YDisplay extends YFunction
         pixmap = new Uint8Array(pixcount);
         srcx = 0;
         srcy = 0;
-        incx = ((8 / zipbits) >> 0);
         srcval = 0;
         while (srcpos < zipsize) {
             // load next compression pattern byte
@@ -1873,11 +1873,15 @@ export class YDisplay extends YFunction
                 if ((srcpat & 128) != 0) {
                     srcval = zipmap[srcpos];
                     srcpos = srcpos + 1;
+                    if (zipbits > 1) {
+                        srcval = (srcval << 8) + zipmap[srcpos];
+                        srcpos = srcpos + 1;
+                    }
                 }
                 srcpat = (srcpat << 1);
                 pixpos = srcy * zipwidth + srcx;
-                // produce 8 pixels (or 4, if bitmap uses 2 bits per pixel)
-                srci = 8 - zipbits;
+                // produce 8 pixels
+                srci = 7 * zipbits;
                 while (srci >= 0) {
                     pixval = ((srcval >> srci) & zipmask);
                     pixmap.set([pixval], pixpos);
@@ -1887,7 +1891,7 @@ export class YDisplay extends YFunction
                 srcy = srcy + 1;
                 if (srcy >= zipheight) {
                     srcy = 0;
-                    srcx = srcx + incx;
+                    srcx = srcx + 8;
                     // drop last bytes if image is not a multiple of 8
                     if (srcx >= zipwidth) {
                         srcbit = 0;
@@ -2053,9 +2057,9 @@ export namespace YDisplay
     export const enum DISPLAYTYPE
     {
         MONO = 0,
-        GRAY = 1,
-        RGB = 2,
-        EPAPER = 3,
+        EPAPER_BW = 1,
+        EPAPER_BWR = 2,
+        EPAPER_BWRY = 3,
         INVALID = -1
     }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_messagebox.ts 68482 2025-08-21 10:07:30Z mvuilleu $
+ *  $Id: yocto_messagebox.ts 72410 2026-03-11 07:18:41Z mvuilleu $
  *
  *  Implements the high-level API for Sms functions
  *
@@ -48,6 +48,7 @@ export declare class YSms {
     _mbox: YMessageBox;
     _slot: number;
     _deliv: boolean;
+    _isnew: boolean;
     _smsc: string;
     _mref: number;
     _orig: string;
@@ -68,22 +69,45 @@ export declare class YSms {
     get_slot(): Promise<number>;
     get_smsc(): Promise<string>;
     get_msgRef(): Promise<number>;
-    get_sender(): Promise<string>;
-    get_recipient(): Promise<string>;
     get_protocolId(): Promise<number>;
+    get_recipient(): Promise<string>;
+    isNew(): Promise<boolean>;
     isReceived(): Promise<boolean>;
     get_alphabet(): Promise<number>;
     get_msgClass(): Promise<number>;
     get_dcs(): Promise<number>;
-    get_timestamp(): Promise<string>;
     get_userDataHeader(): Promise<Uint8Array>;
     get_userData(): Promise<Uint8Array>;
     /**
-     * Returns the content of the message.
+     * Returns true iff the message is a "Flash" SMS (class 0 message). Flash messages
+     * are displayed on the handset immediately and usually not saved on the SIM card.
      *
-     * @return  a string with the content of the message.
+     * @return a boolean.
+     */
+    isFlashMessage(): Promise<boolean>;
+    /**
+     * Returns the reported message timestamp.
+     *
+     * @return the timestamp as a text string.
+     */
+    get_timestamp(): Promise<string>;
+    /**
+     * Returns the reported message sender.
+     *
+     * @return a text string.
+     */
+    get_sender(): Promise<string>;
+    /**
+     * Returns the content of the message as a text string.
+     *
+     * @return a string with the content of the message.
      */
     get_textData(): Promise<string>;
+    /**
+     * Returns the content of the message, as a list of integer unicode values.
+     *
+     * @return a list of integers.
+     */
     get_unicodeData(): Promise<number[]>;
     get_partCount(): Promise<number>;
     get_pdu(): Promise<Uint8Array>;
@@ -93,6 +117,7 @@ export declare class YSms {
     get_concatCount(): Promise<number>;
     set_slot(val: number): Promise<number>;
     set_received(val: boolean): Promise<number>;
+    set_new(val: boolean): Promise<number>;
     set_smsc(val: string): Promise<number>;
     set_msgRef(val: number): Promise<number>;
     set_sender(val: string): Promise<number>;
@@ -106,7 +131,7 @@ export declare class YSms {
     set_userData(val: Uint8Array): Promise<number>;
     convertToUnicode(): Promise<number>;
     /**
-     * Add a regular text to the SMS. This function support messages
+     * Adds regular text to the SMS. This function support messages
      * of more than 160 characters. ISO-latin accented characters
      * are supported. For messages with special unicode characters such as asian
      * characters and emoticons, use the  addUnicodeData method.
@@ -117,10 +142,10 @@ export declare class YSms {
      */
     addText(val: string): Promise<number>;
     /**
-     * Add a unicode text to the SMS. This function support messages
+     * Adds unicode characters to the SMS. This function support messages
      * of more than 160 characters, using SMS concatenation.
      *
-     * @param val : an array of special unicode characters
+     * @param val : a list of unicode characters provided as integers
      *
      * @return YAPI.SUCCESS when the call succeeds.
      */
@@ -146,6 +171,13 @@ export declare class YSms {
      * On failure, throws an exception or returns a negative error code.
      */
     send(): Promise<number>;
+    /**
+     * Delete the SMS from the SIM card.
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
     deleteFromSIM(): Promise<number>;
 }
 export declare namespace YSms {
@@ -168,6 +200,7 @@ export declare class YMessageBox extends YFunction {
     _obey: string;
     _command: string;
     _valueCallbackMessageBox: YMessageBox.ValueCallback | null;
+    _smsCallback: YMessageBox.SmsCallback | null;
     _nextMsgRef: number;
     _prevBitmapStr: string;
     _pdus: YSms[];
@@ -191,6 +224,7 @@ export declare class YMessageBox extends YFunction {
     static readonly COMMAND_INVALID: string;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): number;
+    _internalEventCallback(YMessageBox_obj: YMessageBox, str_value: string): Promise<void>;
     /**
      * Returns the number of message storage slots currently in use.
      *
@@ -335,9 +369,11 @@ export declare class YMessageBox extends YFunction {
     static FindMessageBoxInContext(yctx: YAPIContext, func: string): YMessageBox;
     /**
      * Registers the callback function that is invoked on every change of advertised value.
-     * The callback is invoked only during the execution of ySleep or yHandleEvents.
-     * This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     * one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     * The callback is then invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered. For good responsiveness,
+     * remember to call one of these two functions periodically. The callback is called once juste after beeing
+     * registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     * To unregister a callback, pass a null pointer as argument.
      *
      * @param callback : the callback function to call, or a null pointer. The callback function should take two
      *         arguments: the function object of which the value has changed, and the character string describing
@@ -348,7 +384,7 @@ export declare class YMessageBox extends YFunction {
     _invokeValueCallback(value: string): Promise<number>;
     nextMsgRef(): Promise<number>;
     clearSIMSlot(slot: number): Promise<number>;
-    _AT(cmd: string): Promise<string>;
+    sendPDU(pdu: Uint8Array): Promise<number>;
     fetchPdu(slot: number): Promise<YSms>;
     initGsm2Unicode(): Promise<number>;
     gsm2unicode(gsm: Uint8Array): Promise<number[]>;
@@ -418,6 +454,21 @@ export declare class YMessageBox extends YFunction {
      */
     get_messages(): Promise<YSms[]>;
     /**
+     * Registers a callback function to be called each time that a new SMS is received.
+     * The callback is invoked only during the execution of ySleep or yHandleEvents.
+     * This provides control over the time when the callback is triggered.
+     * For good responsiveness, remember to call one of these two functions periodically.
+     * To unregister a callback, pass a null pointer as argument.
+     *
+     * @param callback : the callback function to call, or a null pointer.
+     *         The callback function should take four arguments:
+     *         the YMessageBox object that emitted the event, and
+     *         the YSms object containing the received message.
+     *         On failure, throws an exception or returns a negative error code.
+     */
+    registerSmsCallback(callback: YMessageBox.SmsCallback | null): Promise<number>;
+    _internalEventHandler(cbVal: string): Promise<number>;
+    /**
      * Continues the enumeration of SMS message box interfaces started using yFirstMessageBox().
      * Caution: You can't make any assumption about the returned SMS message box interfaces order.
      * If you want to find a specific a SMS message box interface, use MessageBox.findMessageBox()
@@ -454,5 +505,8 @@ export declare class YMessageBox extends YFunction {
 export declare namespace YMessageBox {
     interface ValueCallback {
         (func: YMessageBox, value: string): void;
+    }
+    interface SmsCallback {
+        (func: YMessageBox, sms: YSms): void;
     }
 }
