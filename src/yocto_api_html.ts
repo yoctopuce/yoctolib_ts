@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 68272 2025-08-11 14:08:33Z mvuilleu $
+ * $Id: yocto_api_html.ts 72774 2026-04-17 08:08:56Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -205,7 +205,7 @@ class YHttpHtmlEngine extends YHttpEngine
         xhr.onerror = ():void => {
             onError(YAPI.IO_ERROR, 'HTTP request failed without status', false);
         };
-        xhr.send(body);
+        xhr.send(body as XMLHttpRequestBodyInit);
         return xhr;
     }
 
@@ -231,6 +231,7 @@ class YWebSocketHtmlEngine extends YWebSocketEngine
      **/
     imm_getRandomValues(arr: Uint8Array): Uint8Array
     {
-        return <Uint8Array>window.crypto.getRandomValues(arr);
+        window.crypto.getRandomValues(arr as any);
+        return arr;
     }
 }

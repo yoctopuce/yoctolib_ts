@@ -53,16 +53,23 @@ export class YOrientation extends YSensor
 {
     //--- (YOrientation attributes declaration)
     _className: string;
+    _counterClockwise: YOrientation.COUNTERCLOCKWISE = YOrientation.COUNTERCLOCKWISE_INVALID;
     _command: string = YOrientation.COMMAND_INVALID;
     _zeroOffset: number = YOrientation.ZEROOFFSET_INVALID;
     _valueCallbackOrientation: YOrientation.ValueCallback | null = null;
     _timedReportCallbackOrientation: YOrientation.TimedReportCallback | null = null;
 
     // API symbols as object properties
+    public readonly COUNTERCLOCKWISE_FALSE: YOrientation.COUNTERCLOCKWISE = 0;
+    public readonly COUNTERCLOCKWISE_TRUE: YOrientation.COUNTERCLOCKWISE = 1;
+    public readonly COUNTERCLOCKWISE_INVALID: YOrientation.COUNTERCLOCKWISE = -1;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public readonly ZEROOFFSET_INVALID: number = YAPI.INVALID_DOUBLE;
 
     // API symbols as static members
+    public static readonly COUNTERCLOCKWISE_FALSE: YOrientation.COUNTERCLOCKWISE = 0;
+    public static readonly COUNTERCLOCKWISE_TRUE: YOrientation.COUNTERCLOCKWISE = 1;
+    public static readonly COUNTERCLOCKWISE_INVALID: YOrientation.COUNTERCLOCKWISE = -1;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     public static readonly ZEROOFFSET_INVALID: number = YAPI.INVALID_DOUBLE;
     //--- (end of YOrientation attributes declaration)
@@ -80,6 +87,9 @@ export class YOrientation extends YSensor
     imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
+        case 'counterClockwise':
+            this._counterClockwise = <YOrientation.COUNTERCLOCKWISE> <number> val;
+            return 1;
         case 'command':
             this._command = <string> <string> val;
             return 1;
@@ -88,6 +98,44 @@ export class YOrientation extends YSensor
             return 1;
         }
         return super.imm_parseAttr(name, val);
+    }
+
+    /**
+     * Returns a value indicating whether the sensor is operating in a counterclockwise direction.
+     *
+     * @return either YOrientation.COUNTERCLOCKWISE_FALSE or YOrientation.COUNTERCLOCKWISE_TRUE, according
+     * to a value indicating whether the sensor is operating in a counterclockwise direction
+     *
+     * On failure, throws an exception or returns YOrientation.COUNTERCLOCKWISE_INVALID.
+     */
+    async get_counterClockwise(): Promise<YOrientation.COUNTERCLOCKWISE>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YOrientation.COUNTERCLOCKWISE_INVALID;
+            }
+        }
+        res = this._counterClockwise;
+        return res;
+    }
+
+    /**
+     * Defines the operating direction of the sensor.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
+     *
+     * @param newval : either YOrientation.COUNTERCLOCKWISE_FALSE or YOrientation.COUNTERCLOCKWISE_TRUE
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_counterClockwise(newval: YOrientation.COUNTERCLOCKWISE): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('counterClockwise', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -114,7 +162,6 @@ export class YOrientation extends YSensor
      * can typically be used  to compensate for mechanical offset. This offset can also be set
      * automatically using the zero() method.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
-     * On failure, throws an exception or returns a negative error code.
      *
      * @param newval : a floating point number
      *
@@ -318,8 +365,7 @@ export class YOrientation extends YSensor
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
+     *         On failure, throws an exception or returns a negative error code.
      */
     async zero(): Promise<number>
     {
@@ -460,6 +506,13 @@ export class YOrientation extends YSensor
 
 export namespace YOrientation {
     //--- (YOrientation definitions)
+    export const enum COUNTERCLOCKWISE
+    {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+
     export interface ValueCallback {(func: YOrientation, value: string): void}
 
     export interface TimedReportCallback {(func: YOrientation, measure: YMeasure): void}

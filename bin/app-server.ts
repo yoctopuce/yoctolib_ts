@@ -22,6 +22,7 @@ import * as path from 'path';
 import * as url from 'url';
 import * as http from 'http';
 import * as childProcess from 'child_process';
+import ts from 'typescript';
 
 const HTTP_PORT: number = 3000;
 const HTTP_ROOT: string = process.cwd();
@@ -33,6 +34,7 @@ const ROOT_URL: string = 'http://127.0.0.1:'+HTTP_PORT;
 const MimeTypes: StringDict = {
     '.js': 'application/javascript',
     '.ts': 'application/typescript',
+    '.json': 'application/json',
     '.xml': 'application/xml',
     '.map': 'application/json',
     '.html': 'text/html',
@@ -49,12 +51,12 @@ interface StringDict {
 
 function listener(message: http.IncomingMessage, response: http.ServerResponse): void
 {
-    let srvpath: string = url.parse(<string>message.url).pathname || '/';
+    let srvpath: string = url.parse(message.url as string).pathname || '/';
     let relpath: string = srvpath.slice(1);
     let abspath: string = path.join(HTTP_ROOT, relpath);
     let extension: string = path.extname(relpath);
     let mimetype: string = MimeTypes[extension.toLowerCase()];
-    let headers: http.OutgoingHttpHeaders = { 'Content-Type': MimeTypes[extension] };
+    let headers: http.OutgoingHttpHeaders = { 'Content-Type': mimetype };
 
     // Redirect server root to our demo subdirectory
     if(!relpath) {
@@ -77,11 +79,12 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse):
         }
     }
     if(!fileexists || !mimetype) {
-        response.writeHead(404, {'Content-Type': 'text/plain'});
-        if(!fileexists) {
-            response.write("404 Not Found: ["+abspath+"]");
-        } else {
+        if(!mimetype) {
+            response.writeHead(404, {'Content-Type': 'text/plain'});
             response.write("404 Not Found: unsupported MIME type ["+extension+"]");
+        } else {
+            response.writeHead(404, { 'Content-Type': mimetype });
+            response.write("// 404 Not Found: ["+abspath+"]");
         }
         response.end();
         return;
@@ -96,9 +99,7 @@ function listener(message: http.IncomingMessage, response: http.ServerResponse):
     });
 }
 
-// TypeScript incremental watcher, from Microsoft github page
-import * as ts from 'typescript';
-
+// TypeScript incremental watcher, from Microsoft GitHub page
 const formatHost: ts.FormatDiagnosticsHost = {
     getCanonicalFileName: (path:string):string => path,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
@@ -107,12 +108,21 @@ const formatHost: ts.FormatDiagnosticsHost = {
 
 function reportDiagnostic(diagnostic: ts.Diagnostic): void
 {
-    console.error("Error", diagnostic.code, ":", ts.flattenDiagnosticMessageText( diagnostic.messageText, formatHost.getNewLine()));
+    let origin: string = 'Error';
+    if(diagnostic.file) {
+        const filename: string = diagnostic.file.fileName;
+        origin = filename.slice(filename.indexOf('src/'));
+        if(diagnostic.start) {
+            const { line } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+            origin += ':' + line;
+        }
+    }
+    console.error(origin, "-", ts.flattenDiagnosticMessageText(diagnostic.messageText, formatHost.getNewLine()));
 }
 
 function reportWatchStatusChanged(diagnostic: ts.Diagnostic): void
 {
-    console.info(ts.formatDiagnostic(diagnostic, formatHost));
+    console.log(`[build] ` + diagnostic.messageText);
 }
 
 function TypeScriptWatcher(rootdir: string): void
@@ -127,10 +137,29 @@ function TypeScriptWatcher(rootdir: string): void
         reportDiagnostic,
         reportWatchStatusChanged
     );
+    host.afterProgramCreate = (program) => {
+        const tsProgram = program.getProgram();
+        const allDiagnostics = [
+            ...program.getConfigFileParsingDiagnostics(),
+            ...program.getGlobalDiagnostics(),
+            ...tsProgram.getSourceFiles()
+                .filter(f => !f.fileName.includes('.d.ts'))
+                .flatMap(f => [
+                    ...tsProgram.getSyntacticDiagnostics(f),
+                    ...tsProgram.getSemanticDiagnostics(f),
+                ])
+        ];
+        program.emit();
+        if (allDiagnostics.length > 0) {
+            allDiagnostics.forEach(reportDiagnostic);
+            console.warn(`${allDiagnostics.length} TypeScript error(s) found.`);
+            return;
+        }
+    };
     ts.createWatchProgram(host);
 }
 
-// Function to open an URL in the default browser, inspired from https://github.com/sindresorhus/open
+// Function to open a URL in the default browser, inspired from https://github.com/sindresorhus/open
 function OpenBrowser(target: string): void
 {
     let command: string;

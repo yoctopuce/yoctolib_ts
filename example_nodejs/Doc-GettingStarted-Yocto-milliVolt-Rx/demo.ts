@@ -1,12 +1,12 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: demo.ts 72913 2026-04-22 09:37:39Z seb $
  *
- *  An example that shows how to use a  Yocto-4-20mA-Rx
+ *  An example that shows how to use a  Yocto-milliVolt-Rx
  *
  *  You can find more information on our web site:
- *   Yocto-4-20mA-Rx documentation:
- *      https://www.yoctopuce.com/EN/products/yocto-4-20ma-rx/doc.html
+ *   Yocto-milliVolt-Rx documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-millivolt-rx/doc.html
  *   TypeScript API Reference:
  *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-typescript-EN.html
  *

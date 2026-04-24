@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 71188 2026-01-06 09:23:14Z seb $
+ * $Id: yocto_api_nodejs.ts 72761 2026-04-16 09:17:11Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -211,7 +211,7 @@ class YHttpCallbackEngine extends YHubEngine {
             });
         });
     }
-    /** Test input data for a HTTP callback hub
+    /** Test input data for an HTTP callback hub
      *
      */
     async reconnect(tryOpenID) {

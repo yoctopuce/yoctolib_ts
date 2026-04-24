@@ -478,6 +478,58 @@ export class YColorLedCluster extends YFunction {
         return await this.sendCommand('MH' + String(Math.round(ledIndex)) + ',' + String(Math.round(count)) + ',' + (hslValue).toString(16).toLowerCase() + ',' + String(Math.round(delay)));
     }
     /**
+     * Changes the color displayed by the last LED and shifts all currently displayed colors
+     * toward the beginning of the RGB LED string. The new color is encoded as follows: 0xRRGGBB.
+     *
+     * @param rgbValue :  new color.
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async shl_rgb(rgbValue) {
+        return await this.sendCommand('<R' + (rgbValue).toString(16).toLowerCase());
+    }
+    /**
+     * Changes the color displayed by the first LED and shifts all currently displayed colors
+     * toward the end of the RGB LED string. The new color is encoded as follows: 0xRRGGBB.
+     *
+     * @param rgbValue :  new color.
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async shr_rgb(rgbValue) {
+        return await this.sendCommand('>R' + (rgbValue).toString(16).toLowerCase());
+    }
+    /**
+     * Changes the color displayed by the last LED and shifts all currently displayed colors
+     * toward the beginning of the RGB LED string. The new color is encoded as follows: 0xHHSSLL.
+     *
+     * @param hslValue :  new color.
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async shl_hsl(hslValue) {
+        return await this.sendCommand('<H' + (hslValue).toString(16).toLowerCase());
+    }
+    /**
+     * Changes the color displayed by the first LED and shifts all currently displayed colors
+     * toward the end of the RGB LED string. The new color is encoded as follows: 0xHHSSLL.
+     *
+     * @param hslValue :  new color.
+     *
+     * @return YAPI.SUCCESS when the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async shr_hsl(hslValue) {
+        return await this.sendCommand('>H' + (hslValue).toString(16).toLowerCase());
+    }
+    /**
      * Adds an RGB transition to a sequence. A sequence is a transition list, which can
      * be executed in loop by a group of LEDs.  Sequences are persistent and are saved
      * in the device flash memory as soon as the saveBlinkSeq() method is called.

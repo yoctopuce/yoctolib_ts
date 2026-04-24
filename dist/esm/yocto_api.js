@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 72344 2026-03-09 14:01:56Z seb $
+ * $Id: yocto_api.ts 72760 2026-04-16 08:58:35Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -3673,9 +3673,6 @@ export class YFunction {
      *         (ex: Relay(MyCustomName.relay1)=RELAYLO1-123456.relay1)
      */
     async describe() {
-        if (this._hwId != '') {
-            return this._className + '(' + this._func + ')=' + this._hwId;
-        }
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
         if (resolve.errorType != YAPI_SUCCESS && resolve.result != this._func) {
             return this._className + '(' + this._func + ')=unresolved';
@@ -12816,7 +12813,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.12413';
+        return /* version number patched automatically */ '2.1.12967';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

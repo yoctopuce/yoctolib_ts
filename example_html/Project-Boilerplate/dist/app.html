@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <meta charset="UTF-8">
+  <script type='module'>
+  import { WebApp } from './app.min.js';
+  const app = new WebApp(window.location.hostname);
+  app.run();
+  </script>
+  <script nomodule >
+  document.write("This application cannot run on this browser, sorry.<br>Consider using a more recent browser.");
+  </script>
+</head>
+<body id="body" style="font-family: Arial,sans-serif; height: 100vh;">
+Hum, it looks like we failed to load the application code...
+</body>

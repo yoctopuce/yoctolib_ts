@@ -53,14 +53,21 @@ export class YCounter extends YSensor
 {
     //--- (YCounter attributes declaration)
     _className: string;
+    _decimalMode: YCounter.DECIMALMODE = YCounter.DECIMALMODE_INVALID;
     _command: string = YCounter.COMMAND_INVALID;
     _valueCallbackCounter: YCounter.ValueCallback | null = null;
     _timedReportCallbackCounter: YCounter.TimedReportCallback | null = null;
 
     // API symbols as object properties
+    public readonly DECIMALMODE_FALSE: YCounter.DECIMALMODE = 0;
+    public readonly DECIMALMODE_TRUE: YCounter.DECIMALMODE = 1;
+    public readonly DECIMALMODE_INVALID: YCounter.DECIMALMODE = -1;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
+    public static readonly DECIMALMODE_FALSE: YCounter.DECIMALMODE = 0;
+    public static readonly DECIMALMODE_TRUE: YCounter.DECIMALMODE = 1;
+    public static readonly DECIMALMODE_INVALID: YCounter.DECIMALMODE = -1;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YCounter attributes declaration)
 
@@ -77,11 +84,52 @@ export class YCounter extends YSensor
     imm_parseAttr(name: string, val: any): number
     {
         switch (name) {
+        case 'decimalMode':
+            this._decimalMode = <YCounter.DECIMALMODE> <number> val;
+            return 1;
         case 'command':
             this._command = <string> <string> val;
             return 1;
         }
         return super.imm_parseAttr(name, val);
+    }
+
+    /**
+     * Returns a value indicating if the senseur compute whole or fractional values.
+     *
+     * @return either YCounter.DECIMALMODE_FALSE or YCounter.DECIMALMODE_TRUE, according to a value
+     * indicating if the senseur compute whole or fractional values
+     *
+     * On failure, throws an exception or returns YCounter.DECIMALMODE_INVALID.
+     */
+    async get_decimalMode(): Promise<YCounter.DECIMALMODE>
+    {
+        let res: number;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YCounter.DECIMALMODE_INVALID;
+            }
+        }
+        res = this._decimalMode;
+        return res;
+    }
+
+    /**
+     * Changes the sensor's operating mode so that it computes integer or decimal values.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param newval : either YCounter.DECIMALMODE_FALSE or YCounter.DECIMALMODE_TRUE, according to the
+     * sensor's operating mode so that it computes integer or decimal values
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_decimalMode(newval: YCounter.DECIMALMODE): Promise<number>
+    {
+        let rest_val: string;
+        rest_val = String(newval);
+        return await this._setAttr('decimalMode', rest_val);
     }
 
     async get_command(): Promise<string>
@@ -270,7 +318,10 @@ export class YCounter extends YSensor
     /**
      * Reset the counter to zero.
      *
-     * @return YAPI.SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds. Please note that this function only resets
+     *         the integer part of the counter. In CONTINUOUS mode, the decimal part is calculated
+     *         from the angle measured by the sensor. To set the decimal part of the sensor to zero,
+     *         the origin of the sensor must be changed with the YOrientation.zero().
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -337,6 +388,13 @@ export class YCounter extends YSensor
 
 export namespace YCounter {
     //--- (YCounter definitions)
+    export const enum DECIMALMODE
+    {
+        FALSE = 0,
+        TRUE = 1,
+        INVALID = -1
+    }
+
     export interface ValueCallback {(func: YCounter, value: string): void}
 
     export interface TimedReportCallback {(func: YCounter, measure: YMeasure): void}

@@ -1,0 +1,17 @@
+{
+  "lang": "en-us",
+  "name": "sample-typescript-html-project",
+  "description": "Sample TypeScript HTML project",
+  "start_url": "./app.html",
+  "orientation": "any",
+  "display": "standalone",
+  "icons": [ {
+      "type": "image/svg+xml",
+      "src": "icon.svg",
+      "sizes": "512x512"
+    },{
+      "type": "image/svg+xml",
+      "src": "icon.svg",
+      "sizes": "192x192"
+    }]
+}

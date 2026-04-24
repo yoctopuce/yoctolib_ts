@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: demo.ts 72915 2026-04-22 10:15:21Z seb $
  *
  *  An example that shows how to use a  Yocto-Relay
  *

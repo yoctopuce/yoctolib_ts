@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: demo.ts 72915 2026-04-22 10:15:21Z seb $
  *
  *  An example that shows how to use a  Yocto-PowerRelay
  *
@@ -14,7 +14,7 @@
 
 /*********************************************************************
  *
- *  $Id: demo.js 32717 2018-10-19 15:58:17Z seb $
+ *  $Id: demo.ts 72915 2026-04-22 10:15:21Z seb $
  *
  *  An example that shows how to use a  Yocto-PowerRelay
  *

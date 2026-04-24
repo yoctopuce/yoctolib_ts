@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api_html.ts 68272 2025-08-11 14:08:33Z mvuilleu $
+ * $Id: yocto_api_html.ts 72774 2026-04-17 08:08:56Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -202,7 +202,8 @@ class YWebSocketHtmlEngine extends yocto_api_js_1.YWebSocketEngine {
     /** Fills a buffer with random numbers
      **/
     imm_getRandomValues(arr) {
-        return window.crypto.getRandomValues(arr);
+        window.crypto.getRandomValues(arr);
+        return arr;
     }
 }
 //# sourceMappingURL=yocto_api_html.js.map

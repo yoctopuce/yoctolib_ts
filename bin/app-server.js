@@ -1,4 +1,3 @@
-"use strict";
 /*********************************************************************
  *
  *  $Id: app.ts 32624 2018-10-10 13:23:29Z seb $
@@ -15,36 +14,13 @@
  *    automatically redirect to the current directory app.html
  *
  *********************************************************************/
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-require("process");
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
-const url = __importStar(require("url"));
-const http = __importStar(require("http"));
-const childProcess = __importStar(require("child_process"));
+import 'process';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as url from 'url';
+import * as http from 'http';
+import * as childProcess from 'child_process';
+import ts from 'typescript';
 const HTTP_PORT = 3000;
 const HTTP_ROOT = process.cwd();
 const DEMO_PATH = (process.env.INIT_CWD ? process.env.INIT_CWD.slice(HTTP_ROOT.length + 1) : '.');
@@ -54,6 +30,7 @@ const ROOT_URL = 'http://127.0.0.1:' + HTTP_PORT;
 const MimeTypes = {
     '.js': 'application/javascript',
     '.ts': 'application/typescript',
+    '.json': 'application/json',
     '.xml': 'application/xml',
     '.map': 'application/json',
     '.html': 'text/html',
@@ -69,7 +46,7 @@ function listener(message, response) {
     let abspath = path.join(HTTP_ROOT, relpath);
     let extension = path.extname(relpath);
     let mimetype = MimeTypes[extension.toLowerCase()];
-    let headers = { 'Content-Type': MimeTypes[extension] };
+    let headers = { 'Content-Type': mimetype };
     // Redirect server root to our demo subdirectory
     if (!relpath) {
         response.writeHead(302, { 'Location': DEFAULT_FILE, 'Content-Type': 'text/plain' });
@@ -90,12 +67,13 @@ function listener(message, response) {
         }
     }
     if (!fileexists || !mimetype) {
-        response.writeHead(404, { 'Content-Type': 'text/plain' });
-        if (!fileexists) {
-            response.write("404 Not Found: [" + abspath + "]");
+        if (!mimetype) {
+            response.writeHead(404, { 'Content-Type': 'text/plain' });
+            response.write("404 Not Found: unsupported MIME type [" + extension + "]");
         }
         else {
-            response.write("404 Not Found: unsupported MIME type [" + extension + "]");
+            response.writeHead(404, { 'Content-Type': mimetype });
+            response.write("// 404 Not Found: [" + abspath + "]");
         }
         response.end();
         return;
@@ -110,26 +88,53 @@ function listener(message, response) {
         response.end();
     });
 }
-// TypeScript incremental watcher, from Microsoft github page
-const ts = __importStar(require("typescript"));
+// TypeScript incremental watcher, from Microsoft GitHub page
 const formatHost = {
     getCanonicalFileName: (path) => path,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
     getNewLine: () => ts.sys.newLine
 };
 function reportDiagnostic(diagnostic) {
-    console.error("Error", diagnostic.code, ":", ts.flattenDiagnosticMessageText(diagnostic.messageText, formatHost.getNewLine()));
+    let origin = 'Error';
+    if (diagnostic.file) {
+        const filename = diagnostic.file.fileName;
+        origin = filename.slice(filename.indexOf('src/'));
+        if (diagnostic.start) {
+            const { line } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+            origin += ':' + line;
+        }
+    }
+    console.error(origin, "-", ts.flattenDiagnosticMessageText(diagnostic.messageText, formatHost.getNewLine()));
 }
 function reportWatchStatusChanged(diagnostic) {
-    console.info(ts.formatDiagnostic(diagnostic, formatHost));
+    console.log(`[build] ` + diagnostic.messageText);
 }
 function TypeScriptWatcher(rootdir) {
     const configPath = path.join(rootdir, "tsconfig.json");
     const createProgram = ts.createEmitAndSemanticDiagnosticsBuilderProgram;
     const host = ts.createWatchCompilerHost(configPath, {}, ts.sys, createProgram, reportDiagnostic, reportWatchStatusChanged);
+    host.afterProgramCreate = (program) => {
+        const tsProgram = program.getProgram();
+        const allDiagnostics = [
+            ...program.getConfigFileParsingDiagnostics(),
+            ...program.getGlobalDiagnostics(),
+            ...tsProgram.getSourceFiles()
+                .filter(f => !f.fileName.includes('.d.ts'))
+                .flatMap(f => [
+                ...tsProgram.getSyntacticDiagnostics(f),
+                ...tsProgram.getSemanticDiagnostics(f),
+            ])
+        ];
+        program.emit();
+        if (allDiagnostics.length > 0) {
+            allDiagnostics.forEach(reportDiagnostic);
+            console.warn(`${allDiagnostics.length} TypeScript error(s) found.`);
+            return;
+        }
+    };
     ts.createWatchProgram(host);
 }
-// Function to open an URL in the default browser, inspired from https://github.com/sindresorhus/open
+// Function to open a URL in the default browser, inspired from https://github.com/sindresorhus/open
 function OpenBrowser(target) {
     let command;
     let cliArguments = [];

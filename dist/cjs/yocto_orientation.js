@@ -54,11 +54,15 @@ class YOrientation extends yocto_api_js_1.YSensor {
     constructor(yapi, func) {
         //--- (YOrientation constructor)
         super(yapi, func);
+        this._counterClockwise = YOrientation.COUNTERCLOCKWISE_INVALID;
         this._command = YOrientation.COMMAND_INVALID;
         this._zeroOffset = YOrientation.ZEROOFFSET_INVALID;
         this._valueCallbackOrientation = null;
         this._timedReportCallbackOrientation = null;
         // API symbols as object properties
+        this.COUNTERCLOCKWISE_FALSE = 0;
+        this.COUNTERCLOCKWISE_TRUE = 1;
+        this.COUNTERCLOCKWISE_INVALID = -1;
         this.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
         this.ZEROOFFSET_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
         this._className = 'Orientation';
@@ -67,6 +71,9 @@ class YOrientation extends yocto_api_js_1.YSensor {
     //--- (YOrientation implementation)
     imm_parseAttr(name, val) {
         switch (name) {
+            case 'counterClockwise':
+                this._counterClockwise = val;
+                return 1;
             case 'command':
                 this._command = val;
                 return 1;
@@ -75,6 +82,40 @@ class YOrientation extends yocto_api_js_1.YSensor {
                 return 1;
         }
         return super.imm_parseAttr(name, val);
+    }
+    /**
+     * Returns a value indicating whether the sensor is operating in a counterclockwise direction.
+     *
+     * @return either YOrientation.COUNTERCLOCKWISE_FALSE or YOrientation.COUNTERCLOCKWISE_TRUE, according
+     * to a value indicating whether the sensor is operating in a counterclockwise direction
+     *
+     * On failure, throws an exception or returns YOrientation.COUNTERCLOCKWISE_INVALID.
+     */
+    async get_counterClockwise() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YOrientation.COUNTERCLOCKWISE_INVALID;
+            }
+        }
+        res = this._counterClockwise;
+        return res;
+    }
+    /**
+     * Defines the operating direction of the sensor.
+     * Remember to call the saveToFlash() method of the module if the
+     * modification must be kept.
+     *
+     * @param newval : either YOrientation.COUNTERCLOCKWISE_FALSE or YOrientation.COUNTERCLOCKWISE_TRUE
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_counterClockwise(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('counterClockwise', rest_val);
     }
     async get_command() {
         let res;
@@ -96,7 +137,6 @@ class YOrientation extends yocto_api_js_1.YSensor {
      * can typically be used  to compensate for mechanical offset. This offset can also be set
      * automatically using the zero() method.
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
-     * On failure, throws an exception or returns a negative error code.
      *
      * @param newval : a floating point number
      *
@@ -288,8 +328,7 @@ class YOrientation extends yocto_api_js_1.YSensor {
      * Remember to call the saveToFlash() method of the module if the modification must be kept.
      *
      * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
+     *         On failure, throws an exception or returns a negative error code.
      */
     async zero() {
         return await this.sendCommand('Z');
@@ -418,6 +457,9 @@ class YOrientation extends yocto_api_js_1.YSensor {
 }
 exports.YOrientation = YOrientation;
 // API symbols as static members
+YOrientation.COUNTERCLOCKWISE_FALSE = 0;
+YOrientation.COUNTERCLOCKWISE_TRUE = 1;
+YOrientation.COUNTERCLOCKWISE_INVALID = -1;
 YOrientation.COMMAND_INVALID = yocto_api_js_1.YAPI.INVALID_STRING;
 YOrientation.ZEROOFFSET_INVALID = yocto_api_js_1.YAPI.INVALID_DOUBLE;
 //# sourceMappingURL=yocto_orientation.js.map

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 72344 2026-03-09 14:01:56Z seb $
+ * $Id: yocto_api.ts 72760 2026-04-16 08:58:35Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -4306,9 +4306,7 @@ export class YFunction
      */
     async describe(): Promise<string>
     {
-        if (this._hwId != '') {
-            return this._className + '(' + this._func + ')=' + this._hwId;
-        }
+       
         let resolve = this._yapi.imm_resolveFunction(this._className, this._func);
         if (resolve.errorType != YAPI_SUCCESS && resolve.result != this._func) {
             return this._className + '(' + this._func + ')=unresolved';
@@ -11568,7 +11566,7 @@ export abstract class YWebSocketEngine extends YHubEngine
                     mstimeout = this._YIO_10_MINUTES_TCP_TIMEOUT;
                 }
             }
-            yreq.timeoutId = setTimeout((chan, yr): void => { this.imm_abortRequest(chan, yr); }, mstimeout, tcpchan, yreq);
+            yreq.timeoutId = setTimeout((chan: number, yr: YHTTPRequest): void => { this.imm_abortRequest(chan, yr); }, mstimeout, tcpchan, yreq);
             yreq._sent = (Date.now() % 600000).toString();
 
             // Wait for request completion in case this is a sync request
@@ -14509,7 +14507,7 @@ export class YAPIContext
 
     imm_GetAPIVersion(): string
     {
-        return /* version number patched automatically */'2.1.12413';
+        return /* version number patched automatically */'2.1.12967';
     }
 
     /**

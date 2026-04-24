@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api_nodejs.ts 71188 2026-01-06 09:23:14Z seb $
+ * $Id: yocto_api_nodejs.ts 72761 2026-04-16 09:17:11Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -39,7 +39,7 @@
 
 export * from "./yocto_api.js";
 
-import {_YY_UrlInfo, Y_YHubConnType, YAPI, YAPI_NO_TRUSTED_CA_CHECK, YAPIContext, YGenericHub, YGenericSSDPManager, YHTTPBody, YHttpEngine, YHTTPRequest, YHubEngine, YoctoError, YSystemEnv, YUnhandledPromiseRejectionCallback, YWebSocketEngine,} from "./yocto_api.js";
+import {_YY_UrlInfo, _YY_WebSocket, Y_YHubConnType, YAPI, YAPI_NO_TRUSTED_CA_CHECK, YAPIContext, YGenericHub, YGenericSSDPManager, YHTTPBody, YHttpEngine, YHTTPRequest, YHubEngine, YoctoError, YSystemEnv, YUnhandledPromiseRejectionCallback, YWebSocketEngine,} from "./yocto_api.js";
 
 import 'process';
 import * as os from 'os';
@@ -76,7 +76,7 @@ export class YSystemEnvNodeJs extends YSystemEnv
         return new YHttpNodeEngine(ohub, runtime_urlInfo, firstInfoJson);
     }
 
-    getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: WebSocket): YHubEngine | null
+    getWebSocketCallbackEngine(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: _YY_WebSocket): YHubEngine | null
     {
         return new YWebSocketCallbackEngine(hub, runtime_urlInfo, ws);
     }
@@ -207,7 +207,7 @@ export class YSystemEnvNodeJs extends YSystemEnv
 
 const _NodeJsSystemEnv: YSystemEnvNodeJs = new YSystemEnvNodeJs();
 
-YAPI.imm_setSystemEnv(_NodeJsSystemEnv);
+YAPI.imm_setSystemEnv(_NodeJsSystemEnv as YSystemEnv);
 
 interface _YY_HTTPCallbackCache
 {
@@ -244,7 +244,7 @@ class YHttpCallbackEngine extends YHubEngine
         );
     }
 
-    /** Test input data for a HTTP callback hub
+    /** Test input data for an HTTP callback hub
      *
      */
     async reconnect(tryOpenID: string): Promise<void>
@@ -586,7 +586,7 @@ class YWebSocketNodeEngine extends YWebSocketEngine
                 options['secureContext'] = secureContext;
             }
         }
-        this.websocket = new WebSocket(str_url, options);
+        this.websocket = new WebSocket(str_url, options) as _YY_WebSocket;
     }
 
     /** Fills a buffer with random numbers
@@ -608,7 +608,7 @@ class YWebSocketNodeEngine extends YWebSocketEngine
 
 class YWebSocketCallbackEngine extends YWebSocketNodeEngine
 {
-    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: WebSocket)
+    constructor(hub: YGenericHub, runtime_urlInfo: _YY_UrlInfo, ws: _YY_WebSocket)
     {
         super(hub, runtime_urlInfo);
 

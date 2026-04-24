@@ -51,10 +51,14 @@ export class YCounter extends YSensor {
     constructor(yapi, func) {
         //--- (YCounter constructor)
         super(yapi, func);
+        this._decimalMode = YCounter.DECIMALMODE_INVALID;
         this._command = YCounter.COMMAND_INVALID;
         this._valueCallbackCounter = null;
         this._timedReportCallbackCounter = null;
         // API symbols as object properties
+        this.DECIMALMODE_FALSE = 0;
+        this.DECIMALMODE_TRUE = 1;
+        this.DECIMALMODE_INVALID = -1;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this._className = 'Counter';
         //--- (end of YCounter constructor)
@@ -62,11 +66,48 @@ export class YCounter extends YSensor {
     //--- (YCounter implementation)
     imm_parseAttr(name, val) {
         switch (name) {
+            case 'decimalMode':
+                this._decimalMode = val;
+                return 1;
             case 'command':
                 this._command = val;
                 return 1;
         }
         return super.imm_parseAttr(name, val);
+    }
+    /**
+     * Returns a value indicating if the senseur compute whole or fractional values.
+     *
+     * @return either YCounter.DECIMALMODE_FALSE or YCounter.DECIMALMODE_TRUE, according to a value
+     * indicating if the senseur compute whole or fractional values
+     *
+     * On failure, throws an exception or returns YCounter.DECIMALMODE_INVALID.
+     */
+    async get_decimalMode() {
+        let res;
+        if (this._cacheExpiration <= this._yapi.GetTickCount()) {
+            if (await this.load(this._yapi.defaultCacheValidity) != this._yapi.SUCCESS) {
+                return YCounter.DECIMALMODE_INVALID;
+            }
+        }
+        res = this._decimalMode;
+        return res;
+    }
+    /**
+     * Changes the sensor's operating mode so that it computes integer or decimal values.
+     * Remember to call the saveToFlash() method of the module if the modification must be kept.
+     *
+     * @param newval : either YCounter.DECIMALMODE_FALSE or YCounter.DECIMALMODE_TRUE, according to the
+     * sensor's operating mode so that it computes integer or decimal values
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_decimalMode(newval) {
+        let rest_val;
+        rest_val = String(newval);
+        return await this._setAttr('decimalMode', rest_val);
     }
     async get_command() {
         let res;
@@ -242,7 +283,10 @@ export class YCounter extends YSensor {
     /**
      * Reset the counter to zero.
      *
-     * @return YAPI.SUCCESS if the call succeeds.
+     * @return YAPI.SUCCESS if the call succeeds. Please note that this function only resets
+     *         the integer part of the counter. In CONTINUOUS mode, the decimal part is calculated
+     *         from the angle measured by the sensor. To set the decimal part of the sensor to zero,
+     *         the origin of the sensor must be changed with the YOrientation.zero().
      *
      * On failure, throws an exception or returns a negative error code.
      */
@@ -302,5 +346,8 @@ export class YCounter extends YSensor {
     }
 }
 // API symbols as static members
+YCounter.DECIMALMODE_FALSE = 0;
+YCounter.DECIMALMODE_TRUE = 1;
+YCounter.DECIMALMODE_INVALID = -1;
 YCounter.COMMAND_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_counter.js.map

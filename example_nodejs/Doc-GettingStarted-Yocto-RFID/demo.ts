@@ -1,12 +1,12 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: demo.ts 72955 2026-04-24 08:26:36Z seb $
  *
- *  An example that shows how to use a  Yocto-RFID-xxxx
+ *  An example that shows how to use a  Yocto-RFID
  *
  *  You can find more information on our web site:
- *   Yocto-RFID-15693 documentation:
- *      https://www.yoctopuce.com/EN/products/Yocto-rfid-15693
+ *   Yocto-RFID documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-rfid/doc.html
  *   TypeScript API Reference:
  *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-typescript-EN.html
  *

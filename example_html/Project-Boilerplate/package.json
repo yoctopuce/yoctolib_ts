@@ -1,0 +1,23 @@
+{
+  "name": "sample-typescript-html-project",
+  "author": "Yoctopuce",
+  "description": "Sample TypeScript HTML project",
+  "version": "2.1.12672",
+  "keywords": [
+    "Yoctopuce",
+    "TypeScript"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc && esbuild obj/app.js --bundle --minify --outfile=dist/app.min.js --target=es2017 --format=esm --keep-names --sourcemap",
+    "app-server": "cd tools && tsc && cd .. && node tools/app-server.js dist/app.html"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "esbuild": "^0.28.0",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "uuid": "^13.0.0"
+  }
+}

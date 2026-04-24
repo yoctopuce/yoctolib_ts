@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "rootDir": "src",                           /* Source directory */
+        "outDir": "./obj",                          /* Output structure to the directory. */
+        "target": "ES2017",                         /* Output code target version */
+        "module": "NodeNext",                       /* Output code module system */
+        "sourceMap": true,                          /* Generates '.map' file */
+        "declaration": false,                       /* Do not generate '.d.ts' files */
+        "strict": true,                             /* Enforce strict type checking */
+        "forceConsistentCasingInFileNames": true,   /* Enforce strict filename case checks */
+        "moduleResolution": "NodeNext",             /* Use node.js style modules if present */
+        "esModuleInterop": true,                    /* Enables interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+        "allowSyntheticDefaultImports": true,       /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+        "skipLibCheck": true                        /* Skip type checking of declaration files. */
+    },
+    "include": ["./src/**/*"]
+}
