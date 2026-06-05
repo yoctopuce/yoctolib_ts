@@ -1,5 +1,6 @@
 export * from './yocto_api_nodejs.js';
 export * from './yocto_accelerometer.js';
+export * from './yocto_airquality.js';
 export * from './yocto_altitude.js';
 export * from './yocto_anbutton.js';
 export * from './yocto_angularspeed.js';

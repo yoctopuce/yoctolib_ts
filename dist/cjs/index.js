@@ -16,6 +16,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./yocto_api_nodejs.js"), exports);
 __exportStar(require("./yocto_accelerometer.js"), exports);
+__exportStar(require("./yocto_airquality.js"), exports);
 __exportStar(require("./yocto_altitude.js"), exports);
 __exportStar(require("./yocto_anbutton.js"), exports);
 __exportStar(require("./yocto_angularspeed.js"), exports);

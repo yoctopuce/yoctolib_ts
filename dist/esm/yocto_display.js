@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 72057 2026-02-17 09:44:53Z mvuilleu $
+ *  $Id: yocto_display.ts 74504 2026-06-01 14:50:23Z seb $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -36,7 +36,7 @@
  *  WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
-import { YAPI, YFunction } from './yocto_api.js';
+import { YAPI, YAPIContext, YFunction } from './yocto_api.js';
 //--- (generated code: YDisplayLayer class start)
 /**
  * YDisplayLayer Class: Interface for drawing into display layers, obtained by calling display.get_displayLayer.
@@ -50,9 +50,9 @@ import { YAPI, YFunction } from './yocto_api.js';
 export class YDisplayLayer {
     //--- (end of generated code: YDisplayLayer attributes declaration)
     constructor(obj_parent, int_id) {
+        //--- (generated code: YDisplayLayer attributes declaration)
         this._cmdbuff = '';
         this._hidden = false;
-        //--- (generated code: YDisplayLayer attributes declaration)
         this._polyPrevX = 0;
         this._polyPrevY = 0;
         // API symbols as object properties
@@ -81,46 +81,48 @@ export class YDisplayLayer {
         //--- (generated code: YDisplayLayer constructor)
         //--- (end of generated code: YDisplayLayer constructor)
     }
-    // internal function to flush any pending command for this layer
-    imm_must_be_flushed() {
-        return (this._cmdbuff != '');
+    //--- (generated code: YDisplayLayer implementation)
+    must_be_flushed() {
+        return (this._cmdbuff).length > 0;
     }
-    imm_resetHiddenFlag() {
+    resetHiddenFlag() {
         this._hidden = false;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
-    // internal function to flush any pending command for this layer
     async flush_now() {
-        let res = YAPI.SUCCESS;
-        if (this._cmdbuff != '') {
+        let res;
+        res = YAPI.SUCCESS;
+        if ((this._cmdbuff).length > 0) {
             res = await this._display.sendCommand(this._cmdbuff);
             this._cmdbuff = '';
         }
         return res;
     }
-    // internal function to buffer a command for this layer
-    async command_push(str_cmd) {
-        let res = YAPI.SUCCESS;
-        if (this._cmdbuff.length + str_cmd.length >= 100) {
+    async command_push(cmd) {
+        let res;
+        res = YAPI.SUCCESS;
+        if ((this._cmdbuff).length + (cmd).length >= 100) {
             // force flush before, to prevent overflow
-            res = await this.flush_now();
+            await this.flush_now();
         }
-        if (this._cmdbuff == '') {
+        if ((this._cmdbuff).length == 0) {
             // always prepend layer ID first
-            this._cmdbuff = this._id.toString();
+            this._cmdbuff = (this._id).toString();
         }
-        this._cmdbuff += str_cmd;
+        this._cmdbuff = this._cmdbuff + cmd;
         return res;
     }
-    // internal function to send a command for this layer
-    async command_flush(str_cmd) {
-        const res = await this.command_push(str_cmd);
+    async command_flush(cmd) {
+        let res;
+        res = await this.command_push(cmd);
         if (this._hidden) {
+            return res;
+        }
+        if (this._display.isFrozen()) {
             return res;
         }
         return await this.flush_now();
     }
-    //--- (generated code: YDisplayLayer implementation)
     /**
      * Reverts the layer to its initial state (fully transparent, default settings).
      * Reinitializes the drawing pointer to the upper left position,
@@ -693,10 +695,6 @@ export class YDisplayLayer {
     async get_layerHeight() {
         return await this._display.get_layerHeight();
     }
-    async resetHiddenFlag() {
-        this._hidden = false;
-        return YAPI.SUCCESS;
-    }
 }
 // API symbols as static members
 YDisplayLayer.NO_INK = -1;
@@ -742,8 +740,6 @@ export class YDisplay extends YFunction {
     constructor(yapi, func) {
         //--- (generated code: YDisplay constructor)
         super(yapi, func);
-        this._sequence = '';
-        this._recording = false;
         this._enabled = YDisplay.ENABLED_INVALID;
         this._startupSeq = YDisplay.STARTUPSEQ_INVALID;
         this._brightness = YDisplay.BRIGHTNESS_INVALID;
@@ -759,6 +755,9 @@ export class YDisplay extends YFunction {
         this._command = YDisplay.COMMAND_INVALID;
         this._valueCallbackDisplay = null;
         this._allDisplayLayers = [];
+        this._frozenUntil = 0;
+        this._recording = false;
+        this._sequence = '';
         // API symbols as object properties
         this.ENABLED_FALSE = 0;
         this.ENABLED_TRUE = 1;
@@ -783,6 +782,11 @@ export class YDisplay extends YFunction {
         this.LAYERHEIGHT_INVALID = YAPI.INVALID_UINT;
         this.LAYERCOUNT_INVALID = YAPI.INVALID_UINT;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
+        this.DISPLAYSTATE_FAILURE = 0;
+        this.DISPLAYSTATE_OFF = 1;
+        this.DISPLAYSTATE_POWERING = 2;
+        this.DISPLAYSTATE_IDLE = 3;
+        this.DISPLAYSTATE_REFRESHING = 4;
         this._className = 'Display';
         //--- (end of generated code: YDisplay constructor)
     }
@@ -1275,6 +1279,37 @@ export class YDisplay extends YFunction {
         }
         return 0;
     }
+    async sendCommand(cmd) {
+        if (!(this._recording)) {
+            return await this.set_command(cmd);
+        }
+        this._sequence = this._sequence + '' + cmd + '\n';
+        return this._yapi.SUCCESS;
+    }
+    async flushLayers() {
+        for (let ii_0 of this._allDisplayLayers) {
+            if (ii_0.must_be_flushed()) {
+                await ii_0.flush_now();
+            }
+        }
+        return this._yapi.SUCCESS;
+    }
+    resetHiddenLayerFlags() {
+        for (let ii_0 of this._allDisplayLayers) {
+            ii_0.resetHiddenFlag();
+        }
+        return this._yapi.SUCCESS;
+    }
+    isFrozen() {
+        if (this._frozenUntil == 0) {
+            return false;
+        }
+        if (this._frozenUntil <= this._yapi.GetTickCount()) {
+            this._frozenUntil = 0;
+            return false;
+        }
+        return true;
+    }
     /**
      * Clears the display screen and resets all display layers to their default state.
      * Using this function in a sequence will kill the sequence play-back. Don't use that
@@ -1286,7 +1321,7 @@ export class YDisplay extends YFunction {
      */
     async resetAll() {
         await this.flushLayers();
-        this.imm_resetHiddenLayerFlags();
+        this.resetHiddenLayerFlags();
         return await this.sendCommand('Z');
     }
     /**
@@ -1302,6 +1337,52 @@ export class YDisplay extends YFunction {
         return await this.sendCommand('z');
     }
     /**
+     * Returns the current state of an ePaper display, specifically to
+     * determine whether an update is in progress or whether a
+     * configuration issue has been detected. If a display configuration
+     * error has been detected, the error message can be retrieved.
+     *
+     * @param errmsg : a string passed by reference to receive the error message.
+     *
+     * @return a value among the enumeration YDisplay.DISPLAYSTATE
+     *         (YDisplay.DISPLAYSTATE_FAILURE, YDisplay.DISPLAYSTATE_OFF,
+     *         YDisplay.DISPLAYSTATE_POWERING, YDisplay.DISPLAYSTATE_IDLE,
+     *         YDisplay.DISPLAYSTATE_REFRESHING)
+     *         corresponding to the current display state.
+     */
+    async get_ePaperState(errmsg) {
+        let json;
+        let dispError;
+        let dispState;
+        if (await this.get_displayType() == YDisplay.DISPLAYTYPE_MONO) {
+            errmsg.msg = 'Not an ePaper display';
+            return 0;
+        }
+        json = await this._download('disp.json');
+        if ((json).length == 0) {
+            errmsg.msg = await this.get_errorMessage();
+            return 0;
+        }
+        else {
+            dispError = this.imm_json_get_string(this.imm_get_json_path(json, 'err'));
+            errmsg.msg = dispError;
+            if ((dispError).length > 0) {
+                return 0;
+            }
+            dispState = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'state'));
+            if (dispState > 10) {
+                return 4;
+            }
+            if (dispState == 10) {
+                return 3;
+            }
+            if (dispState > 0) {
+                return 2;
+            }
+        }
+        return 1;
+    }
+    /**
      * Disables screen refresh for a short period of time. The combination of
      * postponeRefresh and triggerRefresh can be used as an
      * alternative to double-buffering to avoid flickering during display updates.
@@ -1313,6 +1394,7 @@ export class YDisplay extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async postponeRefresh(duration) {
+        this._frozenUntil = this._yapi.GetTickCount() + duration;
         return await this.sendCommand('H' + String(Math.round(duration)));
     }
     /**
@@ -1325,6 +1407,8 @@ export class YDisplay extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async triggerRefresh() {
+        this._frozenUntil = 0;
+        await this.flushLayers();
         return await this.sendCommand('H0');
     }
     /**
@@ -1433,6 +1517,7 @@ export class YDisplay extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async upload(pathname, content) {
+        await this.flushLayers();
         return await this._upload(pathname, content);
     }
     /**
@@ -1750,39 +1835,6 @@ export class YDisplay extends YFunction {
             return null;
         return YDisplay.FindDisplayInContext(yctx, next_hwid);
     }
-    //--- (end of generated code: YDisplay implementation)
-    async flushLayers() {
-        if (this._allDisplayLayers) {
-            for (let i = 0; i < this._allDisplayLayers.length; i++) {
-                if (this._allDisplayLayers[i].imm_must_be_flushed()) {
-                    await this._allDisplayLayers[i].flush_now();
-                }
-            }
-        }
-        return YAPI.SUCCESS;
-    }
-    async resetHiddenLayerFlags() {
-        if (this._allDisplayLayers) {
-            for (let i = 0; i < this._allDisplayLayers.length; i++) {
-                await this._allDisplayLayers[i].resetHiddenFlag();
-            }
-        }
-    }
-    imm_resetHiddenLayerFlags() {
-        if (this._allDisplayLayers) {
-            for (let i = 0; i < this._allDisplayLayers.length; i++) {
-                this._allDisplayLayers[i].imm_resetHiddenFlag();
-            }
-        }
-    }
-    async sendCommand(cmd) {
-        if (!this._recording) {
-            // ignore call when there is no ongoing sequence
-            return await this.set_command(cmd);
-        }
-        this._sequence += cmd + '\n';
-        return YAPI.SUCCESS;
-    }
 }
 // API symbols as static members
 YDisplay.ENABLED_FALSE = 0;
@@ -1808,4 +1860,9 @@ YDisplay.LAYERWIDTH_INVALID = YAPI.INVALID_UINT;
 YDisplay.LAYERHEIGHT_INVALID = YAPI.INVALID_UINT;
 YDisplay.LAYERCOUNT_INVALID = YAPI.INVALID_UINT;
 YDisplay.COMMAND_INVALID = YAPI.INVALID_STRING;
+YDisplay.DISPLAYSTATE_FAILURE = 0;
+YDisplay.DISPLAYSTATE_OFF = 1;
+YDisplay.DISPLAYSTATE_POWERING = 2;
+YDisplay.DISPLAYSTATE_IDLE = 3;
+YDisplay.DISPLAYSTATE_REFRESHING = 4;
 //# sourceMappingURL=yocto_display.js.map

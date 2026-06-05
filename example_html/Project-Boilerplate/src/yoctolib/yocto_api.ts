@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 72500 2026-03-16 16:54:35Z seb $
+ * $Id: yocto_api.ts 73019 2026-04-27 13:50:52Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -11843,8 +11843,8 @@ export abstract class YWebSocketEngine extends YHubEngine
         let websocket = this.websocket;
         this._hub.imm_setCurrentConnID('');
         this.websocket = null;
-        websocket.onclose = null;
-        websocket.onerror = null;
+        websocket.onclose = () => {};
+        websocket.onerror = () => {};
         try {
             // soft close
             websocket.close();
@@ -14507,7 +14507,7 @@ export class YAPIContext
 
     imm_GetAPIVersion(): string
     {
-        return /* version number patched automatically */'2.1.10765-dev.4';
+        return /* version number patched automatically */'2.1.14544';
     }
 
     /**

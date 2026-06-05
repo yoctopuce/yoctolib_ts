@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 72057 2026-02-17 09:44:53Z mvuilleu $
+ *  $Id: yocto_display.ts 74504 2026-06-01 14:50:23Z seb $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -55,9 +55,9 @@ export class YDisplayLayer
     private _yapi: YAPIContext;
     private _display: YDisplay;
     private _id: number;
-    private _cmdbuff: string = '';
-    private _hidden: boolean = false;
     //--- (generated code: YDisplayLayer attributes declaration)
+    _cmdbuff: string = '';
+    _hidden: boolean = false;
     _polyPrevX: number = 0;
     _polyPrevY: number = 0;
 
@@ -113,57 +113,59 @@ export class YDisplayLayer
         //--- (end of generated code: YDisplayLayer constructor)
     }
 
-    // internal function to flush any pending command for this layer
-    imm_must_be_flushed(): boolean
+    //--- (generated code: YDisplayLayer implementation)
+
+    must_be_flushed(): boolean
     {
-        return (this._cmdbuff != '');
+        return (this._cmdbuff).length > 0;
     }
 
-    imm_resetHiddenFlag(): number
+    resetHiddenFlag(): number
     {
         this._hidden = false;
-        return this._yapi.SUCCESS;
+        return YAPI.SUCCESS;
     }
 
-    // internal function to flush any pending command for this layer
     async flush_now(): Promise<number>
     {
-        let res = YAPI.SUCCESS;
-        if(this._cmdbuff != '') {
+        let res: number;
+        res = YAPI.SUCCESS;
+        if ((this._cmdbuff).length > 0) {
             res = await this._display.sendCommand(this._cmdbuff);
             this._cmdbuff = '';
         }
         return res;
     }
 
-    // internal function to buffer a command for this layer
-    async command_push(str_cmd: string): Promise<number>
+    async command_push(cmd: string): Promise<number>
     {
-        let res = YAPI.SUCCESS;
-
-        if(this._cmdbuff.length + str_cmd.length >= 100) {
+        let res: number;
+        res = YAPI.SUCCESS;
+        if ((this._cmdbuff).length + (cmd).length >= 100) {
             // force flush before, to prevent overflow
-            res = await this.flush_now();
+            await this.flush_now();
         }
-        if(this._cmdbuff == '') {
+        if ((this._cmdbuff).length == 0) {
             // always prepend layer ID first
-            this._cmdbuff = this._id.toString();
+            this._cmdbuff = (this._id).toString();
         }
-        this._cmdbuff += str_cmd;
+        this._cmdbuff = this._cmdbuff + cmd;
         return res;
     }
 
-    // internal function to send a command for this layer
-    async command_flush(str_cmd: string): Promise<number>
+    async command_flush(cmd: string): Promise<number>
     {
-        const res = await this.command_push(str_cmd);
-        if(this._hidden) {
+        let res: number;
+
+        res = await this.command_push(cmd);
+        if (this._hidden) {
+            return res;
+        }
+        if (this._display.isFrozen()) {
             return res;
         }
         return await this.flush_now();
     }
-
-    //--- (generated code: YDisplayLayer implementation)
 
     /**
      * Reverts the layer to its initial state (fully transparent, default settings).
@@ -811,12 +813,6 @@ export class YDisplayLayer
         return await this._display.get_layerHeight();
     }
 
-    async resetHiddenFlag(): Promise<number>
-    {
-        this._hidden = false;
-        return YAPI.SUCCESS;
-    }
-
     //--- (end of generated code: YDisplayLayer implementation)
 }
 
@@ -867,8 +863,6 @@ export namespace YDisplayLayer
 /** @extends {YFunction} **/
 export class YDisplay extends YFunction
 {
-    _sequence: string = '';
-    _recording: boolean = false;
     //--- (generated code: YDisplay attributes declaration)
     _className: string;
     _enabled: YDisplay.ENABLED = YDisplay.ENABLED_INVALID;
@@ -886,6 +880,9 @@ export class YDisplay extends YFunction
     _command: string = YDisplay.COMMAND_INVALID;
     _valueCallbackDisplay: YDisplay.ValueCallback | null = null;
     _allDisplayLayers: YDisplayLayer[] = [];
+    _frozenUntil: number = 0;
+    _recording: boolean = false;
+    _sequence: string = '';
 
     // API symbols as object properties
     public readonly ENABLED_FALSE: YDisplay.ENABLED = 0;
@@ -911,6 +908,11 @@ export class YDisplay extends YFunction
     public readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public readonly LAYERCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+    public readonly DISPLAYSTATE_FAILURE: YDisplay.DISPLAYSTATE = 0;
+    public readonly DISPLAYSTATE_OFF: YDisplay.DISPLAYSTATE = 1;
+    public readonly DISPLAYSTATE_POWERING: YDisplay.DISPLAYSTATE = 2;
+    public readonly DISPLAYSTATE_IDLE: YDisplay.DISPLAYSTATE = 3;
+    public readonly DISPLAYSTATE_REFRESHING: YDisplay.DISPLAYSTATE = 4;
 
     // API symbols as static members
     public static readonly ENABLED_FALSE: YDisplay.ENABLED = 0;
@@ -936,6 +938,11 @@ export class YDisplay extends YFunction
     public static readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly LAYERCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly DISPLAYSTATE_FAILURE: YDisplay.DISPLAYSTATE = 0;
+    public static readonly DISPLAYSTATE_OFF: YDisplay.DISPLAYSTATE = 1;
+    public static readonly DISPLAYSTATE_POWERING: YDisplay.DISPLAYSTATE = 2;
+    public static readonly DISPLAYSTATE_IDLE: YDisplay.DISPLAYSTATE = 3;
+    public static readonly DISPLAYSTATE_REFRESHING: YDisplay.DISPLAYSTATE = 4;
     //--- (end of generated code: YDisplay attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -1483,6 +1490,45 @@ export class YDisplay extends YFunction
         return 0;
     }
 
+    async sendCommand(cmd: string): Promise<number>
+    {
+        if (!(this._recording)) {
+            return await this.set_command(cmd);
+        }
+        this._sequence = this._sequence + '' + cmd + '\n';
+        return this._yapi.SUCCESS;
+    }
+
+    async flushLayers(): Promise<number>
+    {
+        for (let ii_0 of this._allDisplayLayers) {
+            if (ii_0.must_be_flushed()) {
+                await ii_0.flush_now();
+            }
+        }
+        return this._yapi.SUCCESS;
+    }
+
+    resetHiddenLayerFlags(): number
+    {
+        for (let ii_0 of this._allDisplayLayers) {
+            ii_0.resetHiddenFlag();
+        }
+        return this._yapi.SUCCESS;
+    }
+
+    isFrozen(): boolean
+    {
+        if (this._frozenUntil == 0) {
+            return false;
+        }
+        if (this._frozenUntil <= this._yapi.GetTickCount()) {
+            this._frozenUntil = 0;
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Clears the display screen and resets all display layers to their default state.
      * Using this function in a sequence will kill the sequence play-back. Don't use that
@@ -1495,7 +1541,7 @@ export class YDisplay extends YFunction
     async resetAll(): Promise<number>
     {
         await this.flushLayers();
-        this.imm_resetHiddenLayerFlags();
+        this.resetHiddenLayerFlags();
         return await this.sendCommand('Z');
     }
 
@@ -1514,6 +1560,54 @@ export class YDisplay extends YFunction
     }
 
     /**
+     * Returns the current state of an ePaper display, specifically to
+     * determine whether an update is in progress or whether a
+     * configuration issue has been detected. If a display configuration
+     * error has been detected, the error message can be retrieved.
+     *
+     * @param errmsg : a string passed by reference to receive the error message.
+     *
+     * @return a value among the enumeration YDisplay.DISPLAYSTATE
+     *         (YDisplay.DISPLAYSTATE_FAILURE, YDisplay.DISPLAYSTATE_OFF,
+     *         YDisplay.DISPLAYSTATE_POWERING, YDisplay.DISPLAYSTATE_IDLE,
+     *         YDisplay.DISPLAYSTATE_REFRESHING)
+     *         corresponding to the current display state.
+     */
+    async get_ePaperState(errmsg: YErrorMsg): Promise<YDisplay.DISPLAYSTATE>
+    {
+        let json: Uint8Array;
+        let dispError: string;
+        let dispState: number;
+
+        if (await this.get_displayType() == YDisplay.DISPLAYTYPE_MONO) {
+            errmsg.msg = 'Not an ePaper display';
+            return <YDisplay.DISPLAYSTATE> 0;
+        }
+        json = await this._download('disp.json');
+        if ((json).length == 0) {
+            errmsg.msg = await this.get_errorMessage();
+            return <YDisplay.DISPLAYSTATE> 0;
+        } else {
+            dispError = this.imm_json_get_string(this.imm_get_json_path(json, 'err'));
+            errmsg.msg = dispError;
+            if ((dispError).length > 0) {
+                return <YDisplay.DISPLAYSTATE> 0;
+            }
+            dispState = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'state'));
+            if (dispState > 10) {
+                return <YDisplay.DISPLAYSTATE> 4;
+            }
+            if (dispState == 10) {
+                return <YDisplay.DISPLAYSTATE> 3;
+            }
+            if (dispState > 0) {
+                return <YDisplay.DISPLAYSTATE> 2;
+            }
+        }
+        return <YDisplay.DISPLAYSTATE> 1;
+    }
+
+    /**
      * Disables screen refresh for a short period of time. The combination of
      * postponeRefresh and triggerRefresh can be used as an
      * alternative to double-buffering to avoid flickering during display updates.
@@ -1526,6 +1620,7 @@ export class YDisplay extends YFunction
      */
     async postponeRefresh(duration: number): Promise<number>
     {
+        this._frozenUntil = this._yapi.GetTickCount() + duration;
         return await this.sendCommand('H' + String(Math.round(duration)));
     }
 
@@ -1540,6 +1635,8 @@ export class YDisplay extends YFunction
      */
     async triggerRefresh(): Promise<number>
     {
+        this._frozenUntil = 0;
+        await this.flushLayers();
         return await this.sendCommand('H0');
     }
 
@@ -1662,6 +1759,7 @@ export class YDisplay extends YFunction
      */
     async upload(pathname: string, content: Uint8Array): Promise<number>
     {
+        await this.flushLayers();
         return await this._upload(pathname, content);
     }
 
@@ -1993,46 +2091,6 @@ export class YDisplay extends YFunction
 
     //--- (end of generated code: YDisplay implementation)
 
-    async flushLayers(): Promise<number>
-    {
-        if(this._allDisplayLayers) {
-            for(let i = 0; i < this._allDisplayLayers.length; i++) {
-                if(this._allDisplayLayers[i].imm_must_be_flushed()) {
-                    await this._allDisplayLayers[i].flush_now();
-                }
-            }
-        }
-        return YAPI.SUCCESS;
-    }
-
-    async resetHiddenLayerFlags(): Promise<void>
-    {
-        if(this._allDisplayLayers) {
-            for(let i = 0; i < this._allDisplayLayers.length; i++) {
-                await this._allDisplayLayers[i].resetHiddenFlag();
-            }
-        }
-    }
-
-    imm_resetHiddenLayerFlags(): void
-    {
-        if(this._allDisplayLayers) {
-            for(let i = 0; i < this._allDisplayLayers.length; i++) {
-                this._allDisplayLayers[i].imm_resetHiddenFlag();
-            }
-        }
-    }
-
-    async sendCommand(cmd: string): Promise<number>
-    {
-        if(!this._recording) {
-            // ignore call when there is no ongoing sequence
-            return await this.set_command(cmd);
-        }
-        this._sequence += cmd+'\n';
-        return YAPI.SUCCESS;
-    }
-
 }
 
 export namespace YDisplay
@@ -2063,6 +2121,14 @@ export namespace YDisplay
         INVALID = -1
     }
 
+    export const enum DISPLAYSTATE
+    {
+        FAILURE = 0,
+        OFF = 1,
+        POWERING = 2,
+        IDLE = 3,
+        REFRESHING = 4
+    }
     export interface ValueCallback {(func: YDisplay, value: string): void}
 
     //--- (end of generated code: YDisplay definitions)

@@ -69,6 +69,12 @@ export class YRfidTagInfo {
         this.IEC_14443_NTAG_215 = 8;
         this.IEC_14443_NTAG_216 = 9;
         this.IEC_14443_NTAG_424_DNA = 10;
+        this.IEC_15693_ST25DV = 11;
+        this.IEC_15693_ST25TV = 12;
+        this.IEC_15693_TAGIT_HFI = 13;
+        this.IEC_15693_MB89R = 14;
+        this.IEC_15693_ICODE_DNA = 15;
+        this.IEC_15693_ICODE_SLI = 16;
         //--- (generated code: YRfidTagInfo constructor)
         //--- (end of generated code: YRfidTagInfo constructor)
     }
@@ -177,6 +183,24 @@ export class YRfidTagInfo {
         if (tagType == YRfidTagInfo.IEC_14443_NTAG_424_DNA) {
             typeStr = 'NTAG 424 DNA';
         }
+        if (tagType == YRfidTagInfo.IEC_15693_ST25DV) {
+            typeStr = 'ST25DVxx';
+        }
+        if (tagType == YRfidTagInfo.IEC_15693_ST25TV) {
+            typeStr = 'ST25TVxx';
+        }
+        if (tagType == YRfidTagInfo.IEC_15693_TAGIT_HFI) {
+            typeStr = 'TI TAGIT HFI';
+        }
+        if (tagType == YRfidTagInfo.IEC_15693_MB89R) {
+            typeStr = 'MB89Rxx';
+        }
+        if (tagType == YRfidTagInfo.IEC_15693_ICODE_DNA) {
+            typeStr = 'ICODE DNA';
+        }
+        if (tagType == YRfidTagInfo.IEC_15693_ICODE_SLI) {
+            typeStr = 'ICODE SLI';
+        }
         this._tagId = tagId;
         this._tagType = tagType;
         this._typeStr = typeStr;
@@ -198,6 +222,12 @@ YRfidTagInfo.IEC_14443_NTAG_213 = 7;
 YRfidTagInfo.IEC_14443_NTAG_215 = 8;
 YRfidTagInfo.IEC_14443_NTAG_216 = 9;
 YRfidTagInfo.IEC_14443_NTAG_424_DNA = 10;
+YRfidTagInfo.IEC_15693_ST25DV = 11;
+YRfidTagInfo.IEC_15693_ST25TV = 12;
+YRfidTagInfo.IEC_15693_TAGIT_HFI = 13;
+YRfidTagInfo.IEC_15693_MB89R = 14;
+YRfidTagInfo.IEC_15693_ICODE_DNA = 15;
+YRfidTagInfo.IEC_15693_ICODE_SLI = 16;
 //--- (generated code: YRfidStatus class start)
 /**
  * YRfidStatus Class: Detailled information about the result of RFID tag operations, allowing to find
@@ -334,6 +364,14 @@ export class YRfidStatus {
         this.INVALID_SIZE = -154;
         this.BAD_PASSWORD_FORMAT = -155;
         this.RADIO_IS_OFF = -156;
+        this.NOT_AVAILABLE_ON_THIS_TAG = -157;
+        this.PASSWORD_FEATURE_NOT_SUPPORTED = -158;
+        this.BAD_PASSWORD_LENGTH = -159;
+        this.BAD_PASSWORD_TYPE = -160;
+        this.BAD_PASSWORD = -161;
+        this.PASSWORD_REQUIRED = -162;
+        this.MULTIWRITE_NOT_SUPPORTED = -163;
+        this.MULTIREAD_NOT_SUPPORTED = -164;
         //--- (generated code: YRfidStatus constructor)
         //--- (end of generated code: YRfidStatus constructor)
     }
@@ -472,7 +510,7 @@ export class YRfidStatus {
                 errMsg = 'Block / byte is already locked and thus cannot be locked again.';
             }
             if (errCode == YRfidStatus.BLOCK_LOCKED) {
-                errMsg = 'Block / byte is locked and its content cannot be changed';
+                errMsg = 'Block / byte is either locked and its content cannot be changed or operation might require a password.';
             }
             if (errCode == YRfidStatus.BLOCK_NOT_SUCESSFULLY_PROGRAMMED) {
                 errMsg = 'Block was not successfully programmed';
@@ -732,6 +770,30 @@ export class YRfidStatus {
             if (errCode == YRfidStatus.RADIO_IS_OFF) {
                 errMsg = 'Radio is OFF (refreshRate=0).';
             }
+            if (errCode == YRfidStatus.NOT_AVAILABLE_ON_THIS_TAG) {
+                errMsg = 'Tag does not provide this feature.';
+            }
+            if (errCode == YRfidStatus.PASSWORD_FEATURE_NOT_SUPPORTED) {
+                errMsg = 'Password feature not supported this tag.';
+            }
+            if (errCode == YRfidStatus.BAD_PASSWORD_LENGTH) {
+                errMsg = 'Incorrect password length';
+            }
+            if (errCode == YRfidStatus.BAD_PASSWORD_TYPE) {
+                errMsg = 'Bad password type.';
+            }
+            if (errCode == YRfidStatus.BAD_PASSWORD) {
+                errMsg = 'Bad password.';
+            }
+            if (errCode == YRfidStatus.PASSWORD_REQUIRED) {
+                errMsg = 'Operation requires a password';
+            }
+            if (errCode == YRfidStatus.MULTIWRITE_NOT_SUPPORTED) {
+                errMsg = 'Multi block write unavailable on this tag.';
+            }
+            if (errCode == YRfidStatus.MULTIREAD_NOT_SUPPORTED) {
+                errMsg = 'Multi block read unavailable on this tag.';
+            }
             if (errBlk >= 0) {
                 errMsg = errMsg + ' (block ' + String(Math.round(errBlk)) + ')';
             }
@@ -852,6 +914,14 @@ YRfidStatus.INVLD_ACCESS_MODE_COMBINATION = -153;
 YRfidStatus.INVALID_SIZE = -154;
 YRfidStatus.BAD_PASSWORD_FORMAT = -155;
 YRfidStatus.RADIO_IS_OFF = -156;
+YRfidStatus.NOT_AVAILABLE_ON_THIS_TAG = -157;
+YRfidStatus.PASSWORD_FEATURE_NOT_SUPPORTED = -158;
+YRfidStatus.BAD_PASSWORD_LENGTH = -159;
+YRfidStatus.BAD_PASSWORD_TYPE = -160;
+YRfidStatus.BAD_PASSWORD = -161;
+YRfidStatus.PASSWORD_REQUIRED = -162;
+YRfidStatus.MULTIWRITE_NOT_SUPPORTED = -163;
+YRfidStatus.MULTIREAD_NOT_SUPPORTED = -164;
 //--- (generated code: YRfidOptions class start)
 /**
  * YRfidOptions Class: Additional parameters for operations on RFID tags.
@@ -937,6 +1007,13 @@ export class YRfidOptions {
         this.NO_RFID_KEY = 0;
         this.MIFARE_KEY_A = 1;
         this.MIFARE_KEY_B = 2;
+        this.ST25DV_CONFIG_PWD = 3;
+        this.ST25DV_PWD1 = 4;
+        this.ST25DV_PWD2 = 5;
+        this.ST25DV_PWD3 = 6;
+        this.ST25TV_CONFIG_PWD = 7;
+        this.ST25TV_PWD1 = 8;
+        this.ST25TV_PWD2 = 9;
         //--- (generated code: YRfidOptions constructor)
         //--- (end of generated code: YRfidOptions constructor)
     }
@@ -973,6 +1050,13 @@ export class YRfidOptions {
 YRfidOptions.NO_RFID_KEY = 0;
 YRfidOptions.MIFARE_KEY_A = 1;
 YRfidOptions.MIFARE_KEY_B = 2;
+YRfidOptions.ST25DV_CONFIG_PWD = 3;
+YRfidOptions.ST25DV_PWD1 = 4;
+YRfidOptions.ST25DV_PWD2 = 5;
+YRfidOptions.ST25DV_PWD3 = 6;
+YRfidOptions.ST25TV_CONFIG_PWD = 7;
+YRfidOptions.ST25TV_PWD1 = 8;
+YRfidOptions.ST25TV_PWD2 = 9;
 //--- (generated code: YRfidReader class start)
 /**
  * YRfidReader Class: RfidReader function interface
@@ -1299,7 +1383,11 @@ export class YRfidReader extends YFunction {
      * Changes an RFID tag configuration to prevents any further write to
      * the selected blocks. This operation is definitive and irreversible.
      * Depending on the tag type and block index, adjascent blocks may become
-     * read-only as well, based on the locking granularity.
+     * read-only as well, based on the locking granularity.  Note that some tags
+     * may allow only a few blocks to be locked, for instance ST25DVxxx  tags
+     * allows a lock on block 0 and 1 only.
+     *
+     *
      *
      * @param tagId : identifier of the tag to use
      * @param firstBlock : first block to lock
@@ -1754,6 +1842,109 @@ export class YRfidReader extends YFunction {
             res = await status.get_yapiError();
         }
         return res;
+    }
+    /**
+     * Reads a byte from the Tag configuration (ISO 15693 ST25DVxx only).
+     * This function is actually a call to the 0xA0 RFID command and is specific to
+     * ST25DVxx tags. Check ST25DVxx datasheet for more information about
+     * the data organisation of ST25DVxx tags configuration.
+     *
+     * @param tagId : identifier of the tag to use
+     * @param addr  : offset of the byte in the tag configuation
+     *
+     * @param options : an YRfidOptions object with the optional
+     *         command execution parameters, such as security key
+     *         if required
+     * @param status : an RfidStatus object that will contain
+     *         the detailled status of the operation
+     *
+     * @return the requested byte value (0...255)
+     *
+     * On failure, throws an exception or returns a negative error code. When it
+     * happens, you can get more information from the status object.
+     */
+    async tagGetConfigByte(tagId, addr, options, status) {
+        let optstr;
+        let url;
+        let json;
+        let res;
+        optstr = options.imm_getParams();
+        url = 'rfid.json?a=gcfg&t=' + tagId + '&b=' + String(Math.round(addr)) + '' + optstr;
+        json = await this._download(url);
+        await this._chkerror(tagId, json, status);
+        if (await status.get_yapiError() == this._yapi.SUCCESS) {
+            res = YAPIContext.imm_atoi(this.imm_json_get_key(json, 'res'));
+        }
+        else {
+            res = await status.get_yapiError();
+        }
+        return res;
+    }
+    /**
+     * Changes a byte in the tag's configuration (ISO 15693 ST25DVxx only).
+     * Warning: modifing the tag configation may alter its behavior in a non-reversible way.
+     * This operation requires the CONFIG_PWD password to be set in the options,
+     * default value is "0000000000000000" (16 zeros). This function is actually
+     * a call to the 0xA1 RFID command and is specific to ST25DVxx tags. Check
+     * ST25DVxx datasheet for more information about the data organisation
+     * of ST25DVxx tags configuration.
+     *
+     * @param tagId : identifier of the tag to use
+     * @param addr  : address of the byte to write
+     * @param value : the value to write (0...255)
+     * @param options : an YRfidOptions object with the optional
+     *         command execution parameters, such as security key
+     *         if required
+     * @param status : an RfidStatus object that will contain
+     *         the detailled status of the operation
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code. When it
+     * happens, you can get more information from the status object.
+     */
+    async tagSetConfigByte(tagId, addr, value, options, status) {
+        let optstr;
+        let url;
+        let json;
+        optstr = options.imm_getParams();
+        url = 'rfid.json?a=scfg&t=' + tagId + '&b=' + String(Math.round(addr)) + '&v=' + String(Math.round(value)) + '' + optstr;
+        json = await this._download(url);
+        return await this._chkerror(tagId, json, status);
+    }
+    /**
+     * Set a password that will be required to access the tag  (ISO 15693 ST25DVxx only).
+     * The password must be a string of characters representing 8 bytes in hexadecimal.
+     * There are several types of password for the same tag; please consult your tags
+     * documentation to understand their respective applications. Once the password
+     * has been configured, operations requiring this password must be initiated with
+     * the password defined in the KeyType and HexKey fields of the
+     * options parameter for the operations in question. It is not necessarily
+     * required to consistently provide the same password for every operation during the
+     * same session with a tag.
+     *
+     * @param tagId : identifier of the tag to use
+     * @param passwordType  : type of password to be set (YRfidOptions.ST25D_CONFIG_PWD,YRfidOptions.ST25D_PWD1,YRfidOptions.ST25D_PWD2..)
+     * @param password : the password (16 characters hex string encoding 8 bytes)
+     * @param options : an YRfidOptions object with the optional
+     *         command execution parameters, such as security key
+     *         if required
+     * @param status : an RfidStatus object that will contain
+     *         the detailled status of the operation
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code. When it
+     * happens, you can get more information from the status object.
+     */
+    async tagSetPassword(tagId, passwordType, password, options, status) {
+        let optstr;
+        let url;
+        let json;
+        optstr = options.imm_getParams();
+        url = 'rfid.json?a=spwd&t=' + tagId + '&b=' + String(Math.round(passwordType)) + '&p=' + password + '' + optstr;
+        json = await this._download(url);
+        return await this._chkerror(tagId, json, status);
     }
     /**
      * Changes an RFID tag AFI byte (ISO 15693 only).

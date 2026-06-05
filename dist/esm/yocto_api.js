@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 72760 2026-04-16 08:58:35Z mvuilleu $
+ * $Id: yocto_api.ts 73019 2026-04-27 13:50:52Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -10421,8 +10421,8 @@ export class YWebSocketEngine extends YHubEngine {
         let websocket = this.websocket;
         this._hub.imm_setCurrentConnID('');
         this.websocket = null;
-        websocket.onclose = null;
-        websocket.onerror = null;
+        websocket.onclose = () => { };
+        websocket.onerror = () => { };
         try {
             // soft close
             websocket.close();
@@ -12813,7 +12813,7 @@ export class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.12967';
+        return /* version number patched automatically */ '2.1.14544';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
