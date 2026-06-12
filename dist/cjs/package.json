@@ -2,7 +2,7 @@
   "name": "yoctolib-cjs",
   "author": "Yoctopuce",
   "description": "Yoctopuce library for TypeScript/JavaScript, as a CommonJS module",
-  "version": "2.1.14544",
+  "version": "2.1.14699",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": {
     "type": "git",
