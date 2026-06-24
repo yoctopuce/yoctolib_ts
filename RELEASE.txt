@@ -1,4 +1,5 @@
-TypeScriptV2 v2.1.14699
+TypeScriptV2 v2.1.14868
 
-- Add support for new RFID tags
-- Fix possible unhandled exception when closing websocket forcefully
+- Update ws dependency
+- Fix possible unhanded exception when closing WebSocket forcefully
+- Fix YAPI.PreregisterHub() that was not reconnecting offline hubs

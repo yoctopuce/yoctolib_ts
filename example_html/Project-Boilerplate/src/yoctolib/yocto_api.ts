@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 73019 2026-04-27 13:50:52Z mvuilleu $
+ * $Id: yocto_api.ts 74809 2026-06-22 08:55:29Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -9702,7 +9702,9 @@ export class YGenericHub
                             let data: Uint8Array = await this._yapi.system_env.downloadfile(serialurl, this._yapi);
                             this.imm_setSerialNumber(YAPI.imm_bin2str(data));
                         } catch (e) {
-                            this.imm_commonDisconnect(tryOpenID, YAPI.IO_ERROR, (e as Error).message);
+                            this.imm_disconnectNow();
+                            // connection error, will retry automatically
+                            this.imm_signalHubDisconnected(tryOpenID);
                             return;
                         }
                     }
@@ -14507,7 +14509,7 @@ export class YAPIContext
 
     imm_GetAPIVersion(): string
     {
-        return /* version number patched automatically */'2.1.14699';
+        return /* version number patched automatically */'2.1.14868';
     }
 
     /**

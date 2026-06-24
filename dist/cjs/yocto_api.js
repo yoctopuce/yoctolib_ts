@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 73019 2026-04-27 13:50:52Z mvuilleu $
+ * $Id: yocto_api.ts 74809 2026-06-22 08:55:29Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -8507,7 +8507,9 @@ class YGenericHub {
                             this.imm_setSerialNumber(exports.YAPI.imm_bin2str(data));
                         }
                         catch (e) {
-                            this.imm_commonDisconnect(tryOpenID, exports.YAPI.IO_ERROR, e.message);
+                            this.imm_disconnectNow();
+                            // connection error, will retry automatically
+                            this.imm_signalHubDisconnected(tryOpenID);
                             return;
                         }
                     }
@@ -12839,7 +12841,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.14699';
+        return /* version number patched automatically */ '2.1.14868';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.
