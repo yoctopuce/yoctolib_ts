@@ -33,7 +33,7 @@
     "app-server": "node bin/app-server.js"
   },
   "dependencies": {
-    "ws": "^8.20.0"
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "typescript": "^6.0.2",
