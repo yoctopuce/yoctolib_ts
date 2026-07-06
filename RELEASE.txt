@@ -1,5 +1,5 @@
-TypeScriptV2 v2.1.14868
+TypeScriptV2 v2.1.15129
 
-- Update ws dependency
-- Fix possible unhanded exception when closing WebSocket forcefully
-- Fix YAPI.PreregisterHub() that was not reconnecting offline hubs
+- Add NFC encoding support to YRfidReader class
+- Fix compilation of TypeScript examples with TypeScript 6+
+- Fix generation of .d.ts files

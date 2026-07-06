@@ -8,7 +8,8 @@
         "moduleResolution": "bundler",              /* Use node.js style modules if present */
         "esModuleInterop": true,                    /* Enables interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
         "allowSyntheticDefaultImports": true,       /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
-        "skipLibCheck": true                        /* Skip type checking of declaration files. */
+        "skipLibCheck": true,                       /* Skip type checking of declaration files. */
+        "types": [ "node" ]
     },
     "files": [
         "demo.ts"

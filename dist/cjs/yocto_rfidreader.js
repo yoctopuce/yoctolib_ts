@@ -56,6 +56,7 @@ class YRfidTagInfo {
         this._tagId = '';
         this._tagType = 0;
         this._typeStr = '';
+        this._nfcType = 0;
         this._size = 0;
         this._usable = 0;
         this._blksize = 0;
@@ -108,6 +109,15 @@ class YRfidTagInfo {
         return this._typeStr;
     }
     /**
+     * Returns the type of NFC type usable on the RFID tag, between 1 and 5.
+     * If no known NFC type is know for the RFID tag, returns zero.
+     *
+     * @return an integer corresponding to the RFID tag type
+     */
+    get_tagNFCtype() {
+        return this._nfcType;
+    }
+    /**
      * Returns the total memory size of the RFID tag, in bytes.
      *
      * @return the total memory size of the RFID tag
@@ -155,6 +165,7 @@ class YRfidTagInfo {
     }
     imm_init(tagId, tagType, size, usable, blksize, fblk, lblk) {
         let typeStr;
+        let nfcType;
         typeStr = 'unknown';
         if (tagType == YRfidTagInfo.IEC_15693) {
             typeStr = 'IEC 15693';
@@ -204,8 +215,19 @@ class YRfidTagInfo {
         if (tagType == YRfidTagInfo.IEC_15693_ICODE_SLI) {
             typeStr = 'ICODE SLI';
         }
+        nfcType = 0;
+        if ((tagType == YRfidTagInfo.IEC_14443_MIFARE_ULTRALIGHT) || (tagType == YRfidTagInfo.IEC_14443_MIFARE_CLASSIC1K) || (tagType == YRfidTagInfo.IEC_14443_MIFARE_CLASSIC4K) || (tagType == YRfidTagInfo.IEC_14443_NTAG_213) || (tagType == YRfidTagInfo.IEC_14443_NTAG_215) || (tagType == YRfidTagInfo.IEC_14443_NTAG_216) || (tagType == YRfidTagInfo.IEC_14443_NTAG_424_DNA)) {
+            nfcType = 2;
+        }
+        if (tagType == YRfidTagInfo.IEC_14443_MIFARE_DESFIRE) {
+            nfcType = 4;
+        }
+        if ((tagType == YRfidTagInfo.IEC_15693) || (tagType == YRfidTagInfo.IEC_15693_ST25DV) || (tagType == YRfidTagInfo.IEC_15693_ST25TV) || (tagType == YRfidTagInfo.IEC_15693_TAGIT_HFI) || (tagType == YRfidTagInfo.IEC_15693_MB89R) || (tagType == YRfidTagInfo.IEC_15693_ICODE_DNA) || (tagType == YRfidTagInfo.IEC_15693_ICODE_SLI)) {
+            nfcType = 5;
+        }
         this._tagId = tagId;
         this._tagType = tagType;
+        this._nfcType = nfcType;
         this._typeStr = typeStr;
         this._size = size;
         this._usable = usable;
@@ -1816,6 +1838,286 @@ class YRfidReader extends yocto_api_js_1.YFunction {
         let buff;
         buff = this._yapi.imm_str2bin(text);
         return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
+    }
+    /**
+     * Writes data provided as a binary object to an RFID tag, using NFC
+     * compatible encoding.
+     * The function will automatically create a NFC Capability Container,
+     * and encapsulate the content with the required NDEF header corresponding
+     * to the given content type.
+     *
+     * @param tagId : identifier of the tag to use
+     * @param ndefType : the content type, either "U" for a URL, or a
+     *         generic MIME type like "text/vcard"
+     * @param payload : the payload of the NDEF record
+     * @param options : an YRfidOptions object with the optional
+     *         command execution parameters, such as security key
+     *         if required
+     * @param status : an RfidStatus object that will contain
+     *         the detailled status of the operation
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code. When it
+     * happens, you can get more information from the status object.
+     */
+    async tagWriteBinNFC(tagId, ndefType, payload, options, status) {
+        let tagInfo;
+        let nfcType;
+        let usableSize;
+        let nfcBlocks;
+        let ccLen;
+        let typeLen;
+        let payloadLen;
+        let srBit;
+        let ndefLen;
+        let tlvHdrLen;
+        let totalLen;
+        let absPos;
+        let idx;
+        let binType;
+        let buff;
+        tagInfo = await this.get_tagInfo(tagId, status);
+        // for now, we only allow NFC Type 5 (T5T)
+        nfcType = tagInfo.get_tagNFCtype();
+        if (!(nfcType == 5)) {
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'no NFC support for this tag', this._yapi.INVALID_ARGUMENT);
+        }
+        usableSize = tagInfo.get_tagUsableSize();
+        ccLen = 4;
+        nfcBlocks = (((usableSize - ccLen) / 8) >> 0);
+        if (nfcBlocks > 255) {
+            if (nfcType == 5) {
+                ccLen = 8;
+                nfcBlocks = (((usableSize - ccLen) / 8) >> 0);
+            }
+            else {
+                nfcBlocks = 255;
+            }
+        }
+        binType = this._yapi.imm_str2bin(ndefType);
+        typeLen = (binType).length;
+        payloadLen = (payload).length;
+        // compute the total length of the NDEF record
+        ndefLen = 3 + typeLen + payloadLen;
+        srBit = 0x10;
+        if (payloadLen > 255) {
+            ndefLen = ndefLen + 3;
+            srBit = 0;
+        }
+        // compute the total length of the TLV record
+        tlvHdrLen = 2;
+        if (ndefLen > 254) {
+            tlvHdrLen = 4;
+        }
+        // make sure the content fits on the tag
+        if (!((tlvHdrLen + ndefLen + 1) <= (8 * nfcBlocks))) {
+            return this._throw(this._yapi.INVALID_ARGUMENT, 'content is too large', this._yapi.INVALID_ARGUMENT);
+        }
+        totalLen = ccLen + tlvHdrLen + ndefLen + 1;
+        buff = new Uint8Array(totalLen);
+        // CC header
+        if (ccLen == 4) {
+            buff.set([0xE1], 0);
+            if (nfcType == 5) {
+                buff.set([0x40], 1);
+            }
+            else {
+                buff.set([0x10], 1);
+            }
+            buff.set([nfcBlocks], 2);
+            buff.set([0x00], 3);
+        }
+        else {
+            buff.set([0xE2], 0);
+            buff.set([0x40], 1);
+            buff.set([0x00], 2);
+            buff.set([0x01], 3);
+            buff.set([0x00], 4);
+            buff.set([0x00], 5);
+            buff.set([((nfcBlocks / 256) >> 0)], 6);
+            buff.set([(nfcBlocks & 255)], 7);
+        }
+        // TLV header
+        buff.set([3], ccLen);
+        if (tlvHdrLen == 2) {
+            buff.set([ndefLen], ccLen + 1);
+        }
+        else {
+            buff.set([0xff], ccLen + 1);
+            buff.set([((ndefLen / 256) >> 0)], ccLen + 2);
+            buff.set([(ndefLen & 255)], ccLen + 3);
+        }
+        absPos = ccLen + tlvHdrLen;
+        // NDEF record
+        if (typeLen <= 3) {
+            // NFC Forum type
+            buff.set([0xC1 + srBit], absPos);
+        }
+        else {
+            // MIME type
+            buff.set([0xC2 + srBit], absPos);
+        }
+        if (srBit > 0) {
+            buff.set([typeLen], absPos + 1);
+            buff.set([payloadLen], absPos + 2);
+            absPos = absPos + 3;
+        }
+        else {
+            buff.set([typeLen], absPos + 1);
+            buff.set([0], absPos + 2);
+            buff.set([0], absPos + 3);
+            buff.set([((payloadLen / 256) >> 0)], absPos + 4);
+            buff.set([(payloadLen & 255)], absPos + 5);
+            absPos = absPos + 6;
+        }
+        idx = 0;
+        while (idx < typeLen) {
+            buff.set([binType[idx]], absPos + idx);
+            idx = idx + 1;
+        }
+        absPos = absPos + typeLen;
+        idx = 0;
+        while (idx < payloadLen) {
+            buff.set([payload[idx]], absPos + idx);
+            idx = idx + 1;
+        }
+        absPos = absPos + payloadLen;
+        // TLV trailer
+        buff.set([0xfe], absPos);
+        idx = tagInfo.get_tagFirstBlock();
+        return await this.tagWriteBin(tagId, idx, buff, options, status);
+    }
+    /**
+     * Writes an URL to an RFID tag using NFC compatible encoding, so that
+     * mobile phones with NFC support automatically offer to open
+     * the URL when reading the tag.
+     *
+     * @param tagId : identifier of the tag to use
+     * @param url : the URL to write on the tag
+     * @param options : an YRfidOptions object with the optional
+     *         command execution parameters, such as security key
+     *         if required
+     * @param status : an RfidStatus object that will contain
+     *         the detailled status of the operation
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code. When it
+     * happens, you can get more information from the status object.
+     */
+    async tagWriteUrlNFC(tagId, url, options, status) {
+        let prefix;
+        let binUrl;
+        prefix = 0;
+        if (url.substr(0, 8) == 'https://') {
+            prefix = 4;
+            url = url.substr(8, (url).length - 8);
+        }
+        else {
+            if (url.substr(0, 8) == 'http://') {
+                prefix = 3;
+                url = url.substr(7, (url).length - 7);
+            }
+        }
+        if (url.substr(0, 8) == 'www.') {
+            prefix = prefix - 2;
+            url = url.substr(4, (url).length - 4);
+        }
+        binUrl = this._yapi.imm_str2bin('_' + url);
+        binUrl.set([prefix], 0);
+        return await this.tagWriteBinNFC(tagId, 'U', binUrl, options, status);
+    }
+    /**
+     * Writes WiFi settings to an RFID tag using NFC compatible encoding, so that
+     * mobile phones with NFC support automatically offer to connect to this WiFi
+     * network.
+     *
+     * @param tagId : identifier of the tag to use
+     * @param ssid : the SSID of the WiFi network to connect to
+     * @param auth : the network authentication type (currently always "WPA2")
+     * @param secret : the network password
+     * @param options : an YRfidOptions object with the optional
+     *         command execution parameters, such as security key
+     *         if required
+     * @param status : an RfidStatus object that will contain
+     *         the detailled status of the operation
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code. When it
+     * happens, you can get more information from the status object.
+     */
+    async tagWriteWifiConfigNFC(tagId, ssid, auth, secret, options, status) {
+        let ssidBin;
+        let ssidLen;
+        let secretBin;
+        let secretLen;
+        let payloadLen;
+        let payload;
+        let idx;
+        ssidBin = this._yapi.imm_str2bin(ssid);
+        ssidLen = (ssidBin).length;
+        secretBin = this._yapi.imm_str2bin(secret);
+        secretLen = (secretBin).length;
+        payloadLen = ssidLen + secretLen + 39;
+        payload = new Uint8Array(payloadLen);
+        // Credential header
+        payload.set([0x10], 0);
+        payload.set([0x0e], 1);
+        payload.set([0], 2);
+        payload.set([payloadLen - 4], 3);
+        // Network index
+        payload.set([0x10], 4);
+        payload.set([0x26], 5);
+        payload.set([0], 6);
+        payload.set([1], 7);
+        payload.set([1], 8);
+        // SSID
+        payload.set([0x10], 9);
+        payload.set([0x45], 10);
+        payload.set([0], 11);
+        payload.set([ssidLen], 12);
+        idx = 0;
+        while (idx < ssidLen) {
+            payload.set([ssidBin[idx]], 13 + idx);
+            idx = idx + 1;
+        }
+        // Auth: WPA2-Personal
+        payload.set([0x10], 13 + ssidLen);
+        payload.set([0x03], 14 + ssidLen);
+        payload.set([0], 15 + ssidLen);
+        payload.set([2], 16 + ssidLen);
+        payload.set([0], 17 + ssidLen);
+        payload.set([32], 18 + ssidLen);
+        // Encryption: AES
+        payload.set([0x10], 19 + ssidLen);
+        payload.set([0x0f], 20 + ssidLen);
+        payload.set([0], 21 + ssidLen);
+        payload.set([2], 22 + ssidLen);
+        payload.set([0], 23 + ssidLen);
+        payload.set([8], 24 + ssidLen);
+        // Network key
+        payload.set([0x10], 25 + ssidLen);
+        payload.set([0x27], 26 + ssidLen);
+        payload.set([0], 27 + ssidLen);
+        payload.set([secretLen], 28 + ssidLen);
+        idx = 0;
+        while (idx < secretLen) {
+            payload.set([secretBin[idx]], 29 + ssidLen + idx);
+            idx = idx + 1;
+        }
+        // MAC broadcast
+        payload.set([0x10], 29 + ssidLen + secretLen);
+        payload.set([0x20], 30 + ssidLen + secretLen);
+        payload.set([0], 31 + ssidLen + secretLen);
+        payload.set([6], 32 + ssidLen + secretLen);
+        idx = 0;
+        while (idx < 6) {
+            payload.set([0xff], 33 + ssidLen + secretLen + idx);
+            idx = idx + 1;
+        }
+        return await this.tagWriteBinNFC(tagId, 'application/vnd.wfa.wsc', payload, options, status);
     }
     /**
      * Reads an RFID tag AFI byte (ISO 15693 only).
