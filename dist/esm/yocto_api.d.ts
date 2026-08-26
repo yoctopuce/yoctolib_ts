@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 74809 2026-06-22 08:55:29Z seb $
+ * $Id: yocto_api.ts 75622 2026-08-19 07:56:53Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -1525,6 +1525,7 @@ export declare class YFunction {
      * @noreturn
      */
     clearCache(): Promise<void>;
+    _clearLazyCache(): Promise<void>;
     /**
      * Gets the YModule object for the device on which the function is located.
      * If the function cannot be located on any module, the returned instance of

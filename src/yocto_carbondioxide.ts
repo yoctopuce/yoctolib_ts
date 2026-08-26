@@ -60,11 +60,11 @@ export class YCarbonDioxide extends YSensor
     _timedReportCallbackCarbonDioxide: YCarbonDioxide.TimedReportCallback | null = null;
 
     // API symbols as object properties
-    public readonly ABCPERIOD_INVALID: number = YAPI.INVALID_UINT;
+    public readonly ABCPERIOD_INVALID: number = YAPI.INVALID_INT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
 
     // API symbols as static members
-    public static readonly ABCPERIOD_INVALID: number = YAPI.INVALID_UINT;
+    public static readonly ABCPERIOD_INVALID: number = YAPI.INVALID_INT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
     //--- (end of YCarbonDioxide attributes declaration)
 
@@ -324,7 +324,7 @@ export class YCarbonDioxide extends YSensor
      */
     async triggerForcedCalibration(refVal: number): Promise<number>
     {
-        return await this.set_command('F' + String(Math.round(<number> Math.round(1000*refVal))) + 'C');
+        return await this.set_command('F' + String(Math.round(<number> Math.round(refVal))) + 'C');
     }
 
     /**

@@ -87,16 +87,34 @@ function checkExamples() {
                 if (fs.existsSync(pkgjson) && !fs.existsSync(modules)) {
                     execSync('cd ' + dir + '/' + exdir + ' && npm install', { stdio: [0, 1, 2] });
                 }
-                const options = {
-                    noEmitOnError: true,
-                    noImplicitAny: true,
-                    target: ts.ScriptTarget.ES5,
-                    module: ts.ModuleKind.CommonJS,
-                    strict: true,
-                    allowSyntheticDefaultImports: true,
-                    esModuleInterop: true,
-                    skipLibCheck: true
-                };
+                let options;
+                if (exdir == 'examples_html') {
+                    options = {
+                        target: ts.ScriptTarget.ES2017,
+                        module: ts.ModuleKind.ESNext,
+                        strict: true,
+                        forceConsistentCasingInFileNames: true,
+                        esModuleInterop: true,
+                        allowSyntheticDefaultImports: true,
+                        skipLibCheck: true,
+                        noEmitOnError: true,
+                        noImplicitAny: true
+                    };
+                }
+                else {
+                    options = {
+                        target: ts.ScriptTarget.ES2017,
+                        module: ts.ModuleKind.CommonJS,
+                        strict: true,
+                        forceConsistentCasingInFileNames: true,
+                        esModuleInterop: true,
+                        allowSyntheticDefaultImports: true,
+                        skipLibCheck: true,
+                        noEmitOnError: true,
+                        noImplicitAny: true,
+                        types: ['node']
+                    };
+                }
                 const host = ts.createCompilerHost(options);
                 host.writeFile = ((filename, contents) => { filename; });
                 let program = ts.createProgram([file], options, host);

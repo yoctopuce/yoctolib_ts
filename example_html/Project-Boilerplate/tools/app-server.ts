@@ -10,7 +10,6 @@
 import 'process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as url from 'url';
 import * as http from 'http';
 import * as childProcess from 'child_process';
 import esbuild from 'esbuild';
@@ -41,7 +40,12 @@ interface StringDict {
 
 function listener(message: http.IncomingMessage, response: http.ServerResponse)
 {
-    let srvpath: string = url.parse(message.url as string).pathname || '/';
+    let srvpath :string;
+    try {
+        srvpath = new URL(message.url as string).pathname;
+    } catch (e) {
+        srvpath = '/';
+    }
     let relpath: string = srvpath.slice(1);
     let abspath: string = path.join(PROJECT_ROOT, relpath);
     let extension: string = path.extname(relpath);

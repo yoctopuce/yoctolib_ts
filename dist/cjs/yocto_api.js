@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- * $Id: yocto_api.ts 74809 2026-06-22 08:55:29Z seb $
+ * $Id: yocto_api.ts 75622 2026-08-19 07:56:53Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -4213,6 +4213,11 @@ class YFunction {
             this._cacheExpiration = this._yapi.GetTickCount();
         }
     }
+    // Internal method to force reloading even lazy attributes (eg. displayWidth, etc)
+    async _clearLazyCache() {
+        await this.clearCache();
+        this._cacheExpiration = 0;
+    }
     /**
      * Gets the YModule object for the device on which the function is located.
      * If the function cannot be located on any module, the returned instance of
@@ -5133,7 +5138,13 @@ class YModule extends YFunction {
      * On failure, throws an exception or returns a negative error code.
      */
     async revertFromFlash() {
-        return await this.set_persistentSettings(0 /* YModule.PERSISTENTSETTINGS.LOADED */);
+        let res;
+        res = await this.set_persistentSettings(0 /* YModule.PERSISTENTSETTINGS.LOADED */);
+        if (!(res == exports.YAPI_SUCCESS)) {
+            return this._throw(res, 'unable to trigger revert settings', res);
+        }
+        await this._clearLazyCache();
+        return res;
     }
     /**
      * Schedules a simple module reboot after the given number of seconds.
@@ -8482,7 +8493,7 @@ class YGenericHub {
                                 if (port == 0) {
                                     break;
                                 }
-                                this._portInfo.push({ proto, port });
+                                this._portInfo.push({ 'proto': proto, 'port': port });
                             }
                         }
                     }
@@ -8505,6 +8516,9 @@ class YGenericHub {
                         try {
                             let data = await this._yapi.system_env.downloadfile(serialurl, this._yapi);
                             this.imm_setSerialNumber(exports.YAPI.imm_bin2str(data));
+                            // use default protocols
+                            this._portInfo.push({ 'proto': 'ws', 'port': this.urlInfo.imm_getPort() });
+                            this._portInfo.push({ 'proto': 'http', 'port': this.urlInfo.imm_getPort() });
                         }
                         catch (e) {
                             this.imm_disconnectNow();
@@ -11278,6 +11292,9 @@ class YAPIContext {
                 if (!hubDev) {
                     // this is a newly added hub, for which we did not yet load all attributes
                     // skip it for now
+                    if (this._logLevel >= 4) {
+                        this.imm_log('Skip updateDeviceList for hub ' + rootUrl + ', not yet loaded');
+                    }
                     continue;
                 }
                 if (hub.imm_getcurrentState() < 1 /* Y_YHubConnType.HUB_PREREGISTERED */) {
@@ -12841,7 +12858,7 @@ class YAPIContext {
         return this.imm_GetAPIVersion();
     }
     imm_GetAPIVersion() {
-        return /* version number patched automatically */ '2.1.15129';
+        return /* version number patched automatically */ '2.1.15681';
     }
     /**
      * Initializes the Yoctopuce programming library explicitly.

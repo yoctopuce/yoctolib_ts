@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 72057 2026-02-17 09:44:53Z mvuilleu $
+ *  $Id: yocto_serialport.ts 75514 2026-08-13 07:24:08Z mvuilleu $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -108,6 +108,11 @@ export declare class YSerialPort extends YFunction {
     _rxbuffptr: number;
     _eventPos: number;
     _eventCallback: YSerialPort.SnoopingCallback | null;
+    _xyproto: string;
+    _xyfname: string;
+    _xyfdata: Uint8Array;
+    _xytotal: number;
+    _xysent: number;
     readonly RXCOUNT_INVALID: number;
     readonly TXCOUNT_INVALID: number;
     readonly ERRCOUNT_INVALID: number;
@@ -912,6 +917,100 @@ export declare class YSerialPort extends YFunction {
      * On failure, throws an exception or returns an empty array.
      */
     modbusWriteAndReadRegisters(slaveNo: number, pduWriteAddr: number, values: number[], pduReadAddr: number, nReadWords: number): Promise<number[]>;
+    _xymodemQueue(proto: string, fname: string, buff: Uint8Array, timeoutSec: number): Promise<number>;
+    _xymodemProcess(timeoutSec: number): Promise<number>;
+    /**
+     * Initiates a buffer transmit to the serial port using the standard XMODEM protocol.
+     * The function will block until the XMODEM receiver triggers the transfer,
+     * up to the specified timeout.
+     * Once the transfer is started, the function returns the current percentage
+     * of completion. The caller should then invoke method
+     * xmodemUploadMore() until it returns 100 (percent).
+     *
+     * @param buff : the binary buffer to send
+     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     *
+     * @return an integer in the range 0 to 100 (percentage of completion),
+     *         or a negative error code in case of failure.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    xmodemUpload(buff: Uint8Array, timeoutSec: number): Promise<number>;
+    /**
+     * Continues a standard XMODEM upload previously started with xmodemUpload.
+     * The function will block until the data sent has been acknowledged by receiver,
+     * up to the specified timeout, and return the current percentage of completion.
+     * It should be called continuously until it returns the 100 (percent).
+     *
+     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     *
+     * @return an integer in the range 0 to 100 (percentage of completion),
+     *         or a negative error code in case of failure.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    xmodemUploadMore(timeoutSec: number): Promise<number>;
+    /**
+     * Initiates a buffer transmit to the serial port using the standard XMODEM-1k protocol.
+     * The function will block until the XMODEM receiver triggers the transfer,
+     * up to the specified timeout.
+     * Once the transfer is started, the function returns the current percentage
+     * of completion. The caller should then invoke method
+     * xmodem1kUploadMore() until it returns 100 (percent).
+     *
+     * @param buff : the binary buffer to send
+     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    xmodem1kUpload(buff: Uint8Array, timeoutSec: number): Promise<number>;
+    /**
+     * Continues a XMODEM-1k upload previously started with xmodem1kUpload.
+     * The function will block until the data sent has been acknowledged by receiver,
+     * up to the specified timeout, and return the current percentage of completion.
+     * It should be called continuously until it returns the 100 (percent).
+     *
+     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     *
+     * @return an integer in the range 0 to 100 (percentage of completion),
+     *         or a negative error code in case of failure.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    xmodem1kUploadMore(timeoutSec: number): Promise<number>;
+    /**
+     * Initiates a buffer transmit to the serial port using the standard YMODEM protocol.
+     * The function will block until the YMODEM receiver triggers the transfer,
+     * up to the specified timeout.
+     * Once the transfer is started, the function returns the current percentage
+     * of completion. The caller should then invoke method
+     * ymodemUploadMore() until it returns 100 (percent).
+     *
+     * @param filename : the filename associated with the data in the buffer
+     * @param buff : the binary buffer to send
+     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    ymodemUpload(filename: string, buff: Uint8Array, timeoutSec: number): Promise<number>;
+    /**
+     * Continues a YMODEM upload previously started with ymodemUpload.
+     * The function will block until the data sent has been acknowledged by receiver,
+     * up to the specified timeout, and return the current percentage of completion.
+     * It should be called continuously until it returns the 100 (percent).
+     *
+     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     *
+     * @return an integer in the range 0 to 100 (percentage of completion),
+     *         or a negative error code in case of failure.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    ymodemUploadMore(timeoutSec: number): Promise<number>;
     /**
      * Continues the enumeration of serial ports started using yFirstSerialPort().
      * Caution: You can't make any assumption about the returned serial ports order.

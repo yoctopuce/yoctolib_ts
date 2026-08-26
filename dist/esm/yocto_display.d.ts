@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 74504 2026-06-01 14:50:23Z seb $
+ *  $Id: yocto_display.ts 75637 2026-08-20 16:54:40Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -328,27 +328,6 @@ export declare class YDisplayLayer {
      */
     drawImage(x: number, y: number, imagename: string): Promise<number>;
     /**
-     * Draws a bitmap at the specified position. The bitmap is provided as a binary object,
-     * where each pixel maps to a bit, from left to right and from top to bottom.
-     * The most significant bit of each byte maps to the leftmost pixel, and the least
-     * significant bit maps to the rightmost pixel. Bits set to 1 are drawn using the
-     * layer selected pen color. Bits set to 0 are drawn using the specified background
-     * gray level, unless -1 is specified, in which case they are not drawn at all
-     * (as if transparent).
-     *
-     * @param x : the distance from left of layer to the left of the bitmap, in pixels
-     * @param y : the distance from top of layer to the top of the bitmap, in pixels
-     * @param w : the width of the bitmap, in pixels
-     * @param bitmap : a binary object
-     * @param bgcol : the background gray level to use for zero bits (0 = black,
-     *         255 = white), or -1 to leave the pixels unchanged
-     *
-     * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    drawBitmap(x: number, y: number, w: number, bitmap: Uint8Array, bgcol: number): Promise<number>;
-    /**
      * Draws a GIF image provided as a binary buffer at the specified position.
      * If the image drawing must be included in an animation sequence, save it
      * in the device filesystem first and use drawImage instead.
@@ -362,6 +341,46 @@ export declare class YDisplayLayer {
      * On failure, throws an exception or returns a negative error code.
      */
     drawGIF(x: number, y: number, gifimage: Uint8Array): Promise<number>;
+    /**
+     * Draws a bitmap at the specified position. The bitmap is provided as a binary object,
+     * where each pixel maps to a bit, from left to right and from top to bottom.
+     * The most significant bit of each byte maps to the leftmost pixel, and the least
+     * significant bit maps to the rightmost pixel. Bits set to 1 are drawn using the
+     * layer selected pen color. Bits set to 0 are drawn using the specified background
+     * color, unless NO_INK (-1) is specified, in which case they are not
+     * drawn at all (as if transparent).
+     *
+     * @param x : the distance from left of layer to the left of the bitmap, in pixels
+     * @param y : the distance from top of layer to the top of the bitmap, in pixels
+     * @param w : the width of the bitmap, in pixels
+     * @param bitmap : a binary object
+     * @param bgcol : the RGB background color to use for zero bits, as a 24-bit RGB value,
+     *         or one of the constants NO_INK, FG_INK or BG_INK
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    drawBitmap(x: number, y: number, w: number, bitmap: Uint8Array, bgcol: number): Promise<number>;
+    /**
+     * Draws a color pixmap at the specified position. The pixmap is provided as a binary
+     * object, where each byte maps to one pixel. The 24 bit RGB value corresponding to each
+     * byte value is defined in the palette provided as extra argument.
+     * The palette maximal size is 8, and it is recommended to use the smallest possible
+     * palette size to optimize the size of data to be sent to the display.
+     * The height of the pixmap is implicitely given by the pixmap buffer size.
+     *
+     * @param x : the distance from left of layer to the left of the pixmap, in pixels
+     * @param y : the distance from top of layer to the top of the pixmap, in pixels
+     * @param w : the width of the pixmap, in pixels
+     * @param pixmap : a binary buffer where each byte maps to one pixel
+     * @param palette : an array of 24-bit RGB values, defining the color for each byte value in pixmap
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    drawPixmap(x: number, y: number, w: number, pixmap: Uint8Array, palette: number[]): Promise<number>;
     /**
      * Moves the drawing pointer of this layer to the specified position.
      *
@@ -410,7 +429,7 @@ export declare class YDisplayLayer {
      */
     polygonAdd(x: number, y: number): Promise<number>;
     /**
-     * Close the currently open polygon, fill its content the fill color currently
+     * Closes the currently open polygon, fill its content the fill color currently
      * selected for the layer, and draw its outline using the selected line color.
      *
      * @return YAPI.SUCCESS if the call succeeds.
@@ -630,11 +649,43 @@ export declare class YDisplay extends YFunction {
     readonly LAYERHEIGHT_INVALID: number;
     readonly LAYERCOUNT_INVALID: number;
     readonly COMMAND_INVALID: string;
+    readonly FASTREFRESH_WHENEVER_POSSIBLE: YDisplay.FASTREFRESH;
+    readonly FASTREFRESH_WHENEVER_SUPPORTED: YDisplay.FASTREFRESH;
+    readonly FASTREFRESH_NEVER: YDisplay.FASTREFRESH;
+    readonly FASTREFRESH_INVALID: YDisplay.FASTREFRESH;
+    readonly REGENERATE_ON_REQUEST_ONLY: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_DAY: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_12H: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_6H: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_3H: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_2H: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_HOUR: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_30MIN: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_15MIN: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_480: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_432: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_360: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_288: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_240: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_192: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_144: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_96: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_48: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_36: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_24: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_12: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_10: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_8: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_6: YDisplay.REGENERATE;
+    readonly REGENERATE_EVERY_4: YDisplay.REGENERATE;
+    readonly REGENERATE_ALWAYS: YDisplay.REGENERATE;
+    readonly REGENERATE_INVALID: YDisplay.REGENERATE;
     readonly DISPLAYSTATE_FAILURE: YDisplay.DISPLAYSTATE;
     readonly DISPLAYSTATE_OFF: YDisplay.DISPLAYSTATE;
     readonly DISPLAYSTATE_POWERING: YDisplay.DISPLAYSTATE;
     readonly DISPLAYSTATE_IDLE: YDisplay.DISPLAYSTATE;
     readonly DISPLAYSTATE_REFRESHING: YDisplay.DISPLAYSTATE;
+    readonly DISPLAYSTATE_INVALID: YDisplay.DISPLAYSTATE;
     static readonly ENABLED_FALSE: YDisplay.ENABLED;
     static readonly ENABLED_TRUE: YDisplay.ENABLED;
     static readonly ENABLED_INVALID: YDisplay.ENABLED;
@@ -658,11 +709,43 @@ export declare class YDisplay extends YFunction {
     static readonly LAYERHEIGHT_INVALID: number;
     static readonly LAYERCOUNT_INVALID: number;
     static readonly COMMAND_INVALID: string;
+    static readonly FASTREFRESH_WHENEVER_POSSIBLE: YDisplay.FASTREFRESH;
+    static readonly FASTREFRESH_WHENEVER_SUPPORTED: YDisplay.FASTREFRESH;
+    static readonly FASTREFRESH_NEVER: YDisplay.FASTREFRESH;
+    static readonly FASTREFRESH_INVALID: YDisplay.FASTREFRESH;
+    static readonly REGENERATE_ON_REQUEST_ONLY: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_DAY: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_12H: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_6H: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_3H: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_2H: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_HOUR: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_30MIN: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_15MIN: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_480: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_432: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_360: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_288: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_240: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_192: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_144: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_96: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_48: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_36: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_24: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_12: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_10: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_8: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_6: YDisplay.REGENERATE;
+    static readonly REGENERATE_EVERY_4: YDisplay.REGENERATE;
+    static readonly REGENERATE_ALWAYS: YDisplay.REGENERATE;
+    static readonly REGENERATE_INVALID: YDisplay.REGENERATE;
     static readonly DISPLAYSTATE_FAILURE: YDisplay.DISPLAYSTATE;
     static readonly DISPLAYSTATE_OFF: YDisplay.DISPLAYSTATE;
     static readonly DISPLAYSTATE_POWERING: YDisplay.DISPLAYSTATE;
     static readonly DISPLAYSTATE_IDLE: YDisplay.DISPLAYSTATE;
     static readonly DISPLAYSTATE_REFRESHING: YDisplay.DISPLAYSTATE;
+    static readonly DISPLAYSTATE_INVALID: YDisplay.DISPLAYSTATE;
     constructor(yapi: YAPIContext, func: string);
     imm_parseAttr(name: string, val: any): number;
     /**
@@ -694,11 +777,11 @@ export declare class YDisplay extends YFunction {
      */
     get_startupSeq(): Promise<string>;
     /**
-     * Changes the name of the sequence to play when the displayed is powered on.
+     * Changes the name of the sequence to play when the display is powered on.
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a string corresponding to the name of the sequence to play when the displayed is powered on
+     * @param newval : a string corresponding to the name of the sequence to play when the display is powered on
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -753,7 +836,10 @@ export declare class YDisplay extends YFunction {
      */
     set_autoInvertDelay(newval: number): Promise<number>;
     /**
-     * Returns the currently selected display orientation.
+     * Returns the currently selected display orientation. The orientation is defined as the side of the
+     * screen where the
+     * USB connector (for OLED displays) or the ribbon cable (for ePaper panels) is located when the
+     * display is up straight.
      *
      * @return a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
      * YDisplay.ORIENTATION_RIGHT and YDisplay.ORIENTATION_DOWN corresponding to the currently selected
@@ -763,7 +849,9 @@ export declare class YDisplay extends YFunction {
      */
     get_orientation(): Promise<YDisplay.ORIENTATION>;
     /**
-     * Changes the display orientation. Remember to call the saveToFlash()
+     * Changes the display orientation. he orientation is defined as the side of the screen where the
+     * USB connector (for OLED displays) or the ribbon cable (for ePaper panels) is located when the
+     * display is up straight. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
      * @param newval : a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
@@ -785,8 +873,7 @@ export declare class YDisplay extends YFunction {
     /**
      * Changes the model of display to match the connected display panel.
      * This function has no effect if the module does not support the selected
-     * display panel.
-     * Remember to call the saveToFlash()
+     * display panel. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
      * @param newval : a string corresponding to the model of display to match the connected display panel
@@ -813,11 +900,11 @@ export declare class YDisplay extends YFunction {
      */
     get_displayHeight(): Promise<number>;
     /**
-     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
+     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, and so on.
      *
      * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_EPAPER_BW,
      * YDisplay.DISPLAYTYPE_EPAPER_BWR and YDisplay.DISPLAYTYPE_EPAPER_BWRY corresponding to the display
-     * type: monochrome OLED, black and white ePaper, color ePaper, etc
+     * type: monochrome OLED, black and white ePaper, color ePaper, and so on
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
@@ -923,8 +1010,82 @@ export declare class YDisplay extends YFunction {
     resetHiddenLayerFlags(): number;
     isFrozen(): boolean;
     /**
+     * Returns the fast refresh usage policy in use (ePaper displays only).
+     * This setting is combined with the regenerate policy to determine when the screen
+     * should be updated using a fast update versus or regenerated using a slower,
+     * flickering full refresh.
+     *
+     * @return a value among the YDisplay.FASTREFRESH enumeration
+     *         (YDisplay.FASTREFRESH_WHENEVER_POSSIBLE,
+     *         YDisplay.FASTREFRESH_WHENEVER_SUPPORTED,
+     *         YDisplay.FASTREFRESH_NEVER).
+     *
+     * On failure, throws an exception or returns YDisplay.FASTREFRESH_INVALID.
+     */
+    get_fastRefreshPolicy(): Promise<YDisplay.FASTREFRESH>;
+    /**
+     * Returns the display regeneration minimal frequency (ePaper displays only).
+     * This setting is combined with the fast refresh usage policy to determine
+     * when the screen should be updated using a fast update versus or regenerated
+     * using a slower, flickering full refresh. To change the display regeneration minimal
+     * frequency, use methode set_fastRefreshPolicy().
+     *
+     * @return a value among the YDisplay.REGENERATE enumeration
+     *         (YDisplay.REGENERATE_ON_REQUEST_ONLY,
+     *         YDisplay.REGENERATE_EVERY_DAY, YDisplay.REGENERATE_EVERY_12H,
+     *         YDisplay.REGENERATE_EVERY_6H, YDisplay.REGENERATE_EVERY_3H,
+     *         YDisplay.REGENERATE_EVERY_2H, YDisplay.REGENERATE_EVERY_HOUR,
+     *         YDisplay.REGENERATE_EVERY_30MIN, YDisplay.REGENERATE_EVERY_15MIN,
+     *         YDisplay.REGENERATE_EVERY_480, YDisplay.REGENERATE_EVERY_432,
+     *         YDisplay.REGENERATE_EVERY_360, YDisplay.REGENERATE_EVERY_288,
+     *         YDisplay.REGENERATE_EVERY_240, YDisplay.REGENERATE_EVERY_192,
+     *         YDisplay.REGENERATE_EVERY_144, YDisplay.REGENERATE_EVERY_96,
+     *         YDisplay.REGENERATE_EVERY_48, YDisplay.REGENERATE_EVERY_36,
+     *         YDisplay.REGENERATE_EVERY_24, YDisplay.REGENERATE_EVERY_12,
+     *         YDisplay.REGENERATE_EVERY_10, YDisplay.REGENERATE_EVERY_8,
+     *         YDisplay.REGENERATE_EVERY_6, YDisplay.REGENERATE_EVERY_4,
+     *         YDisplay.REGENERATE_ALWAYS).
+     *
+     * On failure, throws an exception or returns YDisplay.REGENERATE_INVALID.
+     */
+    get_regeneratePolicy(): Promise<YDisplay.REGENERATE>;
+    /**
+     * Changes the fast refresh usage policy and display regeneration minimal frequency
+     * (ePaper displays only). These settings jointly determine when the screen should be
+     * updated using a fast update versus or regenerated using a slower, flickering full
+     * refresh.
+     *
+     * @param fastRefresh : a value among the YDisplay.FASTREFRESH enumeration
+     *         (YDisplay.FASTREFRESH_WHENEVER_POSSIBLE,
+     *         YDisplay.FASTREFRESH_WHENEVER_SUPPORTED,
+     *         YDisplay.FASTREFRESH_NEVER),
+     *         corresponding to the policy for using fast refresh.
+     * @param regenerate : a value among the enumeration YRefFrame.REGENERATE
+     *         (YDisplay.REGENERATE_ON_REQUEST_ONLY,
+     *         YDisplay.REGENERATE_EVERY_DAY, YDisplay.REGENERATE_EVERY_12H,
+     *         YDisplay.REGENERATE_EVERY_6H, YDisplay.REGENERATE_EVERY_3H,
+     *         YDisplay.REGENERATE_EVERY_2H, YDisplay.REGENERATE_EVERY_HOUR,
+     *         YDisplay.REGENERATE_EVERY_30MIN, YDisplay.REGENERATE_EVERY_15MIN,
+     *         YDisplay.REGENERATE_EVERY_480, YDisplay.REGENERATE_EVERY_432,
+     *         YDisplay.REGENERATE_EVERY_360, YDisplay.REGENERATE_EVERY_288,
+     *         YDisplay.REGENERATE_EVERY_240, YDisplay.REGENERATE_EVERY_192,
+     *         YDisplay.REGENERATE_EVERY_144, YDisplay.REGENERATE_EVERY_96,
+     *         YDisplay.REGENERATE_EVERY_48, YDisplay.REGENERATE_EVERY_36,
+     *         YDisplay.REGENERATE_EVERY_24, YDisplay.REGENERATE_EVERY_12,
+     *         YDisplay.REGENERATE_EVERY_10, YDisplay.REGENERATE_EVERY_8,
+     *         YDisplay.REGENERATE_EVERY_6, YDisplay.REGENERATE_EVERY_4,
+     *         YDisplay.REGENERATE_ALWAYS),
+     *         corresponding to the display minimal regeneration frequency.
+     *
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    set_fastRefreshPolicy(fastRefresh: YDisplay.FASTREFRESH, regenerate: YDisplay.REGENERATE): Promise<number>;
+    /**
      * Clears the display screen and resets all display layers to their default state.
-     * Using this function in a sequence will kill the sequence play-back. Don't use that
+     * Using this function in a sequence will kill the sequence play-back. Do not use that
      * function to reset the display at sequence start-up.
      *
      * @return YAPI.SUCCESS if the call succeeds.
@@ -970,7 +1131,7 @@ export declare class YDisplay extends YFunction {
      */
     postponeRefresh(duration: number): Promise<number>;
     /**
-     * Trigger an immediate screen refresh. The combination of
+     * Triggers an immediate screen refresh. The combination of
      * postponeRefresh and triggerRefresh can be used as an
      * alternative to double-buffering to avoid flickering during display updates.
      *
@@ -1120,6 +1281,7 @@ export declare class YDisplay extends YFunction {
      * On failure, throws an exception or returns an empty binary object.
      */
     readDisplay(palette: number[]): Promise<Uint8Array>;
+    gifEncode(pixmap: Uint8Array, palette: number[], w: number, shortHdr: boolean): Promise<Uint8Array>;
     /**
      * Continues the enumeration of displays started using yFirstDisplay().
      * Caution: You can't make any assumption about the returned displays order.
@@ -1174,12 +1336,48 @@ export declare namespace YDisplay {
         EPAPER_BWRY = 3,
         INVALID = -1
     }
+    const enum FASTREFRESH {
+        WHENEVER_POSSIBLE = 0,
+        WHENEVER_SUPPORTED = 1,
+        NEVER = 2,
+        INVALID = 3
+    }
+    const enum REGENERATE {
+        ON_REQUEST_ONLY = 0,
+        EVERY_DAY = 1,
+        EVERY_12H = 2,
+        EVERY_6H = 3,
+        EVERY_3H = 4,
+        EVERY_2H = 5,
+        EVERY_HOUR = 6,
+        EVERY_30MIN = 7,
+        EVERY_15MIN = 8,
+        EVERY_480 = 9,
+        EVERY_432 = 10,
+        EVERY_360 = 11,
+        EVERY_288 = 12,
+        EVERY_240 = 13,
+        EVERY_192 = 14,
+        EVERY_144 = 15,
+        EVERY_96 = 16,
+        EVERY_48 = 17,
+        EVERY_36 = 18,
+        EVERY_24 = 19,
+        EVERY_12 = 20,
+        EVERY_10 = 21,
+        EVERY_8 = 22,
+        EVERY_6 = 23,
+        EVERY_4 = 24,
+        ALWAYS = 25,
+        INVALID = 26
+    }
     const enum DISPLAYSTATE {
         FAILURE = 0,
         OFF = 1,
         POWERING = 2,
         IDLE = 3,
-        REFRESHING = 4
+        REFRESHING = 4,
+        INVALID = 5
     }
     interface ValueCallback {
         (func: YDisplay, value: string): void;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_display.ts 74504 2026-06-01 14:50:23Z seb $
+ *  $Id: yocto_display.ts 75637 2026-08-20 16:54:40Z mvuilleu $
  *
  *  Implements the high-level API for DisplayLayer functions
  *
@@ -141,7 +141,7 @@ export class YDisplayLayer
     {
         let res: number;
         res = YAPI.SUCCESS;
-        if ((this._cmdbuff).length + (cmd).length >= 100) {
+        if ((this._cmdbuff).length + (cmd).length >= 64) {
             // force flush before, to prevent overflow
             await this.flush_now();
         }
@@ -474,6 +474,18 @@ export class YDisplayLayer
      */
     async drawText(x: number, y: number, anchor: YDisplayLayer.ALIGN, text: string): Promise<number>
     {
+        let textlen: number;
+        let destname: string;
+        textlen = (text).length;
+        if (textlen > 60) {
+            if (textlen > 1000) {
+                this._display._throw(YAPI.INVALID_ARGUMENT, 'text too large (max 1000 characters)');
+                return YAPI.INVALID_ARGUMENT;
+            }
+            await this._display.flushLayers();
+            destname = 'layer' + String(Math.round(this._id)) + ':T' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + String(anchor) + ',';
+            return await this._display.upload(destname, this._yapi.imm_str2bin(text));
+        }
         return await this.command_flush('T' + String(Math.round(x)) + ',' + String(Math.round(y)) + ',' + String(anchor) + ',' + text + '' + String.fromCharCode(27));
     }
 
@@ -497,33 +509,6 @@ export class YDisplayLayer
     }
 
     /**
-     * Draws a bitmap at the specified position. The bitmap is provided as a binary object,
-     * where each pixel maps to a bit, from left to right and from top to bottom.
-     * The most significant bit of each byte maps to the leftmost pixel, and the least
-     * significant bit maps to the rightmost pixel. Bits set to 1 are drawn using the
-     * layer selected pen color. Bits set to 0 are drawn using the specified background
-     * gray level, unless -1 is specified, in which case they are not drawn at all
-     * (as if transparent).
-     *
-     * @param x : the distance from left of layer to the left of the bitmap, in pixels
-     * @param y : the distance from top of layer to the top of the bitmap, in pixels
-     * @param w : the width of the bitmap, in pixels
-     * @param bitmap : a binary object
-     * @param bgcol : the background gray level to use for zero bits (0 = black,
-     *         255 = white), or -1 to leave the pixels unchanged
-     *
-     * @return YAPI.SUCCESS if the call succeeds.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    async drawBitmap(x: number, y: number, w: number, bitmap: Uint8Array, bgcol: number): Promise<number>
-    {
-        let destname: string;
-        destname = 'layer' + String(Math.round(this._id)) + ':' + String(Math.round(w)) + ',' + String(Math.round(bgcol)) + '@' + String(Math.round(x)) + ',' + String(Math.round(y));
-        return await this._display.upload(destname, bitmap);
-    }
-
-    /**
      * Draws a GIF image provided as a binary buffer at the specified position.
      * If the image drawing must be included in an animation sequence, save it
      * in the device filesystem first and use drawImage instead.
@@ -539,8 +524,89 @@ export class YDisplayLayer
     async drawGIF(x: number, y: number, gifimage: Uint8Array): Promise<number>
     {
         let destname: string;
+        await this._display.flushLayers();
         destname = 'layer' + String(Math.round(this._id)) + ':G,-1@' + String(Math.round(x)) + ',' + String(Math.round(y));
         return await this._display.upload(destname, gifimage);
+    }
+
+    /**
+     * Draws a bitmap at the specified position. The bitmap is provided as a binary object,
+     * where each pixel maps to a bit, from left to right and from top to bottom.
+     * The most significant bit of each byte maps to the leftmost pixel, and the least
+     * significant bit maps to the rightmost pixel. Bits set to 1 are drawn using the
+     * layer selected pen color. Bits set to 0 are drawn using the specified background
+     * color, unless NO_INK (-1) is specified, in which case they are not
+     * drawn at all (as if transparent).
+     *
+     * @param x : the distance from left of layer to the left of the bitmap, in pixels
+     * @param y : the distance from top of layer to the top of the bitmap, in pixels
+     * @param w : the width of the bitmap, in pixels
+     * @param bitmap : a binary object
+     * @param bgcol : the RGB background color to use for zero bits, as a 24-bit RGB value,
+     *         or one of the constants NO_INK, FG_INK or BG_INK
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async drawBitmap(x: number, y: number, w: number, bitmap: Uint8Array, bgcol: number): Promise<number>
+    {
+        let destname: string;
+        let r: number;
+        let g: number;
+        let b: number;
+        let rgbcol: string;
+        if ((w < 0) || (w > 512)) {
+            this._display._throw(YAPI.INVALID_ARGUMENT, 'bitmap width must be in range 1..512');
+            return YAPI.INVALID_ARGUMENT;
+        }
+        await this._display.flushLayers();
+        if (bgcol <= 255) {
+            if (bgcol >= -1) {
+                // backward-compatible behaviour (gray level)
+                rgbcol = String(Math.round(bgcol));
+            } else {
+                // background color or foreground color
+                if (bgcol <= -3) {
+                    rgbcol = '#.';
+                } else {
+                    rgbcol = '#-';
+                }
+            }
+        } else {
+            // RGB color
+            r = ((bgcol >> 20) & 15);
+            g = ((bgcol >> 12) & 15);
+            b = ((bgcol >> 4) & 15);
+            rgbcol = '#' + (r).toString(16).toLowerCase() + '' + (g).toString(16).toLowerCase() + '' + (b).toString(16).toLowerCase();
+        }
+        destname = 'layer' + String(Math.round(this._id)) + ':' + String(Math.round(w)) + ',' + rgbcol + '@' + String(Math.round(x)) + ',' + String(Math.round(y));
+        return await this._display.upload(destname, bitmap);
+    }
+
+    /**
+     * Draws a color pixmap at the specified position. The pixmap is provided as a binary
+     * object, where each byte maps to one pixel. The 24 bit RGB value corresponding to each
+     * byte value is defined in the palette provided as extra argument.
+     * The palette maximal size is 8, and it is recommended to use the smallest possible
+     * palette size to optimize the size of data to be sent to the display.
+     * The height of the pixmap is implicitely given by the pixmap buffer size.
+     *
+     * @param x : the distance from left of layer to the left of the pixmap, in pixels
+     * @param y : the distance from top of layer to the top of the pixmap, in pixels
+     * @param w : the width of the pixmap, in pixels
+     * @param pixmap : a binary buffer where each byte maps to one pixel
+     * @param palette : an array of 24-bit RGB values, defining the color for each byte value in pixmap
+     *
+     * @return YAPI.SUCCESS if the call succeeds.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async drawPixmap(x: number, y: number, w: number, pixmap: Uint8Array, palette: number[]): Promise<number>
+    {
+        let gifimage: Uint8Array;
+        gifimage = await this._display.gifEncode(pixmap, palette, w, false);
+        return await this.drawGIF(x, y, gifimage);
     }
 
     /**
@@ -615,7 +681,7 @@ export class YDisplayLayer
     }
 
     /**
-     * Close the currently open polygon, fill its content the fill color currently
+     * Closes the currently open polygon, fill its content the fill color currently
      * selected for the layer, and draw its outline using the selected line color.
      *
      * @return YAPI.SUCCESS if the call succeeds.
@@ -642,6 +708,18 @@ export class YDisplayLayer
      */
     async consoleOut(text: string): Promise<number>
     {
+        let textlen: number;
+        let destname: string;
+        textlen = (text).length;
+        if (textlen > 60) {
+            if (textlen > 1000) {
+                this._display._throw(YAPI.INVALID_ARGUMENT, 'text too large (max 1000 characters)');
+                return YAPI.INVALID_ARGUMENT;
+            }
+            await this._display.flushLayers();
+            destname = 'layer' + String(Math.round(this._id)) + ':!';
+            return await this._display.upload(destname, this._yapi.imm_str2bin(text));
+        }
         return await this.command_flush('!' + text + '' + String.fromCharCode(27));
     }
 
@@ -908,11 +986,43 @@ export class YDisplay extends YFunction
     public readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public readonly LAYERCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+    public readonly FASTREFRESH_WHENEVER_POSSIBLE: YDisplay.FASTREFRESH = 0;
+    public readonly FASTREFRESH_WHENEVER_SUPPORTED: YDisplay.FASTREFRESH = 1;
+    public readonly FASTREFRESH_NEVER: YDisplay.FASTREFRESH = 2;
+    public readonly FASTREFRESH_INVALID: YDisplay.FASTREFRESH = 3;
+    public readonly REGENERATE_ON_REQUEST_ONLY: YDisplay.REGENERATE = 0;
+    public readonly REGENERATE_EVERY_DAY: YDisplay.REGENERATE = 1;
+    public readonly REGENERATE_EVERY_12H: YDisplay.REGENERATE = 2;
+    public readonly REGENERATE_EVERY_6H: YDisplay.REGENERATE = 3;
+    public readonly REGENERATE_EVERY_3H: YDisplay.REGENERATE = 4;
+    public readonly REGENERATE_EVERY_2H: YDisplay.REGENERATE = 5;
+    public readonly REGENERATE_EVERY_HOUR: YDisplay.REGENERATE = 6;
+    public readonly REGENERATE_EVERY_30MIN: YDisplay.REGENERATE = 7;
+    public readonly REGENERATE_EVERY_15MIN: YDisplay.REGENERATE = 8;
+    public readonly REGENERATE_EVERY_480: YDisplay.REGENERATE = 9;
+    public readonly REGENERATE_EVERY_432: YDisplay.REGENERATE = 10;
+    public readonly REGENERATE_EVERY_360: YDisplay.REGENERATE = 11;
+    public readonly REGENERATE_EVERY_288: YDisplay.REGENERATE = 12;
+    public readonly REGENERATE_EVERY_240: YDisplay.REGENERATE = 13;
+    public readonly REGENERATE_EVERY_192: YDisplay.REGENERATE = 14;
+    public readonly REGENERATE_EVERY_144: YDisplay.REGENERATE = 15;
+    public readonly REGENERATE_EVERY_96: YDisplay.REGENERATE = 16;
+    public readonly REGENERATE_EVERY_48: YDisplay.REGENERATE = 17;
+    public readonly REGENERATE_EVERY_36: YDisplay.REGENERATE = 18;
+    public readonly REGENERATE_EVERY_24: YDisplay.REGENERATE = 19;
+    public readonly REGENERATE_EVERY_12: YDisplay.REGENERATE = 20;
+    public readonly REGENERATE_EVERY_10: YDisplay.REGENERATE = 21;
+    public readonly REGENERATE_EVERY_8: YDisplay.REGENERATE = 22;
+    public readonly REGENERATE_EVERY_6: YDisplay.REGENERATE = 23;
+    public readonly REGENERATE_EVERY_4: YDisplay.REGENERATE = 24;
+    public readonly REGENERATE_ALWAYS: YDisplay.REGENERATE = 25;
+    public readonly REGENERATE_INVALID: YDisplay.REGENERATE = 26;
     public readonly DISPLAYSTATE_FAILURE: YDisplay.DISPLAYSTATE = 0;
     public readonly DISPLAYSTATE_OFF: YDisplay.DISPLAYSTATE = 1;
     public readonly DISPLAYSTATE_POWERING: YDisplay.DISPLAYSTATE = 2;
     public readonly DISPLAYSTATE_IDLE: YDisplay.DISPLAYSTATE = 3;
     public readonly DISPLAYSTATE_REFRESHING: YDisplay.DISPLAYSTATE = 4;
+    public readonly DISPLAYSTATE_INVALID: YDisplay.DISPLAYSTATE = 5;
 
     // API symbols as static members
     public static readonly ENABLED_FALSE: YDisplay.ENABLED = 0;
@@ -938,11 +1048,43 @@ export class YDisplay extends YFunction
     public static readonly LAYERHEIGHT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly LAYERCOUNT_INVALID: number = YAPI.INVALID_UINT;
     public static readonly COMMAND_INVALID: string = YAPI.INVALID_STRING;
+    public static readonly FASTREFRESH_WHENEVER_POSSIBLE: YDisplay.FASTREFRESH = 0;
+    public static readonly FASTREFRESH_WHENEVER_SUPPORTED: YDisplay.FASTREFRESH = 1;
+    public static readonly FASTREFRESH_NEVER: YDisplay.FASTREFRESH = 2;
+    public static readonly FASTREFRESH_INVALID: YDisplay.FASTREFRESH = 3;
+    public static readonly REGENERATE_ON_REQUEST_ONLY: YDisplay.REGENERATE = 0;
+    public static readonly REGENERATE_EVERY_DAY: YDisplay.REGENERATE = 1;
+    public static readonly REGENERATE_EVERY_12H: YDisplay.REGENERATE = 2;
+    public static readonly REGENERATE_EVERY_6H: YDisplay.REGENERATE = 3;
+    public static readonly REGENERATE_EVERY_3H: YDisplay.REGENERATE = 4;
+    public static readonly REGENERATE_EVERY_2H: YDisplay.REGENERATE = 5;
+    public static readonly REGENERATE_EVERY_HOUR: YDisplay.REGENERATE = 6;
+    public static readonly REGENERATE_EVERY_30MIN: YDisplay.REGENERATE = 7;
+    public static readonly REGENERATE_EVERY_15MIN: YDisplay.REGENERATE = 8;
+    public static readonly REGENERATE_EVERY_480: YDisplay.REGENERATE = 9;
+    public static readonly REGENERATE_EVERY_432: YDisplay.REGENERATE = 10;
+    public static readonly REGENERATE_EVERY_360: YDisplay.REGENERATE = 11;
+    public static readonly REGENERATE_EVERY_288: YDisplay.REGENERATE = 12;
+    public static readonly REGENERATE_EVERY_240: YDisplay.REGENERATE = 13;
+    public static readonly REGENERATE_EVERY_192: YDisplay.REGENERATE = 14;
+    public static readonly REGENERATE_EVERY_144: YDisplay.REGENERATE = 15;
+    public static readonly REGENERATE_EVERY_96: YDisplay.REGENERATE = 16;
+    public static readonly REGENERATE_EVERY_48: YDisplay.REGENERATE = 17;
+    public static readonly REGENERATE_EVERY_36: YDisplay.REGENERATE = 18;
+    public static readonly REGENERATE_EVERY_24: YDisplay.REGENERATE = 19;
+    public static readonly REGENERATE_EVERY_12: YDisplay.REGENERATE = 20;
+    public static readonly REGENERATE_EVERY_10: YDisplay.REGENERATE = 21;
+    public static readonly REGENERATE_EVERY_8: YDisplay.REGENERATE = 22;
+    public static readonly REGENERATE_EVERY_6: YDisplay.REGENERATE = 23;
+    public static readonly REGENERATE_EVERY_4: YDisplay.REGENERATE = 24;
+    public static readonly REGENERATE_ALWAYS: YDisplay.REGENERATE = 25;
+    public static readonly REGENERATE_INVALID: YDisplay.REGENERATE = 26;
     public static readonly DISPLAYSTATE_FAILURE: YDisplay.DISPLAYSTATE = 0;
     public static readonly DISPLAYSTATE_OFF: YDisplay.DISPLAYSTATE = 1;
     public static readonly DISPLAYSTATE_POWERING: YDisplay.DISPLAYSTATE = 2;
     public static readonly DISPLAYSTATE_IDLE: YDisplay.DISPLAYSTATE = 3;
     public static readonly DISPLAYSTATE_REFRESHING: YDisplay.DISPLAYSTATE = 4;
+    public static readonly DISPLAYSTATE_INVALID: YDisplay.DISPLAYSTATE = 5;
     //--- (end of generated code: YDisplay attributes declaration)
 
     constructor(yapi: YAPIContext, func: string)
@@ -1058,11 +1200,11 @@ export class YDisplay extends YFunction
     }
 
     /**
-     * Changes the name of the sequence to play when the displayed is powered on.
+     * Changes the name of the sequence to play when the display is powered on.
      * Remember to call the saveToFlash() method of the module if the
      * modification must be kept.
      *
-     * @param newval : a string corresponding to the name of the sequence to play when the displayed is powered on
+     * @param newval : a string corresponding to the name of the sequence to play when the display is powered on
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
@@ -1157,7 +1299,10 @@ export class YDisplay extends YFunction
     }
 
     /**
-     * Returns the currently selected display orientation.
+     * Returns the currently selected display orientation. The orientation is defined as the side of the
+     * screen where the
+     * USB connector (for OLED displays) or the ribbon cable (for ePaper panels) is located when the
+     * display is up straight.
      *
      * @return a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
      * YDisplay.ORIENTATION_RIGHT and YDisplay.ORIENTATION_DOWN corresponding to the currently selected
@@ -1178,7 +1323,9 @@ export class YDisplay extends YFunction
     }
 
     /**
-     * Changes the display orientation. Remember to call the saveToFlash()
+     * Changes the display orientation. he orientation is defined as the side of the screen where the
+     * USB connector (for OLED displays) or the ribbon cable (for ePaper panels) is located when the
+     * display is up straight. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
      * @param newval : a value among YDisplay.ORIENTATION_LEFT, YDisplay.ORIENTATION_UP,
@@ -1192,7 +1339,9 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('orientation', rest_val);
+        let res = await this._setAttr('orientation', rest_val);
+        await this._clearLazyCache();
+        return res;
     }
 
     /**
@@ -1217,8 +1366,7 @@ export class YDisplay extends YFunction
     /**
      * Changes the model of display to match the connected display panel.
      * This function has no effect if the module does not support the selected
-     * display panel.
-     * Remember to call the saveToFlash()
+     * display panel. Remember to call the saveToFlash()
      * method of the module if the modification must be kept.
      *
      * @param newval : a string corresponding to the model of display to match the connected display panel
@@ -1231,7 +1379,9 @@ export class YDisplay extends YFunction
     {
         let rest_val: string;
         rest_val = String(newval);
-        return await this._setAttr('displayPanel', rest_val);
+        let res = await this._setAttr('displayPanel', rest_val);
+        await this._clearLazyCache();
+        return res;
     }
 
     /**
@@ -1273,11 +1423,11 @@ export class YDisplay extends YFunction
     }
 
     /**
-     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
+     * Returns the display type: monochrome OLED, black and white ePaper, color ePaper, and so on.
      *
      * @return a value among YDisplay.DISPLAYTYPE_MONO, YDisplay.DISPLAYTYPE_EPAPER_BW,
      * YDisplay.DISPLAYTYPE_EPAPER_BWR and YDisplay.DISPLAYTYPE_EPAPER_BWRY corresponding to the display
-     * type: monochrome OLED, black and white ePaper, color ePaper, etc
+     * type: monochrome OLED, black and white ePaper, color ePaper, and so on
      *
      * On failure, throws an exception or returns YDisplay.DISPLAYTYPE_INVALID.
      */
@@ -1530,8 +1680,125 @@ export class YDisplay extends YFunction
     }
 
     /**
+     * Returns the fast refresh usage policy in use (ePaper displays only).
+     * This setting is combined with the regenerate policy to determine when the screen
+     * should be updated using a fast update versus or regenerated using a slower,
+     * flickering full refresh.
+     *
+     * @return a value among the YDisplay.FASTREFRESH enumeration
+     *         (YDisplay.FASTREFRESH_WHENEVER_POSSIBLE,
+     *         YDisplay.FASTREFRESH_WHENEVER_SUPPORTED,
+     *         YDisplay.FASTREFRESH_NEVER).
+     *
+     * On failure, throws an exception or returns YDisplay.FASTREFRESH_INVALID.
+     */
+    async get_fastRefreshPolicy(): Promise<YDisplay.FASTREFRESH>
+    {
+        let combined: number;
+        let fmod: number;
+        combined = await this.get_brightness();
+        if (combined < 0) {
+            return YDisplay.FASTREFRESH_INVALID;
+        }
+        fmod = ((combined / 25) >> 0);
+        if (fmod >= 2) {
+            fmod = fmod - 2;
+        }
+        return <YDisplay.FASTREFRESH> fmod;
+    }
+
+    /**
+     * Returns the display regeneration minimal frequency (ePaper displays only).
+     * This setting is combined with the fast refresh usage policy to determine
+     * when the screen should be updated using a fast update versus or regenerated
+     * using a slower, flickering full refresh. To change the display regeneration minimal
+     * frequency, use methode set_fastRefreshPolicy().
+     *
+     * @return a value among the YDisplay.REGENERATE enumeration
+     *         (YDisplay.REGENERATE_ON_REQUEST_ONLY,
+     *         YDisplay.REGENERATE_EVERY_DAY, YDisplay.REGENERATE_EVERY_12H,
+     *         YDisplay.REGENERATE_EVERY_6H, YDisplay.REGENERATE_EVERY_3H,
+     *         YDisplay.REGENERATE_EVERY_2H, YDisplay.REGENERATE_EVERY_HOUR,
+     *         YDisplay.REGENERATE_EVERY_30MIN, YDisplay.REGENERATE_EVERY_15MIN,
+     *         YDisplay.REGENERATE_EVERY_480, YDisplay.REGENERATE_EVERY_432,
+     *         YDisplay.REGENERATE_EVERY_360, YDisplay.REGENERATE_EVERY_288,
+     *         YDisplay.REGENERATE_EVERY_240, YDisplay.REGENERATE_EVERY_192,
+     *         YDisplay.REGENERATE_EVERY_144, YDisplay.REGENERATE_EVERY_96,
+     *         YDisplay.REGENERATE_EVERY_48, YDisplay.REGENERATE_EVERY_36,
+     *         YDisplay.REGENERATE_EVERY_24, YDisplay.REGENERATE_EVERY_12,
+     *         YDisplay.REGENERATE_EVERY_10, YDisplay.REGENERATE_EVERY_8,
+     *         YDisplay.REGENERATE_EVERY_6, YDisplay.REGENERATE_EVERY_4,
+     *         YDisplay.REGENERATE_ALWAYS).
+     *
+     * On failure, throws an exception or returns YDisplay.REGENERATE_INVALID.
+     */
+    async get_regeneratePolicy(): Promise<YDisplay.REGENERATE>
+    {
+        let combined: number;
+        let fval: number;
+        combined= await this.get_brightness();
+        if (combined < 0) {
+            return YDisplay.REGENERATE_INVALID;
+        }
+        if (combined >= 100) {
+            fval = 25;
+        } else {
+            fval = (combined % 25);
+        }
+        return <YDisplay.REGENERATE> fval;
+    }
+
+    /**
+     * Changes the fast refresh usage policy and display regeneration minimal frequency
+     * (ePaper displays only). These settings jointly determine when the screen should be
+     * updated using a fast update versus or regenerated using a slower, flickering full
+     * refresh.
+     *
+     * @param fastRefresh : a value among the YDisplay.FASTREFRESH enumeration
+     *         (YDisplay.FASTREFRESH_WHENEVER_POSSIBLE,
+     *         YDisplay.FASTREFRESH_WHENEVER_SUPPORTED,
+     *         YDisplay.FASTREFRESH_NEVER),
+     *         corresponding to the policy for using fast refresh.
+     * @param regenerate : a value among the enumeration YRefFrame.REGENERATE
+     *         (YDisplay.REGENERATE_ON_REQUEST_ONLY,
+     *         YDisplay.REGENERATE_EVERY_DAY, YDisplay.REGENERATE_EVERY_12H,
+     *         YDisplay.REGENERATE_EVERY_6H, YDisplay.REGENERATE_EVERY_3H,
+     *         YDisplay.REGENERATE_EVERY_2H, YDisplay.REGENERATE_EVERY_HOUR,
+     *         YDisplay.REGENERATE_EVERY_30MIN, YDisplay.REGENERATE_EVERY_15MIN,
+     *         YDisplay.REGENERATE_EVERY_480, YDisplay.REGENERATE_EVERY_432,
+     *         YDisplay.REGENERATE_EVERY_360, YDisplay.REGENERATE_EVERY_288,
+     *         YDisplay.REGENERATE_EVERY_240, YDisplay.REGENERATE_EVERY_192,
+     *         YDisplay.REGENERATE_EVERY_144, YDisplay.REGENERATE_EVERY_96,
+     *         YDisplay.REGENERATE_EVERY_48, YDisplay.REGENERATE_EVERY_36,
+     *         YDisplay.REGENERATE_EVERY_24, YDisplay.REGENERATE_EVERY_12,
+     *         YDisplay.REGENERATE_EVERY_10, YDisplay.REGENERATE_EVERY_8,
+     *         YDisplay.REGENERATE_EVERY_6, YDisplay.REGENERATE_EVERY_4,
+     *         YDisplay.REGENERATE_ALWAYS),
+     *         corresponding to the display minimal regeneration frequency.
+     *
+     * Remember to call the saveToFlash()
+     * method of the module if the modification must be kept.
+     *
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async set_fastRefreshPolicy(fastRefresh: YDisplay.FASTREFRESH, regenerate: YDisplay.REGENERATE): Promise<number>
+    {
+        let combined: number;
+        let fmod: number;
+        let fval: number;
+        fmod = fastRefresh;
+        fval = regenerate;
+        if ((fval == 25) || (fmod == 2)) {
+            combined = 100;
+        } else {
+            combined = 50 + fmod * 25 + fval;
+        }
+        return await this.set_brightness(combined);
+    }
+
+    /**
      * Clears the display screen and resets all display layers to their default state.
-     * Using this function in a sequence will kill the sequence play-back. Don't use that
+     * Using this function in a sequence will kill the sequence play-back. Do not use that
      * function to reset the display at sequence start-up.
      *
      * @return YAPI.SUCCESS if the call succeeds.
@@ -1625,7 +1892,7 @@ export class YDisplay extends YFunction
     }
 
     /**
-     * Trigger an immediate screen refresh. The combination of
+     * Triggers an immediate screen refresh. The combination of
      * postponeRefresh and triggerRefresh can be used as an
      * alternative to double-buffering to avoid flickering during display updates.
      *
@@ -2036,6 +2303,208 @@ export class YDisplay extends YFunction
         return rotmap;
     }
 
+    async gifEncode(pixmap: Uint8Array, palette: number[], w: number, shortHdr: boolean): Promise<Uint8Array>
+    {
+        let minCodeSize: number;
+        let LZW_CLRCODE: number;
+        let LZW_ENDCODE: number;
+        let LZW_1STCODE: number;
+        let codeSize: number;
+        let maxCode: number;
+        let codes: number[] = [];
+        let nCodes: number;
+        let pixmapSize: number;
+        let dataStream: Uint8Array;
+        let blockStart: number;
+        let blockEnd: number;
+        let prevCode: number;
+        let pixPos: number;
+        let wrBits: number;
+        let wrBitCnt: number;
+        let outPos: number;
+        let nextVal: number;
+        let i: number;
+        let hdrSize: number;
+        let res: Uint8Array;
+        let h: number;
+
+        if (palette.length > 8) {
+            this._throw(this._yapi.INVALID_ARGUMENT, 'Palette should have no more than 8 colors');
+            res = new Uint8Array(0);
+            return res;
+        }
+        if (palette.length <= 4) {
+            minCodeSize = 2;
+        } else {
+            minCodeSize = 3;
+        }
+        LZW_CLRCODE = (1 << minCodeSize);
+        LZW_ENDCODE = LZW_CLRCODE + 1;
+        LZW_1STCODE = LZW_ENDCODE + 1;
+        codeSize = minCodeSize + 1;
+        maxCode = (1 << codeSize) - 1 - LZW_1STCODE;
+        codes.length = 0;
+        nCodes = 0;
+        pixmapSize = (pixmap).length;
+        dataStream = new Uint8Array((((2 * pixmapSize) / 3) >> 0) + 8);
+        outPos = 0;
+        wrBits = LZW_CLRCODE;
+        wrBitCnt = 3;
+        // prefetch first byte
+        prevCode = pixmap[0];
+        pixPos = 1;
+        while (pixPos < pixmapSize + 3) {
+            blockStart = outPos;
+            outPos = blockStart + 1;
+            blockEnd = blockStart + 256;
+            // flush any carry-over output byte from previous data sub-block
+            while (wrBitCnt >= 8) {
+                dataStream.set([(wrBits & 0xff)], outPos);
+                outPos = outPos + 1;
+                wrBits = (wrBits >> 8);
+                wrBitCnt = wrBitCnt - 8;
+            }
+            while ((outPos < blockEnd) && (pixPos < pixmapSize)) {
+                // search for an existing code matching the running input segment
+                // printf("[%d] ", rdBits >> 12);
+                nextVal = (prevCode | (pixmap[pixPos] << 12));
+                pixPos = pixPos + 1;
+                if (prevCode < LZW_1STCODE) {
+                    i = 0;
+                } else {
+                    i = prevCode - LZW_ENDCODE;
+                }
+                while ((i < nCodes) && (codes[i] != nextVal)) {
+                    i = i + 1;
+                }
+                if (i >= nCodes) {
+                    // not found, emit prevCode and create new code
+                    wrBits = (wrBits | (prevCode << wrBitCnt));
+                    wrBitCnt = wrBitCnt + codeSize;
+                    if (nCodes <= maxCode) {
+                        //fprintf(stderr, "#%d: #%d + %d\n", nextCode, nextVal & 63, nextVal >> 6);
+                        codes.push(nextVal);
+                        nCodes = nCodes + 1;
+                    } else {
+                        codeSize = codeSize + 1;
+                        if (codeSize <= 12) {
+                            //fprintf(stderr, "#%d: #%d + %d\n", nextCode, nextVal & 63, nextVal >> 6);
+                            codes.push(nextVal);
+                            nCodes = nCodes + 1;
+                        } else {
+                            wrBits = (wrBits | (LZW_CLRCODE << wrBitCnt));
+                            wrBitCnt = wrBitCnt + codeSize;
+                            codes.length = 0;
+                            nCodes = 0;
+                            codeSize = minCodeSize + 1;
+                        }
+                        maxCode = (1 << codeSize) - 1 - LZW_1STCODE;
+                    }
+                    // flush one (or two) codes to output stream
+                    while ((wrBitCnt >= 8) && (outPos < blockEnd)) {
+                        dataStream.set([(wrBits & 0xff)], outPos);
+                        outPos = outPos + 1;
+                        wrBits = (wrBits >> 8);
+                        wrBitCnt = wrBitCnt - 8;
+                    }
+                    prevCode = (nextVal >> 12);
+                } else {
+                    prevCode = i + LZW_1STCODE;
+                }
+            }
+            if (pixPos >= pixmapSize) {
+                if ((outPos < blockEnd) && (pixPos == pixmapSize)) {
+                    // append code for last run
+                    wrBits = (wrBits | (prevCode << wrBitCnt));
+                    wrBitCnt = wrBitCnt + codeSize;
+                    while ((wrBitCnt >= 8) && (outPos < blockEnd)) {
+                        dataStream.set([(wrBits & 0xff)], outPos);
+                        outPos = outPos + 1;
+                        wrBits = (wrBits >> 8);
+                        wrBitCnt = wrBitCnt - 8;
+                    }
+                    pixPos = pixPos + 1;
+                }
+                if ((outPos < blockEnd) && (pixPos == pixmapSize + 1)) {
+                    // append end code
+                    wrBits = (wrBits | (LZW_ENDCODE << wrBitCnt));
+                    wrBitCnt = wrBitCnt + codeSize;
+                    while ((wrBitCnt >= 8) && (outPos < blockEnd)) {
+                        dataStream.set([(wrBits & 0xff)], outPos);
+                        outPos = outPos + 1;
+                        wrBits = (wrBits >> 8);
+                        wrBitCnt = wrBitCnt - 8;
+                    }
+                    pixPos = pixPos + 1;
+                }
+                if ((outPos < blockEnd) && (pixPos == pixmapSize + 2)) {
+                    // flush last 0-7 bits
+                    if (wrBitCnt > 0) {
+                        dataStream.set([(wrBits & 0xff)], outPos);
+                        outPos = outPos + 1;
+                        wrBitCnt = 0;
+                    }
+                    pixPos = pixPos + 1;
+                }
+            }
+            dataStream.set([outPos - (blockStart + 1)], blockStart);
+        }
+        blockEnd = outPos;
+        // Now write final buffer
+        hdrSize = 24 + LZW_CLRCODE * 3;
+        res = new Uint8Array(hdrSize + outPos + 2);
+        // GIF89a header
+        res.set([0x47], 0x00);
+        res.set([0x49], 0x01);
+        res.set([0x46], 0x02);
+        res.set([0x38], 0x03);
+        res.set([0x39], 0x04);
+        res.set([0x61], 0x05);
+        // Logical screen descriptor
+        h = ((((pixmap).length) / w) >> 0);
+        res.set([(w & 0xff)], 0x06);
+        res.set([(w >> 8)], 0x07);
+        res.set([(h & 0xff)], 0x08);
+        res.set([(h >> 8)], 0x09);
+        res.set([0xf0 + minCodeSize - 1], 0x0a);
+        res.set([0], 0x0b);
+        res.set([0], 0x0c);
+        // Palette
+        outPos = 0x0d;
+        i = 0;
+        while (i < LZW_CLRCODE) {
+            if (i < palette.length) {
+                wrBits = palette[i];
+                res.set([((wrBits >> 16) & 0xff)], outPos);
+                res.set([((wrBits >> 8) & 0xff)], outPos + 1);
+                res.set([(wrBits & 0xff)], outPos + 2);
+            }
+            outPos = outPos + 3;
+            i = i + 1;
+        }
+        // Image descriptor
+        res.set([0x2c], outPos);
+        res.set([(w & 0xff)], outPos + 5);
+        res.set([(w >> 8)], outPos + 6);
+        res.set([(h & 0xff)], outPos + 7);
+        res.set([(h >> 8)], outPos + 8);
+        outPos = outPos + 10;
+        // Prepare to append Image data
+        res.set([minCodeSize], outPos);
+        i = 0;
+        while (i < blockEnd) {
+            outPos = outPos + 1;
+            res.set([dataStream[i]], outPos);
+            i = i + 1;
+        }
+        // Append zero-block and trailer
+        outPos = outPos + 1;
+        res.set([0], outPos);
+        outPos = outPos + 1;
+        res.set([0x3b], outPos);
+        return res;
+    }
+
     /**
      * Continues the enumeration of displays started using yFirstDisplay().
      * Caution: You can't make any assumption about the returned displays order.
@@ -2121,13 +2590,51 @@ export namespace YDisplay
         INVALID = -1
     }
 
+    export const enum FASTREFRESH
+    {
+        WHENEVER_POSSIBLE = 0,
+        WHENEVER_SUPPORTED = 1,
+        NEVER = 2,
+        INVALID = 3
+    }
+    export const enum REGENERATE
+    {
+        ON_REQUEST_ONLY = 0,
+        EVERY_DAY = 1,
+        EVERY_12H = 2,
+        EVERY_6H = 3,
+        EVERY_3H = 4,
+        EVERY_2H = 5,
+        EVERY_HOUR = 6,
+        EVERY_30MIN = 7,
+        EVERY_15MIN = 8,
+        EVERY_480 = 9,
+        EVERY_432 = 10,
+        EVERY_360 = 11,
+        EVERY_288 = 12,
+        EVERY_240 = 13,
+        EVERY_192 = 14,
+        EVERY_144 = 15,
+        EVERY_96 = 16,
+        EVERY_48 = 17,
+        EVERY_36 = 18,
+        EVERY_24 = 19,
+        EVERY_12 = 20,
+        EVERY_10 = 21,
+        EVERY_8 = 22,
+        EVERY_6 = 23,
+        EVERY_4 = 24,
+        ALWAYS = 25,
+        INVALID = 26
+    }
     export const enum DISPLAYSTATE
     {
         FAILURE = 0,
         OFF = 1,
         POWERING = 2,
         IDLE = 3,
-        REFRESHING = 4
+        REFRESHING = 4,
+        INVALID = 5
     }
     export interface ValueCallback {(func: YDisplay, value: string): void}
 

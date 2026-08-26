@@ -57,7 +57,7 @@ export class YCarbonDioxide extends YSensor {
         this._valueCallbackCarbonDioxide = null;
         this._timedReportCallbackCarbonDioxide = null;
         // API symbols as object properties
-        this.ABCPERIOD_INVALID = YAPI.INVALID_UINT;
+        this.ABCPERIOD_INVALID = YAPI.INVALID_INT;
         this.COMMAND_INVALID = YAPI.INVALID_STRING;
         this._className = 'CarbonDioxide';
         //--- (end of YCarbonDioxide constructor)
@@ -292,7 +292,7 @@ export class YCarbonDioxide extends YSensor {
      * On failure, throws an exception or returns a negative error code.
      */
     async triggerForcedCalibration(refVal) {
-        return await this.set_command('F' + String(Math.round(Math.round(1000 * refVal))) + 'C');
+        return await this.set_command('F' + String(Math.round(Math.round(refVal))) + 'C');
     }
     /**
      * Triggers a baseline calibration at standard CO2 ambiant level (400ppm).
@@ -391,6 +391,6 @@ export class YCarbonDioxide extends YSensor {
     }
 }
 // API symbols as static members
-YCarbonDioxide.ABCPERIOD_INVALID = YAPI.INVALID_UINT;
+YCarbonDioxide.ABCPERIOD_INVALID = YAPI.INVALID_INT;
 YCarbonDioxide.COMMAND_INVALID = YAPI.INVALID_STRING;
 //# sourceMappingURL=yocto_carbondioxide.js.map

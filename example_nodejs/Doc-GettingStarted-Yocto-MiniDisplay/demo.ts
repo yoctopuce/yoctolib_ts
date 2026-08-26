@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: demo.ts 72913 2026-04-22 09:37:39Z seb $
+ *  $Id: demo.ts 75548 2026-08-17 14:13:13Z seb $
  *
  *  An example that shows how to use a  Yocto-MiniDisplay
  *
@@ -60,7 +60,7 @@ async function startDemo(): Promise<void>
     h = await disp.get_displayHeight();
 
     // reteive the first layer
-    let l0 = await disp.get_displayLayer(0);
+    let l0 = await disp.get_displayLayer(0) as YDisplayLayer;
     // display a text in the middle of the screen
     await l0.drawText(w / 2, h / 2, YDisplayLayer.ALIGN_CENTER , "Hello world!");
 
@@ -79,7 +79,7 @@ async function startDemo(): Promise<void>
     await l0.lineTo(w - 6, 0);
 
     // draw a circle in the top left corner of layer 1
-    l1 = await disp.get_displayLayer(1);
+    l1 = await disp.get_displayLayer(1) as YDisplayLayer;
     await l1.clear();
     await l1.drawCircle(h / 8, h / 8, h / 8);
 

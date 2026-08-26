@@ -46,7 +46,7 @@ async function startDemo(): Promise<void>
     let h: number = await disp.get_displayHeight();
 
     // reteive the first layer
-    let l0: YDisplayLayer = await disp.get_displayLayer(0);
+    let l0: YDisplayLayer = await disp.get_displayLayer(0) as YDisplayLayer;
     let count: number = 8;
     let coord: number[] = new Array(2*count);
     // precompute the "leds" position

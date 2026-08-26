@@ -17,7 +17,6 @@
 import 'process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as url from 'url';
 import * as http from 'http';
 import * as childProcess from 'child_process';
 import ts from 'typescript';
@@ -41,7 +40,13 @@ const MimeTypes = {
     '.jpeg': 'image/jpeg'
 };
 function listener(message, response) {
-    let srvpath = url.parse(message.url).pathname || '/';
+    let srvpath;
+    try {
+        srvpath = new URL(message.url).pathname;
+    }
+    catch (e) {
+        srvpath = '/';
+    }
     let relpath = srvpath.slice(1);
     let abspath = path.join(HTTP_ROOT, relpath);
     let extension = path.extname(relpath);

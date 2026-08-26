@@ -53,8 +53,8 @@ async function startDemo(): Promise<void>
     await disp.resetAll();
 
     // retreive the display size
-    l1 = await disp.get_displayLayer(1);
-    l2 = await disp.get_displayLayer(2);
+    l1 = await disp.get_displayLayer(1) as YDisplayLayer;
+    l2 = await disp.get_displayLayer(2) as YDisplayLayer;
     centerX = await disp.get_displayWidth() / 2;
     centerY = await disp.get_displayHeight() / 2;
     radius  = await disp.get_displayHeight() / 2;

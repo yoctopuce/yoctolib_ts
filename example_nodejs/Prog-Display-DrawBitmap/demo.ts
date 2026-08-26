@@ -62,7 +62,7 @@ async function startDemo(): Promise<void>
     h = await disp.get_displayHeight();
 
     // retrieve the first layer
-    l0 = await disp.get_displayLayer(0);
+    l0 = await disp.get_displayLayer(0) as YDisplayLayer;
     bytesPerLines = (w / 8) >> 0;
     // display clean up
     await disp.resetAll();

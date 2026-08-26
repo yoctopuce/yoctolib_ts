@@ -11,9 +11,9 @@
 import * as fs from 'fs';
 import * as semver from 'semver';
 import * as ts from 'typescript';
-import { execSync } from 'child_process';
+import {execSync} from 'child_process';
 
-const Examples: {[dir:string]:string} = {
+const Examples: { [dir: string]: string } = {
     example_html: 'app.ts',
     example_nodejs: 'demo.ts'
 };
@@ -36,13 +36,13 @@ function patchVersionInFile(newver: string, str_filename: string): void
     let pattern: string = '/* version number patched automatically */';
     let jsFile: Buffer = fs.readFileSync(str_filename);
     let pos: number = jsFile.indexOf(pattern);
-    if(pos < 0) {
-        console.log('*** Warning, cannot patch '+ str_filename+', pattern not found !');
+    if (pos < 0) {
+        console.log('*** Warning, cannot patch ' + str_filename + ', pattern not found !');
     } else {
         pos += pattern.length;
         let endMark: number = jsFile.indexOf(';', pos);
         let patch: string = "'" + newver + "'";
-        let res: Buffer = Buffer.alloc(pos + patch.length + jsFile.length-endMark);
+        let res: Buffer = Buffer.alloc(pos + patch.length + jsFile.length - endMark);
         jsFile.copy(res, 0, 0, pos);
         res.write(patch, pos);
         jsFile.copy(res, pos + patch.length, endMark);
@@ -87,42 +87,59 @@ function setVersion(str_newver: string): void
 
 function checkExamples(): void
 {
-    for(let dir in Examples) {
-        fs.readdirSync(dir).forEach(function (exdir: string):void {
-            let file: string = dir+'/'+exdir+'/'+Examples[dir];
-            if(fs.existsSync(file)) {
-                console.log('Checking '+file);
-                let pkgjson: string = dir+'/'+exdir+'/package.json';
-                let modules: string = dir+'/'+exdir+'/node_modules';
-                if(fs.existsSync(pkgjson) && !fs.existsSync(modules)) {
-                    execSync('cd '+dir+'/'+exdir+' && npm install', {stdio:[0,1,2]});
+    for (let dir in Examples) {
+        fs.readdirSync(dir).forEach(function (exdir: string): void {
+            let file: string = dir + '/' + exdir + '/' + Examples[dir];
+            if (fs.existsSync(file)) {
+                console.log('Checking ' + file);
+                let pkgjson: string = dir + '/' + exdir + '/package.json';
+                let modules: string = dir + '/' + exdir + '/node_modules';
+                if (fs.existsSync(pkgjson) && !fs.existsSync(modules)) {
+                    execSync('cd ' + dir + '/' + exdir + ' && npm install', {stdio: [0, 1, 2]});
                 }
-                const options: ts.CompilerOptions = {
-                    noEmitOnError: true,
-                    noImplicitAny: true,
-                    target: ts.ScriptTarget.ES5,
-                    module: ts.ModuleKind.CommonJS,
-                    strict: true,
-                    allowSyntheticDefaultImports: true,
-                    esModuleInterop: true,
-                    skipLibCheck: true
-                };
+                let options: ts.CompilerOptions;
+                if (exdir == 'examples_html') {
+                    options = {
+                        target: ts.ScriptTarget.ES2017,
+                        module: ts.ModuleKind.ESNext,
+                        strict: true,
+                        forceConsistentCasingInFileNames: true,
+                        esModuleInterop: true,
+                        allowSyntheticDefaultImports: true,
+                        skipLibCheck: true,
+                        noEmitOnError: true,
+                        noImplicitAny: true
+                    };
+                } else {
+                    options = {
+                        target: ts.ScriptTarget.ES2017,
+                        module: ts.ModuleKind.CommonJS,
+                        strict: true,
+                        forceConsistentCasingInFileNames: true,
+                        esModuleInterop: true,
+                        allowSyntheticDefaultImports: true,
+                        skipLibCheck: true,
+                        noEmitOnError: true,
+                        noImplicitAny: true,
+                        types: ['node']
+                    };
+                }
                 const host = ts.createCompilerHost(options);
-                host.writeFile = ((filename: string, contents: string):void => { filename; });
+                host.writeFile = ((filename: string, contents: string): void => { filename; });
                 let program = ts.createProgram([file], options, host);
                 let emitResult = program.emit();
                 let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-                allDiagnostics.forEach((diagnostic: ts.Diagnostic):void => {
+                allDiagnostics.forEach((diagnostic: ts.Diagnostic): void => {
                     if (diagnostic.file) {
-                        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start||0);
+                        let {line, character} = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start || 0);
                         let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
                         console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
                     } else {
                         console.log(ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"));
                     }
                 });
-                if(emitResult.emitSkipped) {
-                    console.error('ERROR: TypeScript example '+exdir+' failed to compile')
+                if (emitResult.emitSkipped) {
+                    console.error('ERROR: TypeScript example ' + exdir + ' failed to compile')
                 }
             }
         });
@@ -131,26 +148,26 @@ function checkExamples(): void
 
 function cleanExamples(): void
 {
-    for(let dir in Examples) {
+    for (let dir in Examples) {
         fs.readdirSync(dir).forEach(function (exdir: string): void {
-            let file: string = dir+'/'+exdir+'/'+Examples[dir];
-            if(fs.existsSync(file)) {
-                let jsfile: string = file.replace('.ts','.js');
-                let jsmapfile: string = file.replace('.ts','.js.map');
-                let pkglock: string = dir+'/'+exdir+'/package-lock.json';
-                let modules: string = dir+'/'+exdir+'/node_modules';
-                if(fs.existsSync(jsmapfile)) {
+            let file: string = dir + '/' + exdir + '/' + Examples[dir];
+            if (fs.existsSync(file)) {
+                let jsfile: string = file.replace('.ts', '.js');
+                let jsmapfile: string = file.replace('.ts', '.js.map');
+                let pkglock: string = dir + '/' + exdir + '/package-lock.json';
+                let modules: string = dir + '/' + exdir + '/node_modules';
+                if (fs.existsSync(jsmapfile)) {
                     fs.unlinkSync(jsmapfile);
                 }
-                if(fs.existsSync(jsfile)) {
+                if (fs.existsSync(jsfile)) {
                     fs.unlinkSync(jsfile);
                 }
-                if(fs.existsSync(pkglock)) {
+                if (fs.existsSync(pkglock)) {
                     fs.unlinkSync(pkglock);
                 }
-                if(fs.existsSync(modules)) {
-                    console.log('Cleaning '+modules);
-                    fs.rmSync(modules, { recursive: true });
+                if (fs.existsSync(modules)) {
+                    console.log('Cleaning ' + modules);
+                    fs.rmSync(modules, {recursive: true});
                 }
             }
         });
@@ -158,20 +175,20 @@ function cleanExamples(): void
 }
 
 let args: string[] = process.argv.slice(2);
-if(args.length == 0) {
+if (args.length == 0) {
     console.log("argument expected: build")
 } else {
-    switch(args[0]) {
-        case "newbuild":
-            setVersion(args[1]);
-            makeIndex();
-            break;
-        case "checkExamples":
-            checkExamples();
-            break;
-        case "cleanExamples":
-            cleanExamples();
-            break;
+    switch (args[0]) {
+    case "newbuild":
+        setVersion(args[1]);
+        makeIndex();
+        break;
+    case "checkExamples":
+        checkExamples();
+        break;
+    case "cleanExamples":
+        cleanExamples();
+        break;
     }
 }
 

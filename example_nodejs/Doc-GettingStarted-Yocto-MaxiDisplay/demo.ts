@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: demo.ts 75107 2026-07-03 17:05:23Z mvuilleu $
+ *  $Id: demo.ts 75548 2026-08-17 14:13:13Z seb $
  *
  *  An example that shows how to use a  Yocto-MaxiDisplay
  *
@@ -78,7 +78,7 @@ async function startDemo(): Promise<void>
     await l0.lineTo(w - 6, 0);
 
     // draw a circle in the top left corner of layer 1
-    l1 = await disp.get_displayLayer(1) as YDisplayLayer    ;
+    l1 = await disp.get_displayLayer(1) as YDisplayLayer;
     await l1.clear();
     await l1.drawCircle(h / 8, h / 8, h / 8);
 
