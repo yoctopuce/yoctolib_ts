@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_api.ts 75622 2026-08-19 07:56:53Z mvuilleu $
+ * $Id: yocto_api.ts version 2.1.16087 (build 76087) $
  *
  * High-level programming interface, common to all modules
  *

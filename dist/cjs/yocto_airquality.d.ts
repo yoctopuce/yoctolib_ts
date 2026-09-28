@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_airquality.ts version 2.1.16087 (build 76087) $
  *
  *  Implements the high-level API for AirQuality functions
  *
@@ -41,7 +41,7 @@ import { YAPIContext, YSensor, YMeasure } from './yocto_api.js';
  * YAirQuality Class: air quality sensor control interface
  *
  * The YAirQuality class allows you to read and configure Yoctopuce air quality sensors.
- * It inherits from YSensor class the core functions to read measurements,
+ * It inherits from the YSensor class the core functions to read measures,
  * to register callback functions, and to access the autonomous datalogger.
  */
 export declare class YAirQuality extends YSensor {
@@ -105,7 +105,7 @@ export declare class YAirQuality extends YSensor {
      */
     set_aqiMode(newval: YAirQuality.AQIMODE): Promise<number>;
     /**
-     * Retrieves a air quality sensor for a given identifier.
+     * Retrieves an air quality sensor for a given identifier.
      * The identifier can be specified using several formats:
      *
      * - FunctionLogicalName
@@ -119,7 +119,7 @@ export declare class YAirQuality extends YSensor {
      * it is invoked. The returned object is nevertheless valid.
      * Use the method YAirQuality.isOnline() to test if the air quality sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * a air quality sensor by logical name, no error is notified: the first instance
+     * an air quality sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -134,7 +134,7 @@ export declare class YAirQuality extends YSensor {
      */
     static FindAirQuality(func: string): YAirQuality;
     /**
-     * Retrieves a air quality sensor for a given identifier in a YAPI context.
+     * Retrieves an air quality sensor for a given identifier in a YAPI context.
      * The identifier can be specified using several formats:
      *
      * - FunctionLogicalName
@@ -148,7 +148,7 @@ export declare class YAirQuality extends YSensor {
      * it is invoked. The returned object is nevertheless valid.
      * Use the method YAirQuality.isOnline() to test if the air quality sensor is
      * indeed online at a given time. In case of ambiguity when looking for
-     * a air quality sensor by logical name, no error is notified: the first instance
+     * an air quality sensor by logical name, no error is notified: the first instance
      * found is returned. The search is performed first by hardware name,
      * then by logical name.
      *
@@ -190,11 +190,11 @@ export declare class YAirQuality extends YSensor {
     /**
      * Continues the enumeration of air quality sensors started using yFirstAirQuality().
      * Caution: You can't make any assumption about the returned air quality sensors order.
-     * If you want to find a specific a air quality sensor, use AirQuality.findAirQuality()
+     * If you want to find a specific an air quality sensor, use AirQuality.findAirQuality()
      * and a hardwareID or a logical name.
      *
      * @return a pointer to a YAirQuality object, corresponding to
-     *         a air quality sensor currently online, or a null pointer
+     *         an air quality sensor currently online, or a null pointer
      *         if there are no more air quality sensors to enumerate.
      */
     nextAirQuality(): YAirQuality | null;

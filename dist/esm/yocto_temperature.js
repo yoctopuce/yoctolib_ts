@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_temperature.ts version 2.1.16087 (build 76087) $
  *
  *  Implements the high-level API for Temperature functions
  *

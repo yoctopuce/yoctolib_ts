@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_sdi12port.ts 54279 2023-04-28 10:11:03Z seb $
+ *  $Id: yocto_sdi12port.ts version 2.1.16087 (build 76087) $
  *
  *  Implements the high-level API for Sdi12SnoopingRecord functions
  *

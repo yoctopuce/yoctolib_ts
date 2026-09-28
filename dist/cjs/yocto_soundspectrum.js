@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_soundspectrum.ts version 2.1.16087 (build 76087) $
  *
  *  Implements the high-level API for SoundSpectrum functions
  *

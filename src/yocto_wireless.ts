@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_wireless.ts 72057 2026-02-17 09:44:53Z mvuilleu $
+ *  $Id: yocto_wireless.ts version 2.1.16087 (build 76087) $
  *
  *  Implements the high-level API for WlanRecord functions
  *

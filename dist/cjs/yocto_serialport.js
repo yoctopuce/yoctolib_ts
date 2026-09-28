@@ -1,7 +1,7 @@
 "use strict";
 /*********************************************************************
  *
- *  $Id: yocto_serialport.ts 75514 2026-08-13 07:24:08Z mvuilleu $
+ *  $Id: yocto_serialport.ts version 2.1.16087 (build 76087) $
  *
  *  Implements the high-level API for SnoopingRecord functions
  *
@@ -142,9 +142,14 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         this._eventCallback = null;
         this._xyproto = '';
         this._xyfname = '';
+        this._xyfattr = '';
         this._xyfdata = new Uint8Array(0);
         this._xytotal = 0;
-        this._xysent = 0;
+        this._xyblock = new Uint8Array(0);
+        this._xyavail = 0;
+        this._xyready = 0;
+        this._xyacked = 0;
+        this._xyclose = false;
         // API symbols as object properties
         this.RXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
         this.TXCOUNT_INVALID = yocto_api_js_1.YAPI.INVALID_UINT;
@@ -2053,172 +2058,240 @@ class YSerialPort extends yocto_api_js_1.YFunction {
         }
         return res;
     }
-    async _xymodemQueue(proto, fname, buff, timeoutSec) {
+    async _xymodemQueue(proto, buff, fname, attributes, closeBatch) {
+        let datablock;
         if ((this._xyproto).length > 0) {
             this._throw(this._yapi.DEVICE_BUSY, 'file transfer already in progress');
             return this._yapi.DEVICE_BUSY;
         }
+        datablock = new Uint8Array(1024);
         this._xyproto = proto;
         this._xyfname = fname;
+        this._xyfattr = attributes;
         this._xyfdata = buff;
         this._xytotal = (buff).length;
-        this._xysent = 0;
-        return await this._xymodemProcess(timeoutSec);
+        this._xyblock = datablock;
+        this._xyavail = 4096;
+        this._xyready = 0;
+        this._xyacked = 0;
+        this._xyclose = closeBatch;
+        return await this._xymodemProcess(proto);
     }
-    async _xymodemProcess(timeoutSec) {
-        let proto;
+    async _xymodemProcess(proto) {
+        let maxblocks;
         let blksize;
-        let cnt;
         let datablock;
+        let cnt;
         let namesuffix;
         let fullproto;
         let json;
         let jsonStr;
         let errStr;
-        let sentBytes;
+        let state;
         let empty;
-        proto = this._xyproto;
-        if ((proto).length == 0) {
+        if ((this._xyproto).length == 0) {
             this._throw(this._yapi.INVALID_ARGUMENT, 'no file transfer in progress');
             return this._yapi.INVALID_ARGUMENT;
         }
-        // create a data block up to 1k
-        blksize = this._xytotal - this._xysent;
-        if (blksize > 1024) {
-            blksize = 1024;
+        if ((proto).length > 6) {
+            proto = proto.substr(0, 6);
         }
-        datablock = new Uint8Array(blksize);
-        cnt = 0;
-        while (cnt < blksize) {
-            datablock.set([this._xyfdata[this._xysent + cnt]], cnt);
-            cnt = cnt + 1;
+        if (!(this._xyproto.substr(0, 6) == proto)) {
+            this._throw(this._yapi.INVALID_ARGUMENT, 'file transfer protocol mismatch');
+            return this._yapi.INVALID_ARGUMENT;
         }
-        namesuffix = '';
-        if (this._xysent == 0) {
-            if (proto.substr(0, 6) == 'ymodem') {
-                namesuffix = ':' + this._xyfname;
+        if (this._xyready == 0) {
+            if (proto == 'ymodem') {
+                if ((this._xyfattr).length == 0) {
+                    namesuffix = ':' + this._xyfname + ' ' + String(Math.round(this._xytotal));
+                }
+                else {
+                    namesuffix = ':' + this._xyfname + ' ' + String(Math.round(this._xytotal)) + ' ' + this._xyfattr;
+                }
+            }
+            else {
+                namesuffix = '';
             }
         }
         else {
             namesuffix = '+';
         }
-        if (this._xytotal > this._xysent + blksize) {
-            fullproto = proto + '-t' + String(Math.round(timeoutSec)) + '-m' + namesuffix;
+        maxblocks = 5;
+        while ((this._xyready < this._xytotal) && (this._xyavail >= 1040) && (maxblocks > 0)) {
+            // create a data block up to 1k
+            maxblocks = maxblocks - 1;
+            blksize = this._xytotal - this._xyready;
+            if (blksize >= 1024) {
+                blksize = 1024;
+                datablock = this._xyblock;
+            }
+            else {
+                datablock = new Uint8Array(blksize);
+            }
+            cnt = 0;
+            while (cnt < blksize) {
+                datablock.set([this._xyfdata[this._xyready + cnt]], cnt);
+                cnt = cnt + 1;
+            }
+            if (this._xytotal > this._xyready + blksize) {
+                fullproto = this._xyproto + '-m' + namesuffix;
+            }
+            else {
+                fullproto = this._xyproto + '' + namesuffix;
+            }
+            // backup _xyproto and clear it, to drop transfer in case of exception
+            proto = this._xyproto;
+            this._xyproto = '';
+            json = await this._uploadEx(fullproto, datablock);
+            if ((json).length == 0) {
+                this._throw(this._yapi.IO_ERROR, 'failed to receive result from device');
+                return this._yapi.IO_ERROR;
+            }
+            jsonStr = this._yapi.imm_bin2str(json);
+            if (jsonStr.substr(2, 3) == 'err') {
+                // will get error message and full status from json URL below
+                maxblocks = 0;
+            }
+            else {
+                this._xyready = this._xyready + blksize;
+                this._xyavail = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(json, 'rts'));
+                namesuffix = '+';
+            }
+            this._xyproto = proto;
         }
-        else {
-            fullproto = proto + '-t' + String(Math.round(timeoutSec)) + '' + namesuffix;
+        if ((this._xyready == this._xytotal) && (this._xyavail >= 262) && (maxblocks > 0)) {
+            this._xyready = this._xyready + 1;
+            if (this._xyclose) {
+                // schedule transfer of NUL file to end YModem batch
+                empty = new Uint8Array(0);
+                await this._uploadEx('ymodem:', empty);
+            }
         }
-        // backup _xyproto and clear it, to drop transfer in case of exception
-        this._xyproto = '';
-        json = await this._uploadEx(fullproto, datablock);
-        if ((json).length == 0) {
-            this._throw(this._yapi.IO_ERROR, 'failed to receive result from device');
-            return this._yapi.IO_ERROR;
+        await yocto_api_js_1.YAPI.Sleep(100);
+        json = await this._download(proto.substr(0, 6) + '.json');
+        state = this.imm_json_get_key(json, 'st').substr(0, 2);
+        this._xyavail = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(json, 'rts'));
+        this._xyacked = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(json, 'ack'));
+        // Only report 100% or an error when the state machine has reached a final state
+        // But we must detect individual file completion within a multi-file batch transfer
+        if (!(this._xyclose) && state == 'BR' && (this._xyacked > 1024)) {
+            state = 'ZZ';
         }
-        jsonStr = this._yapi.imm_bin2str(json);
-        errStr = this.imm_json_get_key(json, 'err');
-        if ((errStr).length > 0) {
-            this._throw(this._yapi.IO_ERROR, errStr);
-            return this._yapi.IO_ERROR;
-        }
-        sentBytes = yocto_api_js_1.YAPIContext.imm_atoi(this.imm_json_get_key(json, 'sent'));
-        if (sentBytes >= this._xytotal) {
-            // done, free binary buffer
+        if (state == 'ZZ') {
+            // transfer completed, free binary buffer
             empty = new Uint8Array(0);
+            this._xyproto = '';
             this._xyfdata = empty;
+            this._xyblock = empty;
+            // if transfer did not end successfully, report error
+            errStr = this.imm_json_get_key(json, 'err');
+            if ((errStr).length > 0) {
+                this._throw(this._yapi.IO_ERROR, errStr);
+                return this._yapi.IO_ERROR;
+            }
             return 100;
         }
-        this._xyproto = proto;
-        this._xysent = sentBytes;
-        return (((100 * sentBytes) / this._xytotal) >> 0);
+        // Stay at 0% unless receiver receives at least one header block
+        if (this._xyacked == 0) {
+            return 0;
+        }
+        // Move to 1-99% as progress unfolds
+        cnt = this._xytotal;
+        if (proto == 'ymodem') {
+            cnt = cnt + 256;
+        }
+        cnt = 1 + (((99 * this._xyacked) / cnt) >> 0);
+        if (cnt > 99) {
+            cnt = 99;
+        }
+        return cnt;
+    }
+    async _xymodemAbort() {
+        let empty;
+        let res;
+        empty = new Uint8Array(0);
+        this._xyproto = '';
+        this._xyfname = '';
+        this._xyfdata = empty;
+        this._xyblock = empty;
+        res = await this._upload('xmodem!', empty);
+        // give some extra time for the state machine to abort
+        await yocto_api_js_1.YAPI.Sleep(10);
+        return res;
     }
     /**
      * Initiates a buffer transmit to the serial port using the standard XMODEM protocol.
-     * The function will block until the XMODEM receiver triggers the transfer,
-     * up to the specified timeout.
-     * Once the transfer is started, the function returns the current percentage
-     * of completion. The caller should then invoke method
-     * xmodemUploadMore() until it returns 100 (percent).
+     * The function will return almost immediately, but the transfer only starts when
+     * the XMODEM receiver requests it. A few kilobytes of data are buffered within the
+     * device, ready to be sent, but the caller should repeatedly invoke method
+     * xmodemUploadMore() until it returns 100 (percent) to ensure that the
+     * file transfer completes.
      *
      * @param buff : the binary buffer to send
      * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     * @param use1kBlocks : whether to use 1KB data blocks for faster transfer
+     *         (relatively standard XMODEM protocol extension)
      *
      * @return an integer in the range 0 to 100 (percentage of completion),
      *         or a negative error code in case of failure.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async xmodemUpload(buff, timeoutSec) {
-        return await this._xymodemQueue('xmodem', '', buff, timeoutSec);
+    async xmodemUpload(buff, timeoutSec, use1kBlocks) {
+        let proto;
+        if (use1kBlocks) {
+            proto = 'xmodem-1k-t' + String(Math.round(timeoutSec));
+        }
+        else {
+            proto = 'xmodem-t' + String(Math.round(timeoutSec));
+        }
+        return await this._xymodemQueue(proto, buff, '', '', false);
     }
     /**
-     * Continues a standard XMODEM upload previously started with xmodemUpload.
+     * Continues a XMODEM upload previously started with xmodemUpload.
      * The function will block until the data sent has been acknowledged by receiver,
      * up to the specified timeout, and return the current percentage of completion.
      * It should be called continuously until it returns the 100 (percent).
      *
-     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
-     *
      * @return an integer in the range 0 to 100 (percentage of completion),
      *         or a negative error code in case of failure.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async xmodemUploadMore(timeoutSec) {
-        return await this._xymodemProcess(timeoutSec);
+    async xmodemUploadMore() {
+        return await this._xymodemProcess('xmodem');
     }
     /**
-     * Initiates a buffer transmit to the serial port using the standard XMODEM-1k protocol.
-     * The function will block until the XMODEM receiver triggers the transfer,
-     * up to the specified timeout.
-     * Once the transfer is started, the function returns the current percentage
-     * of completion. The caller should then invoke method
-     * xmodem1kUploadMore() until it returns 100 (percent).
-     *
-     * @param buff : the binary buffer to send
-     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
-     *
-     * @return YAPI.SUCCESS if the call succeeds.
-     *
+     * Abort any XMODEM or YMODEM data transfer previously started.
      * On failure, throws an exception or returns a negative error code.
      */
-    async xmodem1kUpload(buff, timeoutSec) {
-        return await this._xymodemQueue('xmodem-1k', '', buff, timeoutSec);
-    }
-    /**
-     * Continues a XMODEM-1k upload previously started with xmodem1kUpload.
-     * The function will block until the data sent has been acknowledged by receiver,
-     * up to the specified timeout, and return the current percentage of completion.
-     * It should be called continuously until it returns the 100 (percent).
-     *
-     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
-     *
-     * @return an integer in the range 0 to 100 (percentage of completion),
-     *         or a negative error code in case of failure.
-     *
-     * On failure, throws an exception or returns a negative error code.
-     */
-    async xmodem1kUploadMore(timeoutSec) {
-        return await this._xymodemProcess(timeoutSec);
+    async xmodemAbort() {
+        return await this._xymodemAbort();
     }
     /**
      * Initiates a buffer transmit to the serial port using the standard YMODEM protocol.
-     * The function will block until the YMODEM receiver triggers the transfer,
-     * up to the specified timeout.
-     * Once the transfer is started, the function returns the current percentage
-     * of completion. The caller should then invoke method
-     * ymodemUploadMore() until it returns 100 (percent).
+     * The function will return almost immediately, but the transfer only starts when
+     * the XMODEM receiver requests it. A few kilobytes of data are buffered within the
+     * device, ready to be sent, but the caller should repeatedly invoke method
+     * xmodemUploadMore() until it returns 100 (percent) to ensure that the
+     * file transfer completes.
      *
-     * @param filename : the filename associated with the data in the buffer
      * @param buff : the binary buffer to send
      * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
+     * @param filename : the filename associated with the data in the buffer
+     * @param attributes : optional file attributes (eg. modif date timestamp in octal form),
+     *         or an empty string if no further attribute is required
+     * @param lastFile : TRUE to end the YMODEM batch session after this file,
+     *         or FALSE if more files will be sent in the same batch session
      *
      * @return YAPI.SUCCESS if the call succeeds.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async ymodemUpload(filename, buff, timeoutSec) {
-        return await this._xymodemQueue('ymodem', filename, buff, timeoutSec);
+    async ymodemUpload(buff, timeoutSec, filename, attributes, lastFile) {
+        let proto;
+        proto = 'ymodem-t' + String(Math.round(timeoutSec));
+        return await this._xymodemQueue(proto, buff, filename, attributes, lastFile);
     }
     /**
      * Continues a YMODEM upload previously started with ymodemUpload.
@@ -2226,15 +2299,20 @@ class YSerialPort extends yocto_api_js_1.YFunction {
      * up to the specified timeout, and return the current percentage of completion.
      * It should be called continuously until it returns the 100 (percent).
      *
-     * @param timeoutSec : the timeout before aborting send (e.g. 60 sec)
-     *
      * @return an integer in the range 0 to 100 (percentage of completion),
      *         or a negative error code in case of failure.
      *
      * On failure, throws an exception or returns a negative error code.
      */
-    async ymodemUploadMore(timeoutSec) {
-        return await this._xymodemProcess(timeoutSec);
+    async ymodemUploadMore() {
+        return await this._xymodemProcess('ymodem');
+    }
+    /**
+     * Abort any XMODEM or YMODEM data transfer previously started.
+     * On failure, throws an exception or returns a negative error code.
+     */
+    async ymodemAbort() {
+        return await this._xymodemAbort();
     }
     /**
      * Continues the enumeration of serial ports started using yFirstSerialPort().
